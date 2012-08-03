@@ -1,0 +1,15 @@
+.DS_Store
+
+*.log
+*.aux
+*.toc
+*.dvi
+index.ps
+*.out
+*.bbl
+*.blg
+*.nav
+*.snm
+
+# http://mactex-wiki.tug.org/wiki/index.php?title=SyncTeX
+*.synctex.gz
