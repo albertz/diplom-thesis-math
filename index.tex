@@ -1,0 +1,140 @@
+\documentclass[twoside,openright]{article}
+%%!TEX encoding = UTF-8 Unicode
+\usepackage[utf8]{inputenc}
+\usepackage{palatino} %Schriftart
+%\usepackage{ngerman}
+%\usepackage[ps2pdf,a4paper,colorlinks]{hyperref}
+%\usepackage[a4paper,colorlinks]{hyperref}
+\usepackage[a4paper]{hyperref}
+\usepackage[a4paper,%
+	inner=3.5cm,%
+	outer=3.5cm,%
+	top=4cm,%
+	bottom=4cm,%
+	marginparwidth=2.5cm,%
+	marginparsep=0.3cm,%
+	includehead]{geometry}
+\usepackage{makeidx}
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage{titlesec}
+\usepackage[fleqn]{amsmath}
+\usepackage{amsthm}
+\usepackage{amstext}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{xparse}
+\usepackage{url}
+\usepackage{cleveref}
+\usepackage{mdframed}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+% doesnt work?
+%\usepackage{vaucanson-g}
+% evtl auch gastex. siehe: http://www.automata.rwth-aachen.de/material/skripte/latex/latex.pdf
+
+\pagestyle{headings}
+
+\hypersetup{%
+	pdftitle = {Language Operations and a Structure Theory of ω-Languages},%
+	pdfsubject = {},%
+	pdfauthor = {Albert Zeyer}%
+}
+
+% funktioniert nicht?
+%\makeidx
+
+\input{texdefs}
+
+\begin{document}
+\title{Language Operations and a Structure Theory of $\omega$-Languages}
+\author{Albert Zeyer}
+\date{\today}
+
+% http://en.wikibooks.org/wiki/LaTeX/Title_Creation
+\begin{titlepage}
+\begin{center}
+\setlength{\parskip}{2ex plus0.5ex minus0.2ex}
+\setlength{\baselineskip}{5ex}
+\textsc{\LARGE Language Operations and a Structure Theory of $\omega$-Languages}\\[1.5cm]
+
+\setlength{\baselineskip}{3ex}
+
+\textsc{Diploma Thesis} \\
+in Computer Science \\[0.7cm]
+
+by \\
+Albert Zeyer \\[3cm]
+
+submitted to the \\
+Faculty of Mathematics, Computer Science and Natural Science of \\
+RWTH Aachen University \\[1.5cm]
+
+July 2012 \\
+revised version from \today \\[1.5cm]
+
+Supervisor: Prof. Dr. Dr.h.c. Wolfgang Thomas \\
+Second examiner: PD Dr. Christof Löding \\[1.5cm]
+
+written at the \\
+Chair of Computer Science 7 \\
+Logic and Theory of Discrete Systems \\
+Prof. Dr. Dr.h.c. Wolfgang Thomas
+
+\end{center}
+\end{titlepage}
+
+
+% dont need that for the revised version
+%% empty page
+%\newpage
+%\thispagestyle{empty}
+%\mbox{}
+%
+%\begin{titlepage}
+%\setlength{\parindent}{0pt}
+%\setlength{\parskip}{3ex}
+%\textbf{\large Erklärung}
+%
+%Hiermit versichere ich, dass ich diese Arbeit selbstständig verfasst und keine anderen als die angegebenen Quellen und Hilfsmittel benutzt sowie Zitate kenntlich gemacht habe.\\
+%
+%Aachen, den \todaygerman
+%\end{titlepage}
+%
+%% empty page
+%\newpage
+%\thispagestyle{empty}
+%\mbox{}
+
+\newpage
+\thispagestyle{empty}
+\setlength{\parskip}{0.7ex}
+\tableofcontents
+\newpage
+
+
+% http://www.automata.rwth-aachen.de/material/skripte/latex/latex.pdf
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2ex plus0.5ex minus0.2ex}
+\setlength{\baselineskip}{3ex}
+\renewcommand{\baselinestretch}{1.5}
+
+% http://www.ctex.org/documents/packages/layout/titlesec.pdf
+\titleformat{\section}[display]{\LARGE\bfseries}{Chapter \thesection}{0.5em}{}{}
+\titlespacing*{\section}{0pt}{0pt}{2em}
+
+\input{intro}
+\input{reg-omega-lang}
+\input{star-omega-ops}
+\input{generic-star-omega-results}
+\input{star-languages}
+\input{conclusion}
+
+% http://tex.stackexchange.com/questions/8458/making-the-bibliography-appear-in-the-table-of-contents
+% http://www.automata.rwth-aachen.de/material/skripte/latex/latex.pdf
+% 9.2ff
+\bibliographystyle{alpha}
+\bibliography{bibliography}
+
+\printindex
+
+\end{document}

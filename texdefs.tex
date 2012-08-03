@@ -1,0 +1,95 @@
+%!TEX root =  index.tex
+
+% some useful stuff:
+% http://www.automata.rwth-aachen.de/material/skripte/latex/latex.pdf
+% http://en.wikibooks.org/wiki/LaTeX/Mathematics
+% http://en.wikibooks.org/wiki/LaTeX/Advanced_Mathematics
+% http://en.wikibooks.org/wiki/LaTeX/Theorems
+
+\theoremstyle{plain}\newtheorem{lemma}{Lemma}[section]
+\theoremstyle{plain}\newtheorem{theorem}[lemma]{Theorem}
+\theoremstyle{definition}\newtheorem{mydef}[lemma]{Definition}
+\theoremstyle{definition}\newtheorem{algo}[lemma]{Algorithm}
+\theoremstyle{plain}\newtheorem{example}[lemma]{Example}
+\theoremstyle{definition}\newtheorem{sexample}[lemma]{Example}
+
+% http://tex.stackexchange.com/questions/5767/how-to-get-more-complete-references
+\Crefname{section}{Chapter}{Chapters}
+\crefname{section}{chapter}{chapters}
+\Crefname{subsection}{Section}{Sections}
+\crefname{subsection}{section}{sections}
+
+\crefname{sexample}{example}{examples}
+\crefname{mydef}{definition}{definitions}
+
+\newenvironment{simpleexample}[0]%
+{\begin{sexample}}%
+{\qed \end{sexample}}
+
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\Reg}{\text{Reg}}
+\newcommand{\Lang}{\mathcal{L}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\B}{\mathbb{B}}
+\newcommand{\Power}{\mathcal{P}}
+
+\newcommand{\mathtext}[1]{\textup{\textrm{#1}}}
+\newcommand{\PT}{\mathtext{PT}}
+\newcommand{\posPT}{\mathtext{pos-PT}}
+\newcommand{\LT}{\mathtext{LT}}
+\newcommand{\LTT}{\mathtext{LTT}}
+
+% got some help here: http://tex.stackexchange.com/questions/13554/define-something-like-lim-but-for-another-name
+
+\newcommand{\ext}{\operatorname{ext}}
+\newcommand{\Inf}{\operatorname{Inf}}
+\newcommand{\BC}{\operatorname{BC}}
+\newcommand{\posBC}{\operatorname{pos-BC}}
+\newcommand{\dext}{\operatorname{\widehat{ext}}}
+\newcommand{\dlim}{\operatorname{\widehat{lim}}}
+\newcommand{\Kleene}{\operatorname{Kleene}}
+\newcommand{\limClosure}{\operatorname{Lim}}
+\newcommand{\Occ}{\operatorname{Occ}}
+\newcommand{\existsinf}{\exists^\omega}
+\newcommand{\overx}{\overset{\times}}
+%\newcommand{\overx}{\stackrel{\times}}
+\newcommand{\Ax}{\overx{\A}}
+\newcommand{\Langreg}{\Lang^*(\mathtext{reg})}
+\newcommand{\LangOreg}{\Lang^\omega(\mathtext{reg})}
+
+\newcommand{\defword}[1]{{\bf #1}}
+
+% inspired by http://ftp.fernuni-hagen.de/ftp-dir/pub/mirrors/www.ctan.org/macros/latex/contrib/braket/braket.sty
+\def\mid@vertical{\mskip1mu\vrule\mskip1mu}
+\def\midvert{\egroup\;\mid@vertical\;\bgroup}
+\NewDocumentCommand\Set{mg}{%
+    \IfNoValueTF{#2}{%
+        \ensuremath{\left\{ #1 \right\}}%
+    }{%
+        \ensuremath{\left\{ {#1} \;\mid@vertical\; {#2} \right\}}%
+    }%
+}
+
+%\newcommand{\SetS}[1]{\bigl\{ #1 \bigr\}}
+%\newcommand{\SetC}[2]{\bigl\{ #1 \bigm| #2 \bigr\}}
+%\DeclarePairedDelimiterX\SetC[2]{\lbrace}{\rbrace}{ #1 \,\delimsize|\, #2 }
+
+%\newcommand{\abs}[1]{\mathopen| #1 \mathclose|}
+%\newcommand{\Abs}[1]{\left| #1 \right|}
+\newcommand{\abs}[1]{\left| #1 \right|}
+
+% http://de.wikibooks.org/wiki/LaTeX-W%C3%B6rterbuch:_today
+\def\monthgerman{\ifcase\month \or
+  Januar\or Februar\or M\"arz\or April\or Mai\or Juni\or
+  Juli\or August\or September\or Oktober\or November\or Dezember\fi}
+\def\todaygerman{\number\day.~\monthgerman\space\number\year}
+
+
+% new page for every section
+\let\stdsection\section
+\renewcommand\section{\newpage\stdsection}
