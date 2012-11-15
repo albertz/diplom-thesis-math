@@ -1,0 +1,9 @@
+
+* Grobe Strukturierung der Arbeit
+
+* Liste von zu beweisenden Lemmas
+
+* Code: Layout: CurlS,CurlF,Chi gegeben -> Matrix (von Abbildung …)
+
+
+
