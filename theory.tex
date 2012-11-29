@@ -3,5 +3,24 @@
 \section{Theory}
 
 
+\begin{lemma}
+Let $f \colon \M_2(\C) \rightarrow \C$ be a hermitian modular form of weight $k$.
+Then, $f(S \tau) \colon \HalfPlane_1 \subseteq \C \rightarrow \C$ is an eliptic modular form of weight $2k$ for some $S$ with $\Gamma(S) \subseteq \SL_2(\Z)$.
+\end{lemma}
 
 
+
+\begin{algo}
+\begin{enumerate}
+\item Select a set of matrices $\mathcal{S} \subseteq \M_2^T(\Z)$ with $0 < S \in \mathcal{S}$. Make $\mathcal{S}$ big enough. Now, for some $S \in \mathcal{S}$:
+
+\item Fix $B \in \N$ as a limit. Or select a precision
+\[ \F = \Set{\SmallMatrix{a}{b}{\overline b}{c}}{0 \le a c < B} \subseteq \Lambda , \]
+where
+\[ \Lambda := \Set{0 \le \SmallMatrix{a}{b}{\overline b}{c} \in \M_2(o^\#)}{a,c \in \Z } . \]
+
+\item \[ \mathcal{M}_{k,\mathcal{S},\F}^H = \Set{f S}{f \in \Q^\F} , \]
+\[ \mathcal{M}_{k,S} = \mathtext{FourierExpansion}_{\F(S)}(\M_k(\Gamma(S))) \]
+
+\end{enumerate}
+\end{algo}
