@@ -2,11 +2,17 @@
 
 \section{Background results}
 
-Definition Siegel modular cusp form
+\subsection{Preliminaries}
 
+Let $\M_n(\K)$ be the set of all $n \times n$ matrices over some field $\K$. Likewise, $\M_n^T(\K)$ are the symetric $n \times n$ matrices. A matrix $Y \in \M_n(\R)$ is greater $0$ iff $\forall x \in \R^n - \Set{0} \colon Y[x] := x^T Y x > 0$. Let $\HalfPlane_n := \Set{Z = X + iY \in \M_n^T(\C)}{Y > 0}$. Thus, $\HalfPlane_1$ is the Poincaré upper half plane.
 
+The general linear group is defined by $\GL_n(\K) = \Set{X \in \M_n(\K)}{\det(X) \neq 0}$ and the special linear group by $\SL_n(\K) = \Set{X \in \M_n(\K)}{\det(X) = 1}$. The orthogonal group is defined by $\Orth_n(\K) = \Set{X \in \GL_n(\K)}{X^T X = 1_n}$.
 
-
-
-
+A siegel modular cusp form is a holomorphic function
+\[ f \colon \HalfPlane_n \rightarrow \C \]
+with
+\begin{align*}
+(1) \ \ & f |_k y = f \ \forall \ y \in \Gamma \subseteq Sp_n(\Z) \\
+(2) \ \ & \text{for } n = 1 \colon f(Z) = O(1) \text{ for } Z \rightarrow i \infty
+\end{align*}
 
