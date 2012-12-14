@@ -10,6 +10,7 @@ index.ps
 *.blg
 *.nav
 *.snm
+.*.swp
 
 # http://mactex-wiki.tug.org/wiki/index.php?title=SyncTeX
 *.synctex.gz
