@@ -24,12 +24,10 @@ with
 (2) \ \ & \text{for } n = 1 \colon f(Z) = O(1) \ \text{ for } Z \rightarrow i \infty
 \end{align*}
 where
-\[ \left( f|_k \left( \begin{array}{ccc}
-A & B \\
-C & D \end{array} \right) \right) (Z) =
+\[ \left( f|_k \SmallMatrix{A}{B}{C}{D} \right) (Z) =
 f((AZ + B)(CZ + D)^{-1}) \cdot \det(CZ + D)^{-k} \]
 %with $Z = S \tau$. https://mail.google.com/mail/u/0/#label/Diplomarbeit/13b471d95eb713e9
-with $Z \in \HalfPlane_n$.
+with $Z \in \HalfPlane_n$, $\SmallMatrix{A}{B}{C}{D} \in \Gamma$.
 
 A \defword{Hermitian Modular form} of degree $n\in\N$ and weight $k\in \Z$ is a holomorphic function
 \[ f \colon \HalfPlane_n \rightarrow \C \]
