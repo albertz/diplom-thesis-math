@@ -54,7 +54,11 @@
 %\newcommand{\det}{\operatorname{det}}
 \newcommand{\FE}{\mathcal{FE}} % Fourier expansion
 
-\newcommand{\SmallMatrix}[4]{\left( \begin{array}{cc}
+\newcommand{\SmallMatrix}[4]{\left( \begin{smallmatrix}
+#1 & #2 \\
+#3 & #4 \end{smallmatrix} \right)}
+
+\newcommand{\SimpleMatrix}[4]{\left( \begin{array}{cc}
 #1 & #2 \\
 #3 & #4 \end{array} \right)}
 
