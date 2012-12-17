@@ -29,10 +29,17 @@ f((AZ + B)(CZ + D)^{-1}) \cdot \det(CZ + D)^{-k} \]
 %with $Z = S \tau$. https://mail.google.com/mail/u/0/#label/Diplomarbeit/13b471d95eb713e9
 with $Z \in \HalfPlane_n$, $\SmallMatrix{A}{B}{C}{D} \in \Gamma$.
 
-A \defword{Hermitian Modular form} of degree $n\in\N$ and weight $k\in \Z$ for some $\Gamma \subseteq \Sp_n(\curlO)$, $\curlO \subseteq \Q(\sqrt{D})$ and $D \in -\N$  is a holomorphic function
+% Def 1.8 bei Dern
+% Bei Dern: j((A B C D),Z) = det(CZ + D)
+% Multiplikatorsystem -> multiplier
+A \defword{Hermitian Modular form} of degree $n\in\N$
+is a holomorphic function
 \[ f \colon \HalfPlane_n \rightarrow \C \]
-with
-\[ f(M \cdot Z) = \nu(M) \det(CZ + D)^k f(Z), \ \ \ \ M = \SmallMatrix{*}{*}{C}{D} \in \Sp_n(\curlO) , \]
-where $Z \in \HalfPlane_n$ and $\nu$ is an abel character of $\Sp_n(\curlO)$.
+with weight $k\in \Z$ for some $\Gamma \subseteq \Sp_n(\curlO)$, $\curlO \subseteq \Q(\sqrt{D})$, $D \in -\N$, $\nu \colon \Gamma \rightarrow \C^\times$ is an abel character of $\Sp_n(\curlO)$, with
+\begin{align*}
+(1) \ \ & f(M \cdot Z) = \nu(M) \det(CZ + D)^k f(Z), \ \ \ \ M = \SmallMatrix{*}{*}{C}{D} \in \Gamma, Z \in \HalfPlane_n , \\
+(2) \ \ & \text{for } n = 1 \colon \ \text{$f$ is holomorphic in all peaks} .
+\end{align*}
+
 
 In this work, we will concentrate on Hermitian Modular forms of degree 2.
