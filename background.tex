@@ -4,23 +4,25 @@
 
 \subsection{Preliminaries}
 
-Let $\M_n(\K)$ be the set of all $n \times n$ matrices over some field $\K$.
-Likewise, $\M_n^T(\K)$ are the symetric $n \times n$ matrices.
+$\N$ denotes the set $\Set{1,2,3,\dots}$, $\N_0 = \N \cup \Set{0}$ and $\Z$ are all integers. $\Q$ are all the rational numbers, $\R$ are the real numbers and $\C$ are the complex numbers.
+
+Let $\M_n(R)$ be the set of all $n \times n$ matrices over some commutative ring $R$.
+Likewise, $\M_n^T(R)$ are the symetric $n \times n$ matrices.
 A matrix $Y \in \M_n(\R)$ is greater $0$ iff $\forall x \in \R^n - \Set{0} \colon Y[x] := x^T Y x > 0$.
 Let $\HalfPlane_n := \Set{Z = X + iY \in \M_n^T(\C)}{Y > 0}$.
-Thus, $\HalfPlane_1$ is the Poincaré upper half plane.
+Thus, $\HalfPlane_1$ is the \defword{Poincaré upper half plane}.
 
-The general linear group is defined by $\GL_n(\K) = \Set{X \in \M_n(\K)}{\det(X) \neq 0}$
-and the special linear group by $\SL_n(\K) = \Set{X \in \M_n(\K)}{\det(X) = 1}$. % Poor
-The orthogonal group is defined by $\Orth_n(\K) = \Set{X \in \GL_n(\K)}{X^T 1_n X = 1_n}$. %Poor
-The symplectic group is defined by $\Sp_n(\K) = \Set{X \in \GL_{2n}(\K)}{X^T J_n X = J_n}$ %Poor
+The \defword{general linear group} is defined by $\GL_n(R) = \Set{X \in \M_n(R)}{\text{$\det(X)$ is a unit in $R$}}$
+and the \defword{special linear group} by $\SL_n(R) = \Set{X \in \M_n(R)}{\det(X) = 1}$. % Poor
+The \defword{orthogonal group} is defined by $\Orth_n(R) = \Set{X \in \GL_n(R)}{X^T 1_n X = 1_n}$. %Poor
+The \defword{symplectic group} is defined by $\Sp_n(R) = \Set{X \in \GL_{2n}(R)}{X^T J_n X = J_n}$ %Poor
 % Tippfehler in Poor: Dort sind es n*n Matrixen, es müssen aber 2n*2n Matrixen sein.
-where $J_n := \SmallMatrix{0}{1_n}{-1_n}{0} \in \SL_{2n}(\K)$. % Poor
+where $J_n := \SmallMatrix{0}{1_n}{-1_n}{0} \in \SL_{2n}(R)$. % Poor
 % In Dern ist U_2(\curlO) = \Sp_2(\curlO).
 % Dern nennt das, und wir auch: Hermitian modular group
 % U steht für unitäre Gruppe.
 % Sp steht für symplectische Gruppe.
-$\Sp_n(\K)$ will also be called the Hermitian modular group.
+$\Sp_n(R)$ will also be called the \defword{Hermitian modular group}.
 % Weil-Darstellung ist eine gewisse Darstellung von symplektischen Gruppen. Aber irrelevant für mich.
 % In dem Zusammenhang waren auch vektorwertigen Modulformen, die auch nicht relevant für mich sind.
 
