@@ -24,8 +24,8 @@ $\Sp_n(R)$ is also called the \defword{Hermitian modular group}.
 % Weil-Darstellung ist eine gewisse Darstellung von symplektischen Gruppen. Aber irrelevant für mich.
 % In dem Zusammenhang waren auch vektorwertigen Modulformen, die auch nicht relevant für mich sind.
 
-Let $\HalfPlane_n := \Set{Z = X + iY \in \M_n^T(\C)}{Y > 0}$.
-Thus, $\HalfPlane_1$ is the \defword{Poincaré upper half plane}.
+Let $\SiegelHalfPlane_n := \Set{Z = X + iY \in \M_n^T(\C)}{Y > 0}$ be the \defword{Siegel upper half space}.
+Thus, $\SiegelHalfPlane_1$ is the \defword{Poincaré upper half plane}.
 
 % Groß/Kleinschreibung:
 % Hermitian modular form
@@ -35,7 +35,7 @@ Thus, $\HalfPlane_1$ is the \defword{Poincaré upper half plane}.
 % Skript Krieg, p.49. Aber die folgende Def ist woanders her, glaub ich...?
 % cusp = Spitzenform
 A \defword{Siegel modular cusp form} of degree $n\in\N$ for some $\Gamma \subseteq \Sp_n(\Z)$ is a holomorphic function
-\[ f \colon \HalfPlane_n \rightarrow \C \]
+\[ f \colon \SiegelHalfPlane_n \rightarrow \C \]
 with
 \begin{align*}
 (1) \ \ & f |_k y = f \ \ \forall \ y \in \Gamma \\
@@ -45,7 +45,9 @@ where
 \[ \left( f|_k \SimpleMatrix{A}{B}{C}{D} \right) (Z) =
 f((AZ + B)(CZ + D)^{-1}) \cdot \det(CZ + D)^{-k} \]
 %with $Z = S \tau$. https://mail.google.com/mail/u/0/#label/Diplomarbeit/13b471d95eb713e9
-with $Z \in \HalfPlane_n$, $\SmallMatrix{A}{B}{C}{D} \in \Gamma$.
+with $Z \in \SiegelHalfPlane_n$, $\SmallMatrix{A}{B}{C}{D} \in \Gamma$.
+
+Let $\HalfPlane_n :=  \Set{ Z \in \M_n(\C) }{ \frac{1}{2 i} \left(Z - \overline{Z}^\tr \right) > 0}$ be the \defword{Hermitian uppper half space}.
 
 % Def 1.8 bei Dern
 % Bei Dern: j((A B C D),Z) = det(CZ + D)
