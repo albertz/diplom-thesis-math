@@ -8,11 +8,12 @@ $\N$ denotes the set $\Set{1,2,3,\dots}$, $\N_0 = \N \cup \Set{0}$ and $\Z$ are 
 
 Let $\M_n(R)$ be the set of all $n \times n$ matrices over some commutative ring $R$.
 Likewise, $\M_n^T(R)$ are the symetric $n \times n$ matrices.
-A matrix $Y \in \M_n(\R)$ is greater $0$ iff $\forall x \in \R^n - \Set{0} \colon Y[x] := x^T Y x > 0$.
+A matrix $Y \in \M_n(\R)$ is greater $0$ iff $\forall x \in \R^n - \Set{0} \colon Y[x] := x^T Y x > 0$. We cal these the \defword{positive definitive matrices}, defined by $\PM_n = \Set{X \in \M_n}{X > 0}$.
 
 The \defword{general linear group} is defined by $\GL_n(R) = \Set{X \in \M_n(R)}{\text{$\det(X)$ is a unit in $R$}}$
 and the \defword{special linear group} by $\SL_n(R) = \Set{X \in \M_n(R)}{\det(X) = 1}$. % Poor
 The \defword{orthogonal group} is defined by $\Orth_n(R) = \Set{X \in \GL_n(R)}{X^T 1_n X = 1_n}$. %Poor
+
 The \defword{symplectic group} is defined by $\Sp_n(R) = \Set{X \in \GL_{2n}(R)}{X^T J_n X = J_n}$ %Poor
 % Tippfehler in Poor: Dort sind es n*n Matrixen, es müssen aber 2n*2n Matrixen sein.
 where $J_n := \SmallMatrix{0}{1_n}{-1_n}{0} \in \SL_{2n}(R)$. % Poor
