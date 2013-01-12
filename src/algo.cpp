@@ -28,13 +28,14 @@ struct PrecisionF {
 
 struct ReductionMatrices_Calc {
 	int HermWeight; // k in the paper. usually <20
+	//Odual oDual; // not sure if i need to specify it explicitely..., probably not
 	
 	//CurlO curlO;
 	//Gamma gamma;
 	//Character nu;
 	
 	CurlS_Generator curlS;
-	
+	PrecisionF curlF;
 	
 	
 };
