@@ -37,6 +37,18 @@ struct ReductionMatrices_Calc {
 	CurlS_Generator curlS;
 	PrecisionF curlF;
 	
+	int wantedDimension; // dim M_k^H
+	int calcDimension() {
+		
+	}
 	
+	void loop() {
+		while(calcDimension() < wantedDimension) {
+			M2T S = curlS.getNextS();
+			
+		}
+	}
 };
+
+
 
