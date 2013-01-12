@@ -23,18 +23,19 @@ $\Gamma(\mathcal{L}) \supseteq \Gamma_0(l)$ for $l \in \Z^+, ls^{-1} \in \mathca
 \end{lemma}
 
 
-Now we will formulate the main algorithm of our work.
+We want to calculate a generating set for the Fourier expansions of Hermitian modular forms Now we will formulate the main algorithm of our work.
 
 \begin{algo}
-We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta$ (for now, $\Delta \in \Set{3,4,8}$). Then we select some form weight $k \in \Z$, some $\curlO \subseteq \Q(\sqrt{-\Delta})$ and some subgroup $\Gamma$ of $\Sp_2(\curlO)$. Then we select an abel character $\nu \colon \Gamma \rightarrow \C^\times$ of $\Sp_2(\curlO)$.
+We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta$ (for now, $\Delta \in \Set{3,4,8}$). Then we select some form weight $k \in \Z$ ($k \in \Set{1,\dots,20}$ or so), some $\curlO \subseteq \Q(\sqrt{-\Delta})$ and some subgroup $\Gamma$ of $\Sp_2(\curlO)$. Then we select an abel character $\nu \colon \Gamma \rightarrow \C^\times$ of $\Sp_2(\curlO)$.
+
+We define the index set
+\[ \Lambda := \Set{0 \le \SimpleMatrix{a}{b}{\overline b}{c} \in \M_2(\curlO^\#)}{a,c \in \Z } . \]
 
 \begin{enumerate}
 \item Select a set of matrices $\mathcal{S} \subseteq \M_2^T(\Z)$ with $0 < S \in \mathcal{S}$. Make $\mathcal{S}$ big enough. Now, for some $S \in \mathcal{S}$:
 
 \item Fix $B \in \N$ as a limit. Or select a precision
-\[ \F := \Set{\SimpleMatrix{a}{b}{\overline b}{c}}{0 \le a c < B, b \in \curlO^\#} \subseteq \Lambda , \]
-where
-\[ \Lambda := \Set{0 \le \SimpleMatrix{a}{b}{\overline b}{c} \in \M_2(\curlO^\#)}{a,c \in \Z } . \]
+\[ \F := \Set{\SimpleMatrix{a}{b}{\overline b}{c}}{0 \le a c < B, b \in \curlO^\#} \subseteq \Lambda . \]
 % \Lambda sind die die Indizes der Fourier-Entwicklung einer Hermitischen Modulform.
 
 \item
