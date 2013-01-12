@@ -27,7 +27,11 @@ struct PrecisionF {
 
 
 struct ReductionMatrices_Calc {
+	int HermWeight; // k in the paper. usually <20
 	
+	//CurlO curlO;
+	//Gamma gamma;
+	//Character nu;
 	
 	CurlS_Generator curlS;
 	
