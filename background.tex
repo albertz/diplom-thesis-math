@@ -1,14 +1,14 @@
 %!TEX root =  index.tex
 
-\section{Background results}
+%\section{Background results}
 
-\subsection{Preliminaries}
+\section{Preliminaries}
 
 $\N$ denotes the set $\Set{1,2,3,\dots}$, $\N_0 = \N \cup \Set{0}$ and $\Z$ are all integers. $\Q$ are all the rational numbers, $\R$ are the real numbers and $\C$ are the complex numbers. $\R^+ := \Set{x\in\R}{x>0}$, $\R^\times$ and $\C^\times$ denotes all non-zero numbers.
 
 Let $\M_n(R)$ be the set of all $n \times n$ matrices over some commutative ring $R$.
 Likewise, $\M_n^T(R)$ are the symmetric $n \times n$ matrices.
-A matrix $Y \in \M_n(\C)$ is greater $0$ iff $\forall x \in \C^n - \Set{0} \colon Y[x] := \overline{x}^{\tr} Y x \in \R^+$. Such symmetric matrices are called the \defword{positive definitive matrices}, defined by $\PM_n(R) = \Set{X \in \M^T_n(R)}{X > 0}$. For $A,X \in \M_n(\C)$, we define $A[X] := \overline{X}^{\tr} A X$. For $Z \in \M_n(\C)$, we call $\Re(Z) = \frac{1}{2} (Z + \overline{Z}^{\tr}) \in \M_n(\R)$ the real part and $\Im(Z) = \frac{1}{2i} (Z - \overline{Z}^{\tr})  \in \M_n(\R)$ the imaginary part of $Z$ and we have $Z = \Re(Z) + i \Im(Z)$.
+A matrix $Y \in \M_n(\C)$ is greater $0$ if and only if $\forall x \in \C^n - \Set{0} \colon Y[x] := \overline{x}^{T} Y x \in \R^+$. Such symmetric matrices are called the \defword{positive definitive matrices}, defined by $\PM_n(R) = \Set{X \in \M^T_n(R)}{X > 0}$. For $A,X \in \M_n(\C)$, we define $A[X] := \overline{X}^T A X$. For $Z \in \M_n(\C)$, we call $\Re(Z) = \frac{1}{2} (Z + \overline{Z}^{T}) \in \M_n(\R)$ the real part and $\Im(Z) = \frac{1}{2i} (Z - \overline{Z}^{T})  \in \M_n(\R)$ the imaginary part of $Z$ and we have $Z = \Re(Z) + i \Im(Z)$. The \defword{denominator} of a matrix $Z \in \M_n(\Q)$ is the smallest numbers $x \in \N$ such that $x Z \in \M_n(\Z)$. 
 
 The \defword{general linear group} is defined by $\GL_n(R) = \Set{X \in \M_n(R)}{\text{$\det(X)$ is a unit in $R$}}$
 and the \defword{special linear group} by $\SL_n(R) = \Set{X \in \M_n(R)}{\det(X) = 1}$. % Poor
@@ -24,6 +24,10 @@ where $J_n := \SmallMatrix{0}{1_n}{-1_n}{0} \in \SL_{2n}(R)$. % Poor
 $\Sp_n(R)$ is also called the \defword{Hermitian modular group} or the \defword{unitary group}.
 % Weil-Darstellung ist eine gewisse Darstellung von symplektischen Gruppen. Aber irrelevant für mich.
 % In dem Zusammenhang waren auch vektorwertigen Modulformen, die auch nicht relevant für mich sind.
+
+\[ U_n(R) = \Set{X \in \GL_{2n}(R)}{\overline{X}^T J_n X = J_n} \]
+
+\subsection{Siegel modular forms}
 
 Let $\SiegelHalfPlane_n := \Set{Z \in \M_n^T(\C)}{\Im(Z) > 0}$ be the \defword{Siegel upper half space}.
 Thus, $\SiegelHalfPlane_1$ is the \defword{Poincaré upper half plane}.
@@ -47,6 +51,12 @@ where
 f((AZ + B)(CZ + D)^{-1}) \cdot \det(CZ + D)^{-k} \]
 %with $Z = S \tau$. https://mail.google.com/mail/u/0/#label/Diplomarbeit/13b471d95eb713e9
 with $Z \in \SiegelHalfPlane_n$, $\SmallMatrix{A}{B}{C}{D} \in \Gamma$.
+
+\subsection{Elliptic modular forms}
+
+$\Gamma_0(l)$
+
+\subsection{Hermitian modular forms}
 
 Let $\HalfPlane_n :=  \Set{ Z \in \M_n(\C) }{ \Im(Z) > 0}$ be the \defword{Hermitian upper half space}.
 

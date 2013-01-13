@@ -38,23 +38,27 @@ Fix $B \in \N$ as a limit. Select a precision
 % \Lambda sind die die Indizes der Fourier-Entwicklung einer Hermitischen Modulform.
 
 \begin{enumerate}
-\item Select a set of matrices $\mathcal{S} \subseteq \M_2^T(\Z)$ with $0 < S \in \mathcal{S}$.
+\item Set $\mathcal{S} = \{\}$,
+\item Enumerate matrices $S \in \M_2^T(\Z)$, and set $\mathcal{S} \leftarrow \mathcal{S} \cup \{ S \}$ and for each time you add a new matrix perform the following steps.
+
+%Select a set of matrices $\mathcal{S} \subseteq \M_2^T(\Z)$ with $0 < S \in \mathcal{S}$.
 %Make $\mathcal{S}$ big enough.
-Now, for some $S \in \mathcal{S}$:
+%Now, for some $S \in \mathcal{S}$:
 
 \item
-\[ \mathcal{M}_{k,\mathcal{S},\F}^H = \Set{f [S]}{f \in \Q^\F} , \]
+\[ \mathcal{M}_{k,\mathcal{S},\F}^H = \Set{ (f [S])_{S\in\mathcal{S}} }{f \in \Q^\F \text{is $\GL_2(\curlO)$ invariant}} \subseteq \bigoplus_S \Q^{\F(S)} , \]
 % unter GL_2(\curlO) invariant:
 % also Fourier-Entwicklung unter der Operation von \GL{2}(\cO) invariant:
 % also wenn a(T), T \in \Lambda die Fourier-Koeffizienten bezeichnen, dann gilt \det(U)^k a(T[U]) = a(T) für alle U \in \GL{2}(\cO)
-\[ \mathcal{M}_{k,S} = \FE_{\F(S)}(\M_k(\Gamma(S))) \]
+\[ \mathcal{M}_{k, \mathcal{S}} = \bigoplus_S \FE_{\F(S)}(\M_k(\Gamma(l_S))) \]
 
 \item
 If
-\[ \dim \mathcal{M}_{k,\mathcal{S},\F}^H \cap \bigoplus_{S \in \mathcal{S}} \mathcal{M}_{k,S}
+\[ \dim \mathcal{M}_{k,\mathcal{S},\F}^H \cap \mathcal{M}_{k, \mathcal{S}}
 = \dim M^H_k , \]
 then we are ready and we can reconstruct the Fourier expansion in the following way: ...
 
+If not, then return to Step 2, and enlarge $\mathcal{S}$.
 \end{enumerate}
 \end{algo}
 
