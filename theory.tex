@@ -31,12 +31,16 @@ We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta
 We define the index set
 \[ \Lambda := \Set{0 \le \SimpleMatrix{a}{b}{\overline b}{c} \in \M_2(\curlO^\#)}{a,c \in \Z } . \]
 
-\begin{enumerate}
-\item Select a set of matrices $\mathcal{S} \subseteq \M_2^T(\Z)$ with $0 < S \in \mathcal{S}$. Make $\mathcal{S}$ big enough. Now, for some $S \in \mathcal{S}$:
+We start with $l = 1$ and increase it but only use the square-free numbers.
 
-\item Fix $B \in \N$ as a limit. Select a precision
-\[ \F := \Set{\SimpleMatrix{a}{b}{\overline b}{c}}{0 \le a c < B, b \in \curlO^\#} \subseteq \Lambda . \]
+Fix $B \in \N$ as a limit. Select a precision
+\[ \F := \Set{\SimpleMatrix{a}{b}{\overline b}{c}}{0 \le a , c < B, b \in \curlO^\#} \subseteq \Lambda . \]
 % \Lambda sind die die Indizes der Fourier-Entwicklung einer Hermitischen Modulform.
+
+\begin{enumerate}
+\item Select a set of matrices $\mathcal{S} \subseteq \M_2^T(\Z)$ with $0 < S \in \mathcal{S}$.
+%Make $\mathcal{S}$ big enough.
+Now, for some $S \in \mathcal{S}$:
 
 \item
 \[ \mathcal{M}_{k,\mathcal{S},\F}^H = \Set{f [S]}{f \in \Q^\F} , \]
