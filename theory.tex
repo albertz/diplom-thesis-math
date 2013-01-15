@@ -31,15 +31,16 @@ We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta
 We define the index set
 \[ \Lambda := \Set{0 \le \SimpleMatrix{a}{b}{\overline b}{c} \in \M_2(\curlO^\#)}{a,c \in \Z } . \]
 
-We start with $l = 1$ and increase it but only use the square-free numbers.
-
 Fix $B \in \N$ as a limit. Select a precision
 \[ \F := \Set{\SimpleMatrix{a}{b}{\overline b}{c}}{0 \le a , c < B, b \in \curlO^\#} \subseteq \Lambda . \]
 % \Lambda sind die die Indizes der Fourier-Entwicklung einer Hermitischen Modulform.
 
 \begin{enumerate}
+%or: http://www.latex-community.org/forum/viewtopic.php?f=4&t=2209
+%\renewcommand{\theenumi}{Step \arabic{enumi}}
+\item We start with $l = 1$ and increase it but only use the square-free numbers.
 \item Set $\mathcal{S} = \{\}$,
-\item Enumerate matrices $S \in \M_2^T(\Z)$, and set $\mathcal{S} \leftarrow \mathcal{S} \cup \{ S \}$ and for each time you add a new matrix perform the following steps.
+\item\label{NextSStep} Enumerate matrices $S \in \M_2^T(\Z)$, and set $\mathcal{S} \leftarrow \mathcal{S} \cup \{ S \}$ and for each time you add a new matrix perform the following steps.
 
 %Select a set of matrices $\mathcal{S} \subseteq \M_2^T(\Z)$ with $0 < S \in \mathcal{S}$.
 %Make $\mathcal{S}$ big enough.
@@ -58,7 +59,7 @@ If
 = \dim M^H_k , \]
 then we are ready and we can reconstruct the Fourier expansion in the following way: ...
 
-If not, then return to Step 2, and enlarge $\mathcal{S}$.
+If not, then return to step \ref{NextSStep}, and enlarge $\mathcal{S}$.
 \end{enumerate}
 \end{algo}
 
