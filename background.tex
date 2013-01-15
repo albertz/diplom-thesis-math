@@ -8,7 +8,8 @@ $\N$ denotes the set $\Set{1,2,3,\dots}$, $\N_0 = \N \cup \Set{0}$ and $\Z$ are 
 
 Let $\M_n(R)$ be the set of all $n \times n$ \defword{matrices} over some commutative ring $R$.
 Likewise, $\M_n^T(R)$ are the \defword{symmetric} $n \times n$ matrices.
-$X^T \in \M_n(R)$ is the \defword{transposed} matrix of $X \in \M_n(R)$.
+$X^T$ is the \defword{transposed} matrix of $X \in \M_n(R)$.
+$\overline{Z}$ is the \defword{conjugated} matrix of $Z \in \M_n(\C)$.
 A matrix $Y \in \M_n(\C)$ is greater $0$ if and only if $\forall x \in \C^n - \Set{0} \colon Y[x] := \overline{x}^{T} Y x \in \R^+$. Such symmetric matrices are called the \defword{positive definitive matrices}, defined by $\PM_n(R) = \Set{X \in \M^T_n(R)}{X > 0}$. For $A,X \in \M_n(\C)$, we define $A[X] := \overline{X}^T A X$. For $Z \in \M_n(\C)$, we call $\Re(Z) = \frac{1}{2} (Z + \overline{Z}^{T}) \in \M_n(\R)$ the \defword{real} part and $\Im(Z) = \frac{1}{2i} (Z - \overline{Z}^{T})  \in \M_n(\R)$ the \defword{imaginary} part of $Z$ and we have $Z = \Re(Z) + i \Im(Z)$. The \defword{denominator} of a matrix $Z \in \M_n(\Q)$ is the smallest number $x \in \N$ such that $x Z \in \M_n(\Z)$. 
 
 The \defword{general linear group} is defined by $\GL_n(R) = \Set{X \in \M_n(R)}{\text{$\det(X)$ is a unit in $R$}}$
