@@ -62,17 +62,26 @@ $\Gamma_0(l)$
 \subsection{Hermitian modular forms}
 
 A matrix $Z \in \M_n(\C)$ is \defword{hermitian} if and only if $\overline{Z}^T = Z$.
+
 Let $\HalfPlane_n :=  \Set{ Z \in \M_n(\C) }{ \Im(Z) > 0}$ be the \defword{Hermitian upper half space}.
 
 % Def 1.8 bei Dern
 % Bei Dern: j((A B C D),Z) = det(CZ + D)
 % Multiplikatorsystem -> multiplier
-% $\Sp_n(\curlO)$ is the Hermitian modular group.
 
-A \defword{Hermitian modular form} of degree $n\in\N$
+Let $\Delta \in \N$ so that we have the field $\Q(\sqrt{-\Delta})$.
+Then, let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximum order.
+We call $\Sp_n(\curlO)$ the \defword{Hermitian modular group}.
+Let $\Gamma$ be a subgroup of $\Sp_n(\curlO)$.
+Let $\nu \colon \Gamma \rightarrow \C^\times$ be an abel character of $\Sp_n(\curlO)$.
+
+A \defword{Hermitian modular form}
+of degree $n\in\N$
+with weight $k\in \Z$
+over $\Gamma$ and $\nu$
 is a holomorphic function
 \[ f \colon \HalfPlane_n \rightarrow \C \]
-with weight $k\in \Z$ for some $\Gamma \subseteq \Sp_n(\curlO)$, $\Gamma$ subgroup of $\Sp_n(\curlO)$, $\curlO \subseteq \Q(\sqrt{-\Delta})$, $\Delta \in \N$, $\nu \colon \Gamma \rightarrow \C^\times$ is an abel character of $\Sp_n(\curlO)$, with
+with
 \begin{align*}
 (1) \ \ & f(M \cdot Z) = \nu(M) \det(CZ + D)^k f(Z), \ \ \ \ M = \SmallMatrix{*}{*}{C}{D} \in \Gamma, Z \in \HalfPlane_n , \\
 (2) \ \ & \text{for } n = 1 \colon \ \text{$f$ is holomorphic in all cusps} .
@@ -80,7 +89,7 @@ with weight $k\in \Z$ for some $\Gamma \subseteq \Sp_n(\curlO)$, $\Gamma$ subgro
 
 $[\Gamma, k, \nu]$ denotes the vector space of such Hermitian modular forms.
 
-In this work, we will concentrate on Hermitian Modular forms of degree 2. We will start with $\Delta \in \Set{3,4,8}$.
+In this work, we will concentrate on Hermitian modular forms of degree 2. We will start with $\Delta \in \Set{3,4,8}$.
 % weight k is fixed in the algorithm, but the algorithm allows any k.
 
 Note that if $\Delta$ is fundamental, we have
