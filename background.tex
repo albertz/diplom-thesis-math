@@ -101,10 +101,15 @@ $[\Gamma, k, \nu]$ denotes the vector space of such Hermitian modular forms.
 In this work, we will concentrate on Hermitian modular forms of degree 2. We will start with $\Delta \in \Set{3,4,8}$.
 % weight k is fixed in the algorithm, but the algorithm allows any k.
 
-Note that if $\Delta$ is fundamental (see \cite{Dern01Herm}), we have
+Note that if $\Delta$ is fundamental, we have
+\begin{enumerate}
+\item $\Delta = 1 \mod 4$ and $\Delta$ is square-free,
+\item $\Delta = 0 \mod 4$, $\Delta/4 = 2,3 \mod 4$ and $\Delta/4$ is square-free.
+\end{enumerate}
+And we have (compare \cite{Dern01Herm})
 \begin{align*}
-\curlO = &\ \Z +  \Z \frac{-\Delta+\sqrt{-\Delta}}{2} , \\
-\curlO^\# = & \ \Z \frac{i}{\sqrt{-\Delta}} + \Z \frac{1 + \sqrt{-\Delta}}{2} .
+\curlO = &\ \Z +  \Z \frac{-\Delta+i\sqrt{\Delta}}{2} , \\
+\curlO^\# = & \ \Z \frac{i}{\sqrt{\Delta}} + \Z \frac{1 + i\sqrt{\Delta}}{2} .
 \end{align*}
 
 From now on, we will always work with Hermitian modular forms of degree 2, i.e. we will always have $n=2$, except if otherwise stated.
