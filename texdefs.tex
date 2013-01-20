@@ -54,7 +54,12 @@
 %\newcommand{\det}{\operatorname{det}}
 \newcommand{\FE}{\mathcal{FE}} % Fourier expansion
 
-\newcommand{\HSpace}[2]{\operatorname{M}^\mathbb{H}_#1 (#2)}
+\newcommand{\ModFormSpace}[3]{\operatorname{M}^{#1}_#2 (#3)}
+\newcommand{\ESpace}[2]{\ModFormSpace{}{#1}{#2}}
+\newcommand{\SSpaceN}[3]{\ModFormSpace{\SiegelHalfPlane_{#1}}{#2}{#3}}
+\newcommand{\HSpaceN}[3]{\ModFormSpace{\HalfPlane_{#1}}{#2}{#3}}
+\newcommand{\SSpace}[2]{\SSpaceN{2}{#1}{#2}}
+\newcommand{\HSpace}[2]{\HSpaceN{2}{#1}{#2}}
 
 \newcommand{\SmallMatrix}[4]{\left( \begin{smallmatrix}
 #1 & #2 \\
