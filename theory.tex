@@ -53,11 +53,14 @@ where
 The elements $a$ are Fourier expansions of Elliptic modular forms ($\HalfPlane_1 \rightarrow \C$) and $a(T) \in \Q$ for $T \in \F \subseteq \M_2(\curlO^\#)$ are the Fourier coefficients.
 Recall that $a$ being invariant under $\GL_2(\curlO)$ means that we have
 \[ \det(U)^k a(T[U]) = a(T) \; \forall\ U \in \GL_2(\curlO) . \]
-As $\F$ is finite, so is $\invar{\F}{\GL_2(\curlO)} \subseteq \F$. $\invar{\Q^\F}{\GL_2(\curlO)}$ is of finite dimension.
+As $\F$ is finite, so is $\invar{\F}{\GL_2(\curlO)} \subseteq \F$.
+%$\invar{\Q^\F}{\GL_2(\curlO)}$ is of finite dimension.
 Define
-\[ I_\F := \Set{T =\SmallMatrix{a}{b}{c}{d} \in \F}{\forall\ U \in \GL_2(\curlO) \colon \det{T[U]} \ge \det{T}} \]
-The set $I_\F$ is finite.
-Thus, to represent such invariant $a$, we can use <TODO>.
+\[ I_\F := \Set{T =\SmallMatrix{a}{b}{c}{d} \in \F}{\forall\ U \in \GL_2(\curlO) \colon \det{T[U]} \ge \det{T}} . \]
+The set $I_\F$ is finite. And we have the canonical maps $r_I \colon \F \rightarrow I_\F$, $r_U \colon \F \rightarrow \GL_2(\curlO)$ such that $r_I(T) [r_U(T)] = T$. Then,
+\[ a(T) =  \det(r_U(T))^k a(r_I(T)) \]
+and we have 
+Thus, to represent $\invar{\Q^\F}{\GL_2(\curlO)}$, we can use $\Q^{I_\F}$.
 
 
 And we set
