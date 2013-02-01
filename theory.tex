@@ -53,8 +53,8 @@ where
 The elements $a$ are Fourier expansions of Elliptic modular forms ($\HalfPlane_1 \rightarrow \C$) and $a(T) \in \Q$ for $T \in \F \subseteq \M_2(\curlO^\#)$ are the Fourier coefficients.
 Recall that $a$ being invariant under $\GL_2(\curlO)$ means that we have
 \[ \det(U)^k a(T[U]) = a(T) \; \forall\ U \in \GL_2(\curlO) . \]
-As $\F$ is finite, so is $\invar{\F}{\GL_2(\curlO)} \subseteq \F$.
-%$\invar{\Q^\F}{\GL_2(\curlO)}$ is of finite dimension.
+As $\F$ is finite, so is $\invar{\F}{\GL_2(\curlO)} \subseteq \F$
+and $\invar{\Q^\F}{\GL_2(\curlO)}$ is of finite dimension.
 Define
 \[ I_\F := \Set{T =\SmallMatrix{a}{b}{c}{d} \in \F}{\forall\ U \in \GL_2(\curlO) \colon \det{T[U]} \ge \det{T}} . \]
 The set $I_\F$ is finite. And we have the canonical maps $r_I \colon \F \rightarrow I_\F$, $r_U \colon \F \rightarrow \GL_2(\curlO)$ such that $r_I(T) [r_U(T)] = T$. Then,
@@ -64,6 +64,8 @@ Thus, to represent $\invar{\Q^\F}{\GL_2(\curlO)}$, we can use $\Q^{I_\F}$.
 We identify
 % Das ist der Bildbereich der Abbildung.
 \[ \bigoplus_{S\in\mathcal{S}} \Q^{\F(S)} = \Q^N, \ \ N = \sum_S \F(S) . \]
+
+We want to calculate the matrix of the linear function $\invar{\Q^\F}{\GL_2(\curlO)} \rightarrow \bigoplus_{S\in\mathcal{S}} \Q^{\F(S)}$, $a \mapsto (a[S])_{S\in\mathcal{S}}$.
 
 And we set
 \[ \mathcal{M}_{k, \mathcal{S},\F} := \bigoplus_{S\in\mathcal{S}} \FE_{\F(S)}(\ESpace{k}{\Gamma_0(l_S)}) \]
