@@ -42,6 +42,11 @@ struct ReductionMatrices_Calc {
 		
 	}
 	
+	void calcOneColumn(ElemOfF elemOfF, vector& out) {
+		
+	}
+	
+	
 	void loop() {
 		while(calcDimension() < wantedDimension) {
 			M2T S = curlS.getNextS();
