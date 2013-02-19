@@ -15,7 +15,9 @@ struct M2T {
 template<typename T>
 struct Matrix2 {
 	T a,b,c,d; // [[a,b],[c,d]]
-	Matrix2() : a(),b(),c(),d() {}
+	Matrix2(T _a = 0, T _b = 0, T _c = 0, T _d = 0)
+	: a(_a), b(_b), c(_c), d(_d) {}
+	T det() { return a*c - b*d; }
 };
 
 struct CurlS_Generator {
@@ -124,15 +126,48 @@ struct CombinedGenerator {
 		}
 	}
 	
-	Pair<T1,T2> get() {
+	typedef typename Pair<T1,T2> Type;
+	Type get() {
 		return Pair<T1,T2>(gen1.get(), gen2.get());
 	}
 };
 
-template<typename T, typename TGen>
-struct GL2Iterator {
-	TGen a,b,c,d;
+template<typename T>
+struct Matrix2Generator {
+	typedef typename LinearGenerator<T> LinGen;
+	typedef typename PlusMinusGenerator<T,LinGen> BaseGen;
+	typedef typename CombinedGenerator<T,BaseGen,T,BaseGen> Vector2Gen;
+	typedef typename Vector2Gen::Type Vector2Type;
+	typedef typename CombinedGenerator<Vector2Type,Vector2Gen,Vector2Type,Vector2Gen> Vector4Gen;
+	Vector4Gen vec4gen;
 	
+	void next() { vec4gen.next(); }
+	void prev() { vec4gen.prev(); }
+
+	typedef typename Matrix2<T> Matrix2Type;
+	typedef Matrix2Type Type;
+	Type get() {
+		Matrix2Type m(
+			vec4gen.get().a.get().a,
+			vec4gen.get().a.get().b,
+			vec4gen.get().b.get().a,
+			vec4gen.get().b.get().b
+		);
+		return m;
+	}
+};
+
+template<typename T>
+struct GL2Iterator {
+	Matrix2Generator<T> mgen;
+	
+	GL2Iterator() { while(!isValid()) mgen.next(); }
+	bool isValid() { return get().det() > 0; }
+	void next() { do { mgen.next(); } while(!isValid()); }
+	void prev() { do { mgen.prev(); } while(!isValid()); }
+	
+	typedef typename Matrix2Generator<T>::Type Type;
+	Type get() { return mgen.get(); }
 };
 
 struct ReductionMatrices_Calc {
