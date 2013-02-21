@@ -194,8 +194,11 @@ struct ReductionMatrices_Calc {
 	
 	bool getA(ElemOfF aChar, Matrix2<Complex> m, Complex& res) {
 		// aChar is characterizing our function a:\F->\Q like:
-		//   a(aChar) = 1. where we get a solution for
-		//     m = aChar[U] for U \in GL_2(\curlO)
+		//   a(aChar) = 1
+		//   a(aChar[U]) = det(U)^-k for all U \in GL_2(\curlO)
+		//   a(x) = 0 elsewhere.
+		// Thus, we try to find some U with
+		//   m = aChar[U] .
 		
 		// we are trying to solve this.
 		// WolframAlpha input:
@@ -204,8 +207,39 @@ struct ReductionMatrices_Calc {
 		
 		res = 0;
 		
-		a1 == b1 * u1 * u1.conjugate() + b2 * u3 * u1.conjugate();
+		auto a1 = m.a;
+		auto a2 = m.b;
+		auto a3 = m.c;
+		auto a4 = m.d;
+		auto b1 = aChar.a;
+		auto b2 = aChar.b;
+		auto b3 = aChar.c;
+		auto b4 = aChar.d;
 		
+		GL2Iterator<CurlO> uGen;
+		while(true) {
+			auto u = uGen.get();
+			uGen.next();
+			auto u1 = u.a;
+			auto u2 = u.b;
+			auto u3 = u.c;
+			auto u4 = u.d;
+			
+			if(a1 != b1 * u1 * u1.conjugate() + b2 * u3 * u1.conjugate())
+				continue;
+			if(a2 != b1 * u2 * u3.conjugate() + b2 * u4 * u3.conjugate())
+				continue;
+			if(a3 != b3 * u1 * u2.conjugate() + b4 * u3 * u2.conjugate())
+				continue;
+			if(a4 != b3 * u2 * u4.conjugate() + b4 * u4 * u4.conjugate())
+				continue;
+			
+			// found it!
+			res = pow(u.det(), -HermWeight);
+			return true;
+		}
+		
+		return false;
 	}
 	
 	void calcOneColumn(ElemOfF elemOfF, ElemOfS elemOfS, vector& outVec) {
