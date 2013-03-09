@@ -241,12 +241,48 @@ struct ReductionMatrices_Calc {
 		
 		return false;
 	}
+		
+	void calcReducedMatrix(const ElemOfF& T, ElemOfF& reducedMatrix, Matrix2<ElemOfO>& U) {
+		// ...
+		
+	}
 	
-	void calcOneColumn(ElemOfF elemOfF, ElemOfS elemOfS, vector& outVec) {
+	std::vector<ElemOfF> curlFList;
+	std::map<ElemOfF,size_t> reducedCurlFMap; // reducedMatrix(\cF) -> index in list
+	std::vector<ElemOfF> reducedCurlFList; // reducedMatrix(\cF)
+	void calcReducedCurlF() {
+		curlFList.clear();
+		reducedCurlFList.clear();
+		for(ElemOfF T : curlF) {
+			curlFList.push_back(T);
+			ElemOfF F; // reduced matrix
+			Matrix2<ElemOfO> U; // F[U] = T
+			calcReducedMatrix(T, F, U);
+			if(reducedCurlFMap.find(U) != reducedCurlFMap.end()) {
+				reducedCurlFMap[U] = reducedCurlFList.size();
+				reducedCurlFList.push_back(F);
+			}
+		}
+	}
+	
+	// This defines a_F(T) for all F \in reducedMatrix(\cF), T \in \cF.
+	// F is indexed by reducedCurlFList and T is indexed by curlFList.
+	typedef ElemOfO ValueOfA;
+	std::vector<ValueOfA> A;
+	void calcA() {
+		for(ElemOfF T : curlFList) {
+			ElemOfF F; // reduced matrix
+			Matrix2<ElemOfO> U; // F[U] = T
+			calcReducedMatrix(T, F, U);
+			// ...
+		}
+	}
+	
+	void calcOneColumn(ElemOfF elemOfF, vector& outVec) {
 		int outVecIndex = 0;
 		for(ElemOfS S : curlS) {
 			int outDim = calcOutDim(S);
-
+			
 			for(int i = 0; i < S.calcPrecisionDimension(); ++i, ++outVecIndex) {
 				auto& out = outVec[outVecIndex];
 				
@@ -259,7 +295,22 @@ struct ReductionMatrices_Calc {
 			}
 		}
 	}
-	
+
+	std::vector<ValueOfA> matrix; // flat. column \times row
+	void calcMainMatrix() {
+		calcA();
+				
+		size_t rowCount = 0;
+		for(ElemOfS S : curlS) {
+			rowCount += S.calcPrecisionDimension();
+		}
+		
+		size_t column = 0;
+		for(ElemOfF F : reducedCurlFList) {
+			calcOneColumn( F, &matrix[rowCount * column], &matrix[rowCount * (column + 1)] );
+			++column;
+		}
+	}
 	
 	void loop() {
 		while(calcDimension() < wantedDimension) {
