@@ -1,4 +1,6 @@
 
+#include "reduceGL.hpp"
+
 typedef int Int;
 //typedef ... M2; // Matrix 2x2
 
@@ -276,6 +278,23 @@ struct ReductionMatrices_Calc {
 			calcReducedMatrix(T, F, U);
 			// ...
 		}
+	}
+	
+	// a_F(T)
+	int evalA(ElemOfF aRepr, ElemOfF T) {
+		// ...
+	}
+	
+	// a_F[S](n)
+	int evalA_S_n(ElemOfF aRepr, ElemOfS S, int n) {
+		// = \sum_{T \in \cF, tr(ST) = n} a_F(T)
+		int sum = 0;
+		for(ElemOfF T : curlFList) {
+			if(trace(S,T) == n) {
+				sum += evalA(aRepr, T);
+			}
+		}
+		return sum;
 	}
 	
 	void calcOneColumn(ElemOfF elemOfF, vector& outVec) {
