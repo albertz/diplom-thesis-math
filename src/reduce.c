@@ -11,69 +11,53 @@ struct hermitian_form_with_character_evaluation {
 	int nu_character;
 }
 
-void reduce_GL(s, int D) {
+
+void reduce_GL(int a, int b1, int b2, int c, int D, struct hermitian_form_with_character_evaluation& res) {
+	
     /*
-    Reduce the positive semi-definite hermitian quatratic form `\lbrackt a,b,c \rbrackt`
-    with respect to `\GL(2, \mathfrak{o}_{\Q(\sqrt{D})})` and the transposition.
-    Return the evaluation of the characters `det` and `\nu` (see Dern where
-    he calls this `\nu_\mathcal{p}`) as well as the number mod 2 of applied
-    transpositions.
-    
-    INPUT:
-        `s` -- A tuple `(a, b1, b2, c)`; We set `b = b1 / \sqrt{D} + b2 (1 + \sqrt{D})/2`.
-        `D` -- An negative integer; The fundamental discriminant of the underlying;
-               imaginary quadratic number field.
-    
-    OUTPUT:
-        A pair `(s, (\mathrm{trans}, \mathrm{det}, \nu))` of a quadratic form `s`,
-        which is represented by a four-tuple, and character evaluations, with
-        `\nu` and `\mathrm{trans}` either `1` or `-1` and `\mathrm{det}` between
-        `0` and `|\mathfrak{o}_{\Q(\sqrt{D})}^\times|`.
+	 Reduce the positive semi-definite hermitian quatratic form `\lbrackt a,b,c \rbrackt`
+	 with respect to `\GL(2, \mathfrak{o}_{\Q(\sqrt{D})})` and the transposition.
+	 Return the evaluation of the characters `det` and `\nu` (see Dern where
+	 he calls this `\nu_\mathcal{p}`) as well as the number mod 2 of applied
+	 transpositions.
+	 
+	 INPUT:
+	 `s` -- A tuple `(a, b1, b2, c)`; We set `b = b1 / \sqrt{D} + b2 (1 + \sqrt{D})/2`.
+	 `D` -- An negative integer; The fundamental discriminant of the underlying;
+	 imaginary quadratic number field.
+	 
+	 OUTPUT:
+	 A pair `(s, (\mathrm{trans}, \mathrm{det}, \nu))` of a quadratic form `s`,
+	 which is represented by a four-tuple, and character evaluations, with
+	 `\nu` and `\mathrm{trans}` either `1` or `-1` and `\mathrm{det}` between
+	 `0` and `|\mathfrak{o}_{\Q(\sqrt{D})}^\times|`.
      
-    TEST::
-        sage: from hermitianmodularforms.hermitianmodularformd2_fourierexpansion_cython import reduce_GL
-        sage: reduce_GL((2,1,1,2), -3)
-        ((2, 1, 1, 2), (1, 0, 1))
-        sage: reduce_GL((1,0,0,-1), -3)
-        Traceback (most recent call last):
-        ...
-        NotImplementedError: only implemented for non-positive discriminants: (1, 0, 0, -1)
-        sage: reduce_GL((-1,0,0,1), -3)
-        Traceback (most recent call last):
-        ...
-        NotImplementedError: only implemented for non-positive discriminants: (-1, 0, 0, 1)
-        sage: reduce_GL((-1,0,0,-1), -3)
-        Traceback (most recent call last):
-        ...
-        NotImplementedError: only implemented for non-positive discriminants: (-1, 0, 0, -1)
-        sage: reduce_GL((1,6,0,1), -3)
-        Traceback (most recent call last):
-        ...
-        NotImplementedError: only implemented for non-positive discriminants: (1, 6, 0, 1)
-        sage: reduce_GL((1,50,0,1), -7)
-        Traceback (most recent call last):
-        ...
-        NotImplementedError: only implemented for non-positive discriminants: (1, 50, 0, 1)
-    */
-    struct hermitian_form_with_character_evaluation res;
-    int a, b1, b2, c, det_char, nu_char, trans_char;
-
-    (a, b1, b2, c) = s;
-
-    // the discriminant will be -D det(M)
-    // FIXME: the discriminant can become too big
-    if(a < 0 or c < 0 or - D * a * c - b1**2 - D * b1 * b2 - (D**2 - D)) // 4 * b2**2 < 0 :;
-		assert(false);
-        //raise NotImplementedError, "only implemented for non-positive discriminants: " + repr((a, b1, b2, c));
-
-    res = _reduce_GL(a, b1, b2, c, D);
-
-//    return ( (res.a, res.b1, res.b2, res.c),
-//             (res.transposition_character, res.determinant_character, res.nu_character) );
-}
-
-
-struct hermitian_form_with_character_evaluation _reduce_GL(int a, int b1, int b2, int c, int D) {
+	 TEST::
+	 sage: from hermitianmodularforms.hermitianmodularformd2_fourierexpansion_cython import reduce_GL
+	 sage: reduce_GL((2,1,1,2), -3)
+	 ((2, 1, 1, 2), (1, 0, 1))
+	 sage: reduce_GL((1,0,0,-1), -3)
+	 Traceback (most recent call last):
+	 ...
+	 NotImplementedError: only implemented for non-positive discriminants: (1, 0, 0, -1)
+	 sage: reduce_GL((-1,0,0,1), -3)
+	 Traceback (most recent call last):
+	 ...
+	 NotImplementedError: only implemented for non-positive discriminants: (-1, 0, 0, 1)
+	 sage: reduce_GL((-1,0,0,-1), -3)
+	 Traceback (most recent call last):
+	 ...
+	 NotImplementedError: only implemented for non-positive discriminants: (-1, 0, 0, -1)
+	 sage: reduce_GL((1,6,0,1), -3)
+	 Traceback (most recent call last):
+	 ...
+	 NotImplementedError: only implemented for non-positive discriminants: (1, 6, 0, 1)
+	 sage: reduce_GL((1,50,0,1), -7)
+	 Traceback (most recent call last):
+	 ...
+	 NotImplementedError: only implemented for non-positive discriminants: (1, 50, 0, 1)
+	 */
+	
     /*
     Reduce the positive semi-definite hermitian quatratic form
     `\lbrackt a,b,c \rbrackt` with respect to `\mathrm{GL}_2(\mathcal{o}_D)`.
@@ -119,7 +103,13 @@ struct hermitian_form_with_character_evaluation _reduce_GL(int a, int b1, int b2
         sage: reduce_GL((117,43,27,10), -7) ## indirect doctest
         ((10, -6, 3, 65), (1, 0, 1))
     */
-    struct hermitian_form_with_character_evaluation res;
+
+    // the discriminant will be -D det(M)
+    // FIXME: the discriminant can become too big
+    if(a < 0 or c < 0 or - D * a * c - b1**2 - D * b1 * b2 - (D**2 - D)) // 4 * b2**2 < 0 :;
+		assert(false);
+	//raise NotImplementedError, "only implemented for non-positive discriminants: " + repr((a, b1, b2, c));
+
     int twoa, q, r;
     int tmp;
     // for a describtion of det, trans and nu see the output documentation
