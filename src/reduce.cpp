@@ -1,6 +1,9 @@
 
 // https://github.com/martinra/psage/blob/paper_computing_jacobi_forms/psage/modform/hermitianmodularforms/hermitianmodularformd2_fourierexpansion_cython.pyx
 
+#include <assert.h>
+#include <math.h>
+
 struct hermitian_form_with_character_evaluation {
 	int a;
 	int b1;
@@ -9,7 +12,7 @@ struct hermitian_form_with_character_evaluation {
 	int transposition_character;
 	int determinant_character;
 	int nu_character;
-}
+};
 
 
 void reduce_GL(int a, int b1, int b2, int c, int D, struct hermitian_form_with_character_evaluation& res) {
@@ -106,7 +109,7 @@ void reduce_GL(int a, int b1, int b2, int c, int D, struct hermitian_form_with_c
 
     // the discriminant will be -D det(M)
     // FIXME: the discriminant can become too big
-    if(a < 0 or c < 0 or - D * a * c - b1**2 - D * b1 * b2 - (D**2 - D)) // 4 * b2**2 < 0 :;
+    if(a < 0 or c < 0 or - D * a * c - b1*b1 - D * b1 * b2 - (D*D - D)) // 4 * b2**2 < 0 :;
 		assert(false);
 	//raise NotImplementedError, "only implemented for non-positive discriminants: " + repr((a, b1, b2, c));
 
@@ -119,7 +122,7 @@ void reduce_GL(int a, int b1, int b2, int c, int D, struct hermitian_form_with_c
     int nu = 1;
 
     
-    // K = QQ[\sqrt -1];
+    // K = QQ[\sqrt -1]
     if(D == -4) {
         // We want b to be of from the positive real axis by at most pi/4 in
         // positive direction
@@ -267,7 +270,7 @@ void reduce_GL(int a, int b1, int b2, int c, int D, struct hermitian_form_with_c
             }
 			
             // apply [[1, -q*(D + \sqrt D)/2], [0, 1]]
-            c = c + q**2 * a * (D**2 - D) / 4 + b1 * q;
+            c = c + q*q * a * (D*D - D) / 4 + b1 * q;
             b1 = b1 + q * a * (D-1) * D / 2;
             b2 = b2 - q * a * D;
 		}
@@ -283,9 +286,9 @@ void reduce_GL(int a, int b1, int b2, int c, int D, struct hermitian_form_with_c
 			}
 			
 			// apply [[1, -q], [0, 1]]
-            c = c - b2 * q + a * q**2;
+            c = c - b2 * q + a * q*q;
             b1 = b1 + D * q * a ;
-            b2 = r # = b2 - 2 * q * a;
+            b2 = r; // = b2 - 2 * q * a;
 		}
 		
         if(a > c) {
@@ -439,6 +442,5 @@ void reduce_GL(int a, int b1, int b2, int c, int D, struct hermitian_form_with_c
         res.determinant_character = det % 2;
     res.nu_character = nu;
     
-    return res;
 }
 
