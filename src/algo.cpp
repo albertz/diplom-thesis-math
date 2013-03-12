@@ -297,20 +297,12 @@ struct ReductionMatrices_Calc {
 		return sum;
 	}
 	
-	void calcOneColumn(ElemOfF elemOfF, vector& outVec) {
+	void calcOneColumn(ElemOfF elemOfF, vector<ValueOfA>& outVec) {
 		int outVecIndex = 0;
 		for(ElemOfS S : curlS) {
-			int outDim = calcOutDim(S);
-			
 			for(int i = 0; i < S.calcPrecisionDimension(); ++i, ++outVecIndex) {
 				auto& out = outVec[outVecIndex];
-				
-				// we have "a" given by the base which is identified by elemOfF.
-				
-				// calculate a[S]
-				
-				
-				
+				out = evalA_S_n(elemOfF, S, i);
 			}
 		}
 	}
