@@ -1,4 +1,7 @@
 
+#ifndef __SAGE_HERMITIAN_REDUCEGL_HPP__
+#define __SAGE_HERMITIAN_REDUCEGL_HPP__
+
 // https://github.com/martinra/psage/blob/paper_computing_jacobi_forms/psage/modform/hermitianmodularforms/hermitianmodularformd2_fourierexpansion_cython.pyx
 
 #include <assert.h>
@@ -15,7 +18,7 @@ struct hermitian_form_with_character_evaluation {
 };
 
 
-void reduce_GL(int a, int b1, int b2, int c, int D, struct hermitian_form_with_character_evaluation& res) {
+inline void reduce_GL(int a, int b1, int b2, int c, int D, struct hermitian_form_with_character_evaluation& res) {
 	
     /*
 	 Reduce the positive semi-definite hermitian quatratic form `\lbrackt a,b,c \rbrackt`
@@ -444,3 +447,4 @@ void reduce_GL(int a, int b1, int b2, int c, int D, struct hermitian_form_with_c
     
 }
 
+#endif
