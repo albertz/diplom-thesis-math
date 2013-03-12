@@ -1,3 +1,6 @@
+
+// https://github.com/martinra/psage/blob/paper_computing_jacobi_forms/psage/modform/hermitianmodularforms/hermitianmodularformd2_fourierexpansion_cython.pyx
+
 struct hermitian_form_with_character_evaluation {
 	int a;
 	int b1;
@@ -8,7 +11,7 @@ struct hermitian_form_with_character_evaluation {
 	int nu_character;
 }
 
- reduce_GL(s, int D) {
+void reduce_GL(s, int D) {
     /*
     Reduce the positive semi-definite hermitian quatratic form `\lbrackt a,b,c \rbrackt`
     with respect to `\GL(2, \mathfrak{o}_{\Q(\sqrt{D})})` and the transposition.
@@ -65,8 +68,8 @@ struct hermitian_form_with_character_evaluation {
 
     res = _reduce_GL(a, b1, b2, c, D);
 
-    return ( (res.a, res.b1, res.b2, res.c),;
-             (res.transposition_character, res.determinant_character, res.nu_character) );
+//    return ( (res.a, res.b1, res.b2, res.c),
+//             (res.transposition_character, res.determinant_character, res.nu_character) );
 }
 
 
@@ -169,261 +172,283 @@ struct hermitian_form_with_character_evaluation _reduce_GL(int a, int b1, int b2
         else if(b1 > 2 * b2) {
             // apply transposition
             b1 = -b1 + 4 * b2;
-            ;
+            
             trans = -trans;
-;
-    ## K = QQ[\sqrt -3] ;
-    elif D == -3 :;
-        if b2 < 0 : ;
-            ## apply [[-1, 0], [0, 1]];
+		}
+	}
+	
+    // K = QQ[\sqrt -3]
+    else if(D == -3) {
+        if(b2 < 0) {
+            // apply [[-1, 0], [0, 1]]
             b1 = -b1;
             b2 = -b2;
-            ;
+            
             det = det + 3;
-;
-        ## TODO: Use one transformation for each sixth of the left half plane        ;
-        ## check whether b is between 0 and pi/6 off from the real line in mathematical positive direction.;
-        ## b is in the upper quadrant;
-        if b1 < 0 :;
-            ## apply [[\bar eps, 0], [0, 1]];
+		}
+		
+        // TODO: Use one transformation for each sixth of the left half plane
+        // check whether b is between 0 and pi/6 off from the real line in mathematical positive direction.
+        // b is in the upper quadrant
+        if(b1 < 0) {
+            // apply [[\bar eps, 0], [0, 1]]
             tmp = -b1 + 3*b2;
             b2 = -b1 + 2*b2;
             b1 = tmp;
-        ;
+        
             det = det + 5;
-;
-        ## b is in the last third of the lower quadrant ;
-        elif b1 > 3 * b2 :;
-            ## apply [[eps**2, 0], [0, 1]];
+		}
+		
+        // b is in the last third of the lower quadrant
+        else if(b1 > 3 * b2) {
+            // apply [[eps**2, 0], [0, 1]]
             tmp = -3 * b2 + b1;
             b2 = b1 - 2 * b2;
             b1 = tmp;
-;
+			
             det = det + 2;
-        ;
-        ## b is in the lower quadrant ;
-        elif 2 * b1 > 3 * b2 :;
-            ## apply [[eps, 0], [0, 1]];
+        }
+		
+        // b is in the lower quadrant
+        else if(2 * b1 > 3 * b2) {
+            // apply [[eps, 0], [0, 1]]
             tmp = 2*b1 - 3*b2;
             b2 = b1 - b2;
             b1 = tmp;
-            ;
+            
             det = det + 1;
-        ;
-        ## now b is between 0 and pi/3 off from the real line in mathematical positive direction.;
-        ## check whether b is more than pi/6 off from the real in mathematical positive direction.;
-        if b1 < b2 :;
-            ## apply the transpose and;
-            ## apply [[eps, 0], [0, 1]];
+        }
+		
+        // now b is between 0 and pi/3 off from the real line in mathematical positive direction.
+        // check whether b is more than pi/6 off from the real in mathematical positive direction.
+        if(b1 < b2) {
+            // apply the transpose and
+            // apply [[eps, 0], [0, 1]]
             tmp = 3 * b2 - 2 * b1;
             b2 = 2 * b2 - b1;
             b1 = tmp;
-;
+
             trans = -trans;
             det = det + 1;
-    #! elif D == -3;
-    else :;
-        # if b is not in the right half plane;
-        if b2 < 0 :;
-            ## apply [[-1, 0], [0, 1]];
+		}
+		
+    // ! else if(D == -3)
+	} else {
+        // if b is not in the right half plane
+        if(b2 < 0) {
+            // apply [[-1, 0], [0, 1]]
             b1 = -b1;
             b2 = -b2;
-            ;
+            
             det = det + 1;
-        ;
-        # if b is not in the upper half plane;
-        if 2 * b1 + D * b2 > 0 :;
+        }
+		
+        // if b is not in the upper half plane;
+        if(2 * b1 + D * b2 > 0) {
             b1 = - b1 - D * b2;
-            ;
+            
             trans = -trans;
-            ;
-    #! else D == -4;
-;
-    ## TODO: Why is the _sig_on commented?;
-    #_sig_on;
-;
-    ## while not GL-reduced;
-    while not (a<=c and abs(b2) <= a and abs(-4*b1 - 2 * D * b2) <= -D*a ) :;
-        ## apply symmetric step (reflection) if necessary;
-        if b1 < 0:;
-            ## apply [[-1, 0], [0, 1]];
+		}
+    } //! else D == -4
+
+    // while not GL-reduced
+	while (! (a<=c && abs(b2) <= a && abs(-4*b1 - 2 * D * b2) <= -D*a ) ) {
+        // apply symmetric step (reflection) if necessary
+        if(b1 < 0) {
+            // apply [[-1, 0], [0, 1]]
             b1 = -b1;
             b2 = -b2;
-            if D == -4 :;
+            if(D == -4)
                 det = det + 2;
-            elif D == -3 :;
+            else if(D == -3)
                 det = det + 3;
-            else :;
+            else
                 det = det + 1;
-            ;
-        ## abs(Im b / sqrt D) <= a/4 <=> -4*D abs(Im b) <= -D * a;
-        if abs(-4*b1 - 2 * D * b2) > -D*a :;
-;
+		}
+		
+        // abs(Im b / sqrt D) <= a/4 <=> -4*D abs(Im b) <= -D * a
+        if(abs(-4*b1 - 2 * D * b2) > -D*a) {
             q = (-2*b1 - D * b2) / (-D * a);
             r = (-2*b1 - D * b2) % (-D * a);
-            ;
-            if r > (-D * a) / 2 :;
-                #r -= -D * a;
+            
+            if(r > (-D * a) / 2) {
+                // r -= -D * a;
                 q += 1;
-            ;
-            ## apply [[1, -q*(D + \sqrt D)/2], [0, 1]] ;
+            }
+			
+            // apply [[1, -q*(D + \sqrt D)/2], [0, 1]]
             c = c + q**2 * a * (D**2 - D) / 4 + b1 * q;
             b1 = b1 + q * a * (D-1) * D / 2;
             b2 = b2 - q * a * D;
-    ;
-        ## abs(Re b) <= a/2;
-        if abs (b2) > a :;
+		}
+		
+        // abs(Re b) <= a/2
+        if(abs (b2) > a) {
             q = b2 / (2 * a);
             r = b2 % (2 * a);
-;
-            if r > a :;
+
+            if(r > a) {
                 r = r - 2 * a;
                 q = q + 1;
-;
-            # apply [[1, -q], [0, 1]];
+			}
+			
+			// apply [[1, -q], [0, 1]]
             c = c - b2 * q + a * q**2;
             b1 = b1 + D * q * a ;
             b2 = r # = b2 - 2 * q * a;
-;
-        if a > c:;
-            ## apply [[0, 1], [1, 0]];
+		}
+		
+        if(a > c) {
+            // apply [[0, 1], [1, 0]]
             tmp = c;
             c = a;
             a = tmp;
             b1 = -b1 - D * b2;
-            if D == -4 :;
+            if(D == -4)
                 det = det + 2;
-            elif D == -3 :;
+            else if(D == -3)
                 det = det + 3;
-            else :;
+            else
                 det = det + 1;
-;
-        ## K = QQ[\sqrt -1];
-        if D == -4 :;
-            ## We want b to be of from the positive real axis by at most pi/4 in;
-            ## positive direction ;
-        ;
-            ## if b is not in the right half plane;
-            if b2 < 0 : ;
-                ## apply [[-1, 0], [0, 1]];
+		}
+		
+        // K = QQ[\sqrt -1]
+        if(D == -4) {
+            // We want b to be of from the positive real axis by at most pi/4 in
+            // positive direction
+        
+            // if b is not in the right half plane
+            if(b2 < 0) {
+                // apply [[-1, 0], [0, 1]]
                 b1 = -b1;
                 b2 = -b2;
-                ;
+                
                 det = det + 2;
-        ;
-            ## if b is in the upper quarter of the right half plane;
-            if b1 < b2 :;
-                ## apply [[i, 0], [0, 1]];
+			}
+			
+            // if b is in the upper quarter of the right half plane
+            if(b1 < b2) {
+                // apply [[i, 0], [0, 1]]
                 tmp = -2 * b1 + 5 * b2;
                 b2 = -b1 + 2 * b2;
                 b1 = tmp;
-                ;
+                
                 det = det + 1;
-                ;
-                ## apply transposition;
+                
+                // apply transposition
                 b1 = -b1 + 4 * b2;
-                ;
+                
                 trans = -trans;
-                ;
-            ## if b is in the lower quarter of the right half plane;
-            elif b1 > 3 * b2 :;
-                ## apply [[-i, 0], [0, 1]];
+			}
+			
+            // if b is in the lower quarter of the right half plane
+            else if(b1 > 3 * b2) {
+                // apply [[-i, 0], [0, 1]]
                 tmp = 2 * b1 - 5 * b2;
                 b2 = b1 - 2 * b2;
                 b1 = tmp;
-                ;
+                
                 det = det + 3;
-            ;
-            ## b is in the second quarter counted from below of the right half plane;
-            elif b1 > 2 * b2 :;
-                ## apply transposition;
+            }
+			
+            // b is in the second quarter counted from below of the right half plane
+            else if(b1 > 2 * b2) {
+                // apply transposition
                 b1 = -b1 + 4 * b2;
-                ;
+                
                 trans = -trans;
-            ;
-        ## K = QQ[\sqrt -3] ;
-        elif D == -3 :;
-            if b2 < 0 : ;
-                ## apply [[-1, 0], [0, 1]];
+            }
+		}
+		
+        // K = QQ[\sqrt -3]
+		else if(D == -3) {
+            if(b2 < 0) {
+                // apply [[-1, 0], [0, 1]]
                 b1 = -b1;
                 b2 = -b2;
-                ;
+                
                 det = det + 3;
-    ;
-            ## TODO: Use one transformation for each sixth of the left half plane        ;
-            ## check whether b is between 0 and pi/6 off from the real line in mathematical positive direction.;
-            ## b is in the upper quadrant;
-            if b1 < 0 :;
-                ## apply [[\bar eps, 0], [0, 1]];
+			}
+    
+            // TODO: Use one transformation for each sixth of the left half plane
+            // check whether b is between 0 and pi/6 off from the real line in mathematical positive direction.
+            // b is in the upper quadrant
+            if(b1 < 0) {
+                // apply [[\bar eps, 0], [0, 1]]
                 tmp = -b1 + 3*b2;
                 b2 = -b1 + 2*b2;
                 b1 = tmp;
-                ;
+                
                 det = det + 5;
-                ;
-            ## b is in the last third of the lower quadrant ;
-            elif b1 > 3 * b2 :;
-                ## apply [[eps**2, 0], [0, 1]];
+			}
+			
+            // b is in the last third of the lower quadrant
+            else if(b1 > 3 * b2) {
+                // apply [[eps**2, 0], [0, 1]]
                 tmp = -3 * b2 + b1;
                 b2 = b1 - 2 * b2;
                 b1 = tmp;
-                ;
+                
                 det = det + 2;
-                ;
-            ## b is in the lower quadrant ;
-            elif 2 * b1 > 3 * b2 :;
-                ## apply [[eps, 0], [0, 1]];
+			}
+			
+            // b is in the lower quadrant
+            else if(2 * b1 > 3 * b2) {
+                // apply [[eps, 0], [0, 1]]
                 tmp = 2*b1 - 3*b2;
                 b2 = b1 - b2;
                 b1 = tmp;
-                ;
+                
                 det = det + 1;
-            ;
-            ## now b is between 0 and pi/3 off from the real line in mathematical positive direction.;
-            ## check whether b is more than pi/6 off from the real in mathematical positive direction.;
-            if b1 < b2 :;
-                ## apply the transpose and;
-                ## apply [[eps, 0], [0, 1]];
+            }
+			
+            // now b is between 0 and pi/3 off from the real line in mathematical positive direction.
+            // check whether b is more than pi/6 off from the real in mathematical positive direction.
+            if(b1 < b2) {
+                // apply the transpose and
+                // apply [[eps, 0], [0, 1]]
                 tmp = 3 * b2 - 2 * b1;
                 b2 = 2 * b2 - b1;
                 b1 = tmp;
-                ;
+                
                 trans = -trans;
                 det = det + 1;
-        #! elif D == -3;
-        else :;
-            # if b is not in the right half plane;
-            if b2 < 0 :;
-                ## apply [[-1, 0], [0, 1]];
+			}
+        } //! elif D == -3;
+        else {
+            // if b is not in the right half plane
+            if(b2 < 0) {
+                // apply [[-1, 0], [0, 1]]
                 b1 = -b1;
                 b2 = -b2;
-                ;
+                
                 det = det + 1;
-            ;
-            # if b is not in the upper half plane;
-            if 2 * b1 + D * b2 > 0 :;
+            }
+			
+            // if b is not in the upper half plane
+            if(2 * b1 + D * b2 > 0) {
                 b1 = - b1 - D * b2;
-                ;
+                
                 trans = -trans;
-        #! else D == -4             ;
-    #! while;
-        ;
-    #_sig_off;
-    ;
+			}
+		}
+        //! else D == -4
+    
+	} // #! while
+	
     res.a = a;
     res.b1 = b1;
     res.b2 = b2;
     res.c = c;
     res.transposition_character = trans;
-    if D == -4 :;
+    if(D == -4)
         res.determinant_character = det % 4;
-    elif D == -3 :;
+    else if(D == -3)
         res.determinant_character = det % 6;
-    else :;
+    else
         res.determinant_character = det % 2;
     res.nu_character = nu;
-            ;
+    
     return res;
-	
 }
 
