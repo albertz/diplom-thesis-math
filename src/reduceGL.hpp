@@ -112,9 +112,7 @@ inline void reduce_GL(int a, int b1, int b2, int c, int D, struct hermitian_form
 
 	// the discriminant will be -D det(M)
 	// FIXME: the discriminant can become too big
-	if(a < 0 or c < 0 or - D * a * c - b1*b1 - D * b1 * b2 - (D*D - D)) // 4 * b2**2 < 0 :;
-		assert(false);
-	//raise NotImplementedError, "only implemented for non-positive discriminants: " + repr((a, b1, b2, c));
+	assert(!( a < 0 || c < 0 || - D * a * c - b1*b1 - D * b1 * b2 - (D*D - D) /* 4 * b2**2 < 0 */ ));
 
 	int twoa, q, r;
 	int tmp;
