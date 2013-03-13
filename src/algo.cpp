@@ -2,7 +2,6 @@
 #include "reduceGL.hpp"
 #include "structs.hpp"
 
-//typedef ... M2; // Matrix 2x2
 
 // In many cases, we wont use this variable and hardcode
 // it for degree 2. However, we define it here,
@@ -171,6 +170,7 @@ struct GL2Iterator {
 struct ReductionMatrices_Calc {
 	int HermWeight; // k in the paper. usually <20
 	//Odual oDual; // not sure if i need to specify it explicitely..., probably not
+	int D; // discriminant. usually D in {-2,-3,-4}
 	
 	//CurlO curlO;
 	//Gamma gamma;
@@ -278,7 +278,16 @@ struct ReductionMatrices_Calc {
 	
 	// a_F(T)
 	ValueOfA evalA(ElemOfF aRepr, ElemOfF T) {
-		// ...
+		struct hermitian_form_with_character_evaluation reduced;
+		reduceGL(T, D, reduced);
+		const int sign = 0; // 0 or 1
+		const int nu_exp = 0; // 0 or 1
+		if(aRepr == reduced.matrix)
+			return
+				Pow(reduced.character.transposition, sign) *
+				Pow(reduced.character.nu, nu_exp) *
+				Pow(reduced.character.determinant, -HermWeight);
+		return 0;
 	}
 	
 	// a_F[S](n)

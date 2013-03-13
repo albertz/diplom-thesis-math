@@ -39,6 +39,16 @@ T Div(const T& a, const T& b) {
 	return res;
 }
 
+template<typename T>
+T Pow(const T& a, const T& b) {
+	if(b == 0) return 1;
+	if(b < 0) return 1 / Pow(a, -b);
+	if(b == 1) return a;
+	T result = Pow(a, b / 2);
+	result *= result;
+	if(b % 2) result *= a;
+	return result;
+}
 
 
 #endif
