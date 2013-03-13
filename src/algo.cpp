@@ -1,7 +1,7 @@
 
 #include "reduceGL.hpp"
+#include "structs.hpp"
 
-typedef int Int;
 //typedef ... M2; // Matrix 2x2
 
 // In many cases, we wont use this variable and hardcode
@@ -9,10 +9,6 @@ typedef int Int;
 // so we can point it out in some cases.
 static const int HermDegree = 2;
 
-struct M2T {
-	// [[a,b],[\bar b, c]]
-	Int a, b, c;
-};
 
 template<typename T>
 struct Matrix2 {

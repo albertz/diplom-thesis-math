@@ -6,19 +6,45 @@
 
 #include <assert.h>
 #include <math.h>
+#include <iostream>
+#include "structs.hpp"
+
+struct reduce_character_evalutation {
+	int transposition;
+	int determinant;
+	int nu;
+	reduce_character_evalutation(int _trans = 0, int _det = 0, int _nu = 0)
+	: transposition(_trans), determinant(_det), nu(_nu) {}
+};
+inline std::ostream& operator<< (std::ostream& os, const reduce_character_evalutation& c) {
+	return os << "_C(" << c.transposition << ", " << c.determinant << ", " << c.nu << ")";
+}
+inline bool operator==(const reduce_character_evalutation& c1, const reduce_character_evalutation& c2) {
+	return c1.transposition == c2.transposition && c1.determinant == c2.determinant && c1.nu == c2.nu;
+}
+inline bool operator!=(const reduce_character_evalutation& c1, const reduce_character_evalutation& c2) {
+	return !(c1 == c2);
+}
 
 struct hermitian_form_with_character_evaluation {
-	int a;
-	int b1;
-	int b2;
-	int c;
-	int transposition_character;
-	int determinant_character;
-	int nu_character;
+	M2T matrix;
+	reduce_character_evalutation character;
+	hermitian_form_with_character_evaluation(M2T _m = M2T(), reduce_character_evalutation _char = reduce_character_evalutation())
+	: matrix(_m), character(_char) {}
 };
+inline std::ostream& operator<< (std::ostream& os, const hermitian_form_with_character_evaluation& f) {
+	return os << "_H(" << f.matrix << ", " << f.character << ")";
+}
+inline bool operator==(const hermitian_form_with_character_evaluation& f1, const hermitian_form_with_character_evaluation& f2) {
+	return f1.matrix == f2.matrix && f1.character == f2.character;
+}
+inline bool operator!=(const hermitian_form_with_character_evaluation& f1, const hermitian_form_with_character_evaluation& f2) {
+	return !(f1 == f2);
+}
 
 
-inline void reduce_GL(int a, int b1, int b2, int c, int D, struct hermitian_form_with_character_evaluation& res) {
+inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_evaluation& res) {
+	auto a = matrix.a, b1 = matrix.b1, b2 = matrix.b2, c = matrix.c;
 	
 	/*
 	 Reduce the positive semi-definite hermitian quatratic form `\lbrackt a,b,c \rbrackt`
@@ -73,46 +99,14 @@ inline void reduce_GL(int a, int b1, int b2, int c, int D, struct hermitian_form
 	If `D = -3` it also satisfies `-D b2 \ge 2 b1 \ge 2 b2`.
 	If `D = -4` it also satisfies `2 b2 \ge b1 \ge b2`.
 	In all other cases it also satisfies `2 b1 + D b2 \le 0`.
-	 
-	TEST::
-		sage: from hermitianmodularforms.hermitianmodularformd2_fourierexpansion_cython import reduce_GL
-		sage: reduce_GL((1,0,0,2), -3) # indirect doctest
-		((1, 0, 0, 2), (1, 0, 1))
-		sage: reduce_GL((2,0,0,1), -3) # indirect doctest
-		((1, 0, 0, 2), (1, 3, 1))
-		sage: reduce_GL((2,1,2,2), -3) # indirect doctest
-		((1, 1, 1, 2), (-1, 1, 1))
-		sage: reduce_GL((2,3,1,2), -3) # indirect doctest
-		((2, 3, 2, 2), (1, 1, 1))
-		sage: reduce_GL((1,1,0,1), -3) # indirect doctest
-		((1, 1, 1, 1), (1, 2, 1))
-		sage: reduce_GL((10,7, 8, 9), -3) # indirect doctest
-		((9, 10, 9, 10), (1, 0, 1))
-		sage: reduce_GL((50, 76, 30, 19), -3) # indirect doctest
-		((19, 14, 11, 23), (1, 1, 1))
-		sage: reduce_GL((1,0,0,2), -4) ## indirect doctest
-		((1, 0, 0, 2), (1, 0, 1))
-		sage: reduce_GL((1,2,0,2), -4) ## indirect doctest
-		((1, 0, 0, 1), (1, 3, 1))
-		sage: reduce_GL((1,3,1,1), -4) ## indirect doctest
-		((1, 1, 1, 1), (-1, 0, 1))
-		sage: reduce_GL((17,0,5,10), -4) ## indirect doctest
-		((10, 15, 10, 17), (1, 3, 1))
-		sage: reduce_GL((117,43,27,10), -4) ## indirect doctest
-		((10, 11, 9, 99), (-1, 1, 1))
-		sage: reduce_GL((1,0,0,2), -7) ## indirect doctest
-		((1, 0, 0, 2), (1, 0, 1))
-		sage: reduce_GL((1,2,0,2), -7) ## indirect doctest
-		((1, 2, 1, 2), (-1, 1, 1))
-		sage: reduce_GL((17,0,5,10), -7) ## indirect doctest
-		((10, 0, 5, 17), (-1, 1, 1))
-		sage: reduce_GL((117,43,27,10), -7) ## indirect doctest
-		((10, -6, 3, 65), (1, 0, 1))
 	*/
 
 	// the discriminant will be -D det(M)
 	// FIXME: the discriminant can become too big
-	assert(!( a < 0 || c < 0 || - D * a * c - b1*b1 - D * b1 * b2 - (D*D - D) /* 4 * b2**2 < 0 */ ));
+	if(!( a < 0 || c < 0 || - D * a * c - b1*b1 - D * b1 * b2 - (D*D - D) /* 4 * b2**2 < 0 */ )) {
+		std::cerr << "reduce_GL: invalid input: " << matrix << ", " << D << std::endl;
+		_exit(1);
+	}
 
 	int twoa, q, r;
 	int tmp;
@@ -430,18 +424,18 @@ inline void reduce_GL(int a, int b1, int b2, int c, int D, struct hermitian_form
 	
 	} // #! while
 	
-	res.a = a;
-	res.b1 = b1;
-	res.b2 = b2;
-	res.c = c;
-	res.transposition_character = trans;
+	res.matrix.a = a;
+	res.matrix.b1 = b1;
+	res.matrix.b2 = b2;
+	res.matrix.c = c;
+	res.character.transposition = trans;
 	if(D == -4)
-		res.determinant_character = det % 4;
+		res.character.determinant = det % 4;
 	else if(D == -3)
-		res.determinant_character = det % 6;
+		res.character.determinant = det % 6;
 	else
-		res.determinant_character = det % 2;
-	res.nu_character = nu;
+		res.character.determinant = det % 2;
+	res.character.nu = nu;
 	
 }
 
