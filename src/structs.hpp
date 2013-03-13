@@ -25,6 +25,16 @@ inline bool operator!=(const M2T& m1, const M2T& m2) {
 
 
 template<typename T>
+struct Matrix2 {
+	T a,b,c,d; // [[a,b],[c,d]]
+	Matrix2(T _a = 0, T _b = 0, T _c = 0, T _d = 0)
+	: a(_a), b(_b), c(_c), d(_d) {}
+	T det() { return a*c - b*d; }
+};
+
+
+
+template<typename T>
 T Mod(const T& a, const T& b) {
 	T res = a % b;
 	if(a < 0) res += b;
