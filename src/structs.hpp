@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string.h>
+#include <assert.h>
 
 typedef int Int;
 
@@ -26,8 +27,18 @@ inline bool operator!=(const M2T& m1, const M2T& m2) {
 template<typename T>
 T Mod(const T& a, const T& b) {
 	T res = a % b;
-	if(res < 0) res += b;
+	if(a < 0) res += b;
+	assert(res >= 0);
 	return res;
 }
+
+template<typename T>
+T Div(const T& a, const T& b) {
+	T res = a / b;
+	if(a < 0) res -= 1;
+	return res;
+}
+
+
 
 #endif

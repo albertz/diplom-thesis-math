@@ -103,7 +103,7 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 
 	// the discriminant will be -D det(M)
 	// FIXME: the discriminant can become too big
-	if( a < 0 || c < 0 || - D * a * c - b1*b1 - D * b1 * b2 - (D*D - D) / 4 * b2*b2 < 0 ) {
+	if( a < 0 || c < 0 || - D * a * c - b1*b1 - D * b1 * b2 - Div((D*D - D), 4) * b2*b2 < 0 ) {
 		std::cerr << "reduce_GL: invalid input: " << matrix << ", " << D << std::endl;
 		_exit(1);
 	}
@@ -256,7 +256,7 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 		
 		// abs(Im b / sqrt D) <= a/4 <=> -4*D abs(Im b) <= -D * a
 		if(abs(-4*b1 - 2 * D * b2) > -D*a) {
-			q = (-2*b1 - D * b2) / (-D * a);
+			q = Div((-2*b1 - D * b2), (-D * a));
 			r = Mod((-2*b1 - D * b2), (-D * a));
 			
 			if(r > (-D * a) / 2) {
@@ -265,14 +265,14 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 			}
 			
 			// apply [[1, -q*(D + \sqrt D)/2], [0, 1]]
-			c = c + q*q * a * (D*D - D) / 4 + b1 * q;
-			b1 = b1 + q * a * (D-1) * D / 2;
+			c = c + q*q * a * Div((D*D - D), 4) + b1 * q;
+			b1 = b1 + q * a * Div((D-1) * D, 2);
 			b2 = b2 - q * a * D;
 		}
 		
 		// abs(Re b) <= a/2
 		if(abs (b2) > a) {
-			q = b2 / (2 * a);
+			q = Div(b2, (2 * a));
 			r = Mod(b2, (2 * a));
 
 			if(r > a) {
