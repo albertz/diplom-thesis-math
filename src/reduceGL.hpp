@@ -257,7 +257,7 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 		// abs(Im b / sqrt D) <= a/4 <=> -4*D abs(Im b) <= -D * a
 		if(abs(-4*b1 - 2 * D * b2) > -D*a) {
 			q = (-2*b1 - D * b2) / (-D * a);
-			r = (-2*b1 - D * b2) % (-D * a);
+			r = Mod((-2*b1 - D * b2), (-D * a));
 			
 			if(r > (-D * a) / 2) {
 				// r -= -D * a;
@@ -273,7 +273,7 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 		// abs(Re b) <= a/2
 		if(abs (b2) > a) {
 			q = b2 / (2 * a);
-			r = b2 % (2 * a);
+			r = Mod(b2, (2 * a));
 
 			if(r > a) {
 				r = r - 2 * a;
@@ -430,11 +430,11 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 	res.matrix.c = c;
 	res.character.transposition = trans;
 	if(D == -4)
-		res.character.determinant = det % 4;
+		res.character.determinant = Mod(det, 4);
 	else if(D == -3)
-		res.character.determinant = det % 6;
+		res.character.determinant = Mod(det, 6);
 	else
-		res.character.determinant = det % 2;
+		res.character.determinant = Mod(det, 2);
 	res.character.nu = nu;
 	
 }

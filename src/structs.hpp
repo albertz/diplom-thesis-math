@@ -22,4 +22,12 @@ inline bool operator!=(const M2T& m1, const M2T& m2) {
 	return !(m1 == m2);
 }
 
+
+template<typename T>
+T Mod(const T& a, const T& b) {
+	T res = a % b;
+	if(res < 0) res += b;
+	return res;
+}
+
 #endif
