@@ -8,9 +8,10 @@ using namespace std;
 
 void reduce_GL_assertEqual(M2T matrix, int D, _H result) {
 	_H calcRes;
+	cout << "reduce_GL(" << matrix << ", " << D << ") == " << result << endl;
 	reduce_GL(matrix, D, calcRes);
 	if(result != calcRes) {
-		cerr << "not equal: expected " << result << " and calced " << calcRes << endl;
+		cerr << "not equal: " << calcRes << endl;
 		_exit(1);
 	}
 }
