@@ -103,7 +103,7 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 
 	// the discriminant will be -D det(M)
 	// FIXME: the discriminant can become too big
-	if(!( a < 0 || c < 0 || - D * a * c - b1*b1 - D * b1 * b2 - (D*D - D) /* 4 * b2**2 < 0 */ )) {
+	if( a < 0 || c < 0 || - D * a * c - b1*b1 - D * b1 * b2 - (D*D - D) / 4 * b2*b2 < 0 ) {
 		std::cerr << "reduce_GL: invalid input: " << matrix << ", " << D << std::endl;
 		_exit(1);
 	}
