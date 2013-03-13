@@ -190,61 +190,6 @@ struct ReductionMatrices_Calc {
 		return 10;
 	}
 	
-	bool getA(ElemOfF aChar, Matrix2<Complex> m, Complex& res) {
-		// aChar is characterizing our function a:\F->\Q like:
-		//   a(aChar) = 1
-		//   a(aChar[U]) = det(U)^-k for all U \in GL_2(\curlO)
-		//   a(x) = 0 elsewhere.
-		// Thus, we try to find some U with
-		//   m = aChar[U] .
-		
-		// we are trying to solve this.
-		// WolframAlpha input:
-		// solve {{a1,a2},{a3,a4}} == conjugatetranspose({{u1,u2},{u3,u4}}) * {{b1,b2},{b3,b4}} * {{u1,u2},{u3,u4}}
-		// gives us {{a1 -> b1 u1 Conjugate[u1] + b2 u3 Conjugate[u1], a2 -> b1 u2 Conjugate[u3] + b2 u4 Conjugate[u3], a3 -> b3 u1 Conjugate[u2] + b4 u3 Conjugate[u2], a4 -> b3 u2 Conjugate[u4] + b4 u4 Conjugate[u4]}}
-		
-		res = 0;
-		
-		auto a1 = m.a;
-		auto a2 = m.b;
-		auto a3 = m.c;
-		auto a4 = m.d;
-		auto b1 = aChar.a;
-		auto b2 = aChar.b;
-		auto b3 = aChar.c;
-		auto b4 = aChar.d;
-		
-		GL2Iterator<CurlO> uGen;
-		while(true) {
-			auto u = uGen.get();
-			uGen.next();
-			auto u1 = u.a;
-			auto u2 = u.b;
-			auto u3 = u.c;
-			auto u4 = u.d;
-			
-			if(a1 != b1 * u1 * u1.conjugate() + b2 * u3 * u1.conjugate())
-				continue;
-			if(a2 != b1 * u2 * u3.conjugate() + b2 * u4 * u3.conjugate())
-				continue;
-			if(a3 != b3 * u1 * u2.conjugate() + b4 * u3 * u2.conjugate())
-				continue;
-			if(a4 != b3 * u2 * u4.conjugate() + b4 * u4 * u4.conjugate())
-				continue;
-			
-			// found it!
-			res = pow(u.det(), -HermWeight);
-			return true;
-		}
-		
-		return false;
-	}
-		
-	void calcReducedMatrix(const ElemOfF& T, ElemOfF& reducedMatrix, Matrix2<ElemOfO>& U) {
-		// ...
-		
-	}
-	
 	std::vector<ElemOfF> curlFList;
 	std::map<ElemOfF,size_t> reducedCurlFMap; // reducedMatrix(\cF) -> index in list
 	std::vector<ElemOfF> reducedCurlFList; // reducedMatrix(\cF)
@@ -262,20 +207,7 @@ struct ReductionMatrices_Calc {
 			}
 		}
 	}
-	
-	// This defines a_F(T) for all F \in reducedMatrix(\cF), T \in \cF.
-	// F is indexed by reducedCurlFList and T is indexed by curlFList.
-	typedef ElemOfO ValueOfA;
-	std::vector<ValueOfA> A;
-	void calcA() {
-		for(ElemOfF T : curlFList) {
-			ElemOfF F; // reduced matrix
-			Matrix2<ElemOfO> U; // F[U] = T
-			calcReducedMatrix(T, F, U);
-			// ...
-		}
-	}
-	
+		
 	// a_F(T)
 	ValueOfA evalA(ElemOfF aRepr, ElemOfF T) {
 		struct hermitian_form_with_character_evaluation reduced;
@@ -313,9 +245,7 @@ struct ReductionMatrices_Calc {
 	}
 
 	std::vector<ValueOfA> matrix; // flat. column \times row
-	void calcMainMatrix() {
-		calcA();
-				
+	void calcMainMatrix() {				
 		size_t rowCount = 0;
 		for(ElemOfS S : curlS) {
 			rowCount += S.calcPrecisionDimension();
