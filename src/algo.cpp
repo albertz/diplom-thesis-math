@@ -51,20 +51,18 @@ struct ReductionMatrices_Calc {
 		return 10;
 	}
 	
-	std::vector<ElemOfF> curlFList;
 	std::map<ElemOfF,size_t> reducedCurlFMap; // reducedMatrix(\cF) -> index in list
 	std::vector<ElemOfF> reducedCurlFList; // reducedMatrix(\cF)
 	void calcReducedCurlF() {
-		curlFList.clear();
+		reducedCurlFMap.clear();
 		reducedCurlFList.clear();
 		for(ElemOfF T : curlF) {
 			curlFList.push_back(T);
-			ElemOfF F; // reduced matrix
-			Matrix2<ElemOfO> U; // F[U] = T
-			calcReducedMatrix(T, F, U);
-			if(reducedCurlFMap.find(U) != reducedCurlFMap.end()) {
-				reducedCurlFMap[U] = reducedCurlFList.size();
-				reducedCurlFList.push_back(F);
+			struct hermitian_form_with_character_evaluation reduced;
+			reduceGL(T, D, reduced);
+			if(reducedCurlFMap.find(reduced.matrix) != reducedCurlFMap.end()) {
+				reducedCurlFMap[reduced.matrix] = reducedCurlFList.size();
+				reducedCurlFList.push_back(reduced.matrix);
 			}
 		}
 	}
@@ -87,7 +85,7 @@ struct ReductionMatrices_Calc {
 	ValueOfA evalA_S_n(ElemOfF aRepr, ElemOfS S, int n) {
 		// = \sum_{T \in \cF, tr(ST) = n} a_F(T)
 		ValueOfA sum = 0;
-		for(ElemOfF T : curlFList) {
+		for(ElemOfF T : curlF) {
 			if(trace(S,T) == n) {
 				sum += evalA(aRepr, T);
 			}
