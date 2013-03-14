@@ -1,6 +1,9 @@
 
 #include "reduceGL.hpp"
 #include "structs.hpp"
+#include <map>
+#include <vector>
+#include <list>
 
 
 // In many cases, we wont use this variable and hardcode
@@ -9,24 +12,38 @@
 static const int HermDegree = 2;
 
 
+typedef M2T ElemOfS;
+
 struct CurlS_Generator {
-	
-	M2T getNextS();
+	std::list<ElemOfS> matrices;
+	std::list<ElemOfS>::iterator begin() { return matrices.begin(); }
+	std::list<ElemOfS>::iterator end() { return matrices.end(); }
+	void getNextS();
 };
 
-struct ElemOfS {
-	int calcPrecisionDimension() {}
-	M2T matrix;
-};
+int calcPrecisionDimension(ElemOfS S) {
+	// TODO...
+	return 10;
+}
 
 struct Odual {
 	
 };
 
 struct PrecisionF {
-	
+	struct Iter {
+		
+		M2T operator*() const { return M2T(); }
+		Iter& operator++() { return *this; }
+		bool operator!=(const Iter&) const { return true; }
+	};
+	Iter begin() { return Iter(); }
+	Iter end() { return Iter(); }
 };
 
+
+typedef M2T ElemOfF;
+typedef Int ValueOfA;
 
 struct ReductionMatrices_Calc {
 	int HermWeight; // k in the paper. usually <20
@@ -41,8 +58,8 @@ struct ReductionMatrices_Calc {
 	PrecisionF curlF;
 	
 	int wantedDimension; // dim M_k^H
-	int calcDimension() {
-		
+	void calcDimension() {
+		//...
 	}
 	
 	int calcOutDim(ElemOfS elemOfS) {
@@ -57,9 +74,8 @@ struct ReductionMatrices_Calc {
 		reducedCurlFMap.clear();
 		reducedCurlFList.clear();
 		for(ElemOfF T : curlF) {
-			curlFList.push_back(T);
 			struct hermitian_form_with_character_evaluation reduced;
-			reduceGL(T, D, reduced);
+			reduce_GL(T, D, reduced);
 			if(reducedCurlFMap.find(reduced.matrix) != reducedCurlFMap.end()) {
 				reducedCurlFMap[reduced.matrix] = reducedCurlFList.size();
 				reducedCurlFList.push_back(reduced.matrix);
@@ -70,7 +86,7 @@ struct ReductionMatrices_Calc {
 	// a_F(T)
 	ValueOfA evalA(ElemOfF aRepr, ElemOfF T) {
 		struct hermitian_form_with_character_evaluation reduced;
-		reduceGL(T, D, reduced);
+		reduce_GL(T, D, reduced);
 		const int sign = 0; // 0 or 1
 		const int nu_exp = 0; // 0 or 1
 		if(aRepr == reduced.matrix)
@@ -93,10 +109,10 @@ struct ReductionMatrices_Calc {
 		return sum;
 	}
 	
-	void calcOneColumn(ElemOfF elemOfF, vector<ValueOfA>& outVec) {
+	void calcOneColumn(ElemOfF elemOfF, std::vector<ValueOfA>& outVec) {
 		int outVecIndex = 0;
 		for(ElemOfS S : curlS) {
-			for(int i = 0; i < S.calcPrecisionDimension(); ++i, ++outVecIndex) {
+			for(int i = 0; i < calcPrecisionDimension(S); ++i, ++outVecIndex) {
 				auto& out = outVec[outVecIndex];
 				out = evalA_S_n(elemOfF, S, i);
 			}
@@ -107,7 +123,7 @@ struct ReductionMatrices_Calc {
 	void calcMainMatrix() {				
 		size_t rowCount = 0;
 		for(ElemOfS S : curlS) {
-			rowCount += S.calcPrecisionDimension();
+			rowCount += calcPrecisionDimension(S);
 		}
 		
 		size_t column = 0;
@@ -126,4 +142,8 @@ struct ReductionMatrices_Calc {
 };
 
 
+
+void test_algo() {
+	
+}
 
