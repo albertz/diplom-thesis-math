@@ -125,8 +125,10 @@ struct ReductionMatrices_Calc {
 			rowCount += calcPrecisionDimension(S);
 		}
 		
-		size_t column = 0;
+		calcReducedCurlF();
 		matrix.resize(rowCount * reducedCurlFList.size());
+		
+		size_t column = 0;
 		for(ElemOfF F : reducedCurlFList) {
 			calcOneColumn( F, &matrix[rowCount * column], &matrix[rowCount * (column + 1)] );
 			++column;
