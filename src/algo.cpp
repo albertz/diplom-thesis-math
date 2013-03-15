@@ -26,6 +26,12 @@ int calcPrecisionDimension(ElemOfS S) {
 	return 10;
 }
 
+Int trace(M2T m1, M2T m2) {
+	// calculates trace(m1 * m2)
+	// TODO..
+	return 0;
+}
+
 struct Odual {
 	
 };
@@ -56,17 +62,6 @@ struct ReductionMatrices_Calc {
 	
 	CurlS_Generator curlS;
 	PrecisionF curlF;
-	
-	int wantedDimension; // dim M_k^H
-	void calcDimension() {
-		//...
-	}
-	
-	int calcOutDim(ElemOfS elemOfS) {
-		// TODO...
-		// this is \calcF(S) in the text
-		return 10;
-	}
 	
 	std::map<ElemOfF,size_t> reducedCurlFMap; // reducedMatrix(\cF) -> index in list
 	std::vector<ElemOfF> reducedCurlFList; // reducedMatrix(\cF)
@@ -133,12 +128,6 @@ struct ReductionMatrices_Calc {
 		}
 	}
 	
-	void loop() {
-		while(calcDimension() < wantedDimension) {
-			M2T S = curlS.getNextS();
-			
-		}
-	}
 };
 
 
