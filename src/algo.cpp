@@ -104,14 +104,15 @@ struct ReductionMatrices_Calc {
 		return sum;
 	}
 	
-	void calcOneColumn(ElemOfF elemOfF, std::vector<ValueOfA>& outVec) {
-		int outVecIndex = 0;
+	template<typename TIter>
+	void calcOneColumn(ElemOfF elemOfF, TIter outVec, TIter outVecEnd) {
 		for(ElemOfS S : curlS) {
-			for(int i = 0; i < calcPrecisionDimension(S); ++i, ++outVecIndex) {
-				auto& out = outVec[outVecIndex];
+			for(int i = 0; i < calcPrecisionDimension(S); ++i, ++outVec) {
+				auto& out = *outVec;
 				out = evalA_S_n(elemOfF, S, i);
 			}
 		}
+		assert(outVec == outVecEnd);
 	}
 
 	std::vector<ValueOfA> matrix; // flat. column \times row
