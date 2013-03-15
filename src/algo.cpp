@@ -18,7 +18,10 @@ struct CurlS_Generator {
 	std::list<ElemOfS> matrices;
 	std::list<ElemOfS>::iterator begin() { return matrices.begin(); }
 	std::list<ElemOfS>::iterator end() { return matrices.end(); }
-	void getNextS();
+	void getNextS() {
+		// TODO... (or in Python?)
+		matrices.push_back(M2T(1,1,0,1));
+	}
 };
 
 int calcPrecisionDimension(ElemOfS S) {
@@ -123,6 +126,7 @@ struct ReductionMatrices_Calc {
 		}
 		
 		size_t column = 0;
+		matrix.resize(rowCount * reducedCurlFList.size());
 		for(ElemOfF F : reducedCurlFList) {
 			calcOneColumn( F, &matrix[rowCount * column], &matrix[rowCount * (column + 1)] );
 			++column;
@@ -134,6 +138,8 @@ struct ReductionMatrices_Calc {
 
 
 void test_algo() {
-	
+	ReductionMatrices_Calc calc;
+	calc.curlS.getNextS();
+	calc.calcMainMatrix();
 }
 
