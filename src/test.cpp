@@ -6,6 +6,6 @@ void test_algo();
 
 int main() {
 //	test_reduceGL();
-	test_algo_PrecisionF();
-//	test_algo();
+//	test_algo_PrecisionF();
+	test_algo();
 }
