@@ -127,11 +127,8 @@ struct ReductionMatrices_Calc {
 		reduce_GL(T, D, reduced);
 		const int sign = 0; // 0 or 1
 		const int nu_exp = 0; // 0 or 1
-		if(aRepr == reduced.matrix) {
-			// exp(2 pi i det_character / h)
-			// wo h = 2, es sei denn D = -3, dann h = 6, oder D = -4, dann h = 4
-			
-			ValueOfA result = Pow(reduced.character.determinant, -HermWeight);
+		if(aRepr == reduced.matrix) {			
+			ValueOfA result = Pow(reduced.character.detValue(D), -HermWeight);
 			if(sign) result *= reduced.character.transposition;
 			if(nu_exp) result *= reduced.character.nu;
 			return result;
