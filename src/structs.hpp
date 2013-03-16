@@ -17,10 +17,10 @@ inline std::ostream& operator<<(std::ostream& os, const M2T& m) {
 	return os << "M2T(" << m.a << "," << m.b1 << "," << m.b2 << "," << m.c << ")";
 }
 inline int compare(const M2T& m1, const M2T& m2) {
-	if(m1.a != m2.a) return m1.a - m2.a;
-	if(m1.b1 != m2.b1) return m1.b1 - m2.b1;
-	if(m1.b2 != m2.b2) return m1.b2 - m2.b2;
-	if(m1.c != m2.c) return m1.c - m2.c;
+	if(m1.a != m2.a) return (m1.a < m2.a) ? -1 : 1;
+	if(m1.b1 != m2.b1) return (m1.b1 < m2.b1) ? -1 : 1;
+	if(m1.b2 != m2.b2) return (m1.b2 < m2.b2) ? -1 : 1;
+	if(m1.c != m2.c) return (m1.c < m2.c) ? -1 : 1;
 	return 0;
 }
 inline bool operator==(const M2T& m1, const M2T& m2) {
