@@ -86,11 +86,12 @@ struct ReductionMatrices_Calc {
 		reduce_GL(T, D, reduced);
 		const int sign = 0; // 0 or 1
 		const int nu_exp = 0; // 0 or 1
-		if(aRepr == reduced.matrix)
-			return
-				Pow(reduced.character.transposition, sign) *
-				Pow(reduced.character.nu, nu_exp) *
-				Pow(reduced.character.determinant, -HermWeight);
+		if(aRepr == reduced.matrix) {
+			T result = Pow(reduced.character.determinant, -HermWeight);
+			if(sign) result *= reduced.character.transposition;
+			if(nu_exp) result *= reduced.character.nu;
+			return result;
+		}
 		return 0;
 	}
 	
