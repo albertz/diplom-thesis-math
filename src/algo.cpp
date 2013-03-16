@@ -36,6 +36,8 @@ Int trace(M2T m1, M2T m2) {
 
 struct PrecisionF {
 	Int B; // limit
+	PrecisionF() : B(0) {}
+	
 	struct Iter {
 		const PrecisionF& F;
 		M2T cur;
@@ -179,6 +181,18 @@ struct ReductionMatrices_Calc {
 };
 
 
+
+void test_algo_PrecisionF() {
+	using namespace std;
+	PrecisionF curlF;
+	curlF.B = 10;
+	size_t c = 0;
+	for(ElemOfF T : curlF) {
+		cout << T << endl;
+		++c;
+	}
+	cout << "count: " << c << endl;
+}
 
 void test_algo() {
 	ReductionMatrices_Calc calc;
