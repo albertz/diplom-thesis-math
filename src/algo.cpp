@@ -198,6 +198,7 @@ void test_algo() {
 	ReductionMatrices_Calc calc;
 	calc.HermWeight = 10;
 	calc.D = -2;
+	calc.curlF.B = 10;
 	calc.curlS.getNextS();
 	calc.calcMainMatrix();
 }
