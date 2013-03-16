@@ -42,7 +42,7 @@ struct PrecisionF {
 		const PrecisionF& F;
 		M2T cur;
 		bool hitEnd;
-		Iter(const PrecisionF& _F) : F(_F), hitEnd(false) {}
+		Iter(const PrecisionF& _F, bool _end = false) : F(_F), hitEnd(_end) {}
 		
 		bool isValid() {
 			if(cur.det() < 0) return false;
@@ -85,7 +85,7 @@ struct PrecisionF {
 		bool operator!=(const Iter& other) const { return !(*this == other); }
 	};
 	Iter begin() { return Iter(*this); }
-	Iter end() { return Iter(*this); }
+	Iter end() { return Iter(*this, true); }
 };
 
 
@@ -185,7 +185,7 @@ struct ReductionMatrices_Calc {
 void test_algo_PrecisionF() {
 	using namespace std;
 	PrecisionF curlF;
-	curlF.B = 10;
+	curlF.B = 20;
 	size_t c = 0;
 	for(ElemOfF T : curlF) {
 		cout << T << endl;
