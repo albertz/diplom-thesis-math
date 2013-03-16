@@ -12,7 +12,7 @@ void reduce_GL_assertEqual(M2T matrix, int D, _H result) {
 	reduce_GL(matrix, D, calcRes);
 	if(result != calcRes) {
 		cerr << "not equal: " << calcRes << endl;
-		_exit(1);
+		abort();
 	}
 }
 

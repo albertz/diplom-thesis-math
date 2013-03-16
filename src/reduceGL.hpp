@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <math.h>
 #include <iostream>
-#include <unistd.h>
+#include <stdlib.h>
 #include "structs.hpp"
 
 struct reduce_character_evalutation {
@@ -25,7 +25,7 @@ struct reduce_character_evalutation {
 		if(Mod(determinant, h) == 0) return 1;
 		if(Mod(determinant, h) == h/2) return -1;
 		std::cerr << "reduce_character_evalutation.detValue: determinant = " << determinant << ", D = " << D << std::endl;
-		_exit(1);
+		abort();
 		return 0;
 	}
 };
@@ -118,11 +118,11 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 	// FIXME: the discriminant can become too big
 	if( D >= 0 ) {
 		std::cerr << "reduce_GL: we expect negative D. D = " << D << std::endl;
-		_exit(1);
+		abort();
 	}
 	if( a < 0 || c < 0 || - D * a * c - b1*b1 - D * b1 * b2 - Div((D*D - D), 4) * b2*b2 < 0 ) {
 		std::cerr << "reduce_GL: invalid input: " << matrix << ", " << D << std::endl;
-		_exit(1);
+		abort();
 	}
 
 	int q, r;
