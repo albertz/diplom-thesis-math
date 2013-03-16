@@ -8,11 +8,20 @@
 typedef int Int;
 
 struct M2T {
-	// [[a,b1 + ib2],[b1 - ib2, c]]
+	// We set `b = b1 / \sqrt{D} + b2 (1 + \sqrt{D})/2`, where
+	// D is a negative integer, the fundamental discriminant of
+	// the underlying imaginary quadratic number field.
+	// This M2T-struct represents the matrix [a,b,c].
 	Int a, b1, b2, c;
 	M2T(Int _a = 0, Int _b1 = 0, Int _b2 = 0, Int _c = 0)
 	: a(_a), b1(_b1), b2(_b2), c(_c) {}
-	Int det() const { return a*c - b1*b1 - b2*b2; }
+	// det4D == -D * 4 * det
+	Int det4D(const int D) const {
+		assert(D < 0);
+		// Re(b)^2 = 1/4 b2^2
+		// Im(b)^2 = (b1^2 + b1*b2 + 1/4 b2^2) / \sqrt{-D}
+		return a*c*4*(-D) - b2*b2*(-D) - (b1*b1*4 + b1*b2*4 + b2*b2);
+	}
 };
 inline std::ostream& operator<<(std::ostream& os, const M2T& m) {
 	return os << "M2T(" << m.a << "," << m.b1 << "," << m.b2 << "," << m.c << ")";
