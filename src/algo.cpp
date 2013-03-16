@@ -92,7 +92,7 @@ struct ReductionMatrices_Calc {
 		const int sign = 0; // 0 or 1
 		const int nu_exp = 0; // 0 or 1
 		if(aRepr == reduced.matrix) {
-			T result = Pow(reduced.character.determinant, -HermWeight);
+			ValueOfA result = Pow(reduced.character.determinant, -HermWeight);
 			if(sign) result *= reduced.character.transposition;
 			if(nu_exp) result *= reduced.character.nu;
 			return result;

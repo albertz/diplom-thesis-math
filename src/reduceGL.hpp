@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <math.h>
 #include <iostream>
+#include <unistd.h>
 #include "structs.hpp"
 
 struct reduce_character_evalutation {
@@ -112,7 +113,7 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 		_exit(1);
 	}
 
-	int twoa, q, r;
+	int q, r;
 	int tmp;
 	// for a describtion of det, trans and nu see the output documentation
 	// of reduce_GL
