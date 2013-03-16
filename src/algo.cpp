@@ -35,14 +35,55 @@ Int trace(M2T m1, M2T m2) {
 }
 
 struct PrecisionF {
+	Int B; // limit
 	struct Iter {
+		const PrecisionF& F;
+		M2T cur;
+		bool hitEnd;
+		Iter(const PrecisionF& _F) : F(_F), hitEnd(false) {}
 		
-		M2T operator*() const { return M2T(); }
-		Iter& operator++() { return *this; }
-		bool operator!=(const Iter&) const { return true; }
+		bool isValid() {
+			if(cur.det() < 0) return false;
+			if(cur.a < 0 || cur.a >= F.B) return false;
+			if(cur.c < 0 || cur.c >= F.B) return false;
+			return true;
+		}
+		void next() {
+			if(cur.b2 > 0) { cur.b2 *= -1; return; }
+			cur.b2 = -cur.b2 + 1;
+			if(cur.det() < 0) {
+				cur.b2 = 0;
+				if(cur.b1 > 0) { cur.b1 *= -1; return; }
+				cur.b1 = -cur.b1 + 1;
+			}
+			if(cur.det() < 0) {
+				cur.b1 = cur.b2 = 0;
+				cur.c ++;
+			}
+			if(cur.c >= F.B) {
+				cur.c = cur.b1 = cur.b2 = 0;
+				cur.a ++;
+			}
+			if(cur.a >= F.B)
+				hitEnd = true;
+		}
+		Iter& operator++() {
+			do {
+				next();
+			} while(!isValid() && !hitEnd);
+			return *this;
+		}
+		M2T operator*() const { return cur; }
+		bool operator==(const Iter& other) const {
+			if(hitEnd && other.hitEnd) return true;
+			if(!hitEnd && other.hitEnd) return false;
+			if(hitEnd && !other.hitEnd) return false;
+			return cur == other.cur;
+		}
+		bool operator!=(const Iter& other) const { return !(*this == other); }
 	};
-	Iter begin() { return Iter(); }
-	Iter end() { return Iter(); }
+	Iter begin() { return Iter(*this); }
+	Iter end() { return Iter(*this); }
 };
 
 
@@ -87,6 +128,9 @@ struct ReductionMatrices_Calc {
 		const int sign = 0; // 0 or 1
 		const int nu_exp = 0; // 0 or 1
 		if(aRepr == reduced.matrix) {
+			// exp(2 pi i det_character / h)
+			// wo h = 2, es sei denn D = -3, dann h = 6, oder D = -4, dann h = 4
+			
 			ValueOfA result = Pow(reduced.character.determinant, -HermWeight);
 			if(sign) result *= reduced.character.transposition;
 			if(nu_exp) result *= reduced.character.nu;

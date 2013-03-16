@@ -12,6 +12,7 @@ struct M2T {
 	Int a, b1, b2, c;
 	M2T(Int _a = 0, Int _b1 = 0, Int _b2 = 0, Int _c = 0)
 	: a(_a), b1(_b1), b2(_b2), c(_c) {}
+	Int det() const { return a*c - b1*b1 - b2*b2; }
 };
 inline std::ostream& operator<<(std::ostream& os, const M2T& m) {
 	return os << "M2T(" << m.a << "," << m.b1 << "," << m.b2 << "," << m.c << ")";
@@ -48,6 +49,7 @@ T Mod(const T& a, const T& b) {
 	T res = a % b;
 	if(a < 0) res += b;
 	assert(res >= 0);
+	assert(res < b);
 	return res;
 }
 

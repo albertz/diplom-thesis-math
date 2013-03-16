@@ -16,6 +16,18 @@ struct reduce_character_evalutation {
 	int nu;
 	reduce_character_evalutation(int _trans = 0, int _det = 0, int _nu = 0)
 	: transposition(_trans), determinant(_det), nu(_nu) {}
+	
+	int detValue(const int D) {
+		// det = exp(2 pi i det_character / h)
+		// where h = 2, or if D = -3, then h = 6, or D = -4, then h = 4
+		// we expect that it is a unit here.
+		const int h = (D == -3) ? 6 : (D == -4) ? 4 : 2;
+		if(Mod(determinant, h) == 0) return 1;
+		if(Mod(determinant, h) == h/2) return -1;
+		std::cerr << "reduce_character_evalutation.detValue: determinant = " << determinant << ", D = " << D << std::endl;
+		_exit(1);
+		return 0;
+	}
 };
 inline std::ostream& operator<< (std::ostream& os, const reduce_character_evalutation& c) {
 	return os << "_C(" << c.transposition << ", " << c.determinant << ", " << c.nu << ")";
