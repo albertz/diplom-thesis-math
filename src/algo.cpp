@@ -34,10 +34,6 @@ Int trace(M2T m1, M2T m2) {
 	return m1.a * m2.a + 2 * m1.b1 * m2.b1 + 2 * m1.b2 * m2.b2 + m1.c * m2.c;
 }
 
-struct Odual {
-	
-};
-
 struct PrecisionF {
 	struct Iter {
 		
@@ -55,7 +51,6 @@ typedef Int ValueOfA;
 
 struct ReductionMatrices_Calc {
 	int HermWeight; // k in the paper. usually <20
-	//Odual oDual; // not sure if i need to specify it explicitely..., probably not
 	int D; // discriminant. usually D in {-2,-3,-4}
 	
 	ReductionMatrices_Calc() {
