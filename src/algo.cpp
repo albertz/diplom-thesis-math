@@ -58,6 +58,11 @@ struct ReductionMatrices_Calc {
 	//Odual oDual; // not sure if i need to specify it explicitely..., probably not
 	int D; // discriminant. usually D in {-2,-3,-4}
 	
+	ReductionMatrices_Calc() {
+		HermWeight = 0;
+		D = 0;
+	}
+	
 	//CurlO curlO;
 	//Gamma gamma;
 	//Character nu;
@@ -141,6 +146,8 @@ struct ReductionMatrices_Calc {
 
 void test_algo() {
 	ReductionMatrices_Calc calc;
+	calc.HermWeight = 10;
+	calc.D = -2;
 	calc.curlS.getNextS();
 	calc.calcMainMatrix();
 }
