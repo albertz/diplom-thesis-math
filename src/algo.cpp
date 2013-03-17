@@ -35,8 +35,9 @@ Int trace(M2T m1, M2T m2) {
 }
 
 struct PrecisionF {
+	int D; // fundamental discriminant
 	Int B; // limit
-	PrecisionF() : B(0) {}
+	PrecisionF(int _D = 0, Int _B = 0) : D(_D), B(_B) {}
 	
 	struct Iter {
 		const PrecisionF& F;
@@ -45,7 +46,7 @@ struct PrecisionF {
 		Iter(const PrecisionF& _F, bool _end = false) : F(_F), hitEnd(_end) {}
 		
 		bool isValid() {
-			if(cur.det() < 0) return false;
+			if(cur.det4D(F.D) < 0) return false;
 			if(cur.a < 0 || cur.a >= F.B) return false;
 			if(cur.c < 0 || cur.c >= F.B) return false;
 			return true;
@@ -53,12 +54,12 @@ struct PrecisionF {
 		void next() {
 			if(cur.b2 > 0) { cur.b2 *= -1; return; }
 			cur.b2 = -cur.b2 + 1;
-			if(cur.det() < 0) {
+			if(cur.det4D(F.D) < 0) {
 				cur.b2 = 0;
 				if(cur.b1 > 0) { cur.b1 *= -1; return; }
 				cur.b1 = -cur.b1 + 1;
 			}
-			if(cur.det() < 0) {
+			if(cur.det4D(F.D) < 0) {
 				cur.b1 = cur.b2 = 0;
 				cur.c ++;
 			}
@@ -185,6 +186,7 @@ struct ReductionMatrices_Calc {
 void test_algo_PrecisionF() {
 	using namespace std;
 	PrecisionF curlF;
+	curlF.D = -2;
 	curlF.B = 20;
 	size_t c = 0;
 	for(ElemOfF T : curlF) {
@@ -197,7 +199,7 @@ void test_algo_PrecisionF() {
 void test_algo() {
 	ReductionMatrices_Calc calc;
 	calc.HermWeight = 10;
-	calc.D = -2;
+	calc.D = calc.curlF.D = -2;
 	calc.curlF.B = 10;
 	calc.curlS.getNextS();
 	calc.calcMainMatrix();
