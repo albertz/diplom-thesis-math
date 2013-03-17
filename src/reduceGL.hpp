@@ -108,7 +108,7 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 	`\lbrackt a,b,c \rbrackt` with respect to `\mathrm{GL}_2(\mathcal{o}_D)`.
 	
 	A reduced form `\lbrackt a,b,c \rbrackt` satisfies `a \le c`,
-	`|\Im(b)| / \sqrt{D} \le a / 4`, `|\Re(b)| \le a / 2`. It satisfies `b2 \ge 0`.
+	`|\Im(b)| / \sqrt{-D} \le a / 4`, `|\Re(b)| \le a / 2`. It satisfies `b2 \ge 0`.
 	If `D = -3` it also satisfies `-D b2 \ge 2 b1 \ge 2 b2`.
 	If `D = -4` it also satisfies `2 b2 \ge b1 \ge b2`.
 	In all other cases it also satisfies `2 b1 + D b2 \le 0`.
