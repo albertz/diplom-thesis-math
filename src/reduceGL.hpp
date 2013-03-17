@@ -257,7 +257,7 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 	} //! else D == -4
 
 	// while not GL-reduced
-	while (! (a<=c && abs(b2) <= a && abs(-4*b1 - 2 * D * b2) <= -D*a ) ) {
+	while (! ((a == 0) || ( a<=c && abs(b2) <= a && abs(-4*b1 - 2 * D * b2) <= -D*a )) ) {
 		// apply symmetric step (reflection) if necessary
 		if(b1 < 0) {
 			// apply [[-1, 0], [0, 1]]
