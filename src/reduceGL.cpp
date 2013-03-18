@@ -17,6 +17,8 @@ void reduce_GL_assertEqual(M2T matrix, int D, _H result) {
 }
 
 void test_reduceGL() {
+	reduce_GL_assertEqual(M2T(1,2,0,2), -2,
+		_H(M2T(0, 0, 0, 1), _C(-1, 0, 1)));
 	reduce_GL_assertEqual(M2T(1,0,0,2), -3,
 		_H(M2T(1, 0, 0, 2), _C(1, 0, 1)));
 	reduce_GL_assertEqual(M2T(2,0,0,1), -3,
@@ -48,6 +50,6 @@ void test_reduceGL() {
 	reduce_GL_assertEqual(M2T(17,0,5,10), -7,
 		_H(M2T(10, 0, 5, 17), _C(-1, 1, 1)));
 	reduce_GL_assertEqual(M2T(117,43,27,10), -7,
-		_H(M2T(10, -6, 3, 65), _C(1, 0, 1)));	
+		_H(M2T(10, -6, 3, 65), _C(1, 0, 1)));
 }
 
