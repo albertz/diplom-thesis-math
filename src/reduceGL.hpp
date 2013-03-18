@@ -284,7 +284,14 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 				// r -= -D * a;
 				q += 1;
 			}
-				
+			
+			if(Mod(q*q * a * (D*D - D), 4) != 0) {
+				a *= 2;
+				b1 *= 2;
+				b2 *= 2;
+				c *= 2;
+			}
+			
 			// apply [[1, -q*(D + \sqrt D)/2], [0, 1]]
 			assert(Mod(q*q * a * (D*D - D), 4) == 0);
 			c = c + Div(q*q * a * (D*D - D), 4) + b1 * q;
