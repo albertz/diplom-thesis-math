@@ -18,9 +18,11 @@ struct M2T {
 	// det4D == -D * 4 * det
 	Int det4D(const int D) const {
 		assert(D < 0);
+		// det = a*c - |b|^2
 		// Re(b)^2 = 1/4 b2^2
-		// Im(b)^2 = (b1^2 + b1*b2 + 1/4 b2^2) / \sqrt{-D}
-		return a*c*4*(-D) - b2*b2*(-D) - (b1*b1*4 + b1*b2*4 + b2*b2);
+		// Im(b)^2 = b1^2/(-D) + b1*b2 + 1/4 (-D) b2^2
+		// -> 4*(-D)*|b∫^2 = 4*b1^2 + 4*(-D)*b1*b2 + (D^2 - D)*b2^2
+		return a*c*4*(-D) - 4*b1*b1 - 4*(-D)*b1*b2 - (D*D - D)*b2*b2;
 	}
 };
 inline std::ostream& operator<<(std::ostream& os, const M2T& m) {
@@ -56,6 +58,7 @@ struct Matrix2 {
 template<typename T>
 T Mod(const T& a, const T& b) {
 	T res = a % b;
+	// in C: (1%3,0%3,-1%3,-2%3,-3%3,-4%3) == (1,0,-1,-2,0,-1)
 	if(a % b < 0) res += b;
 	assert(res >= 0);
 	assert(res < b);

@@ -124,7 +124,7 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 		std::cerr << "reduce_GL: we expect negative D. D = " << D << std::endl;
 		abort();
 	}
-	if( a < 0 || c < 0 || - D * a * c - b1*b1 - D * b1 * b2 - Div((D*D - D), 4) * b2*b2 < 0 ) {
+	if( a < 0 || c < 0 || matrix.det4D(D) < 0 ) {
 		std::cerr << "reduce_GL: invalid input: " << matrix << ", " << D << std::endl;
 		abort();
 	}
