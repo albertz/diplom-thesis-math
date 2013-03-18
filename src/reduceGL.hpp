@@ -11,6 +11,10 @@
 #include "structs.hpp"
 
 struct reduce_character_evalutation {
+	// det_character is alread mod h, i.e. < h.
+	// det = exp(2 pi i det_character / h)
+	// where h = 2, or if D = -3, then h = 6, or D = -4, then h = 4.
+
 	int transposition;
 	int determinant;
 	int nu;
@@ -20,7 +24,7 @@ struct reduce_character_evalutation {
 	int detValue(const int D) {
 		// det = exp(2 pi i det_character / h)
 		// where h = 2, or if D = -3, then h = 6, or D = -4, then h = 4
-		// we expect that it is a unit here.
+		// we expect that it is a unit in \Z here.
 		const int h = (D == -3) ? 6 : (D == -4) ? 4 : 2;
 		if(Mod(determinant, h) == 0) return 1;
 		if(Mod(determinant, h) == h/2) return -1;
