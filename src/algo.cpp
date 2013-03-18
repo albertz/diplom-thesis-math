@@ -54,20 +54,23 @@ struct PrecisionF {
 		bool _hardLimitCheck() {
 			auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
 			// det4D >= 0 <=> 4(-D)ac >= 4b1^2 - 4(-D)b1b2 + (-D)(1-D)b2^2
-			// Thus 4(-D)ac >= 4b1^2 + 4(-D)|b1b2| + (-D)(1-D)b2^2 .
+			// Thus, when we have 4(-D)ac >= 4b1^2 - 4(-D)|b1b2| + (-D)(1-D)b2^2,
+			// we are always safe that we don't miss any values. Of course,
+			// we must still check for validity because we will get invalid values.
+			// 4b1^2 - 4(-D)|b1b2| = 4|b1| (|b1| - (-D)|b2|).
 			// This is always strongly monotonly increasing and sign-independent -> thus we can iterate.
-			return 4*(-F.D)*a*c >= 4*b1*b1 + 4*(-F.D)*abs(b1*b2) + (-F.D)*(1-F.D)*b2*b2;
+			return 4*(-F.D)*a*c >= 4*b1*b1 - 4*(-F.D)*abs(b1*b2) + (-F.D)*(1-F.D)*b2*b2;
 		}
 		void next() {
 			auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
 			if(b2 > 0) { b2 *= -1; return; }
 			b2 = -b2 + 1;
-			if(_hardLimitCheck()) {
+			if(!_hardLimitCheck()) {
 				b2 = 0;
 				if(b1 > 0) { b1 *= -1; return; }
 				b1 = -b1 + 1;
 			}
-			if(cur.det4D(F.D) < 0) {
+			if(!_hardLimitCheck()) {
 				b1 = b2 = 0;
 				c ++;
 			}
