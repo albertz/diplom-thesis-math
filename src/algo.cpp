@@ -128,7 +128,7 @@ struct ReductionMatrices_Calc {
 		for(ElemOfF T : curlF) {
 			struct hermitian_form_with_character_evaluation reduced;
 			reduce_GL(T, D, reduced);
-			if(reducedCurlFMap.find(reduced.matrix) != reducedCurlFMap.end()) {
+			if(reducedCurlFMap.find(reduced.matrix) == reducedCurlFMap.end()) {
 				reducedCurlFMap[reduced.matrix] = reducedCurlFList.size();
 				reducedCurlFList.push_back(reduced.matrix);
 			}
@@ -208,11 +208,14 @@ void test_algo_PrecisionF() {
 }
 
 void test_algo() {
+	using namespace std;
 	ReductionMatrices_Calc calc;
 	calc.HermWeight = 10;
 	calc.D = calc.curlF.D = -2;
-	calc.curlF.B = 10;
+	calc.curlF.B = 20;
 	calc.curlS.getNextS();
 	calc.calcMainMatrix();
+	cout << "size of reducedMatrix(curlF): " << calc.reducedCurlFList.size() << endl;
+	cout << "size of matrix: " << calc.matrix.size() << endl;
 }
 
