@@ -56,7 +56,7 @@ struct Matrix2 {
 template<typename T>
 T Mod(const T& a, const T& b) {
 	T res = a % b;
-	if(a < 0) res += b;
+	if(a % b < 0) res += b;
 	assert(res >= 0);
 	assert(res < b);
 	return res;
@@ -65,7 +65,7 @@ T Mod(const T& a, const T& b) {
 template<typename T>
 T Div(const T& a, const T& b) {
 	T res = a / b;
-	if(a < 0) res -= 1;
+	if(a % b < 0) res -= 1;
 	return res;
 }
 
