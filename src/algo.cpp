@@ -31,6 +31,7 @@ int calcPrecisionDimension(ElemOfS S) {
 
 Int trace(M2T m1, M2T m2) {
 	// calculates trace(m1 * m2)
+	// = m1.a * m2.a + 2 * Re(m1.b * m2.b) + m1.c * m2.c
 	return m1.a * m2.a + 2 * m1.b1 * m2.b1 + 2 * m1.b2 * m2.b2 + m1.c * m2.c;
 }
 
