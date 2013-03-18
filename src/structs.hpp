@@ -20,9 +20,9 @@ struct M2T {
 		assert(D < 0);
 		// det = a*c - |b|^2
 		// Re(b)^2 = 1/4 b2^2
-		// Im(b)^2 = b1^2/(-D) + b1*b2 + 1/4 (-D) b2^2
-		// -> 4*(-D)*|b∫^2 = 4*b1^2 + 4*(-D)*b1*b2 + (D^2 - D)*b2^2
-		return a*c*4*(-D) - 4*b1*b1 - 4*(-D)*b1*b2 - (D*D - D)*b2*b2;
+		// Im(b)^2 = b1^2/(-D) - b1*b2 + 1/4 (-D) b2^2
+		// -> 4*(-D)*|b∫^2 = 4*b1^2 - 4*(-D)*b1*b2 + (D^2 - D)*b2^2
+		return a*c*4*(-D) - 4*b1*b1 + 4*(-D)*b1*b2 - (D*D - D)*b2*b2;
 	}
 };
 inline std::ostream& operator<<(std::ostream& os, const M2T& m) {
