@@ -124,6 +124,11 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 		std::cerr << "reduce_GL: we expect negative D. D = " << D << std::endl;
 		abort();
 	}
+	if( (Mod(D, 4) != 1) && !(Mod(D, 4) == 0 && (Mod(Div(D, 4), 4) == 2 || Mod(Div(D, 4), 4) == 3)) ) {
+		std::cerr << "reduce_GL: D must be a fundamental discriminant. D = " << D << std::endl;
+		abort();
+	}
+	assert(Mod(D*D - D, 4) == 0);
 	if( a < 0 || c < 0 || matrix.det4D(D) < 0 ) {
 		std::cerr << "reduce_GL: invalid input: " << matrix << ", " << D << std::endl;
 		abort();
@@ -293,7 +298,6 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 			}
 			
 			// apply [[1, -q*(D + \sqrt D)/2], [0, 1]]
-			assert(Mod(D*D - D, 4) == 0);
 			c = c + q*q * a * Div((D*D - D), 4) + b1 * q;
 			b1 = b1 + q * a * Div((D-1) * D, 2);
 			b2 = b2 - q * a * D;
