@@ -203,7 +203,7 @@ struct ReductionMatrices_Calc {
 void test_algo_PrecisionF() {
 	using namespace std;
 	PrecisionF curlF;
-	curlF.D = -2;
+	curlF.D = -4;
 	curlF.B = 20;
 	size_t c = 0;
 	for(ElemOfF T : curlF) {
@@ -217,7 +217,7 @@ void test_algo_calcReducedCurlF() {
 	using namespace std;
 	ReductionMatrices_Calc calc;
 	calc.HermWeight = 10;
-	calc.D = calc.curlF.D = -2;
+	calc.D = calc.curlF.D = -4;
 	calc.curlF.B = 10;
 	calc.calcReducedCurlF();
 	cout << "size of reducedMatrix(curlF): " << calc.reducedCurlFList.size() << endl;	
@@ -227,7 +227,7 @@ void test_algo() {
 	using namespace std;
 	ReductionMatrices_Calc calc;
 	calc.HermWeight = 10;
-	calc.D = calc.curlF.D = -2;
+	calc.D = calc.curlF.D = -4;
 	calc.curlF.B = 10;
 	calc.curlS.getNextS();
 	calc.calcMainMatrix();
