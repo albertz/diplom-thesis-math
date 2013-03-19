@@ -29,6 +29,7 @@ int calcPrecisionDimension(ElemOfS S) {
 	return 10;
 }
 
+// is always an integer
 Int trace(M2T m1, M2T m2) {
 	// calculates trace(m1 * m2)
 	// = m1.a * m2.a + 2 * Re(m1.b * m2.b) + m1.c * m2.c
