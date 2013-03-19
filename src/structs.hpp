@@ -16,6 +16,7 @@ struct M2T {
 	M2T(Int _a = 0, Int _b1 = 0, Int _b2 = 0, Int _c = 0)
 	: a(_a), b1(_b1), b2(_b2), c(_c) {}
 	// det4D == -D * 4 * det
+	// TODO(?): if D is fundamental, we always have 4|(D*D-D), thus we could just use -D * det.
 	Int det4D(const int D) const {
 		assert(D < 0);
 		// det = a*c - |b|^2
