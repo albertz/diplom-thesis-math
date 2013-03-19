@@ -184,6 +184,10 @@ struct ReductionMatrices_Calc {
 		calcReducedCurlF();
 		matrix.resize(rowCount * reducedCurlFList.size());
 		
+		// TODO: reorder loops for performance.
+		// reduce_GL is expensive, thus we should iterate
+		// through curlF only once.
+		
 		size_t column = 0;
 		for(ElemOfF F : reducedCurlFList) {
 			calcOneColumn( F, &matrix[rowCount * column], &matrix[rowCount * (column + 1)] );
