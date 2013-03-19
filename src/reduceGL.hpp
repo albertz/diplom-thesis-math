@@ -124,6 +124,7 @@ inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_ev
 		std::cerr << "reduce_GL: we expect negative D. D = " << D << std::endl;
 		abort();
 	}
+	// see http://en.wikipedia.org/wiki/Fundamental_discriminant
 	if( (Mod(D, 4) != 1) && !(Mod(D, 4) == 0 && (Mod(Div(D, 4), 4) == 2 || Mod(Div(D, 4), 4) == 3)) ) {
 		std::cerr << "reduce_GL: D must be a fundamental discriminant. D = " << D << std::endl;
 		abort();
