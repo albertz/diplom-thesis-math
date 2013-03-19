@@ -28,7 +28,7 @@ struct reduce_character_evalutation {
 		const int h = (D == -3) ? 6 : (D == -4) ? 4 : 2;
 		if(Mod(determinant, h) == 0) return 1;
 		if(Mod(determinant, h) == h/2) return -1;
-		std::cerr << "reduce_character_evalutation.detValue: determinant = " << determinant << ", D = " << D << std::endl;
+		std::cerr << "reduce_character_evalutation.detValue error: determinant = " << determinant << ", D = " << D << std::endl;
 		abort();
 		return 0;
 	}
