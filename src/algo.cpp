@@ -12,7 +12,7 @@
 static const int HermDegree = 2;
 
 
-typedef M2T_O ElemOfS;
+typedef M2T ElemOfS;
 
 struct CurlS_Generator {
 	std::list<ElemOfS> matrices;
@@ -20,7 +20,7 @@ struct CurlS_Generator {
 	std::list<ElemOfS>::iterator end() { return matrices.end(); }
 	void getNextS() {
 		// TODO... (or in Python?)
-		matrices.push_back(M2T_O(1,1,0,1));
+		matrices.push_back(M2T(1,1,1));
 	}
 };
 
@@ -29,11 +29,13 @@ int calcPrecisionDimension(ElemOfS S) {
 	return 10;
 }
 
+// calculates trace(S * T)
 // is always an integer
-Int trace(M2T_O m1, M2T_O m2) {
-	// calculates trace(m1 * m2)
-	// = m1.a * m2.a + 2 * Re(m1.b * m2.b) + m1.c * m2.c
-	return m1.a * m2.a + 2 * m1.b1 * m2.b1 + 2 * m1.b2 * m2.b2 + m1.c * m2.c;
+Int trace(M2T S, M2T_O T) {
+	// = S.a * T.a + 2 * Re(S.b * \overline{T.b}) + S.c * T.c
+	// = S.a * T.a + S.c * T.c + 2 * S.b * Re(T.b)
+	// = S.a * T.a + S.c * T.c + S.b * T.b2
+	return S.a * T.a + S.c * T.c + S.b * T.b2;
 }
 
 struct PrecisionF {

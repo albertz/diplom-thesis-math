@@ -48,6 +48,13 @@ inline bool operator<(const M2T_O& m1, const M2T_O& m2) {
 	return compare(m1, m2) < 0;
 }
 
+struct M2T {
+	Int a, b, c;
+	// This M2T-struct represents the matrix [a,b,c].
+	M2T(Int _a = 0, Int _b = 0, Int _c = 0)
+	: a(_a), b(_b), c(_c) {}
+};
+
 template<typename T>
 struct Matrix2 {
 	T a,b,c,d; // [[a,b],[c,d]]
