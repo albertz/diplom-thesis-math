@@ -12,7 +12,7 @@
 static const int HermDegree = 2;
 
 
-typedef M2T ElemOfS;
+typedef M2T_O ElemOfS;
 
 struct CurlS_Generator {
 	std::list<ElemOfS> matrices;
@@ -20,7 +20,7 @@ struct CurlS_Generator {
 	std::list<ElemOfS>::iterator end() { return matrices.end(); }
 	void getNextS() {
 		// TODO... (or in Python?)
-		matrices.push_back(M2T(1,1,0,1));
+		matrices.push_back(M2T_O(1,1,0,1));
 	}
 };
 
@@ -30,7 +30,7 @@ int calcPrecisionDimension(ElemOfS S) {
 }
 
 // is always an integer
-Int trace(M2T m1, M2T m2) {
+Int trace(M2T_O m1, M2T_O m2) {
 	// calculates trace(m1 * m2)
 	// = m1.a * m2.a + 2 * Re(m1.b * m2.b) + m1.c * m2.c
 	return m1.a * m2.a + 2 * m1.b1 * m2.b1 + 2 * m1.b2 * m2.b2 + m1.c * m2.c;
@@ -43,7 +43,7 @@ struct PrecisionF {
 	
 	struct Iter {
 		const PrecisionF& F;
-		M2T cur;
+		M2T_O cur;
 		bool hitEnd;
 		Iter(const PrecisionF& _F, bool _end = false) : F(_F), hitEnd(_end) {}
 		
@@ -89,7 +89,7 @@ struct PrecisionF {
 			} while(!isValid() && !hitEnd);
 			return *this;
 		}
-		M2T operator*() const { return cur; }
+		M2T_O operator*() const { return cur; }
 		bool operator==(const Iter& other) const {
 			if(hitEnd && other.hitEnd) return true;
 			if(!hitEnd && other.hitEnd) return false;
@@ -103,7 +103,7 @@ struct PrecisionF {
 };
 
 
-typedef M2T ElemOfF;
+typedef M2T_O ElemOfF;
 typedef Int ValueOfA;
 
 struct ReductionMatrices_Calc {

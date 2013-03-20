@@ -7,13 +7,13 @@
 
 typedef int Int;
 
-struct M2T {
+struct M2T_O {
 	// We set `b = b1 / \sqrt{D} + b2 (1 + \sqrt{D})/2`, where
 	// D is a negative integer, the fundamental discriminant of
 	// the underlying imaginary quadratic number field.
-	// This M2T-struct represents the matrix [a,b,c].
+	// This M2T_O-struct represents the matrix [a,b,c].
 	Int a, b1, b2, c;
-	M2T(Int _a = 0, Int _b1 = 0, Int _b2 = 0, Int _c = 0)
+	M2T_O(Int _a = 0, Int _b1 = 0, Int _b2 = 0, Int _c = 0)
 	: a(_a), b1(_b1), b2(_b2), c(_c) {}
 	// det4D == -D * 4 * det
 	// TODO(?): if D is fundamental, we always have 4|(D*D-D), thus we could just use -D * det.
@@ -28,23 +28,23 @@ struct M2T {
 		return a*c*4*(-D) - 4*b1*b1 + 4*(-D)*b1*b2 - (D*D - D)*b2*b2;
 	}
 };
-inline std::ostream& operator<<(std::ostream& os, const M2T& m) {
-	return os << "M2T(" << m.a << "," << m.b1 << "," << m.b2 << "," << m.c << ")";
+inline std::ostream& operator<<(std::ostream& os, const M2T_O& m) {
+	return os << "M2T_O(" << m.a << "," << m.b1 << "," << m.b2 << "," << m.c << ")";
 }
-inline int compare(const M2T& m1, const M2T& m2) {
+inline int compare(const M2T_O& m1, const M2T_O& m2) {
 	if(m1.a != m2.a) return (m1.a < m2.a) ? -1 : 1;
 	if(m1.b1 != m2.b1) return (m1.b1 < m2.b1) ? -1 : 1;
 	if(m1.b2 != m2.b2) return (m1.b2 < m2.b2) ? -1 : 1;
 	if(m1.c != m2.c) return (m1.c < m2.c) ? -1 : 1;
 	return 0;
 }
-inline bool operator==(const M2T& m1, const M2T& m2) {
+inline bool operator==(const M2T_O& m1, const M2T_O& m2) {
 	return compare(m1, m2) == 0;
 }
-inline bool operator!=(const M2T& m1, const M2T& m2) {
+inline bool operator!=(const M2T_O& m1, const M2T_O& m2) {
 	return compare(m1, m2) != 0;
 }
-inline bool operator<(const M2T& m1, const M2T& m2) {
+inline bool operator<(const M2T_O& m1, const M2T_O& m2) {
 	return compare(m1, m2) < 0;
 }
 

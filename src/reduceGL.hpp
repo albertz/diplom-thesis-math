@@ -44,9 +44,9 @@ inline bool operator!=(const reduce_character_evalutation& c1, const reduce_char
 }
 
 struct hermitian_form_with_character_evaluation {
-	M2T matrix;
+	M2T_O matrix;
 	reduce_character_evalutation character;
-	hermitian_form_with_character_evaluation(M2T _m = M2T(), reduce_character_evalutation _char = reduce_character_evalutation())
+	hermitian_form_with_character_evaluation(M2T_O _m = M2T_O(), reduce_character_evalutation _char = reduce_character_evalutation())
 	: matrix(_m), character(_char) {}
 };
 inline std::ostream& operator<< (std::ostream& os, const hermitian_form_with_character_evaluation& f) {
@@ -60,7 +60,7 @@ inline bool operator!=(const hermitian_form_with_character_evaluation& f1, const
 }
 
 
-inline void reduce_GL(M2T matrix, int D, struct hermitian_form_with_character_evaluation& res) {
+inline void reduce_GL(M2T_O matrix, int D, struct hermitian_form_with_character_evaluation& res) {
 	auto a = matrix.a, b1 = matrix.b1, b2 = matrix.b2, c = matrix.c;
 	
 	/*
