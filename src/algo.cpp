@@ -24,9 +24,12 @@ struct CurlS_Generator {
 	}
 };
 
-int calcPrecisionDimension(ElemOfS S) {
-	// TODO...
-	return 10;
+int calcPrecisionDimension(const PrecisionF& F, ElemOfS S) {
+	// tr([s,t,u] * [a,b,c]) >= max(a,c) * (s + u - 2|t|)
+	// T=[a,b,c] \in \cF - \Lambda => max(a,c) >= B
+	assert(S.a + S.c - 2 * abs(S.b) > 0); // this is always the case if S is positive definite
+	assert(F.B > 0);
+	return F.B * (S.a + S.c - 2 * abs(S.b));
 }
 
 // calculates trace(S * T)
