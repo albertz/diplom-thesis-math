@@ -20,7 +20,7 @@ struct CurlS_Generator {
 	std::list<ElemOfS>::iterator end() { return matrices.end(); }
 	void getNextS() {
 		// TODO... (or in Python?)
-		matrices.push_back(M2T(1,1,1));
+		matrices.push_back(M2T(2,1,1));
 	}
 };
 
