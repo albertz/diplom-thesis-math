@@ -24,14 +24,6 @@ struct CurlS_Generator {
 	}
 };
 
-int calcPrecisionDimension(const PrecisionF& F, ElemOfS S) {
-	// tr([s,t,u] * [a,b,c]) >= max(a,c) * (s + u - 2|t|)
-	// T=[a,b,c] \in \cF - \Lambda => max(a,c) >= B
-	assert(S.a + S.c - 2 * abs(S.b) > 0); // this is always the case if S is positive definite
-	assert(F.B > 0);
-	return F.B * (S.a + S.c - 2 * abs(S.b));
-}
-
 // calculates trace(S * T)
 // is always an integer
 Int trace(M2T S, M2T_O T) {
@@ -108,6 +100,14 @@ struct PrecisionF {
 };
 
 
+int calcPrecisionDimension(const PrecisionF& F, ElemOfS S) {
+	// tr([s,t,u] * [a,b,c]) >= max(a,c) * (s + u - 2|t|)
+	// T=[a,b,c] \in \cF - \Lambda => max(a,c) >= B
+	assert(S.a + S.c - 2 * abs(S.b) > 0); // this is always the case if S is positive definite
+	assert(F.B > 0);
+	return F.B * (S.a + S.c - 2 * abs(S.b));
+}
+
 typedef M2T_O ElemOfF;
 typedef Int ValueOfA;
 
@@ -172,7 +172,7 @@ struct ReductionMatrices_Calc {
 	template<typename TIter>
 	void calcOneColumn(ElemOfF elemOfF, TIter outVec, TIter outVecEnd) {
 		for(ElemOfS S : curlS) {
-			for(int i = 0; i < calcPrecisionDimension(S); ++i, ++outVec) {
+			for(int i = 0; i < calcPrecisionDimension(curlF, S); ++i, ++outVec) {
 				auto& out = *outVec;
 				out = evalA_S_n(elemOfF, S, i);
 			}
@@ -184,7 +184,7 @@ struct ReductionMatrices_Calc {
 	void calcMainMatrix() {				
 		size_t rowCount = 0;
 		for(ElemOfS S : curlS) {
-			rowCount += calcPrecisionDimension(S);
+			rowCount += calcPrecisionDimension(curlF, S);
 		}
 		
 		calcReducedCurlF();
