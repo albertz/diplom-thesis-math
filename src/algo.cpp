@@ -194,29 +194,8 @@ struct ReductionMatrices_Calc {
 	}
 
 	std::vector<ValueOfA> matrix; // flat. column \times row
-	size_t matrixRowCount;
-	void calcMainMatrix() {				
-		matrixRowCount = 0;
-		for(ElemOfS S : curlS) {
-			matrixRowCount += calcPrecisionDimension(curlF, S);
-		}
-		
-		calcReducedCurlF();
-		matrix.clear();
-		matrix.resize(matrixRowCount * reducedCurlFList.size());
-		
-		// TODO: reorder loops for performance.
-		// reduce_GL is expensive, thus we should iterate
-		// through curlF only once.
-		
-		size_t column = 0;
-		for(ElemOfF F : reducedCurlFList) {
-			calcOneColumn( F, &matrix[matrixRowCount * column], &matrix[matrixRowCount * (column + 1)] );
-			++column;
-		}
-	}
-	
-	void calcMatrix2() {
+	size_t matrixRowCount;	
+	void calcMatrix() {
 		matrixRowCount = 0;
 		for(ElemOfS S : curlS) {
 			matrixRowCount += calcPrecisionDimension(curlF, S);
@@ -226,6 +205,7 @@ struct ReductionMatrices_Calc {
 		matrix.clear();
 		matrix.resize(matrixRowCount * reducedCurlFList.size());
 
+		// reduce_GL is expensive, thus we iterate through curlF only once.
 		for(ElemOfF T : curlF) {
 			struct hermitian_form_with_character_evaluation reduced;
 			reduce_GL(T, D, reduced);
@@ -294,19 +274,11 @@ void test_algo() {
 	calc.curlS.getNextS();
 	
 	{
-		Timer timer("calcMainMatrix");
-		calc.calcMainMatrix();
+		Timer timer("calcMatrix");
+		calc.calcMatrix();
 	}
 	cout << "size of reducedMatrix(curlF): " << calc.reducedCurlFList.size() << endl;
 	cout << "size of matrix: " << calc.matrix.size() << endl;
-	auto matrixCopy = calc.matrix;
-	{
-		Timer timer("calcMatrix2");
-		calc.calcMatrix2();
-	}
-	assert(calc.matrix.size() == matrixCopy.size());
-	for(size_t i = 0; i < matrixCopy.size(); ++i)
-		assert(calc.matrix[i] == matrixCopy[i]);
 	calc.dumpMatrix();
 }
 
