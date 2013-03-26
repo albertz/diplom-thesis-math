@@ -223,6 +223,20 @@ struct ReductionMatrices_Calc {
 };
 
 
+#include <chrono>
+
+struct Timer {
+	std::chrono::steady_clock::time_point start;
+	Timer() { start = std::chrono::steady_clock::now(); }
+	~Timer() {
+		auto d = std::chrono::steady_clock::now() - start;
+		auto d_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d).count();
+		float d_s = d_ms / 1000.0f;
+		std::cout << "took " << d_s << " secs" << std::endl;
+	}
+};
+
+
 
 void test_algo_PrecisionF() {
 	using namespace std;
@@ -249,6 +263,7 @@ void test_algo_calcReducedCurlF() {
 }
 
 void test_algo() {
+	Timer timer;
 	using namespace std;
 	ReductionMatrices_Calc calc;
 	calc.HermWeight = 10;
