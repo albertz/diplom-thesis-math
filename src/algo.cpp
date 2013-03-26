@@ -21,6 +21,7 @@ struct CurlS_Generator {
 	void getNextS() {
 		// TODO... (or in Python?)
 		matrices.push_back(M2T(2,1,1));
+		matrices.push_back(M2T(3,1,1));
 	}
 };
 
@@ -270,12 +271,17 @@ void test_algo() {
 	calc.HermWeight = 10;
 	calc.D = calc.curlF.D = -4;
 	calc.testValidParams();
-	calc.curlF.B = 10;
+	calc.curlF.B = 20;
 	calc.curlS.getNextS();
 	
 	{
 		Timer timer("calcMatrix");
 		calc.calcMatrix();
+	}
+	{
+		size_t c = 0;
+		for(ElemOfF T : calc.curlF) { ++c; (void)T; }
+		cout << "size of curlF: " << c << endl;
 	}
 	cout << "size of reducedMatrix(curlF): " << calc.reducedCurlFList.size() << endl;
 	cout << "size of matrix: " << calc.matrix.size() << endl;
