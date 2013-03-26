@@ -194,15 +194,16 @@ struct ReductionMatrices_Calc {
 	}
 
 	std::vector<ValueOfA> matrix; // flat. column \times row
+	size_t matrixRowCount;
 	void calcMainMatrix() {				
-		size_t rowCount = 0;
+		matrixRowCount = 0;
 		for(ElemOfS S : curlS) {
-			rowCount += calcPrecisionDimension(curlF, S);
+			matrixRowCount += calcPrecisionDimension(curlF, S);
 		}
 		
 		calcReducedCurlF();
 		matrix.clear();
-		matrix.resize(rowCount * reducedCurlFList.size());
+		matrix.resize(matrixRowCount * reducedCurlFList.size());
 		
 		// TODO: reorder loops for performance.
 		// reduce_GL is expensive, thus we should iterate
@@ -210,20 +211,20 @@ struct ReductionMatrices_Calc {
 		
 		size_t column = 0;
 		for(ElemOfF F : reducedCurlFList) {
-			calcOneColumn( F, &matrix[rowCount * column], &matrix[rowCount * (column + 1)] );
+			calcOneColumn( F, &matrix[matrixRowCount * column], &matrix[matrixRowCount * (column + 1)] );
 			++column;
 		}
 	}
 	
 	void calcMatrix2() {
-		size_t rowCount = 0;
+		matrixRowCount = 0;
 		for(ElemOfS S : curlS) {
-			rowCount += calcPrecisionDimension(curlF, S);
+			matrixRowCount += calcPrecisionDimension(curlF, S);
 		}
 		
 		calcReducedCurlF();
 		matrix.clear();
-		matrix.resize(rowCount * reducedCurlFList.size());
+		matrix.resize(matrixRowCount * reducedCurlFList.size());
 
 		for(ElemOfF T : curlF) {
 			struct hermitian_form_with_character_evaluation reduced;
@@ -232,12 +233,28 @@ struct ReductionMatrices_Calc {
 			for(ElemOfS S : curlS) {
 				int traceNum = trace(S,T);
 				if(traceNum >= calcPrecisionDimension(curlF, S)) continue;
-				size_t matrixIndex = rowCount * column + traceNum;
+				size_t matrixIndex = matrixRowCount * column + traceNum;
 				matrix[matrixIndex] += reduced.character.value(D, -HermWeight);
 			}
 		}
 	}
 	
+	void dumpMatrix() {
+		using namespace std;
+		assert(matrix.size() == matrixRowCount * reducedCurlFList.size());
+		cout << "matrix " << matrixRowCount << "*" << reducedCurlFList.size() << endl;
+		cout << "[" << endl;
+		for(size_t row = 0; row < matrixRowCount; ++row) {
+			if(row > 0) cout << "," << endl;
+			cout << " [";
+			for(size_t column = 0; column < reducedCurlFList.size(); ++column) {
+				if(column > 0) cout << ",";
+				cout << matrix[column * matrixRowCount + row];
+			}
+			cout << "]";
+		}
+		cout << "]" << endl;
+	}
 };
 
 
@@ -282,9 +299,14 @@ void test_algo() {
 	}
 	cout << "size of reducedMatrix(curlF): " << calc.reducedCurlFList.size() << endl;
 	cout << "size of matrix: " << calc.matrix.size() << endl;
+	auto matrixCopy = calc.matrix;
 	{
 		Timer timer("calcMatrix2");
 		calc.calcMatrix2();
-	}	
+	}
+	assert(calc.matrix.size() == matrixCopy.size());
+	for(size_t i = 0; i < matrixCopy.size(); ++i)
+		assert(calc.matrix[i] == matrixCopy[i]);
+	calc.dumpMatrix();
 }
 
