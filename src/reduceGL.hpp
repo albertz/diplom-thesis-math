@@ -21,18 +21,25 @@ struct reduce_character_evalutation {
 	reduce_character_evalutation(int _trans = 0, int _det = 0, int _nu = 0)
 	: transposition(_trans), determinant(_det), nu(_nu) {}
 	
-	int detValueK(const int D, const int k) {
+	int value(const int D, const int k) {
 		// det = exp(2 pi i det_character / h)
 		// where h = 2, or if D = -3, then h = 6, or D = -4, then h = 4
 		// we expect that it is a unit in \Z here.
 		// we return det^k.
 		const int h = (D == -3) ? 6 : (D == -4) ? 4 : 2;
 		int det_char = determinant * k;
-		if(Mod(det_char, h) == 0) return 1;
-		if(Mod(det_char, h) == h/2) return -1;
-		std::cerr << "reduce_character_evalutation.detValue error: det_char = " << det_char << ", D = " << D << ", k = " << k << std::endl;
-		abort();
-		return 0;
+		int value = 0;
+		if(Mod(det_char, h) == 0) value = 1;
+		else if(Mod(det_char, h) == h/2) value = -1;
+		else {
+			std::cerr << "reduce_character_evalutation.detValue error: det_char = " << det_char << ", D = " << D << ", k = " << k << std::endl;
+			abort();
+		}
+		const int sign = 0; // 0 or 1
+		const int nu_exp = 0; // 0 or 1
+		if(sign) value *= transposition;
+		if(nu_exp) value *= nu;
+		return value;
 	}
 };
 inline std::ostream& operator<< (std::ostream& os, const reduce_character_evalutation& c) {

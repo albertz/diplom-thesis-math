@@ -165,14 +165,8 @@ struct ReductionMatrices_Calc {
 	ValueOfA evalA(ElemOfF aRepr, ElemOfF T) {
 		struct hermitian_form_with_character_evaluation reduced;
 		reduce_GL(T, D, reduced);
-		const int sign = 0; // 0 or 1
-		const int nu_exp = 0; // 0 or 1
-		if(aRepr == reduced.matrix) {			
-			ValueOfA result = reduced.character.detValueK(D, -HermWeight);
-			if(sign) result *= reduced.character.transposition;
-			if(nu_exp) result *= reduced.character.nu;
-			return result;
-		}
+		if(aRepr == reduced.matrix)
+			return reduced.character.value(D, -HermWeight);
 		return 0;
 	}
 	
@@ -207,6 +201,7 @@ struct ReductionMatrices_Calc {
 		}
 		
 		calcReducedCurlF();
+		matrix.clear();
 		matrix.resize(rowCount * reducedCurlFList.size());
 		
 		// TODO: reorder loops for performance.
@@ -217,6 +212,29 @@ struct ReductionMatrices_Calc {
 		for(ElemOfF F : reducedCurlFList) {
 			calcOneColumn( F, &matrix[rowCount * column], &matrix[rowCount * (column + 1)] );
 			++column;
+		}
+	}
+	
+	void calcMatrix2() {
+		size_t rowCount = 0;
+		for(ElemOfS S : curlS) {
+			rowCount += calcPrecisionDimension(curlF, S);
+		}
+		
+		calcReducedCurlF();
+		matrix.clear();
+		matrix.resize(rowCount * reducedCurlFList.size());
+
+		for(ElemOfF T : curlF) {
+			struct hermitian_form_with_character_evaluation reduced;
+			reduce_GL(T, D, reduced);
+			size_t column = reducedCurlFMap[reduced.matrix];
+			for(ElemOfS S : curlS) {
+				int traceNum = trace(S,T);
+				if(traceNum >= calcPrecisionDimension(curlF, S)) continue;
+				size_t matrixIndex = rowCount * column + traceNum;
+				matrix[matrixIndex] += reduced.character.value(D, -HermWeight);
+			}
 		}
 	}
 	
@@ -250,7 +268,6 @@ void test_algo_calcReducedCurlF() {
 }
 
 void test_algo() {
-	Timer timer("algo");
 	using namespace std;
 	ReductionMatrices_Calc calc;
 	calc.HermWeight = 10;
@@ -258,8 +275,16 @@ void test_algo() {
 	calc.testValidParams();
 	calc.curlF.B = 10;
 	calc.curlS.getNextS();
-	calc.calcMainMatrix();
+	
+	{
+		Timer timer("calcMainMatrix");
+		calc.calcMainMatrix();
+	}
 	cout << "size of reducedMatrix(curlF): " << calc.reducedCurlFList.size() << endl;
 	cout << "size of matrix: " << calc.matrix.size() << endl;
+	{
+		Timer timer("calcMatrix2");
+		calc.calcMatrix2();
+	}	
 }
 
