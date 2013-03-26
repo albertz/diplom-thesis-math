@@ -128,7 +128,7 @@ struct ReductionMatrices_Calc {
 			|| (Mod(D, 4) == 0 && (Mod(Div(D, 4), 4) == 2 || Mod(Div(D, 4), 4) == 3)));
 		assert(Mod(D*D - D, 4) == 0); // is implied by the above, but check anyway...
 		
-		assert(HermHeight > 0);
+		assert(HermWeight > 0);
 		// By Dern, Satz 1.10, to imply that we don't have the trivial cases.
 		if(D == -4)
 			assert(Mod(HermWeight, 2) == 0);
@@ -168,7 +168,7 @@ struct ReductionMatrices_Calc {
 		const int sign = 0; // 0 or 1
 		const int nu_exp = 0; // 0 or 1
 		if(aRepr == reduced.matrix) {			
-			ValueOfA result = Pow(reduced.character.detValue(D), -HermWeight);
+			ValueOfA result = reduced.character.detValueK(D, -HermWeight);
 			if(sign) result *= reduced.character.transposition;
 			if(nu_exp) result *= reduced.character.nu;
 			return result;
@@ -242,6 +242,7 @@ void test_algo_calcReducedCurlF() {
 	ReductionMatrices_Calc calc;
 	calc.HermWeight = 10;
 	calc.D = calc.curlF.D = -4;
+	calc.testValidParams();
 	calc.curlF.B = 10;
 	calc.calcReducedCurlF();
 	cout << "size of reducedMatrix(curlF): " << calc.reducedCurlFList.size() << endl;	
@@ -252,6 +253,7 @@ void test_algo() {
 	ReductionMatrices_Calc calc;
 	calc.HermWeight = 10;
 	calc.D = calc.curlF.D = -4;
+	calc.testValidParams();
 	calc.curlF.B = 10;
 	calc.curlS.getNextS();
 	calc.calcMainMatrix();
