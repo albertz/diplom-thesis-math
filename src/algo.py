@@ -12,6 +12,7 @@
 # TODO: how? dependent on S?
 
 # Step 4. Calculate restriction matrix.
+# This is ReductionMatrices_Calc.calcMatrix().
 
 # Step 5. dimension check
 # TODO
