@@ -120,6 +120,25 @@ struct ReductionMatrices_Calc {
 		D = 0;
 	}
 	
+	void testValidParams() {
+		assert(D < 0);
+		// Fundamental discriminant properties on D:
+		assert(
+			(Mod(D, 4) == 1) /* TODO: and check square-free */
+			|| (Mod(D, 4) == 0 && (Mod(Div(D, 4), 4) == 2 || Mod(Div(D, 4), 4) == 3)));
+		assert(Mod(D*D - D, 4) == 0); // is implied by the above, but check anyway...
+		
+		assert(HermHeight > 0);
+		// By Dern, Satz 1.10, to imply that we don't have the trivial cases.
+		if(D == -4)
+			assert(Mod(HermWeight, 2) == 0);
+		if(D == -3) {
+			// nu = det^j
+			// then: Mod(HermWeight, 3) == j
+			// TODO...
+		}
+	}
+	
 	//CurlO curlO;
 	//Gamma gamma;
 	//Character nu;
