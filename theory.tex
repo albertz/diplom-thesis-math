@@ -55,7 +55,8 @@ where
 The elements $a \in \Q^\F$ are Fourier expansions of Elliptic modular forms ($\HalfPlane_1 \rightarrow \C$) and $a(T) \in \Q$ for $T \in \F \subseteq \M_2(\curlO^\#)$ are the Fourier coefficients.
 Recall that $a$ being invariant under $\GL_2(\curlO)$ means that we have
 \[ \det(U)^k a(T[U]) = a(T) \; \forall\ U \in \GL_2(\curlO) . \]
-With $[a,b,c] \in \F$, we have $0\le a,c<B$, thus there are only a finite number of possibilities. Because $0 \le [a,b,c]$, we get $ac - b^2 \ge 0$ and thus $b$ is also always limited. Thus, $\F$ is finite but it might be huge for even small numbers. Restricting the elements in $\F$ by $\GL_2(\curlO)$ invariation makes the set $\invar{\F}{\GL_2(\curlO)} \subseteq \F$ much smaller and better to handle in computer calculations. We use this set to identify a base of the finite dimension vector space $\invar{\Q^\F}{\GL_2(\curlO)}$.
+With $[a,b,c] \in \F$, we have $0\le a,c<B$, thus there are only a finite number of possibilities. Because $0 \le [a,b,c]$, we get $ac - b^2 \ge 0$ and thus $b$ is also always limited. Thus, $\F$ is finite but it might be huge for even small $B$. % TODO: actual numbers
+Restricting the elements in $\F$ by the $\GL_2(\curlO)$-invariation makes the set $\invar{\F}{\GL_2(\curlO)} \subseteq \F$ much smaller and better to handle in computer calculations. We use this set to identify a base of the finite dimension vector space $\invar{\Q^\F}{\GL_2(\curlO)}$.
 
 We identify
 % Das ist der Bildbereich der Abbildung.
@@ -67,7 +68,6 @@ We want to calculate the matrix of the linear function \[
 a \mapsto (a[S])_{S\in\mathcal{S}} .
 \]
 The base of the destination room is canonical. The dimension is $N$.
-%\[\Set{}\].
 The base of the source room can be identified by $\invar{\F}{\GL_2(\curlO)}$.
 
 And we set
