@@ -46,8 +46,10 @@ Fix $B \in \N$ as a limit. Select a precision
 %Make $\mathcal{S}$ big enough.
 %Now, for some $S \in \mathcal{S}$:
 
-\item We set
-\[ \mathcal{M}_{k,\mathcal{S},\F}^H := \Set{ (a [S])_{S\in\mathcal{S}} }{\text{$a \in \Q^\F$ is $\GL_2(\curlO)$ invariant}} \subseteq \bigoplus_{S\in\mathcal{S}} \Q^{\F(S)} , \]
+\item
+\newcommand{\FPrecisionLimit}[1]{\F(#1)}
+We set
+\[ \mathcal{M}_{k,\mathcal{S},\F}^H := \Set{ (a [S])_{S\in\mathcal{S}} }{\text{$a \in \Q^\F$ is $\GL_2(\curlO)$ invariant}} \subseteq \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}} , \]
 where
 \[ a[S] := \N \rightarrow \Q, n \mapsto \sum_{T \in \Lambda, \tr(S T) = n} a(T), \]
 The elements $a \in \Q^\F$ are Fourier expansions of Elliptic modular forms ($\HalfPlane_1 \rightarrow \C$) and $a(T) \in \Q$ for $T \in \F \subseteq \M_2(\curlO^\#)$ are the Fourier coefficients.
@@ -57,10 +59,11 @@ With $[a,b,c] \in \F$, we have $0\le a,c<B$, thus there are only a finite number
 
 We identify
 % Das ist der Bildbereich der Abbildung.
-\[ \bigoplus_{S\in\mathcal{S}} \Q^{\F(S)} = \Q^N, \ \ N = \sum_S \F(S) . \]
+\[ \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}} = \Q^N, \ \ N = \sum_{S\in\mathcal{S}} \FPrecisionLimit{S} . \]
+For a given $S \in \mathcal{S}$ and limit $B \in \N$ which restricts $\F \subset \Lambda$, $\FPrecisionLimit{S} \in \N_0$ is the limit such that for any $T \in \Lambda - \F$, $\tr(S T) \ge \FPrecisionLimit{S}$. Thus, for calculating the Fourier coefficients $T \in \Lambda$ with $\tr(S T) \in \Set{0, \dots, \FPrecisionLimit{S} - 1}$, it is sufficient to enumerate the $T \in \F$.
 
 We want to calculate the matrix of the linear function \[
-\invar{\Q^\F}{\GL_2(\curlO)} \rightarrow \bigoplus_{S\in\mathcal{S}} \Q^{\F(S)}, \ \ 
+\invar{\Q^\F}{\GL_2(\curlO)} \rightarrow \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}}, \ \ 
 a \mapsto (a[S])_{S\in\mathcal{S}} .
 \]
 The base of the destination room is canonical. The dimension is $N$.
