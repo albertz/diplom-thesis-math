@@ -63,6 +63,20 @@ We identify
 \[ \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}} = \Q^N, \ \ N = \sum_{S\in\mathcal{S}} \FPrecisionLimit{S} . \]
 For a given $S \in \mathcal{S}$ and limit $B \in \N$ which restricts $\F \subset \Lambda$, $\FPrecisionLimit{S} \in \N_0$ is the limit such that for any $T \in \Lambda - \F$, $\tr(S T) \ge \FPrecisionLimit{S}$. Thus, for calculating the Fourier coefficients $T \in \Lambda$ with $\tr(S T) \in \Set{0, \dots, \FPrecisionLimit{S} - 1}$, it is sufficient to enumerate the $T \in \F$.
 
+Let $S = [s,t,u]$ and $T = [a,b,c]$. Recall that $S \in \M_2^T(\Z)$. Then we have
+\[ \tr(S T) = as + \overline{t} b + t \overline{b} + cu = as + cu + 2 t \Re(b) . \]
+Because $T \ge 0$, we have $ac \ge \left| b \right|^2$ and thus $\Re(b) \le \sqrt{ac} \le \max(a,c)$. Thus, $2t \Re(b) \ge -2 \left| t \right| \max(a,c)$. We also have $as + cu \ge \max(a,c) (s + u)$. Assuming $T \in \Lambda - \F$, we have $\max(a,c) \ge B$. For such $T$, we get
+\[ \tr(ST) \ge B (s + u - 2 \left| t \right|) . \]
+Given $S > 0$, we have $su > t^2$. Then we have
+\begin{align*}
+& s + u - 2 \left| t \right| > 0 \\
+\Leftrightarrow \quad & su + u^2 - 2 \left| t \right| u > 0 \\
+\Leftrightarrow \quad & \left( t^2 + u^2 - 2 \left| t \right| u \right) + (su - t^2) > 0 \\
+\Leftrightarrow \quad & \left(\left| t \right| - u \right)^2 + (su - t^2) > 0 .
+\end{align*}
+All inequalities were sharp estimations, thus we get
+\[ \FPrecisionLimit{S} = B (s + u - 2 \left| t \right|) . \]
+
 We want to calculate the matrix of the linear function \[
 \invar{\Q^\F}{\GL_2(\curlO)} \rightarrow \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}}, \ \ 
 a \mapsto (a[S])_{S\in\mathcal{S}} .
