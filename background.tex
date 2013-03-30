@@ -21,12 +21,12 @@ The \defword{general linear group} is defined by
 and the \defword{special linear group} by
 \[ \SL_n(R) = \Set{X \in \M_n(R)}{\det(X) = 1} . \] % Poor
 The \defword{orthogonal group} is defined by
-\[ \Orth_n(R) = \Set{X \in \GL_n(R)}{X^T 1_n X = 1_n} \subseteq \SL_n(R) . \] %Poor
+\[ \Orth_n(R) = \Set{X \in \GL_n(R)}{X^T 1_n X = 1_n} \subseteq \GL_n(R) . \] %Poor
 
 For $R \subseteq \C$, $\overline{R} \subseteq R$, the set of \defword{Hermitian matrices} in $R$ is defined as
 \[ \Her_n(R) = \Set{Z \in \M_n(R)}{\overline{Z}^T = Z} . \]
 The \defword{symplectic group} is defined by
-\[ \Sp_n(R) = \Set{X \in \GL_{2n}(R)}{\overline{X}^T J_n X = J_n} \subseteq \M_{2n}(R) \] %Poor
+\[ \Sp_n(R) = \Set{X \in \GL_{2n}(R)}{\overline{X}^T J_n X = J_n} \subseteq \GL_{2n}(R) \subseteq \M_{2n}(R) \] %Poor
 % wegen Adjunktion. siehe Martin 2013-01-14
 % Tippfehler in Poor: Dort sind es n*n Matrixen, es müssen aber 2n*2n Matrixen sein.
 where $J_n := \SmallMatrix{0}{1_n}{-1_n}{0} \in \SL_{2n}(R)$. % Poor
