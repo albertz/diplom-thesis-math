@@ -18,6 +18,57 @@ struct CurlS_Generator {
 	std::list<ElemOfS> matrices;
 	std::list<ElemOfS>::iterator begin() { return matrices.begin(); }
 	std::list<ElemOfS>::iterator end() { return matrices.end(); }
+
+	int D; // fundamental discriminant
+	M2T cur;
+	Int curDenom; // = det
+
+	CurlS_Generator(int _D = 0) : D(_D), curDenom(1) {}
+
+	bool isValid() {
+		// det = denom
+		if(cur.det4D(F.D) != D * 4 * curDenom) return false;
+		if(cur.a < 0 || cur.a >= F.B) return false;
+		if(cur.c < 0 || cur.c >= F.B) return false;
+		return true;
+	}
+	bool _hardLimitCheck() {
+		auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
+		// det4D >= 0 <=> 4(-D)ac >= 4b1^2 - 4(-D)b1b2 + (-D)(1-D)b2^2
+		// Thus, when we have 4(-D)ac >= 4b1^2 - 4(-D)|b1b2| + (-D)(1-D)b2^2,
+		// we are always safe that we don't miss any values. Of course,
+		// we must still check for validity because we will get invalid values.
+		// 4b1^2 - 4(-D)|b1b2| = 4|b1| (|b1| - (-D)|b2|).
+		// This is always strongly monotonly increasing and sign-independent -> thus we can iterate.
+		return 4*(-F.D)*a*c >= 4*b1*b1 - 4*(-F.D)*abs(b1*b2) + (-F.D)*(1-F.D)*b2*b2;
+	}
+	void next() {
+		auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
+		if(b2 > 0) { b2 *= -1; return; }
+		b2 = -b2 + 1;
+		if(!_hardLimitCheck()) {
+			b2 = 0;
+			if(b1 > 0) { b1 *= -1; return; }
+			b1 = -b1 + 1;
+		}
+		if(!_hardLimitCheck()) {
+			b1 = b2 = 0;
+			c ++;
+		}
+		if(c >= F.B) {
+			c = b1 = b2 = 0;
+			a ++;
+		}
+		if(a >= F.B)
+			hitEnd = true;
+	}
+	Iter& operator++() {
+		do {
+			next();
+		} while(!isValid() && !hitEnd);
+		return *this;
+	}
+
 	void getNextS() {
 		// TODO... (or in Python?)
 		matrices.push_back(M2T(2,1,1));
