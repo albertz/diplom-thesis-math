@@ -35,6 +35,22 @@ struct CurlS_Generator {
 		return cur.det() >= 0;
 	}
 	void next() {
+		/*
+		det fixed. a>0, c>0.
+		ac - b^2 = det.
+		<=> b^2 + det = ac
+		start b=1.
+		  start c=1.
+		  check. a = (b^2 + det)/c
+		  c++
+		
+		start a=1.
+		  start b=1.
+		  check. c = (b^2 + det)/a
+		  
+		e.g. det=2. given some b^2, 2|b, c=2, there is always an a.
+		thus there are infinity many solutions. 
+		*/
 		auto &a = cur.a, &b = cur.b, &c = cur.c;
 		if(b > 0) { b *= -1; return; }
 		b = -b + 1;
