@@ -53,6 +53,7 @@ struct M2T {
 	// This M2T-struct represents the matrix [a,b,c].
 	M2T(Int _a = 0, Int _b = 0, Int _c = 0)
 	: a(_a), b(_b), c(_c) {}
+	Int det() { return a*c - b*b; }
 };
 
 template<typename T>
