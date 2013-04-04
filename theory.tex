@@ -66,7 +66,7 @@ For a given $S \in \mathcal{S}$ and limit $B \in \N$ which restricts $\F \subset
 Let $S = [s,t,u]$ and $T = [a,b,c]$. Recall that $S \in \M_2^T(\Z)$. Then we have
 \[ \tr(S T) = as + \overline{t} b + t \overline{b} + cu = as + cu + 2 t \Re(b) . \]
 Because $T \ge 0$, we have $ac \ge \left| b \right|^2$ and thus $\Re(b) \le \sqrt{ac} \le \max(a,c)$. Thus, $2t \Re(b) \ge -2 \left| t \right| \max(a,c)$. We also have $as + cu \ge \max(a,c) (s + u)$. Assuming $T \in \Lambda - \F$, we have $\max(a,c) \ge B$. For such $T$, we get
-\[ \tr(ST) \ge B (s + u - 2 \left| t \right|) . \]
+\[ \tr(ST) \ge B \cdot (s + u - 2 \left| t \right|) . \]
 Given $S > 0$, we have $su > t^2$. Then we have
 \begin{align*}
 & s + u - 2 \left| t \right| > 0 \\
@@ -76,7 +76,7 @@ Given $S > 0$, we have $su > t^2$. Then we have
 \end{align*}
 All inequalities were sharp estimations\footnote{For example, let $S=[2,-1,1]$. Then you have $s+u-2 \left| t \right| = 1$. With $c=B$ and $a=b=1$, you hit the limit $\tr(S T) = 2 + B - 2 = B = \FPrecisionLimit{S}$. }, %
 thus we get
-\[ \FPrecisionLimit{S} = B (s + u - 2 \left| t \right|) . \]
+\[ \FPrecisionLimit{S} = B \cdot (s + u - 2 \left| t \right|) . \]
 
 We want to calculate the matrix of the linear function \[
 \invar{\Q^\F}{\GL_2(\curlO)} \rightarrow \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}}, \ \ 
