@@ -70,14 +70,16 @@ A \defword{Siegel modular form} of degree $n\in\N$ with weight $k \in \Z$ for so
 \[ f \colon \SiegelHalfPlane_n \rightarrow \C \]
 with
 \begin{align*}
-(1) \ \ & f |_k y = f \quad \forall \ y \in \Gamma \\
+(1) \ \ & f\left((AZ + B)\cdot(CZ + D)^{-1}\right) = \det(CZ + D)^k \cdot f(Z) \quad \forall \ \SmallMatrix{A}{B}{C}{D} \in \Gamma, Z \in \SiegelHalfPlane_n \\
 (2) \ \ & \text{for } n = 1 \colon f(Z) = O(1) \quad \text{for } Z \rightarrow i \infty
 \end{align*}
-where
-\[ \left( f|_k \SimpleMatrix{A}{B}{C}{D} \right) (Z) =
-f((AZ + B)(CZ + D)^{-1}) \cdot \det(CZ + D)^{-k} \]
+
+Note that many authors define the transformed function $f | M$ for $M = \SmallMatrix{A}{B}{C}{D} \in \Gamma$ with  
+\[ \left( f | M \right) (Z) :=
+f(M \cdot Z) \cdot \det(CZ + D)^{-k} \]
 %with $Z = S \tau$. https://mail.google.com/mail/u/0/#label/Diplomarbeit/13b471d95eb713e9
-with $Z \in \SiegelHalfPlane_n$, $\SmallMatrix{A}{B}{C}{D} \in \Gamma$.
+with $Z \in \SiegelHalfPlane_n$, where $M \cdot Z := (A Z + B) \cdot (C Z + D)^{-1}$. Then the first property of Siegel modular forms can be written as
+\[ f | M = f \quad \forall\ M \in \Gamma . \]
 
 $\SSpaceN{n}{k}{\Gamma}$ denotes the vector space of such Siegel modular forms.
 
@@ -88,7 +90,7 @@ We have $\Gamma$ as a subgroup of $\SL_2(\Z)$. A \defword{Elliptic modular form}
 \[ f \colon \SiegelHalfPlane_1 \rightarrow \C \]
 with
 \begin{align*}
-(1) \ \ & f\left(\frac{a \tau + b}{b \tau + c}\right) = (c \tau + d)^k \cdot f(\tau) \quad \forall \ \SmallMatrix{a}{b}{c}{d} \in \Gamma \\
+(1) \ \ & f\left(\frac{a \tau + b}{b \tau + c}\right) = (c \tau + d)^k \cdot f(\tau) \quad \forall \ \SmallMatrix{a}{b}{c}{d} \in \Gamma, \tau \in \SiegelHalfPlane_1 \\
 (2) \ \ & f(\tau) = O(1) \quad \text{for } \tau \rightarrow i \infty
 \end{align*}
 
@@ -128,7 +130,7 @@ with
 (2) \ \ & \text{for } n = 1 \colon \ \text{$f$ is holomorphic in all cusps} .
 \end{align*}
 
-Note that most authors write $M \cdot Z := (A Z + B) \cdot (C Z + D)^{-1}$.
+Again as for Siegel modular forms, most authors write $M \cdot Z := (A Z + B) \cdot (C Z + D)^{-1}$.
 
 %$[\Gamma, k, \nu]$ <- früher und Dern, aber jetzt:
 $\HSpaceN{n}{k}{\Gamma,\nu}$
