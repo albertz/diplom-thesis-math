@@ -57,7 +57,6 @@ We say that some function $f \colon \mathcal{A} \rightarrow \mathcal{B}$ with $\
 Siegel modular forms aren't directly used in this work. However, the idea of this work is inspired by \cite{PoorYuen07Comp} and they are using them. Also, they are a generalization of Elliptic modular forms.
 
 Let $\SiegelHalfPlane_n := \Set{Z \in \M_n^T(\C)}{\Im(Z) > 0}$ be the \defword{Siegel upper half space}.
-Thus, $\SiegelHalfPlane_1$ is the \defword{Poincaré upper half plane}.
 We call $\Sp_n(\Z)$ the \defword{Siegel modular group}.
 
 % Groß/Kleinschreibung:
@@ -71,8 +70,8 @@ A \defword{Siegel modular form} of degree $n\in\N$ with weight $k \in \Z$ for so
 \[ f \colon \SiegelHalfPlane_n \rightarrow \C \]
 with
 \begin{align*}
-(1) \ \ & f |_k y = f \ \ \forall \ y \in \Gamma \\
-(2) \ \ & \text{for } n = 1 \colon f(Z) = O(1) \ \text{ for } Z \rightarrow i \infty
+(1) \ \ & f |_k y = f \quad \forall \ y \in \Gamma \\
+(2) \ \ & \text{for } n = 1 \colon f(Z) = O(1) \quad \text{for } Z \rightarrow i \infty
 \end{align*}
 where
 \[ \left( f|_k \SimpleMatrix{A}{B}{C}{D} \right) (Z) =
@@ -83,14 +82,23 @@ with $Z \in \SiegelHalfPlane_n$, $\SmallMatrix{A}{B}{C}{D} \in \Gamma$.
 $\SSpaceN{n}{k}{\Gamma}$ denotes the vector space of such Siegel modular forms.
 
 \subsection{Elliptic modular forms}
+These are functions over $\SiegelHalfPlane_1 = \Set{z \in \C}{\Im(z) > 0} \subseteq \C$ which is called the \defword{Poincaré upper half plane}.
 
-We define
+We have $\Gamma$ as a subgroup of $\SL_2(\Z)$. A \defword{Elliptic modular form} with weight $k \in \Z$ over $\Gamma$ is a holomorphic function
+\[ f \colon \SiegelHalfPlane_1 \rightarrow \C \]
+with
+\begin{align*}
+(1) \ \ & f\left(\frac{a \tau + b}{b \tau + c}\right) = (c \tau + d)^k \cdot f(\tau) \quad \forall \ \SmallMatrix{a}{b}{c}{d} \in \Gamma \\
+(2) \ \ & f(\tau) = O(1) \quad \text{for } \tau \rightarrow i \infty
+\end{align*}
+
+$\ESpace{k}{\Gamma}$ denotes the vector space of such Elliptic modular forms.
+
+Note that we have $\SL_2(\Z) = \Sp_1(\Z)$. We can see that Elliptic modular forms are Siegel modular forms of degree $n=1$. Thus we have $\ESpace{k}{\Gamma} = \SSpaceN{1}{k}{\Gamma}$.
+
+In this work, we use a specific subgroup of $\Sp_1(\Z)$. We define
 \[ \Gamma_0(l) := \Set{\SimpleMatrix{A}{B}{C}{D} \in \Sp_1(\Z)}{C \equiv 0 \pmod{l}} \subseteq \Sp_1(\Z) \subseteq \M_2(\Z) \]
 as a subgroup of $\Sp_1(\Z)$.
-
-\defword{Elliptic modular forms} are Siegel modular forms of degree $n=1$ with weight $k \in \N$ over $\Gamma_0(l)$ for some $l \in \N$.
-
-$\ESpace{k}{\Gamma}$ denotes the vector space of such Elliptic modular forms with weight $k \in \N$, $\Gamma = \Gamma_0(l)$. Thus we have $\ESpace{k}{\Gamma} = \SSpaceN{1}{k}{\Gamma}$.
 
 \subsection{Hermitian modular forms}
 
