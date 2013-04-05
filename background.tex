@@ -92,6 +92,8 @@ with
 (2) \ \ & f(\tau) = O(1) \quad \text{for } \tau \rightarrow i \infty
 \end{align*}
 
+Note that most authors write $M \tau := \frac{a \tau + b}{b \tau + c}$.
+
 $\ESpace{k}{\Gamma}$ denotes the vector space of such Elliptic modular forms.
 
 Note that we have $\SL_2(\Z) = \Sp_1(\Z)$. We can see that Elliptic modular forms are Siegel modular forms of degree $n=1$. Thus we have $\ESpace{k}{\Gamma} = \SSpaceN{1}{k}{\Gamma}$.
@@ -122,9 +124,11 @@ is a holomorphic function
 \[ f \colon \HalfPlane_n \rightarrow \C \]
 with
 \begin{align*}
-(1) \ \ & f(M \cdot Z) = \nu(M) \det(CZ + D)^k f(Z), \quad M = \SmallMatrix{*}{*}{C}{D} \in \Gamma, Z \in \HalfPlane_n , \\
+(1) \ \ & f((A Z + B) \cdot (C Z + D)^{-1}) = \nu(M) \det(CZ + D)^k f(Z), \quad M = \SmallMatrix{A}{B}{C}{D} \in \Gamma, Z \in \HalfPlane_n , \\
 (2) \ \ & \text{for } n = 1 \colon \ \text{$f$ is holomorphic in all cusps} .
 \end{align*}
+
+Note that most authors write $M \cdot Z := (A Z + B) \cdot (C Z + D)^{-1}$.
 
 %$[\Gamma, k, \nu]$ <- früher und Dern, aber jetzt:
 $\HSpaceN{n}{k}{\Gamma,\nu}$
