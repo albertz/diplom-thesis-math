@@ -5,7 +5,7 @@
 
 % TODO: wofür brauchen wir das?
 \begin{lemma}
-Let $f \colon \HalfPlane_2 \rightarrow \C$ be a Hermitian modular form of weight $k$. Let $S \in \PM_2(\C)$.
+Let $f \colon \HalfPlane_2 \rightarrow \C$ be a Hermitian modular form of weight $k$. Let $S \in \PM_2(\curlO)$.
 Then, $f(S \tau) \colon \HalfPlane_1 \subseteq \C \rightarrow \C$ is an Elliptic modular form of weight $2k$ to $\Gamma_0(l)$, where $l$ is the denominator of $S^{-1}$.  %for some matrix $S \in \M_2(\Z)$ with $\Gamma(S) \subseteq \SL_2(\Z)$.
 \proof
 Define $\Gamma^H := \Sp_2(\curlO)$ as the translation group for $f$. Then, we can verify that
@@ -37,6 +37,8 @@ And with $S = \overline{S}^T$ and $ad  - bc = 1$ we have
 \end{align*}
 thus we have
 \[ M' := \SimpleMatrix{a 1_2}{b S}{c S^{-1}}{d 1_2} \in \Sp_2(\C) . \]
+We also have $c S^{-1} \in \M_2(\curlO)$, thus we have $M'  \in \Gamma^H = \Sp_2(\curlO)$.
+
 Thus, because $f$ is a Hermitian modular form, we have
 \begin{align*}
 & f\left(S \frac{a \tau + b}{c \tau + d} \right) \\
