@@ -7,6 +7,35 @@
 \begin{lemma}
 Let $f \colon \HalfPlane_2 \rightarrow \C$ be a Hermitian modular form of weight $k$. Let $S \in \PM_2(\C)$.
 Then, $f(S \tau) \colon \HalfPlane_1 \subseteq \C \rightarrow \C$ is an Elliptic modular form of weight $2k$ to $\Gamma_0(l)$, where $l$ is the denominator of $S^{-1}$.  %for some matrix $S \in \M_2(\Z)$ with $\Gamma(S) \subseteq \SL_2(\Z)$.
+\proof
+Define $\Gamma^H := \Sp_2(\curlO)$ as the translation group for $f$. Then, we can verify that
+\[ M := \SimpleMatrix{1_2}{B}{}{1_2} \in \Gamma^H, \quad B \in \Her_2(\curlO) . \]
+Let $\tau \in \HalfPlane_1$. Then we have $S \tau \in \HalfPlane_2$. Let $\SmallMatrix{a}{b}{c}{d} \in \SL_2(\Z)$. We have
+\begin{align*}
+& S \frac{a \tau + b}{c \tau + d} \\
+=\quad & (a (S \tau) + bS) \cdot ((c S^{-1}) (S \tau) + d)^{-1} \\
+=\quad & \SimpleMatrix{a 1_2}{b S}{c S^{-1}}{d 1_2} \cdot S \tau .
+\end{align*}
+And we have
+\begin{align*}
+& \overline{\SimpleMatrix{a 1_2}{b S}{c S^{-1}}{d 1_2}}^T J_2 \SimpleMatrix{a 1_2}{b S}{c S^{-1}}{d 1_2} \\
+=\quad & \SimpleMatrix
+{(-ac S^{-1} + ac \overline{S^{-1}}^T)}
+{(-ad 1_2 + cb \overline{S^{-1}}^T S)}
+{(-bc \overline{S}^T S^{-1} + ad 1_2)}
+{(-bd \overline{S}^T + bd S)} \\
+=\quad & J_2
+\end{align*}
+because we have $S = \overline{S}^T$ and $ad  - bc = 1$. Thus, we have
+\[ M' := \SimpleMatrix{a 1_2}{b S}{c S^{-1}}{d 1_2} \in \Gamma^H . \]
+Thus, because $f$ is a Hermitian modular form, we have
+\begin{align*}
+& f\left(S \frac{a \tau + b}{c \tau + d} \right) \\
+=\quad & f\left( M' \cdot S \tau \right) \\
+=\quad & \nu(M') \cdot \det(c S^{-1} S \tau + d 1_2)^k \cdot f(S \tau) \\
+=\quad & (c \tau + d)^{2k} \cdot f(S \tau) .
+\end{align*}
+\endproof
 \end{lemma}
 
 
