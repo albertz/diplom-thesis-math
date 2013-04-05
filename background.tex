@@ -10,9 +10,13 @@ Let $\M_n(R)$ be the set of all $n \times n$ \defword{matrices} over some commut
 Likewise, $\M_n^T(R)$ are the \defword{symmetric} $n \times n$ matrices.
 $X^T$ is the \defword{transposed} matrix of $X \in \M_n(R)$.
 $\overline{Z}$ is the \defword{conjugated} matrix of $Z \in \M_n(\C)$.
+For $R \subseteq \C$, $\overline{R} \subseteq R$, the set of \defword{Hermitian matrices} in $R$ is defined as
+\[ \Her_n(R) = \Set{Z \in \M_n(R)}{\overline{Z}^T = Z} . \]
 A matrix $Y \in \M_n(\C)$ is greater $0$ if and only if $\forall x \in \C^n - \Set{0} \colon Y[x] := \overline{x}^{T} Y x \in \R^+$.
 Such symmetric matrices are called the \defword{positive definitive matrices}, defined by
-\[ \PM_n(R) = \Set{X \in \M_n(R)}{X > 0}. \]
+\[ \PM_n(R) = \Set{X \in \M_n(R)}{X > 0} \]
+for $R \subseteq \C$. Note that $\PM_n(\C) \subseteq \Her_n(\C)$.
+
 For $A,X \in \M_n(\C)$, we define $A[X] := \overline{X}^T A X$. 
 The \defword{denominator} of a matrix $Z \in \M_n(\Q)$ is the smallest number $x \in \N$ such that $x Z \in \M_n(\Z)$. We also write $\operatorname{denom}(Z) = x$. $1_n \in \M_n(\Z)$ denotes the \defword{identity matrix}. We use the \defword{Gauß notation} $[a,b,c] := \SmallMatrix{a}{b}{\overline b}{c} \in \M_n(\C)$.
 
@@ -22,9 +26,6 @@ and the \defword{special linear group} by
 \[ \SL_n(R) = \Set{X \in \M_n(R)}{\det(X) = 1} . \] % Poor
 The \defword{orthogonal group} is defined by
 \[ \Orth_n(R) = \Set{X \in \GL_n(R)}{X^T 1_n X = 1_n} \subseteq \GL_n(R) . \] %Poor
-
-For $R \subseteq \C$, $\overline{R} \subseteq R$, the set of \defword{Hermitian matrices} in $R$ is defined as
-\[ \Her_n(R) = \Set{Z \in \M_n(R)}{\overline{Z}^T = Z} . \]
 The \defword{symplectic group} is defined by
 \[ \Sp_n(R) = \Set{X \in \GL_{2n}(R)}{\overline{X}^T J_n X = J_n} \subseteq \GL_{2n}(R) \subseteq \M_{2n}(R) \] %Poor
 % wegen Adjunktion. siehe Martin 2013-01-14
@@ -38,7 +39,7 @@ where $J_n := \SmallMatrix{0}{-1_n}{1_n}{0} \in \SL_{2n}(R)$ (as in \cite{Dern01
 $\Sp_n(R)$ is also called the \defword{unitary group}. Note that \cite{Dern01Herm} uses $\operatorname{U}_n(R) = \Sp_n(R)$.
 % Weil-Darstellung ist eine gewisse Darstellung von symplektischen Gruppen. Aber irrelevant für mich.
 % In dem Zusammenhang waren auch vektorwertigen Modulformen, die auch nicht relevant für mich sind.
-Also note that $M = \SmallMatrix{a}{b}{c}{d} \in \Sp_1(\Z)$ $\Leftrightarrow$ $ad - bc = 1$ $\Leftrightarrow$ $M \in \SL_2(\Z)$. Thus, $\Sp_1(\Z) = \SL_2(\Z)$.
+Also note that $M = \SmallMatrix{a}{b}{c}{d} \in \Sp_1(\Z)$ $\Leftrightarrow$ $ad - bc = 1$ $\Leftrightarrow$ $M \in \SL_2(\Z)$. Thus, $\Sp_1(\Z) = \SL_2(\Z)$. % Notiz 5.4.13
 
 For $Z \in \M_n(\C)$, we call
 \[ \Re(Z) = \frac{1}{2} \left(Z + \overline{Z}^{T}\right) \in \M_n(\C) \]
