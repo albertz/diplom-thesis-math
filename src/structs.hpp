@@ -55,6 +55,10 @@ struct M2T {
 	: a(_a), b(_b), c(_c) {}
 	Int det() { return a*c - b*b; }
 };
+inline std::ostream& operator<<(std::ostream& os, const M2T& m) {
+	return os << "M2T(" << m.a << "," << m.b << "," << m.c << ")";
+}
+
 
 template<typename T>
 struct Matrix2 {

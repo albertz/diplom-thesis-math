@@ -20,52 +20,36 @@ struct CurlS_Generator {
 	std::list<ElemOfS>::iterator end() { return matrices.end(); }
 
 	M2T cur; // matrix S
-	Int curDenom; // denom of S^-1 = det S
+	Int curDenom; // denom of S^-1 = det S = ac - b^2
 
 	CurlS_Generator() : curDenom(1) {}
 
 	bool isValid() {
-		// det = denom
+		if(cur.a > cur.c) return false;
 		if(cur.det() != curDenom) return false;
-		if(cur.a < 0) return false;
-		if(cur.c < 0) return false;
 		return true;
 	}
-	bool _hardLimitCheck() {
-		return cur.det() >= 0;
-	}
 	void next() {
-		/*
-		det fixed. a>0, c>0.
-		ac - b^2 = det.
-		<=> b^2 + det = ac
-		start b=1.
-		  start c=1.
-		  check. a = (b^2 + det)/c
-		  c++
-		
-		start a=1.
-		  start b=1.
-		  check. c = (b^2 + det)/a
-		
-		S teilerfremd, um Zusatzrechnungen zu vermeiden, da keine neuen Infos.
-		
-		e.g. det=2. given some b^2, 2|b, c=2, there is always an a.
-		thus there are infinity many solutions. 
-		*/
 		auto &a = cur.a, &b = cur.b, &c = cur.c;
+
+		c ++;
+		if(c <= curDenom + b*b) {
+			a = (curDenom + b*b) / c;
+			return;
+		}
+
+		c = 0;
 		if(b > 0) { b *= -1; return; }
 		b = -b + 1;
-		if(!_hardLimitCheck()) {
-			b = 0;
-			c ++;
-		}
-		if(c >= F.B) {
-			c = b = 0;
-			a ++;
+		
+		// It must hold: det >= 3b^2.
+		// Thus, when b becomes too huge, we have all matrices with that det.
+		if(3*b*b > curDenom) {
+			a = b = c = 0;
+			curDenom ++;
 		}
 	}
-	Iter& operator++() {
+	CurlS_Generator& operator++() {
 		do {
 			next();
 		} while(!isValid());
@@ -73,9 +57,8 @@ struct CurlS_Generator {
 	}
 
 	void getNextS() {
-		// TODO... (or in Python?)
-		matrices.push_back(M2T(2,1,1));
-		matrices.push_back(M2T(3,1,1));
+		++(*this); // the very first ([0,0,0]) is not valid
+		matrices.push_back(cur);
 	}
 };
 
@@ -294,6 +277,19 @@ struct ReductionMatrices_Calc {
 
 
 
+void test_algo_CurlSGen() {
+	using namespace std;
+	CurlS_Generator curlS;
+	size_t c = 0;
+	size_t denomLimit = 10;
+	while(true) {
+		++curlS;
+		if(curlS.curDenom > denomLimit) break;
+		cout << curlS.curDenom << ", " << curlS.cur << endl;
+		++c;
+	}
+	cout << "count: " << c << endl;
+}
 
 void test_algo_PrecisionF() {
 	using namespace std;
