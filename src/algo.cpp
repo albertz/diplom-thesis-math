@@ -47,7 +47,9 @@ struct CurlS_Generator {
 		start a=1.
 		  start b=1.
 		  check. c = (b^2 + det)/a
-		  
+		
+		S teilerfremd, um Zusatzrechnungen zu vermeiden, da keine neuen Infos.
+		
 		e.g. det=2. given some b^2, 2|b, c=2, there is always an a.
 		thus there are infinity many solutions. 
 		*/
