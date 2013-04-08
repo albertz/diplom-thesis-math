@@ -324,6 +324,7 @@ void test_algo() {
 	calc.testValidParams();
 	calc.curlF.B = 20;
 	calc.curlS.getNextS();
+	calc.curlS.getNextS();
 	
 	{
 		Timer timer("calcMatrix");
