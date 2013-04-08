@@ -27,6 +27,7 @@ struct CurlS_Generator {
 	bool isValid() {
 		if(cur.a > cur.c) return false;
 		if(cur.det() != curDenom) return false;
+		if(gcd(cur.a, cur.b, cur.c) > 1) return false;
 		return true;
 	}
 	void next() {

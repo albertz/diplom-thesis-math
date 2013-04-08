@@ -99,6 +99,22 @@ T Pow(const T& a, const T& b) {
 }
 
 
+template<typename T>
+T gcd(const T& a, const T& b) {
+	if(a < 0) return gcd(-a, b);
+	if(b < 0) return gcd(a, -b);
+	if(a == 0) return b;
+	if(a == 1) return 1;
+	if(a > b) return gcd(b, a);
+	return gcd(Mod(b,a), a);
+}
+
+template<typename T>
+T gcd(const T& a, const T& b, const T& c) {
+	return gcd(gcd(a,b), c);
+}
+
+
 #include <chrono>
 #include <string>
 
