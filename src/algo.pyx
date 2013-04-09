@@ -7,3 +7,8 @@ from sage.matrix.matrix_integer_dense import \
 	Matrix_integer_dense #cdef class
 
 
+cdef extern from "algo.hpp":
+	struct X
+
+
+
