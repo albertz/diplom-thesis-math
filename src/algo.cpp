@@ -337,6 +337,6 @@ void test_algo() {
 	}
 	cout << "size of reducedMatrix(curlF): " << calc.reducedCurlFList.size() << endl;
 	cout << "size of matrix: " << calc.matrix.size() << endl;
-	calc.dumpMatrix();
+	//calc.dumpMatrix();
 }
 
