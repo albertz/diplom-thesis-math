@@ -6,7 +6,7 @@
 % TODO: wofür brauchen wir das?
 \begin{lemma}
 Let $f \colon \HalfPlane_2 \rightarrow \C$ be a Hermitian modular form of weight $k$. Let $S \in \PM_2(\curlO)$.
-Then, $f(S \tau) \colon \HalfPlane_1 \subseteq \C \rightarrow \C$ is an Elliptic modular form of weight $2k$ to $\Gamma_0(l)$, where $l$ is the denominator of $S^{-1}$.  %for some matrix $S \in \M_2(\Z)$ with $\Gamma(S) \subseteq \SL_2(\Z)$.
+Then, $\tau \mapsto f(S \tau) \colon \HalfPlane_1 \subseteq \C \rightarrow \C$ is an Elliptic modular form of weight $2k$ to $\Gamma_0(l)$, where $l$ is the denominator of $S^{-1}$.  %for some matrix $S \in \M_2(\Z)$ with $\Gamma(S) \subseteq \SL_2(\Z)$.
 \proof
 Define $\Gamma^H := \Sp_2(\curlO)$ as the translation group for $f$.
 %not needed?
@@ -19,7 +19,8 @@ Let $\tau \in \HalfPlane_1$. With $S \in \PM_2(\C)$ we have
 = \quad & \frac{1}{2i} S \cdot 2i \Im(\tau) \\
 = \quad & S \Im(\tau) > 0 ,
 \end{align*}
-thus $S \tau \in \HalfPlane_2$.
+%TODO: \nu(M'), warum ist das immer 1?
+thus $S \tau \in \HalfPlane_2$. Thus, $\tau \mapsto f(S \tau)$ is a function $\HalfPlane_1 \rightarrow \C$.
 
 Let $\SmallMatrix{a}{b}{c}{d} \in \SL_2(\Z)$. We have
 \begin{align*}
@@ -52,6 +53,7 @@ Thus, because $f$ is a Hermitian modular form, we have
 =\quad & \nu(M') \cdot \det(c S^{-1} S \tau + d 1_2)^k \cdot f(S \tau) \\
 =\quad & (c \tau + d)^{2k} \cdot f(S \tau) .
 \end{align*}
+Thus, $f$ is an Elliptic modular form of weight $2k$.
 \endproof
 \end{lemma}
 
