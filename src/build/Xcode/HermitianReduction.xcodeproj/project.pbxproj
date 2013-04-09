@@ -31,6 +31,7 @@
 		2347BE6A16F4B23C00472FFB /* reduceGL.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = reduceGL.hpp; path = ../../reduceGL.hpp; sourceTree = "<group>"; };
 		2347BE6B16F4B23C00472FFB /* structs.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = structs.hpp; path = ../../structs.hpp; sourceTree = "<group>"; };
 		2347BE6C16F4B23C00472FFB /* test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test.cpp; path = ../../test.cpp; sourceTree = "<group>"; };
+		238F2DF117148DD2000F8B6E /* algo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = algo.hpp; path = ../../algo.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +64,7 @@
 		2347BE6716F4B22600472FFB /* src */ = {
 			isa = PBXGroup;
 			children = (
+				238F2DF117148DD2000F8B6E /* algo.hpp */,
 				2347BE6816F4B23C00472FFB /* algo.cpp */,
 				2347BE6916F4B23C00472FFB /* reduceGL.cpp */,
 				2347BE6A16F4B23C00472FFB /* reduceGL.hpp */,
