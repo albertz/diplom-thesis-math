@@ -232,8 +232,8 @@ struct ReductionMatrices_Calc {
 		assert(outVec == outVecEnd);
 	}
 
-	std::vector<ValueOfA> matrix; // flat. column \times row
-	size_t matrixRowCount;	
+	std::vector<ValueOfA> matrix; // flat. format: [[0]*ColumnCount]*RowCount
+	size_t matrixRowCount, matrixColumnCount;
 	void calcMatrix() {
 		matrixRowCount = 0;
 		for(ElemOfS S : curlS) {
@@ -241,8 +241,10 @@ struct ReductionMatrices_Calc {
 		}
 		
 		calcReducedCurlF();
+		matrixColumnCount = reducedCurlFList.size();
+		
 		matrix.clear();
-		matrix.resize(matrixRowCount * reducedCurlFList.size());
+		matrix.resize(matrixRowCount * matrixColumnCount);
 
 		// reduce_GL is expensive, thus we iterate through curlF only once.
 		for(ElemOfF T : curlF) {
@@ -252,7 +254,8 @@ struct ReductionMatrices_Calc {
 			for(ElemOfS S : curlS) {
 				int traceNum = trace(S,T);
 				if(traceNum >= calcPrecisionDimension(curlF, S)) continue;
-				size_t matrixIndex = matrixRowCount * column + traceNum;
+				size_t row = traceNum;
+				size_t matrixIndex = row * matrixColumnCount + column;
 				matrix[matrixIndex] += reduced.character.value(D, -HermWeight);
 			}
 		}
@@ -266,9 +269,9 @@ struct ReductionMatrices_Calc {
 		for(size_t row = 0; row < matrixRowCount; ++row) {
 			if(row > 0) cout << "," << endl;
 			cout << " [";
-			for(size_t column = 0; column < reducedCurlFList.size(); ++column) {
+			for(size_t column = 0; column < matrixColumnCount; ++column) {
 				if(column > 0) cout << ",";
-				cout << matrix[column * matrixRowCount + row];
+				cout << matrix[row * matrixColumnCount + column];
 			}
 			cout << "]";
 		}
