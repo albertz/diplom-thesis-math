@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2347BE6D16F4B23C00472FFB /* algo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2347BE6816F4B23C00472FFB /* algo.cpp */; };
+		2347BE6D16F4B23C00472FFB /* algo_cpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2347BE6816F4B23C00472FFB /* algo_cpp.cpp */; };
 		2347BE6E16F4B23C00472FFB /* reduceGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2347BE6916F4B23C00472FFB /* reduceGL.cpp */; };
 		2347BE6F16F4B23C00472FFB /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2347BE6C16F4B23C00472FFB /* test.cpp */; };
 /* End PBXBuildFile section */
@@ -26,12 +26,12 @@
 
 /* Begin PBXFileReference section */
 		2347BE5116F4AF3A00472FFB /* HermitianReduction */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HermitianReduction; sourceTree = BUILT_PRODUCTS_DIR; };
-		2347BE6816F4B23C00472FFB /* algo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = algo.cpp; path = ../../algo.cpp; sourceTree = "<group>"; };
+		2347BE6816F4B23C00472FFB /* algo_cpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = algo_cpp.cpp; path = ../../algo_cpp.cpp; sourceTree = "<group>"; };
 		2347BE6916F4B23C00472FFB /* reduceGL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = reduceGL.cpp; path = ../../reduceGL.cpp; sourceTree = "<group>"; };
 		2347BE6A16F4B23C00472FFB /* reduceGL.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = reduceGL.hpp; path = ../../reduceGL.hpp; sourceTree = "<group>"; };
 		2347BE6B16F4B23C00472FFB /* structs.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = structs.hpp; path = ../../structs.hpp; sourceTree = "<group>"; };
 		2347BE6C16F4B23C00472FFB /* test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test.cpp; path = ../../test.cpp; sourceTree = "<group>"; };
-		238F2DF117148DD2000F8B6E /* algo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = algo.hpp; path = ../../algo.hpp; sourceTree = "<group>"; };
+		238F2DF117148DD2000F8B6E /* algo_cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = algo_cpp.h; path = ../../algo_cpp.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,8 +64,8 @@
 		2347BE6716F4B22600472FFB /* src */ = {
 			isa = PBXGroup;
 			children = (
-				238F2DF117148DD2000F8B6E /* algo.hpp */,
-				2347BE6816F4B23C00472FFB /* algo.cpp */,
+				238F2DF117148DD2000F8B6E /* algo_cpp.h */,
+				2347BE6816F4B23C00472FFB /* algo_cpp.cpp */,
 				2347BE6916F4B23C00472FFB /* reduceGL.cpp */,
 				2347BE6A16F4B23C00472FFB /* reduceGL.hpp */,
 				2347BE6B16F4B23C00472FFB /* structs.hpp */,
@@ -125,7 +125,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2347BE6D16F4B23C00472FFB /* algo.cpp in Sources */,
+				2347BE6D16F4B23C00472FFB /* algo_cpp.cpp in Sources */,
 				2347BE6E16F4B23C00472FFB /* reduceGL.cpp in Sources */,
 				2347BE6F16F4B23C00472FFB /* test.cpp in Sources */,
 			);
