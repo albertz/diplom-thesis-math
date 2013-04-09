@@ -1,5 +1,0 @@
-#ifndef __SAGE_HERMITIAN_MODFORM_ALGO_HPP__
-#define __SAGE_HERMITIAN_MODFORM_ALGO_HPP__
-
-#endif
-
