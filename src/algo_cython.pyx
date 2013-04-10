@@ -18,6 +18,7 @@ cdef extern from "algo_cpp.cpp":
 		void init(int D, int HermWeight)
 		PrecisionF curlF
 		CurlS_Generator curlS
+		size_t matrixRowCount, matrixColumnCount
 		void calcMatrix()
 
 def test():
@@ -31,6 +32,8 @@ cdef class Calc:
 		self.calc.curlF.B = 20
 	def getNextS(self):
 		self.calc.curlS.getNextS()
+	def calcMatrix(self):
+		self.calc.calcMatrix()
 		
 def test_algo_cython():
 	calc = Calc()
