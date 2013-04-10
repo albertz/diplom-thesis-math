@@ -15,6 +15,9 @@ index.ps
 a.out
 *.pyc
 *.dSYM
+*_cython.c*
+*.o
+*.so
 
 # http://mactex-wiki.tug.org/wiki/index.php?title=SyncTeX
 *.synctex.gz
