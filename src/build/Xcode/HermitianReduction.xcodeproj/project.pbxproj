@@ -32,6 +32,8 @@
 		2347BE6B16F4B23C00472FFB /* structs.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = structs.hpp; path = ../../structs.hpp; sourceTree = "<group>"; };
 		2347BE6C16F4B23C00472FFB /* test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test.cpp; path = ../../test.cpp; sourceTree = "<group>"; };
 		238F2DF117148DD2000F8B6E /* algo_cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = algo_cpp.h; path = ../../algo_cpp.h; sourceTree = "<group>"; };
+		238F2DF2171498C6000F8B6E /* algo_cython.pyx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = algo_cython.pyx; path = ../../algo_cython.pyx; sourceTree = "<group>"; };
+		238F2DF3171498DA000F8B6E /* compile.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = compile.sh; path = ../../compile.sh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,8 @@
 		2347BE6716F4B22600472FFB /* src */ = {
 			isa = PBXGroup;
 			children = (
+				238F2DF3171498DA000F8B6E /* compile.sh */,
+				238F2DF2171498C6000F8B6E /* algo_cython.pyx */,
 				238F2DF117148DD2000F8B6E /* algo_cpp.h */,
 				2347BE6816F4B23C00472FFB /* algo_cpp.cpp */,
 				2347BE6916F4B23C00472FFB /* reduceGL.cpp */,
