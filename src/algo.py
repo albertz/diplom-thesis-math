@@ -31,6 +31,8 @@ def test_algo_calcMatrix():
 	calc.calcMatrix()
 	return calc.getMatrix()
 
+Verbose = True
+
 def modform(D, HermWeight):
 	"Main algo"
 	
@@ -47,7 +49,8 @@ def modform(D, HermWeight):
 
 	while True:
 		S = calc.getNextS()
-
+		if Verbuse: print "trying S=", S, "det=", S.det()
+		
 		# Step 3a. Choose B>0 as limit for precision curlF.
 		# TODO: how? dependent on S?
 		# ... calc.setPrecisionLimit(B)
