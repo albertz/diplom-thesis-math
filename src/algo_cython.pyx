@@ -34,7 +34,10 @@ cdef M2T_matrix(M2T m):
 
 cdef class Calc:
 	cdef ReductionMatrices_Calc calc
+	cdef int D, HermWeight
 	def init(self, int D, int HermWeight):
+		self.D = D
+		self.HermWeight = HermWeight
 		self.calc.init(D, HermWeight)
 		# start limit
 		self.calc.curlF.B = 20
@@ -42,6 +45,7 @@ cdef class Calc:
 		cdef M2T m = self.calc.curlS.getNextS()
 		return M2T_matrix(m)
 	def calcMatrix(self):
+		if self.D == 0: raise RuntimeError, "you have to call init first"
 		self.calc.calcMatrix()
 	def getMatrix(self):
 		M = MatrixSpace(ZZ, self.calc.matrixRowCount, self.calc.matrixColumnCount)

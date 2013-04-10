@@ -8,11 +8,10 @@
 
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
-#define __func__ (std::string((const char*)-1L) + ":")
 #define DOMAIN_CHECK(x) { if(!(x)) throw std::domain_error(\
-	__func__ + (__FILE__ ":" TOSTRING(__LINE__) ": domain-check failed: " #x)); }
+	(__FILE__ ":" TOSTRING(__LINE__) ": domain-check failed: " #x)); }
 #define LOGIC_CHECK(x) { if(!(x)) throw std::logic_error(\
-	__func__ + (__FILE__ ":" TOSTRING(__LINE__) ": logic-check failed: " #x)); }
+	(__FILE__ ":" TOSTRING(__LINE__) ": logic-check failed: " #x)); }
 
 typedef int Int;
 
