@@ -9,7 +9,7 @@ struct X {};
 extern "C" {
 #endif
 
-ReductionMatrices_CalcState
+extern int ReductionMatrices_CalcState;
 
 #ifdef __cplusplus
 }
