@@ -58,9 +58,10 @@ struct CurlS_Generator {
 		return *this;
 	}
 
-	void getNextS() {
+	M2T getNextS() {
 		++(*this); // the very first ([0,0,0]) is not valid
 		matrices.push_back(cur);
+		return cur;
 	}
 };
 

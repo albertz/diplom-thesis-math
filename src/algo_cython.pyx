@@ -10,8 +10,10 @@ from sage.matrix.matrix_integer_dense cimport Matrix_integer_dense
 
 cdef extern from "algo_cpp.cpp":
 	void test_algo()
+	cdef cppclass M2T:
+		int a,b,c
 	cdef cppclass CurlS_Generator:
-		void getNextS()
+		M2T getNextS()
 	cdef cppclass PrecisionF:
 		int B
 	cdef cppclass ReductionMatrices_Calc:
@@ -22,9 +24,13 @@ cdef extern from "algo_cpp.cpp":
 		size_t matrixRowCount, matrixColumnCount
 		void calcMatrix()
 		void getMatrix(mpz_t* out)
-		
+
 def test():
 	test_algo()
+
+cdef M2T_matrix(M2T m):
+	M = MatrixSpace(ZZ, 2, 2)
+	return M([m.a, m.b, m.b, m.c])
 
 cdef class Calc:
 	cdef ReductionMatrices_Calc calc
@@ -33,7 +39,8 @@ cdef class Calc:
 		# start limit
 		self.calc.curlF.B = 20
 	def getNextS(self):
-		self.calc.curlS.getNextS()
+		cdef M2T m = self.calc.curlS.getNextS()
+		return M2T_matrix(m)
 	def calcMatrix(self):
 		self.calc.calcMatrix()
 	def getMatrix(self):
@@ -42,12 +49,3 @@ cdef class Calc:
 		self.calc.getMatrix(<mpz_t*>m._entries)
 		return m
 
-def test_algo_cython():
-	calc = Calc()
-	calc.init(D = -4, HermWeight = 10)
-
-	calc.getNextS()
-	calc.getNextS()
-	
-	calc.calcMatrix()
-	return calc.getMatrix()

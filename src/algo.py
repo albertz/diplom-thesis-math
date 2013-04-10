@@ -21,3 +21,36 @@
 # If check fails, goto step 3 and enlarge curlS.
 
 # Otherwise, reconstruct fourier expansion.
+
+
+import algo_cython as C
+
+def reloadC():
+	"""
+	This is just for testing to reload the C (Cython) module
+	after it was recompiled.
+	Note that this code is very unsafe! It will likely crash
+	when you have other references on the C module.
+	This is only for debugging and development!
+	"""
+	global C
+	import ctypes
+	try:
+		libdl = ctypes.CDLL("libdl.so")
+	except Exception:
+		# MacOSX:
+		libdl = ctypes.CDLL("libdl.dylib")
+	libdl.dlclose.argtypes = [ctypes.c_void_p]
+	so = ctypes.PyDLL(C.__file__)
+	assert(libdl.dlclose(so._handle) == 0)
+	reload(C)
+	
+def test_algo():
+	calc = C.Calc()
+	calc.init(D = -4, HermWeight = 10)
+
+	calc.getNextS()
+	calc.getNextS()
+	
+	calc.calcMatrix()
+	return calc.getMatrix()
