@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <list>
+#include <gmp.h>
 
 
 // In many cases, we wont use this variable and hardcode
@@ -262,6 +263,13 @@ struct ReductionMatrices_Calc {
 				size_t matrixIndex = row * matrixColumnCount + column;
 				matrix[matrixIndex] += reduced.character.value(D, -HermWeight);
 			}
+		}
+	}
+	
+	void getMatrix(mpz_t* out) {
+		for(size_t i = 0; i < matrixColumnCount * matrixRowCount; ++i) {
+			mpz_set_ui((mpz_ptr)out, matrix[i]);
+			++out;
 		}
 	}
 	
