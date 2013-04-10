@@ -59,7 +59,10 @@ struct CurlS_Generator {
 	}
 
 	M2T getNextS() {
+		Int oldDenom = curDenom;
 		++(*this); // the very first ([0,0,0]) is not valid
+		if(curDenom != oldDenom)
+			matrices.clear();
 		matrices.push_back(cur);
 		return cur;
 	}
@@ -144,8 +147,8 @@ struct PrecisionF {
 int calcPrecisionDimension(const PrecisionF& F, ElemOfS S) {
 	// tr([s,t,u] * [a,b,c]) >= max(a,c) * (s + u - 2|t|)
 	// T=[a,b,c] \in \cF - \Lambda => max(a,c) >= B
-	assert(S.a + S.c - 2 * abs(S.b) > 0); // this is always the case if S is positive definite
-	assert(F.B > 0);
+	DOMAIN_CHECK(S.a + S.c - 2 * abs(S.b) > 0); // this is always the case if S is positive definite
+	DOMAIN_CHECK(F.B > 0);
 	return F.B * (S.a + S.c - 2 * abs(S.b));
 }
 
@@ -165,19 +168,19 @@ struct ReductionMatrices_Calc {
 	void init(int _D, int _HermWeight) {
 		D = curlF.D = _D;
 		
-		assert(D < 0);
+		DOMAIN_CHECK(D < 0);
 		// Fundamental discriminant properties on D:
-		assert(
+		DOMAIN_CHECK(
 			   (Mod(D, 4) == 1) /* TODO: and check square-free */
 			   || (Mod(D, 4) == 0 && (Mod(Div(D, 4), 4) == 2 || Mod(Div(D, 4), 4) == 3)));
-		assert(Mod(D*D - D, 4) == 0); // is implied by the above, but check anyway...
+		DOMAIN_CHECK(Mod(D*D - D, 4) == 0); // is implied by the above, but check anyway...
 
 		HermWeight = _HermWeight;
 		
-		assert(HermWeight > 0);
+		DOMAIN_CHECK(HermWeight > 0);
 		// By Dern, Satz 1.10, to imply that we don't have the trivial cases.
 		if(D == -4)
-			assert(Mod(HermWeight, 2) == 0);
+			DOMAIN_CHECK(Mod(HermWeight, 2) == 0);
 		if(D == -3) {
 			// nu = det^j
 			// then: Mod(HermWeight, 3) == j
@@ -236,7 +239,7 @@ struct ReductionMatrices_Calc {
 				out = evalA_S_n(elemOfF, S, i);
 			}
 		}
-		assert(outVec == outVecEnd);
+		LOGIC_CHECK(outVec == outVecEnd);
 	}
 
 	std::vector<ValueOfA> matrix; // flat. format: [[0]*ColumnCount]*RowCount
@@ -277,7 +280,7 @@ struct ReductionMatrices_Calc {
 	
 	void dumpMatrix() {
 		using namespace std;
-		assert(matrix.size() == matrixRowCount * matrixColumnCount);
+		LOGIC_CHECK(matrix.size() == matrixRowCount * matrixColumnCount);
 		cout << "matrix " << matrixRowCount << "*" << matrixColumnCount << endl;
 		cout << "[" << endl;
 		for(size_t row = 0; row < matrixRowCount; ++row) {

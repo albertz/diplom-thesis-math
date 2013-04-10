@@ -4,7 +4,6 @@
 
 // https://github.com/martinra/psage/blob/paper_computing_jacobi_forms/psage/modform/hermitianmodularforms/hermitianmodularformd2_fourierexpansion_cython.pyx
 
-#include <assert.h>
 #include <math.h>
 #include <iostream>
 #include <stdlib.h>
@@ -138,7 +137,7 @@ inline void reduce_GL(M2T_O matrix, int D, struct hermitian_form_with_character_
 		std::cerr << "reduce_GL: D must be a fundamental discriminant. D = " << D << std::endl;
 		abort();
 	}
-	assert(Mod(D*D - D, 4) == 0);
+	DOMAIN_CHECK(Mod(D*D - D, 4) == 0);
 	if( a < 0 || c < 0 || matrix.det4D(D) < 0 ) {
 		std::cerr << "reduce_GL: invalid input: " << matrix << ", " << D << std::endl;
 		abort();

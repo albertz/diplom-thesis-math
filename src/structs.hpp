@@ -3,7 +3,16 @@
 
 #include <iostream>
 #include <string.h>
-#include <assert.h>
+#include <stdexcept>
+#include <string>
+
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+#define __func__ std::string((const char*)-1L)
+#define DOMAIN_CHECK(x) { if(!(x)) throw std::domain_error(\
+	__func__ + (__FILE__ ":" TOSTRING(__LINE__) ": domain-check failed: " #x)); }
+#define LOGIC_CHECK(x) { if(!(x)) throw std::logic_error(\
+	__func__ + (__FILE__ ":" TOSTRING(__LINE__) ": logic-check failed: " #x)); }
 
 typedef int Int;
 
@@ -18,7 +27,7 @@ struct M2T_O {
 	// det4D == -D * 4 * det
 	// TODO(?): if D is fundamental, we always have 4|(D*D-D), thus we could just use -D * det.
 	Int det4D(const int D) const {
-		assert(D < 0);
+		DOMAIN_CHECK(D < 0);
 		// det = a*c - |b|^2
 		// Re(b) = 1/2 b2
 		// Re(b)^2 = 1/4 b2^2
@@ -75,8 +84,8 @@ T Mod(const T& a, const T& b) {
 	T res = a % b;
 	// in C: (1%3,0%3,-1%3,-2%3,-3%3,-4%3) == (1,0,-1,-2,0,-1)
 	if(a % b < 0) res += b;
-	assert(res >= 0);
-	assert(res < b);
+	LOGIC_CHECK(res >= 0);
+	LOGIC_CHECK(res < b);
 	return res;
 }
 
