@@ -158,14 +158,18 @@ struct ReductionMatrices_Calc {
 		HermWeight = 0;
 		D = 0;
 	}
-	
-	void testValidParams() {
+		
+	void init(int _D, int _HermWeight) {
+		D = curlF.D = _D;
+		
 		assert(D < 0);
 		// Fundamental discriminant properties on D:
 		assert(
-			(Mod(D, 4) == 1) /* TODO: and check square-free */
-			|| (Mod(D, 4) == 0 && (Mod(Div(D, 4), 4) == 2 || Mod(Div(D, 4), 4) == 3)));
+			   (Mod(D, 4) == 1) /* TODO: and check square-free */
+			   || (Mod(D, 4) == 0 && (Mod(Div(D, 4), 4) == 2 || Mod(Div(D, 4), 4) == 3)));
 		assert(Mod(D*D - D, 4) == 0); // is implied by the above, but check anyway...
+
+		HermWeight = _HermWeight;
 		
 		assert(HermWeight > 0);
 		// By Dern, Satz 1.10, to imply that we don't have the trivial cases.
@@ -311,9 +315,7 @@ void test_algo_PrecisionF() {
 void test_algo_calcReducedCurlF() {
 	using namespace std;
 	ReductionMatrices_Calc calc;
-	calc.HermWeight = 10;
-	calc.D = calc.curlF.D = -4;
-	calc.testValidParams();
+	calc.init(-4, 10);
 	calc.curlF.B = 10;
 	calc.calcReducedCurlF();
 	cout << "size of reducedMatrix(curlF): " << calc.reducedCurlFList.size() << endl;	
@@ -322,9 +324,7 @@ void test_algo_calcReducedCurlF() {
 void test_algo() {
 	using namespace std;
 	ReductionMatrices_Calc calc;
-	calc.HermWeight = 10;
-	calc.D = calc.curlF.D = -4;
-	calc.testValidParams();
+	calc.init(-4, 10);
 	calc.curlF.B = 20;
 	calc.curlS.getNextS();
 	calc.curlS.getNextS();
