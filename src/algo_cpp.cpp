@@ -268,7 +268,7 @@ struct ReductionMatrices_Calc {
 	
 	void getMatrix(mpz_t* out) {
 		for(size_t i = 0; i < matrixColumnCount * matrixRowCount; ++i) {
-			mpz_set_ui((mpz_ptr)out, matrix[i]);
+			mpz_set_si((mpz_ptr)out, matrix[i]);
 			++out;
 		}
 	}
