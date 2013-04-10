@@ -3,8 +3,9 @@ include "interrupt.pxi"
 include "stdsage.pxi"
 include "cdefs.pxi"
 
-from sage.matrix.matrix_integer_dense import \
-	Matrix_integer_dense #cdef class
+from sage.rings.integer_ring import ZZ
+from sage.matrix.matrix_space import MatrixSpace
+from sage.matrix.matrix_integer_dense cimport Matrix_integer_dense
 
 
 cdef extern from "algo_cpp.cpp":
@@ -20,7 +21,8 @@ cdef extern from "algo_cpp.cpp":
 		CurlS_Generator curlS
 		size_t matrixRowCount, matrixColumnCount
 		void calcMatrix()
-
+		void getMatrix(mpz_t* out)
+		
 def test():
 	test_algo()
 
@@ -34,7 +36,12 @@ cdef class Calc:
 		self.calc.curlS.getNextS()
 	def calcMatrix(self):
 		self.calc.calcMatrix()
-		
+	def getMatrix(self):
+		M = MatrixSpace(ZZ, self.calc.matrixRowCount, self.calc.matrixColumnCount)
+		cdef Matrix_integer_dense m = M.zero_matrix().__copy__()
+		self.calc.getMatrix(<mpz_t*>m._entries)
+		return m
+
 def test_algo_cython():
 	calc = Calc()
 	calc.init(D = -4, HermWeight = 10)
@@ -43,3 +50,4 @@ def test_algo_cython():
 	calc.getNextS()
 	
 	calc.calcMatrix()
+	return calc.getMatrix()

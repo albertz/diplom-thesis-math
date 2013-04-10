@@ -1,15 +1,17 @@
 #!/bin/bash
 
 SageDir="/Applications/sage-5.4"
+SageDevelDir="$SageDir/devel/sage"
 SageLocalIncludeDir="$SageDir/local/include"
-SageIncludeDir="$SageDir/devel/sage/c_lib/include"
-SageExtIncludeDir="$SageDir/devel/sage/sage/ext"
+SageCLibIncludeDir="$SageDevelDir/c_lib/include"
+SageExtIncludeDir="$SageDevelDir/sage/ext"
 PythonIncludeDir="$SageLocalIncludeDir/python2.7"
 
 cython \
 	-I $PythonIncludeDir \
-	-I $SageIncludeDir \
+	-I $SageDevelDir \
 	-I $SageLocalIncludeDir \
+	-I $SageCLibIncludeDir \
 	-I $SageExtIncludeDir \
 	--cplus \
 	algo_cython.pyx
@@ -17,8 +19,9 @@ cython \
 c++ \
 	-std=gnu++11 -stdlib=libc++ \
 	-I $PythonIncludeDir \
-	-I $SageIncludeDir \
+	-I $SageDevelDir \
 	-I $SageLocalIncludeDir \
+	-I $SageCLibIncludeDir \
 	-I $SageExtIncludeDir \
 	-c \
 	algo_cython.cpp

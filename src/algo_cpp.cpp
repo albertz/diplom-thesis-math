@@ -158,6 +158,7 @@ struct ReductionMatrices_Calc {
 	ReductionMatrices_Calc() {
 		HermWeight = 0;
 		D = 0;
+		matrixRowCount = matrixColumnCount = 0;
 	}
 		
 	void init(int _D, int _HermWeight) {
