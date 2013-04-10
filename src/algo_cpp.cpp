@@ -276,8 +276,8 @@ struct ReductionMatrices_Calc {
 	
 	void dumpMatrix() {
 		using namespace std;
-		assert(matrix.size() == matrixRowCount * reducedCurlFList.size());
-		cout << "matrix " << matrixRowCount << "*" << reducedCurlFList.size() << endl;
+		assert(matrix.size() == matrixRowCount * matrixColumnCount);
+		cout << "matrix " << matrixRowCount << "*" << matrixColumnCount << endl;
 		cout << "[" << endl;
 		for(size_t row = 0; row < matrixRowCount; ++row) {
 			if(row > 0) cout << "," << endl;
