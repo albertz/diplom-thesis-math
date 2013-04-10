@@ -18,7 +18,7 @@ cdef extern from "algo_cpp.cpp":
 		int B
 	cdef cppclass ReductionMatrices_Calc:
 		ReductionMatrices_Calc()
-		void init(int D, int HermWeight)
+		void init(int D, int HermWeight) except +
 		PrecisionF curlF
 		CurlS_Generator curlS
 		size_t matrixRowCount, matrixColumnCount
