@@ -20,6 +20,14 @@ struct CurlS_Generator {
 	std::list<ElemOfS>::iterator begin() { return matrices.begin(); }
 	std::list<ElemOfS>::iterator end() { return matrices.end(); }
 
+	/*
+	Just now, we iterare reduced matrices in Her_2(\Z).
+	This might not be correct, we might need all reduced
+	matrices in Her_2(\Z) here.
+	It is not possible to iterate them by det(S)!
+	This could be a problem. Maybe it is enough to limit Im(S).
+	*/
+
 	M2T cur; // matrix S
 	Int curDenom; // denom of S^-1 = det S = ac - b^2
 
