@@ -79,6 +79,7 @@ struct CurlS_Generator {
 // calculates trace(S * T)
 // is always an integer
 Int trace(M2T S, M2T_O T) {
+	// = (S.a * T.a + S.b * \overline{T.b}) + (\overline{S.b} * T.b + S.b * T.b)
 	// = S.a * T.a + 2 * Re(S.b * \overline{T.b}) + S.c * T.c
 	// = S.a * T.a + S.c * T.c + 2 * S.b * Re(T.b)
 	// = S.a * T.a + S.c * T.c + S.b * T.b2
