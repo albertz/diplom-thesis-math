@@ -12,7 +12,7 @@ Define $\Gamma^H := \Sp_2(\curlO)$ as the translation group for $f$.
 %not needed?
 %Then, we can verify that
 %\[ M := \SimpleMatrix{1_2}{B}{}{1_2} \in \Gamma^H, \quad B \in \Her_2(\curlO) . \]
-Let $\tau \in \HalfPlane_1$. With $S \in \PM_2(\C)$ we have
+Let $\tau \in \HalfPlane_1$. With $S = [s,t,u] \in \PM_2(\C)$ we have
 \begin{align*}
 \Im(S\tau) \quad = \quad& \frac{1}{2i} \left( S \tau - \overline{S}^T \overline{\tau} \right) \\
 = \quad & \frac{1}{2i} S (\tau - \overline{\tau}) \\
@@ -22,29 +22,26 @@ Let $\tau \in \HalfPlane_1$. With $S \in \PM_2(\C)$ we have
 %TODO: \nu(M'), warum ist das immer 1?
 thus $S \tau \in \HalfPlane_2$. Thus, $\tau \mapsto f(S \tau)$ is a function $\HalfPlane_1 \rightarrow \C$.
 
-Let $\SmallMatrix{a}{b}{c}{d} \in \SL_2(\Z)$. We have
+Let $l := \det(S)$. That is the denominator of $S^{-1}$. Let $\SmallMatrix{a}{b}{c}{d} \in \Gamma_0(l) \subseteq \SL_2(\Z)$. We have
 \begin{align*}
 & S \frac{a \tau + b}{c \tau + d} \\
 =\quad & (a (S \tau) + bS) \cdot ((c S^{-1}) (S \tau) + d)^{-1} \\
 =\quad & \SimpleMatrix{a 1_2}{b S}{c S^{-1}}{d 1_2} \cdot S \tau .
 \end{align*}
-And with $S = \overline{S}^T$ and $ad  - bc = 1$ we have
+Define
+\[ M := \SimpleMatrix{a 1_2}{b S}{c S^{-1}}{d 1_2} \in \M_4(\C) . \]
+With $l | c$, we also have $c S^{-1} = \frac{c}{l} [u, -t, s] \in \M_2(\curlO)$, thus we have $M \in \M_4(\curlO)$.
+Recall that we have $S = \overline{S}^T$ and $ad  - bc = 1$. Verify that we have $M \in \Sp_2(\curlO) = \Gamma^H$:
 \begin{align*}
-& \overline{\SimpleMatrix{a 1_2}{b S}{c S^{-1}}{d 1_2}}^T J_2 \SimpleMatrix{a 1_2}{b S}{c S^{-1}}{d 1_2} \\
+&  \overline{M}^T J_2 M \\
+=\quad & \overline{\SimpleMatrix{a 1_2}{b S}{c S^{-1}}{d 1_2}}^T J_2 \SimpleMatrix{a 1_2}{b S}{c S^{-1}}{d 1_2} \\
 =\quad & \SimpleMatrix
 {(-ac S^{-1} + ac \overline{S^{-1}}^T)}
 {(-ad 1_2 + cb \overline{S^{-1}}^T S)}
 {(-bc \overline{S}^T S^{-1} + ad 1_2)}
 {(-bd \overline{S}^T + bd S)} \\
-=\quad & J_2 ,
+=\quad & J_2 .
 \end{align*}
-thus we have
-\[ M' := \SimpleMatrix{a 1_2}{b S}{c S^{-1}}{d 1_2} \in \Sp_2(\C) . \]
-We also have $c S^{-1} \in \M_2(\curlO)$, thus we have $M'  \in \Gamma^H = \Sp_2(\curlO)$.
-% M' muss ganzzahlig sein, weil:
-%> Weil wir im Endeffekt Modulformen zu vollen Gruppe berechnen wollen. Das
-%> heißt, f ist darunter invariant, aber nicht unter Transformationen, die
-%> gebrochene Einträge haben.
 
 Thus, because $f$ is a Hermitian modular form, we have
 \begin{align*}
@@ -53,7 +50,7 @@ Thus, because $f$ is a Hermitian modular form, we have
 =\quad & \nu(M') \cdot \det(c S^{-1} S \tau + d 1_2)^k \cdot f(S \tau) \\
 =\quad & (c \tau + d)^{2k} \cdot f(S \tau) .
 \end{align*}
-Thus, $f$ is an Elliptic modular form of weight $2k$.
+Thus, $f$ is an Elliptic modular form of weight $2k$ to $\Gamma_0(l)$.
 \endproof
 \end{lemma}
 
