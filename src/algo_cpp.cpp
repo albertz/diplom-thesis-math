@@ -16,6 +16,7 @@ static const int HermDegree = 2;
 typedef M2T_O ElemOfS;
 
 struct CurlS_Generator {
+	int D;
 	std::list<ElemOfS> matrices;
 	std::list<ElemOfS>::iterator begin() { return matrices.begin(); }
 	std::list<ElemOfS>::iterator end() { return matrices.end(); }
@@ -35,12 +36,12 @@ struct CurlS_Generator {
 
 	bool isValid() {
 		if(cur.a > cur.c) return false;
-		if(cur.det() != curDenom) return false;
-		if(gcd(cur.a, cur.b, cur.c) > 1) return false;
+		if(cur.det(D) != curDenom) return false;
+		if(cur.gcd()) return false;
 		return true;
 	}
 	void next() {
-		auto &a = cur.a, &b = cur.b, &c = cur.c;
+		auto &a = cur.a, &b = cur.b1, &c = cur.c;
 
 		c ++;
 		if(c <= curDenom + b*b) {
@@ -66,7 +67,7 @@ struct CurlS_Generator {
 		return *this;
 	}
 
-	M2T getNextS() {
+	M2T_O getNextS() {
 		Int oldDenom = curDenom;
 		++(*this); // the very first ([0,0,0]) is not valid
 		if(curDenom != oldDenom)
@@ -76,14 +77,6 @@ struct CurlS_Generator {
 	}
 };
 
-// calculates trace(S * T)
-// is always an integer
-Int trace(M2T_O S, M2T_Odual T) {
-	// = (S.a * T.a + S.b * \overline{T.b}) + (\overline{S.b} * T.b + S.b * T.b)
-	// = S.a * T.a + 2 * Re(S.b * \overline{T.b}) + S.c * T.c
-	// = S.a * T.a + S.c * T.c + (S.b1 * T.b2 - S.b2 * T.b1)
-	return S.a * T.a + S.c * T.c + S.b1 * T.b2 - S.b2 * T.b1;
-}
 
 struct PrecisionF {
 	int D; // fundamental discriminant

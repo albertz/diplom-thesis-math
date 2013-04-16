@@ -33,6 +33,27 @@ T Div(const T& a, const T& b) {
 	return res;
 }
 
+template<typename T>
+T gcd(const T& a, const T& b) {
+	if(a < 0) return gcd(-a, b);
+	if(b < 0) return gcd(a, -b);
+	if(a == 0) return b;
+	if(a == 1) return 1;
+	if(a > b) return gcd(b, a);
+	return gcd(Mod(b,a), a);
+}
+
+template<typename T>
+T gcd(const T& a, const T& b, const T& c) {
+	return gcd(gcd(a,b), c);
+}
+
+template<typename T>
+T gcd(const T& a, const T& b, const T& c, const T& d) {
+	return gcd(a, b, gcd(c, d));
+}
+
+
 
 struct M2T_Odual {
 	// This represents always an element in Her_2(\cO^#) from our work.
@@ -94,6 +115,7 @@ struct M2T_O {
 		// Im(b)^2 = -D b2^2 1/4
 		return a*c - b1*b1 - D*b2 - Div(D*D-D, 4) * b2*b2;
 	}
+	Int gcd() const { return ::gcd(a, b1, b2, c); }
 };
 
 
@@ -118,6 +140,14 @@ struct Matrix2 {
 };
 
 
+// calculates trace(S * T)
+// is always an integer
+inline Int trace(M2T_O S, M2T_Odual T) {
+	// = (S.a * T.a + S.b * \overline{T.b}) + (\overline{S.b} * T.b + S.b * T.b)
+	// = S.a * T.a + 2 * Re(S.b * \overline{T.b}) + S.c * T.c
+	// = S.a * T.a + S.c * T.c + (S.b1 * T.b2 - S.b2 * T.b1)
+	return S.a * T.a + S.c * T.c + S.b1 * T.b2 - S.b2 * T.b1;
+}
 
 
 template<typename T>
@@ -131,21 +161,6 @@ T Pow(const T& a, const T& b) {
 	return result;
 }
 
-
-template<typename T>
-T gcd(const T& a, const T& b) {
-	if(a < 0) return gcd(-a, b);
-	if(b < 0) return gcd(a, -b);
-	if(a == 0) return b;
-	if(a == 1) return 1;
-	if(a > b) return gcd(b, a);
-	return gcd(Mod(b,a), a);
-}
-
-template<typename T>
-T gcd(const T& a, const T& b, const T& c) {
-	return gcd(gcd(a,b), c);
-}
 
 
 #include <chrono>
