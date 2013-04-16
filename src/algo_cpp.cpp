@@ -13,7 +13,7 @@
 static const int HermDegree = 2;
 
 
-typedef M2T ElemOfS;
+typedef M2T_O ElemOfS;
 
 struct CurlS_Generator {
 	std::list<ElemOfS> matrices;
@@ -28,7 +28,7 @@ struct CurlS_Generator {
 	This could be a problem. Maybe it is enough to limit Im(S).
 	*/
 
-	M2T cur; // matrix S
+	ElemOfS cur; // matrix S
 	Int curDenom; // denom of S^-1 = det S = ac - b^2
 
 	CurlS_Generator() : curDenom(1) {}
@@ -78,12 +78,11 @@ struct CurlS_Generator {
 
 // calculates trace(S * T)
 // is always an integer
-Int trace(M2T S, M2T_Odual T) {
+Int trace(M2T_O S, M2T_Odual T) {
 	// = (S.a * T.a + S.b * \overline{T.b}) + (\overline{S.b} * T.b + S.b * T.b)
 	// = S.a * T.a + 2 * Re(S.b * \overline{T.b}) + S.c * T.c
-	// = S.a * T.a + S.c * T.c + 2 * S.b * Re(T.b)
-	// = S.a * T.a + S.c * T.c + S.b * T.b2
-	return S.a * T.a + S.c * T.c + S.b * T.b2;
+	// = S.a * T.a + S.c * T.c + (S.b1 * T.b2 - S.b2 * T.b1)
+	return S.a * T.a + S.c * T.c + S.b1 * T.b2 - S.b2 * T.b1;
 }
 
 struct PrecisionF {

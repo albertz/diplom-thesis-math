@@ -57,6 +57,18 @@ inline bool operator<(const M2T_Odual& m1, const M2T_Odual& m2) {
 	return compare(m1, m2) < 0;
 }
 
+struct M2T_O {
+	// This represents always an element in Her_2(\cO) from our work.
+	// We set `b = b1 + b2 (D + \sqrt{D})/2`, where
+	// D is a negative integer, the fundamental discriminant of
+	// the underlying imaginary quadratic number field.
+	// This M2T_O-struct represents the matrix [a,b,c].
+	Int a, b1, b2, c;
+	M2T_O(Int _a = 0, Int _b1 = 0, Int _b2 = 0, Int _c = 0)
+	: a(_a), b1(_b1), b2(_b2), c(_c) {}
+};
+
+
 struct M2T {
 	Int a, b, c;
 	// This M2T-struct represents the matrix [a,b,c].
