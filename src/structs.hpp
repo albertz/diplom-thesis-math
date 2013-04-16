@@ -53,6 +53,18 @@ T gcd(const T& a, const T& b, const T& c, const T& d) {
 	return gcd(a, b, gcd(c, d));
 }
 
+template<typename T>
+T squareRootInt(const T& y) {
+	DOMAIN_CHECK(y >= 0);
+	DOMAIN_CHECK(y*y >= y); // this is an overflow check
+	// This uses the Newton algorithm.
+	T x = y;
+	while(!(x*x <= y && (x+1)*(x+1) >= y)) {
+		// y < x^2 ==> y/x < x ==> (x+y/x) < 2x ==> new_x < x
+		x = (x + y/x) / 2;
+	}
+	return x;
+}
 
 
 struct M2T_Odual {
@@ -106,14 +118,25 @@ struct M2T_O {
 	Int a, b1, b2, c;
 	M2T_O(Int _a = 0, Int _b1 = 0, Int _b2 = 0, Int _c = 0)
 	: a(_a), b1(_b1), b2(_b2), c(_c) {}
-	Int det(const int D) {
+	// = |b|^2
+	Int absBsquare(const int D) {
 		DOMAIN_CHECK(D < 0);
 		DOMAIN_CHECK(Mod(D*D - D, 4) == 0);
 		// Re(b) = b1 + D b2 1/2
 		// Re(b)^2 = b1^2 + D b2 + 1/4 D^2 b2^2
 		// Im(b) = sqrt{-D} b2 1/2
 		// Im(b)^2 = -D b2^2 1/4
-		return a*c - b1*b1 - D*b2 - Div(D*D-D, 4) * b2*b2;
+		return b1*b1 + D*b2 + Div(D*D-D, 4) * b2*b2;
+	}
+	// = Gauss_upper( 2*|b| )
+	Int absBupper2(const int D) {
+		Int y = absBsquare(D) * 4;
+		Int x = squareRootInt(y);
+		if(x*x == y) return x;
+		return x + 1;
+	}
+	Int det(const int D) {
+		return a*c - absBsquare(D);
 	}
 	Int gcd() const { return ::gcd(a, b1, b2, c); }
 };

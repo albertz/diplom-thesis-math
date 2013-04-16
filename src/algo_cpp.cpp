@@ -148,9 +148,10 @@ struct PrecisionF {
 int calcPrecisionDimension(const PrecisionF& F, ElemOfS S) {
 	// tr([s,t,u] * [a,b,c]) >= max(a,c) * (s + u - 2|t|)
 	// T=[a,b,c] \in \cF - \Lambda => max(a,c) >= B
-	DOMAIN_CHECK(S.a + S.c - 2 * abs(S.b) > 0); // this is always the case if S is positive definite
+	DOMAIN_CHECK(S.det(F.D) > 0);
 	DOMAIN_CHECK(F.B > 0);
-	return F.B * (S.a + S.c - 2 * abs(S.b));
+	// Note: might be zero
+	return F.B * (S.a + S.c - S.absBupper2(F.D));
 }
 
 typedef M2T_Odual ElemOfF;
