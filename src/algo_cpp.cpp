@@ -78,7 +78,7 @@ struct CurlS_Generator {
 
 // calculates trace(S * T)
 // is always an integer
-Int trace(M2T S, M2T_O T) {
+Int trace(M2T S, M2T_Odual T) {
 	// = (S.a * T.a + S.b * \overline{T.b}) + (\overline{S.b} * T.b + S.b * T.b)
 	// = S.a * T.a + 2 * Re(S.b * \overline{T.b}) + S.c * T.c
 	// = S.a * T.a + S.c * T.c + 2 * S.b * Re(T.b)
@@ -93,7 +93,7 @@ struct PrecisionF {
 	
 	struct Iter {
 		const PrecisionF& F;
-		M2T_O cur;
+		M2T_Odual cur;
 		bool hitEnd;
 		Iter(const PrecisionF& _F, bool _end = false) : F(_F), hitEnd(_end) {}
 		
@@ -139,7 +139,7 @@ struct PrecisionF {
 			} while(!isValid() && !hitEnd);
 			return *this;
 		}
-		M2T_O operator*() const { return cur; }
+		M2T_Odual operator*() const { return cur; }
 		bool operator==(const Iter& other) const {
 			if(hitEnd && other.hitEnd) return true;
 			if(!hitEnd && other.hitEnd) return false;
@@ -161,7 +161,7 @@ int calcPrecisionDimension(const PrecisionF& F, ElemOfS S) {
 	return F.B * (S.a + S.c - 2 * abs(S.b));
 }
 
-typedef M2T_O ElemOfF;
+typedef M2T_Odual ElemOfF;
 typedef Int ValueOfA;
 
 struct ReductionMatrices_Calc {
