@@ -167,7 +167,7 @@ struct ReductionMatrices_Calc {
 	}
 		
 	void init(int _D, int _HermWeight) {
-		D = curlF.D = _D;
+		D = curlF.D = curlS.D = _D;
 		
 		DOMAIN_CHECK(D < 0);
 		// Fundamental discriminant properties on D:
@@ -302,6 +302,7 @@ struct ReductionMatrices_Calc {
 void test_algo_CurlSGen() {
 	using namespace std;
 	CurlS_Generator curlS;
+	curlS.D = -4;
 	size_t c = 0;
 	size_t denomLimit = 10;
 	while(true) {
