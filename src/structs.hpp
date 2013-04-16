@@ -128,9 +128,9 @@ struct M2T_O {
 		// Im(b)^2 = -D b2^2 1/4
 		return b1*b1 + D*b2 + Div(D*D-D, 4) * b2*b2;
 	}
-	// = Gauss_upper( 2*|b| )
-	Int absBupper2(const int D) {
-		Int y = absBsquare(D) * 4;
+	// = Gauss_upper( M*|b| )
+	Int absBMupper(const int D, const Int M) {
+		Int y = absBsquare(D) * M * M;
 		Int x = squareRootInt(y);
 		if(x*x == y) return x;
 		return x + 1;
