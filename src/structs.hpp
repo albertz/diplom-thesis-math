@@ -15,6 +15,25 @@
 
 typedef int Int;
 
+
+template<typename T>
+T Mod(const T& a, const T& b) {
+	T res = a % b;
+	// in C: (1%3,0%3,-1%3,-2%3,-3%3,-4%3) == (1,0,-1,-2,0,-1)
+	if(a % b < 0) res += b;
+	LOGIC_CHECK(res >= 0);
+	LOGIC_CHECK(res < b);
+	return res;
+}
+
+template<typename T>
+T Div(const T& a, const T& b) {
+	T res = a / b;
+	if(a % b < 0) res -= 1;
+	return res;
+}
+
+
 struct M2T_Odual {
 	// This represents always an element in Her_2(\cO^#) from our work.
 	// We set `b = b1 / \sqrt{D} + b2 (1 + \sqrt{D})/2`, where
@@ -66,6 +85,15 @@ struct M2T_O {
 	Int a, b1, b2, c;
 	M2T_O(Int _a = 0, Int _b1 = 0, Int _b2 = 0, Int _c = 0)
 	: a(_a), b1(_b1), b2(_b2), c(_c) {}
+	Int det(const int D) {
+		DOMAIN_CHECK(D < 0);
+		DOMAIN_CHECK(Mod(D*D - D, 4) == 0);
+		// Re(b) = b1 + D b2 1/2
+		// Re(b)^2 = b1^2 + D b2 + 1/4 D^2 b2^2
+		// Im(b) = sqrt{-D} b2 1/2
+		// Im(b)^2 = -D b2^2 1/4
+		return a*c - b1*b1 - D*b2 - Div(D*D-D, 4) * b2*b2;
+	}
 };
 
 
@@ -91,22 +119,6 @@ struct Matrix2 {
 
 
 
-template<typename T>
-T Mod(const T& a, const T& b) {
-	T res = a % b;
-	// in C: (1%3,0%3,-1%3,-2%3,-3%3,-4%3) == (1,0,-1,-2,0,-1)
-	if(a % b < 0) res += b;
-	LOGIC_CHECK(res >= 0);
-	LOGIC_CHECK(res < b);
-	return res;
-}
-
-template<typename T>
-T Div(const T& a, const T& b) {
-	T res = a / b;
-	if(a % b < 0) res -= 1;
-	return res;
-}
 
 template<typename T>
 T Pow(const T& a, const T& b) {
