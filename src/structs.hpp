@@ -117,6 +117,9 @@ struct M2T_O {
 	}
 	Int gcd() const { return ::gcd(a, b1, b2, c); }
 };
+inline std::ostream& operator<<(std::ostream& os, const M2T_O& m) {
+	return os << "M2T_O(" << m.a << "," << m.b1 << "," << m.b2 << "," << m.c << ")";
+}
 
 
 struct M2T {
