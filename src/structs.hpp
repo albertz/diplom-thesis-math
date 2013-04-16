@@ -130,6 +130,7 @@ struct M2T_O {
 	}
 	// = Gauss_upper( M*|b| )
 	Int absBMupper(const int D, const Int M) {
+		if(b2 == 0) return M * b1; // fast path
 		Int y = absBsquare(D) * M * M;
 		Int x = squareRootInt(y);
 		if(x*x == y) return x;
