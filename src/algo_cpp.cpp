@@ -150,7 +150,11 @@ int calcPrecisionDimension(const PrecisionF& F, ElemOfS S) {
 	// T=[a,b,c] \in \cF - \Lambda => max(a,c) >= B
 	DOMAIN_CHECK(S.det(F.D) > 0);
 	DOMAIN_CHECK(F.B > 0);
-	// Note: might be zero
+	// Note: B(s + u) is \in \Z. B(s+u) >= 2 B |t|.
+	// 2 B |t| might be in \R-\Z, but we still have
+	// Gauss_upper(2 B |t|) <= B(s+u).
+	// Those can be equal though, thus this can be zero.
+	// With increasing B, this is always increasing, though.
 	return (F.B * S.a + F.B * S.c - S.absBMupper(F.D, 2 * F.B));
 }
 
