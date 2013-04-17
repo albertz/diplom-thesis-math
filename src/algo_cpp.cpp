@@ -151,7 +151,7 @@ int calcPrecisionDimension(const PrecisionF& F, ElemOfS S) {
 	DOMAIN_CHECK(S.det(F.D) > 0);
 	DOMAIN_CHECK(F.B > 0);
 	// Note: might be zero
-	return (F.B * S.a + F.B * S.c - S.absBMupper(F.D, F.B));
+	return (F.B * S.a + F.B * S.c - S.absBMupper(F.D, 2 * F.B));
 }
 
 typedef M2T_Odual ElemOfF;
