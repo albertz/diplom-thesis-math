@@ -31,7 +31,7 @@ def test():
 cdef M2T_O_matrix(M2T_O m, int D):
 	M = MatrixSpace(CC, 2, 2)
 	b = m.b1 + m.b2 * (D + sqrt(D)) * 0.5
-	return M([m.a, b, b.transpose(), m.c])
+	return M([m.a, b, b.conjugate(), m.c])
 
 cdef class Calc:
 	cdef ReductionMatrices_Calc calc
