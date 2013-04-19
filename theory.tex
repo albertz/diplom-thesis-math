@@ -5,7 +5,7 @@
 
 % TODO: wofür brauchen wir das?
 \begin{lemma}
-Let $f \colon \HalfPlane_2 \rightarrow \C$ be a Hermitian modular form of weight $k$. Let $S \in \PM_2(\curlO)$.
+Let $f \colon \HalfPlane_2 \rightarrow \C$ be a Hermitian modular form of weight $k$ with $\nu \equiv 1$. Let $S \in \PM_2(\curlO)$.
 Then, $\tau \mapsto f(S \tau) \colon \HalfPlane_1 \subseteq \C \rightarrow \C$ is an Elliptic modular form of weight $2k$ to $\Gamma_0(l)$, where $l$ is the denominator of $S^{-1}$.  %for some matrix $S \in \M_2(\Z)$ with $\Gamma(S) \subseteq \SL_2(\Z)$.
 \proof
 Define $\Gamma^H := \Sp_2(\curlO)$ as the translation group for $f$.
@@ -54,6 +54,15 @@ Thus, $f$ is an Elliptic modular form of weight $2k$ to $\Gamma_0(l)$.
 \endproof
 \end{lemma}
 
+
+\begin{remark}
+Let us analyze the case $\nu \not\equiv 1$. According to \cite{Dern01Herm}, only for $\Delta \equiv 0 \pmod{4}$, there is a single non-trivial Abel character $\nu$. This $\nu$ has the following properties (see \cite{Dern01Herm}):
+\begin{align*}
+\nu(J_2) & = 1 , \\
+\nu(\Trans(H)) & = (-1)^{h_1 + h_4 + |h_2|^2}, & H = [h_1, h_2, h_4] \in \Her_2(\curlO) \\
+\nu(\Rot(U)) & = (-1)^{|1+u_1+u_4|^2 |1+u_2+u_3|^2 + |u_1 u_4|^2} & U = \SmallMatrix{u_1}{u_2}{u_3}{u_4} \in \GL_2(\curlO)
+\end{align*}
+\end{remark}
 
 % TODO: wofür brauchen wir das?
 % von Notizen im Block
