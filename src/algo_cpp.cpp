@@ -267,10 +267,12 @@ struct ReductionMatrices_Calc {
 			struct hermitian_form_with_character_evaluation reduced;
 			reduce_GL(T, D, reduced);
 			size_t column = reducedCurlFMap[reduced.matrix];
+			size_t rowStart = 0;
 			for(ElemOfS S : curlS) {
 				int traceNum = trace(S,T);
-				if(traceNum >= calcPrecisionDimension(curlF, S)) continue;
-				size_t row = traceNum;
+				size_t row = rowStart + traceNum;
+				rowStart += calcPrecisionDimension(curlF, S);
+				if(row >= rowStart) continue;
 				size_t matrixIndex = row * matrixColumnCount + column;
 				matrix[matrixIndex] += reduced.character.value(D, -HermWeight);
 			}
