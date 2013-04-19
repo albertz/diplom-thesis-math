@@ -64,11 +64,20 @@ Let us analyze the case $\nu \not\equiv 1$. According to \cite{Dern01Herm}, only
 \end{align*}
 Consider the proof of the previos lemma. To calculate $\nu(M)$ with the given equations, we need to represent $M$ in the creation system $J_2$, $\Trans(H)$ and $\Rot(U)$.
 
-We must consider two different cases.
+We must consider two different cases. Recall that we have $\SmallMatrix{a}{b}{c}{d} \in \SL_2(\Z)$ and
+\[ M = \SimpleMatrix{a 1_2}{b S}{c S^{-1}}{d 1_2} \in \Sp_2(\curlO) . \]
 
-\it{Case 1: $c=0$}.
+Case 1: $c=0$. Define $T := \frac{b}{d} S$. Then we have
+\[ M =
+\SimpleMatrix{1_2}{T}{}{1_2}
+\SimpleMatrix{\frac{1}{d} 1_2}{}{}{d 1_2} . \]
 
-\it{Case 2: $c\neq 0$}.
+Case 2: $c\neq 0$. Define $U := \frac{d}{c} S$. Then we have
+\[ M =
+\SimpleMatrix{1_2}{-\frac{a}{c}S}{}{1_2}
+\SimpleMatrix{-\frac{1}{c}S^T}{}{}{-cS^{-1}}
+(-J_2)
+\SimpleMatrix{1_2}{-\frac{d}{c}S}{}{1_2} . \]
 
 \end{remark}
 
