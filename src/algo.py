@@ -56,7 +56,12 @@ def modform(D, HermWeight):
 		# ... calc.setPrecisionLimit(B)
 
 		# Step 4. Calculate restriction matrix.
-		M = calc.calcMatrix()
+		M_S = calc.calcMatrix()
+
+		#ell_modform_fe_expansions = TODO ...
+		restriction_fe_expansions = modform_fe_expansions.intersection( M_S.row_module() )
+		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
+
 
 		# Step 5. dimension check
 		
