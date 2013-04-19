@@ -18,6 +18,7 @@ cython \
 
 c++ \
 	-std=gnu++11 -stdlib=libc++ \
+	-ftrapv \
 	-I $PythonIncludeDir \
 	-I $SageDevelDir \
 	-I $SageLocalIncludeDir \

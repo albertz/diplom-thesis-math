@@ -169,6 +169,7 @@
 				HEADER_SEARCH_PATHS = "/Applications/sage-5.4/local/include";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-ftrapv";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -195,6 +196,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "/Applications/sage-5.4/local/include";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "-ftrapv";
 				SDKROOT = macosx;
 			};
 			name = Release;
