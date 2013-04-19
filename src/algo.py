@@ -58,6 +58,7 @@ def modform(D, HermWeight):
 		# Step 4. Calculate restriction matrix.
 		M_S = calc.calcMatrix()
 
+		# http://sage.math.washington.edu/tmp/sage-2.8.12.alpha0/doc/ref/module-sage.matrix.matrix2.html
 		#ell_modform_fe_expansions = TODO ...
 		restriction_fe_expansions = modform_fe_expansions.intersection( M_S.row_module() )
 		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
