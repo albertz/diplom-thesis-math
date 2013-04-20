@@ -26,8 +26,8 @@ cdef extern from "algo_cpp.cpp":
 		PrecisionF curlF
 		CurlS_Generator curlS
 		size_t matrixRowCount, matrixColumnCount
-		void calcReducedCurlF()
-		void calcMatrix()
+		void calcReducedCurlF() except +
+		void calcMatrix() except +
 		void getMatrix(mpz_t* out)
 
 def test():
