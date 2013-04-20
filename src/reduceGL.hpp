@@ -32,7 +32,7 @@ struct reduce_character_evalutation {
 		else if(Mod(det_char, h) == h/2) value = -1;
 		else {
 			std::cerr << "reduce_character_evalutation.detValue error: det_char = " << det_char << ", D = " << D << ", k = " << k << std::endl;
-			abort();
+			DOMAIN_CHECK(false);
 		}
 		const int sign = 0; // 0 or 1
 		const int nu_exp = 0; // 0 or 1
