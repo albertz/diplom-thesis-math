@@ -1,4 +1,6 @@
 from sage.matrix.matrix_integer_dense import Matrix_integer_dense
+from sage.matrix.constructor import matrix
+from sage.modular.modform.constructor import ModularForms
 from sage.modules.free_module import FreeModule
 from sage.rings.number_field.number_field import QQ
 import algo_cython as C
@@ -61,8 +63,14 @@ def modform(D, HermWeight):
 		M_S = calc.getMatrix()
 		assert isinstance(M_S, Matrix_integer_dense)
 
-		# http://sage.math.washington.edu/tmp/sage-2.8.12.alpha0/doc/ref/module-sage.matrix.matrix2.html
-		ell_modform_fe_expansions = FreeModule(QQ, M_S.row_count()) #  TODO ...
+		precLimit = 10 # \cF(S)
+
+		mf = ModularForms(Gamma0(l), 2 * k)
+		fe_expansion_matrix = matrix(QQ, [b.qexp(precLimit).padded_list(precLimit) for b in mf.basis()])
+		fe_expansion_matrix.echelonize()
+
+
+		ell_modform_fe_expansions = fe_expansion_matrix.row_module()
 		restriction_fe_expansions = ell_modform_fe_expansions.intersection( M_S.column_module() )
 		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
 
