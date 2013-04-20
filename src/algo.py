@@ -21,14 +21,14 @@ def reloadC():
 	so = ctypes.PyDLL(C.__file__)
 	assert(libdl.dlclose(so._handle) == 0)
 	reload(C)
-	
+
 def test_algo_calcMatrix():
 	calc = C.Calc()
 	calc.init(D = -4, HermWeight = 10)
 
 	calc.getNextS()
 	calc.getNextS()
-	
+
 	calc.calcMatrix()
 	return calc.getMatrix()
 
@@ -36,7 +36,7 @@ Verbose = True
 
 def modform(D, HermWeight):
 	"Main algo"
-	
+
 	calc = C.Calc()
 	calc.init(D = D, HermWeight = HermWeight)
 
@@ -51,7 +51,7 @@ def modform(D, HermWeight):
 	while True:
 		S = calc.getNextS()
 		if Verbose: print "trying S=", S, "det=", S.det()
-		
+
 		# Step 3a. Choose B>0 as limit for precision curlF.
 		# TODO: how? dependent on S?
 		# ... calc.setPrecisionLimit(B)
@@ -59,6 +59,8 @@ def modform(D, HermWeight):
 		# Step 4. Calculate restriction matrix.
 		calc.calcMatrix()
 		M_S = calc.getMatrix()
+
+
 
 		reducedCurlFSize = M_S.column_size()
 
@@ -71,7 +73,7 @@ def modform(D, HermWeight):
 		herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
 
 		# Step 5. dimension check
-		
+
 		# TODO
 		#   This comes last. It's written in Dern.
 
