@@ -6,6 +6,7 @@ include "cdefs.pxi"
 from sage.rings.integer_ring import ZZ, CC
 from sage.matrix.matrix_space import MatrixSpace
 from sage.matrix.matrix_integer_dense cimport Matrix_integer_dense
+from sage.matrix.matrix_integer_dense import Matrix_integer_dense
 
 
 cdef extern from "algo_cpp.cpp":
@@ -49,6 +50,9 @@ cdef class Calc:
 		if self.D == 0: raise RuntimeError, "you have to call init first"
 		self.calc.calcMatrix()
 	def getMatrix(self):
+		"""
+		:rtype : Matrix_integer_dense
+		"""
 		M = MatrixSpace(ZZ, self.calc.matrixRowCount, self.calc.matrixColumnCount)
 		cdef Matrix_integer_dense m = M.zero_matrix().__copy__()
 		self.calc.getMatrix(<mpz_t*>m._entries)
