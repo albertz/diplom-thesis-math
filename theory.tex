@@ -64,7 +64,7 @@ Let us analyze the case $\nu \not\equiv 1$. According to \cite{Dern01Herm}, only
 \end{align*}
 Consider the proof of the previos lemma. To calculate $\nu(M)$ with the given equations, we need to represent $M$ in the creation system $J_2$, $\Trans(H)$ and $\Rot(U)$.
 
-We must consider two different cases. Recall that we have $\SmallMatrix{a}{b}{c}{d} \in \SL_2(\Z)$, i.e. $ad - bc = 1$ and
+We must consider two different cases. Recall that we have $\SmallMatrix{a}{b}{c}{d} \in \SL_2(\Z)$, i.e. $ad - bc = 1$, $S = [s,t,u] \in \PM_2(\curlO)$ and
 \[ M = \SimpleMatrix{a 1_2}{b S}{c S^{-1}}{d 1_2} \in \Sp_2(\curlO) . \]
 
 Case 1: $c=0$. Then we have $ad=1$. Define $T := \frac{b}{d} S$. Then we have
@@ -76,6 +76,11 @@ Case 1: $c=0$. Then we have $ad=1$. Define $T := \frac{b}{d} S$. Then we have
 =\quad &
 \SimpleMatrix{\frac{1}{d}1_2}{b S}{}{d 1_2} \\
 =\quad& M .
+\end{align*}
+And we have
+\begin{align*}
+\nu\left(\Trans\left(\frac{b}{d} S\right)\right) & = (-1)^{\frac{b}{d}s + \frac{b}{d}u + \left|\frac{b}{d} t \right|^2}, \\
+\nu\left(\Rot\left(\frac{1}{d} 1_2\right)\right) & = (-1)^{\left|1 + \frac{2}{d}\right|^2 + \left|\frac{1}{d^2}\right|^2} = 1 .
 \end{align*}
 
 Case 2: $c\neq 0$. Then we have
@@ -97,7 +102,13 @@ Case 2: $c\neq 0$. Then we have
 =\quad &
 M.
 \end{align*}
-
+And we have
+\begin{align*}
+\nu\left( \Trans\left(\frac{a}{c}S \right) \right) & = (-1)^{\frac{a}{c}s + \frac{a}{c}u + \left|\frac{a}{c} t \right|^2} \\
+\nu\left( \Rot\left(-\frac{1}{c}S \right) \right) & = (-1)^{\left|1-\frac{1}{c}s -\frac{1}{c}u\right|^2 \left|1 - \frac{2}{c}\Re(t) \right|^2 + \left| \frac{su}{c^2} \right|^2 } \\
+\nu\left( -J_2 \right) & = -1 \\
+\nu\left( \Trans\left(-\frac{d}{c}S \right) \right)^{-1} & = (-1)^{-\frac{d}{c}s - \frac{d}{c}u + \left|\frac{d}{c} t \right|^2} . \\
+\end{align*}
 \end{remark}
 
 % TODO: wofür brauchen wir das?
