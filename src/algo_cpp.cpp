@@ -214,6 +214,7 @@ struct ReductionMatrices_Calc {
 				reducedCurlFList.push_back(reduced.matrix);
 			}
 		}
+		matrixColumnCount = reducedCurlFList.size();
 	}
 		
 	// a_F(T)
@@ -256,8 +257,8 @@ struct ReductionMatrices_Calc {
 			matrixRowCount += calcPrecisionDimension(curlF, S);
 		}
 		
-		calcReducedCurlF();
-		matrixColumnCount = reducedCurlFList.size();
+		LOGIC_CHECK(reducedCurlFList.size() > 0);
+		LOGIC_CHECK(reducedCurlFList.size() == matrixColumnCount);
 		
 		matrix.clear();
 		matrix.resize(matrixRowCount * matrixColumnCount);

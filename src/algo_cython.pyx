@@ -23,6 +23,7 @@ cdef extern from "algo_cpp.cpp":
 		PrecisionF curlF
 		CurlS_Generator curlS
 		size_t matrixRowCount, matrixColumnCount
+		void calcReducedCurlF()
 		void calcMatrix()
 		void getMatrix(mpz_t* out)
 
@@ -42,10 +43,13 @@ cdef class Calc:
 		self.HermWeight = HermWeight
 		self.calc.init(D, HermWeight)
 		# start limit
+		# this is never changed at the moment
 		self.calc.curlF.B = 20
 	def getNextS(self):
 		cdef M2T_O m = self.calc.curlS.getNextS()
 		return M2T_O_matrix(m, self.D)
+	def calcReducedCurlF(self):
+		self.calc.calcReducedCurlF()
 	def calcMatrix(self):
 		if self.D == 0: raise RuntimeError, "you have to call init first"
 		self.calc.calcMatrix()

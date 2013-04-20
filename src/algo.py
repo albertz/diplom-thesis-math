@@ -39,6 +39,7 @@ def modform(D, HermWeight):
 
 	calc = C.Calc()
 	calc.init(D = D, HermWeight = HermWeight)
+	calc.calcReducedCurlF()
 
 	# Step 1. Iterate through square-free numbers l, starting at 1.
 	# Init curlS = {}.
@@ -48,19 +49,15 @@ def modform(D, HermWeight):
 	# S positive definite.
 	# S can be changed arbitrarily by GL(2, \ZZ).
 
+	curlS = []
 	while True:
 		S = calc.getNextS()
+		curlS += [S]
 		if Verbose: print "trying S=", S, "det=", S.det()
-
-		# Step 3a. Choose B>0 as limit for precision curlF.
-		# TODO: how? dependent on S?
-		# ... calc.setPrecisionLimit(B)
 
 		# Step 4. Calculate restriction matrix.
 		calc.calcMatrix()
 		M_S = calc.getMatrix()
-
-
 
 		reducedCurlFSize = M_S.column_size()
 
@@ -71,12 +68,17 @@ def modform(D, HermWeight):
 
 
 		herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
+		for S_ in curlS:
+			herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S )
 
+		# TODO: calc dim
+		dim = 0
 		# Step 5. dimension check
+		if dim == herm_modform_fe_expannsion.dimension():
+			break
 
-		# TODO
-		#   This comes last. It's written in Dern.
 
 		# If check fails, goto step 3 and enlarge curlS.
 
-		# Otherwise, reconstruct fourier expansion.
+	# TODO:
+	# Otherwise, reconstruct fourier expansion.
