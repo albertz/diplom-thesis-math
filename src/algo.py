@@ -37,7 +37,7 @@ def modform(D, HermWeight):
 	"Main algo"
 	
 	calc = C.Calc()
-	calc.init(D = D, HermWeight = HermHeight)
+	calc.init(D = D, HermWeight = HermWeight)
 
 	# Step 1. Iterate through square-free numbers l, starting at 1.
 	# Init curlS = {}.
