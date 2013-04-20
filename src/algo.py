@@ -1,3 +1,4 @@
+from sage.matrix.matrix_integer_dense import Matrix_integer_dense
 from sage.modules.free_module import FreeModule
 from sage.rings.number_field.number_field import QQ
 import algo_cython as C
@@ -40,17 +41,17 @@ def modform(D, HermWeight):
 	calc = C.Calc()
 	calc.init(D = D, HermWeight = HermWeight)
 	calc.calcReducedCurlF()
+	reducedCurlFSize = calc.matrixColumnCount
 
 	# Step 1. Iterate through square-free numbers l, starting at 1.
 	# Init curlS = {}.
-
-	# Step 3. Iterate S \in Mat_2^T(Z). Add to curlS. iterate by denominator.
-	# S_11 and S_22 (diagonal entries) are positive.
-	# S positive definite.
-	# S can be changed arbitrarily by GL(2, \ZZ).
-
 	curlS = []
+
 	while True:
+		# Step 3. Iterate S \in Mat_2^T(Z). Add to curlS. iterate by denominator.
+		# S_11 and S_22 (diagonal entries) are positive.
+		# S positive definite.
+		# S can be changed arbitrarily by GL(2, \ZZ).
 		S = calc.getNextS()
 		curlS += [S]
 		if Verbose: print "trying S=", S, "det=", S.det()
@@ -58,11 +59,10 @@ def modform(D, HermWeight):
 		# Step 4. Calculate restriction matrix.
 		calc.calcMatrix()
 		M_S = calc.getMatrix()
-
-		reducedCurlFSize = M_S.column_size()
+		assert isinstance(M_S, Matrix_integer_dense)
 
 		# http://sage.math.washington.edu/tmp/sage-2.8.12.alpha0/doc/ref/module-sage.matrix.matrix2.html
-		#ell_modform_fe_expansions = TODO ...
+		ell_modform_fe_expansions = FreeModule(QQ, M_S.row_count()) #  TODO ...
 		restriction_fe_expansions = ell_modform_fe_expansions.intersection( M_S.column_module() )
 		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
 
