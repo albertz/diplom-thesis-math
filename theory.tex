@@ -69,14 +69,12 @@ We must consider two different cases. Recall that we have $\SmallMatrix{a}{b}{c}
 
 Case 1: $c=0$. Then we have $ad=1$. Define $T := \frac{b}{d} S$. Then we have
 \begin{align*}
-& \Trans\left(T\right) \Rot\left(\frac{1}{d} 1_2\right) \\
+& \Trans\left(\frac{b}{d} S\right) \Rot\left(\frac{1}{d} 1_2\right) \\
 =\quad &
-\SimpleMatrix{1_2}{T}{}{1_2}
+\SimpleMatrix{1_2}{\frac{b}{d} S}{}{1_2}
 \SimpleMatrix{\frac{1}{d} 1_2}{}{}{d 1_2} \\
 =\quad &
-\SimpleMatrix{\frac{1}{d}1_2}{dT}{}{d 1_2}
-=
-\SimpleMatrix{a 1_2}{bS}{}{d 1_2} \\
+\SimpleMatrix{\frac{1}{d}1_2}{b S}{}{d 1_2} \\
 =\quad& M .
 \end{align*}
 
