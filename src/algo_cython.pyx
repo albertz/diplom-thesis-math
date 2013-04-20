@@ -3,7 +3,7 @@ include "interrupt.pxi"
 include "stdsage.pxi"
 include "cdefs.pxi"
 
-from sage.misc.functional import sqrt as ssqrt
+from sage.functions.other import sqrt as ssqrt
 from sage.all import CC
 from sage.rings.integer_ring import ZZ
 from sage.matrix.matrix_space import MatrixSpace
