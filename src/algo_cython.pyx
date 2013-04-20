@@ -3,7 +3,9 @@ include "interrupt.pxi"
 include "stdsage.pxi"
 include "cdefs.pxi"
 
-from sage.rings.integer_ring import ZZ, CC
+from sage.misc.functional import sqrt as ssqrt
+from sage.all import CC
+from sage.rings.integer_ring import ZZ
 from sage.matrix.matrix_space import MatrixSpace
 from sage.matrix.matrix_integer_dense cimport Matrix_integer_dense
 from sage.matrix.matrix_integer_dense import Matrix_integer_dense
@@ -36,13 +38,12 @@ cdef M2T_O_matrix(M2T_O m, int D):
 	:rtype : Matrix_integer_dense
 	"""
 	M = MatrixSpace(CC, 2, 2)
-	b = m.b1 + m.b2 * (D + sqrt(D)) * 0.5
+	b = m.b1 + m.b2 * (D + ssqrt(D)) * 0.5
 	return M([m.a, b, b.conjugate(), m.c])
 
 cdef class Calc:
 	cdef ReductionMatrices_Calc calc
 	cdef int D, HermWeight
-	cdef size_t matrixColumnCount
 	def init(self, int D, int HermWeight):
 		self.D = D
 		self.HermWeight = HermWeight

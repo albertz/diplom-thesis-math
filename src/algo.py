@@ -4,7 +4,6 @@ from sage.modular.modform.constructor import ModularForms
 from sage.modules.free_module import FreeModule
 from sage.rings.number_field.number_field import QQ, ZZ
 from sage.rings.power_series_ring import PowerSeriesRing
-from sage.symbolic.ring import var
 
 import algo_cython as C
 
