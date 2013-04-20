@@ -75,6 +75,10 @@ struct CurlS_Generator {
 		matrices.push_back(cur);
 		return cur;
 	}
+	
+	void clearMatrices() {
+		matrices.clear();
+	}
 };
 
 

@@ -15,6 +15,7 @@ cdef extern from "algo_cpp.cpp":
 		int a,b1,b2,c
 	cdef cppclass CurlS_Generator:
 		M2T_O getNextS()
+		void clearMatrices()
 	cdef cppclass PrecisionF:
 		int B
 	cdef cppclass ReductionMatrices_Calc:
@@ -55,6 +56,8 @@ cdef class Calc:
 		"""
 		cdef M2T_O m = self.calc.curlS.getNextS()
 		return M2T_O_matrix(m, self.D)
+	def curlS_clearMatrices(self):
+		self.calc.curlS.clearMatrices()
 	def calcReducedCurlF(self):
 		self.calc.calcReducedCurlF()
 		self.matrixColumnCount = self.calc.matrixColumnCount

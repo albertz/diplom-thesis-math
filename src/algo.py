@@ -49,11 +49,14 @@ def modform(D, HermWeight):
 	# Init curlS = {}.
 	curlS = []
 
+	herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
+
 	while True:
 		# Step 3. Iterate S \in Mat_2^T(Z). Add to curlS. iterate by denominator.
 		# S_11 and S_22 (diagonal entries) are positive.
 		# S positive definite.
 		# S can be changed arbitrarily by GL(2, \ZZ).
+		calc.curlS_clearMatrices()
 		S = calc.getNextS()
 		curlS += [S]
 		if Verbose: print "trying S=", S, "det=", S.det()
@@ -63,30 +66,28 @@ def modform(D, HermWeight):
 		M_S = calc.getMatrix()
 		assert isinstance(M_S, Matrix_integer_dense)
 
-		precLimit = 10 # \cF(S)
+		precLimit = M_S.row_count() # \cF(S)
 
-		mf = ModularForms(Gamma0(l), 2 * k)
+		# These are the Elliptic modular forms.
+		l = S.det()
+		mf = ModularForms(Gamma0(l), 2 * HermWeight)
 		fe_expansion_matrix = matrix(QQ, [b.qexp(precLimit).padded_list(precLimit) for b in mf.basis()])
 		fe_expansion_matrix.echelonize()
-
 
 		ell_modform_fe_expansions = fe_expansion_matrix.row_module()
 		restriction_fe_expansions = ell_modform_fe_expansions.intersection( M_S.column_module() )
 		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
 
-
-		herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
-		for S_ in curlS:
-			herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S )
+		herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S )
+		current_dimension = herm_modform_fe_expannsion.dimension()
+		print "current dimension:", current_dimension
 
 		# TODO: calc dim
 		dim = 0
 		# Step 5. dimension check
-		if dim == herm_modform_fe_expannsion.dimension():
+		if dim == current_dimension:
 			break
 
-
-		# If check fails, goto step 3 and enlarge curlS.
 
 	# TODO:
 	# Otherwise, reconstruct fourier expansion.
