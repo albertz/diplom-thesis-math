@@ -44,6 +44,7 @@ cdef M2T_O_matrix(M2T_O m, int D):
 cdef class Calc:
 	cdef ReductionMatrices_Calc calc
 	cdef int D, HermWeight
+	cdef public size_t matrixColumnCount
 	def init(self, int D, int HermWeight):
 		self.D = D
 		self.HermWeight = HermWeight
