@@ -2,7 +2,10 @@ from sage.matrix.matrix_integer_dense import Matrix_integer_dense
 from sage.matrix.constructor import matrix
 from sage.modular.modform.constructor import ModularForms
 from sage.modules.free_module import FreeModule
-from sage.rings.number_field.number_field import QQ
+from sage.rings.number_field.number_field import QQ, ZZ
+from sage.rings.power_series_ring import PowerSeriesRing
+from sage.symbolic.ring import var
+
 import algo_cython as C
 
 def reloadC():
@@ -51,6 +54,21 @@ def modform(D, HermWeight):
 
 	herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
 
+	# Calculate the dimension of Hermitian modular form space.
+	if D == -3:
+		# dern2003graded, Thm 7
+		R = PowerSeriesRing(ZZ, name="t", default_prec = HermWeight + 1)
+		t = R.an_element()
+		dims = (1 + t**45) / (1 - t**4 ) / ( 1 - t**6 ) / ( 1 - t**9 ) / ( 1 - t**10 ) / ( 1 - t**12 )
+		dim = dims[HermWeight]
+	#elif D == -4:
+		# dern2003graded, Corollary 9 and Lemma 3
+		# TODO...
+		#R = PowerSeriesRing(ZZ, name="t", default_prec = HermWeight + 1)
+		#t = R.an_element()
+	else:
+		raise NotImplementedError, "dimension calculation of Hermitian modular form with D = %i not implemented" % D
+
 	while True:
 		# Step 3. Iterate S \in Mat_2^T(Z). Add to curlS. iterate by denominator.
 		# S_11 and S_22 (diagonal entries) are positive.
@@ -83,8 +101,6 @@ def modform(D, HermWeight):
 		current_dimension = herm_modform_fe_expannsion.dimension()
 		print "current dimension:", current_dimension
 
-		# TODO: calc dim
-		dim = 0
 		# Step 5. dimension check
 		if dim == current_dimension:
 			break
