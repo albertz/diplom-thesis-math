@@ -342,6 +342,7 @@ void test_algo() {
 	ReductionMatrices_Calc calc;
 	calc.init(-4, 10);
 	calc.curlF.B = 20;
+	calc.calcReducedCurlF();
 	calc.curlS.getNextS();
 	calc.curlS.getNextS();
 	
