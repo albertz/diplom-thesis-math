@@ -237,17 +237,6 @@ struct ReductionMatrices_Calc {
 		}
 		return sum;
 	}
-	
-	template<typename TIter>
-	void calcOneColumn(ElemOfF elemOfF, TIter outVec, TIter outVecEnd) {
-		for(ElemOfS S : curlS) {
-			for(int i = 0; i < calcPrecisionDimension(curlF, S); ++i, ++outVec) {
-				auto& out = *outVec;
-				out = evalA_S_n(elemOfF, S, i);
-			}
-		}
-		LOGIC_CHECK(outVec == outVecEnd);
-	}
 
 	std::vector<ValueOfA> matrix; // flat. format: [[0]*ColumnCount]*RowCount
 	size_t matrixRowCount, matrixColumnCount;
