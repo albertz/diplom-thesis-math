@@ -74,6 +74,7 @@ def modform(D, HermWeight):
 		fe_expansion_matrix = matrix(QQ, [b.qexp(precLimit).padded_list(precLimit) for b in mf.basis()])
 		fe_expansion_matrix.echelonize()
 
+		# or:  fe_expansion_matrix[:n2,:].row_module()
 		ell_modform_fe_expansions = fe_expansion_matrix.row_module()
 		restriction_fe_expansions = ell_modform_fe_expansions.intersection( M_S.column_module() )
 		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
