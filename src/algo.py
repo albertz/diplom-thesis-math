@@ -1,4 +1,5 @@
-
+from sage.modules.free_module import FreeModule
+from sage.rings.number_field.number_field import QQ
 import algo_cython as C
 
 def reloadC():
