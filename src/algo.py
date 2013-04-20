@@ -69,6 +69,8 @@ def modform(D, HermWeight):
 	else:
 		raise NotImplementedError, "dimension calculation of Hermitian modular form with D = %i not implemented" % D
 
+	print "current dimension:", herm_modform_fe_expannsion.dimension(), "wanted:", dim
+
 	while True:
 		# Step 3. Iterate S \in Mat_2^T(Z). Add to curlS. iterate by denominator.
 		# S_11 and S_22 (diagonal entries) are positive.
@@ -89,17 +91,18 @@ def modform(D, HermWeight):
 		# These are the Elliptic modular forms.
 		l = S.det()
 		mf = ModularForms(Gamma0(l), 2 * HermWeight)
-		fe_expansion_matrix = matrix(QQ, [b.qexp(precLimit).padded_list(precLimit) for b in mf.basis()])
-		fe_expansion_matrix.echelonize()
+		fe_expansion_matrix_l = matrix(QQ, [b.qexp(precLimit).padded_list(precLimit) for b in mf.basis()])
+		fe_expansion_matrix_l.echelonize()
 
 		# or:  fe_expansion_matrix[:n2,:].row_module()
-		ell_modform_fe_expansions = fe_expansion_matrix.row_module()
-		restriction_fe_expansions = ell_modform_fe_expansions.intersection( M_S.column_module() )
+		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
+
+		restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S.column_module() )
 		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
 
 		herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S )
 		current_dimension = herm_modform_fe_expannsion.dimension()
-		print "current dimension:", current_dimension
+		print "current dimension:", current_dimension, "wanted:", dim
 
 		# Step 5. dimension check
 		if dim == current_dimension:
