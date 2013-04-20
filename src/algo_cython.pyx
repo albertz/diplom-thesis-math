@@ -1,3 +1,4 @@
+from sage.matrix.constructor import matrix
 
 include "interrupt.pxi"
 include "stdsage.pxi"
@@ -35,11 +36,10 @@ def test():
 
 cdef M2T_O_matrix(M2T_O m, int D):
 	"""
-	:rtype : Matrix_integer_dense
+	:rtype : Matrix_symbolic_dense
 	"""
-	M = MatrixSpace(CC, 2, 2)
 	b = m.b1 + m.b2 * (D + ssqrt(D)) * 0.5
-	return M([m.a, b, b.conjugate(), m.c])
+	return matrix(2, 2, [m.a, b, b.conjugate(), m.c])
 
 cdef class Calc:
 	cdef ReductionMatrices_Calc calc
@@ -54,7 +54,7 @@ cdef class Calc:
 		self.calc.curlF.B = 20
 	def getNextS(self):
 		"""
-		:rtype : Matrix_integer_dense
+		:rtype : Matrix_symbolic_dense
 		"""
 		cdef M2T_O m = self.calc.curlS.getNextS()
 		return M2T_O_matrix(m, self.D)
