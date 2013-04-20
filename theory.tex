@@ -64,20 +64,41 @@ Let us analyze the case $\nu \not\equiv 1$. According to \cite{Dern01Herm}, only
 \end{align*}
 Consider the proof of the previos lemma. To calculate $\nu(M)$ with the given equations, we need to represent $M$ in the creation system $J_2$, $\Trans(H)$ and $\Rot(U)$.
 
-We must consider two different cases. Recall that we have $\SmallMatrix{a}{b}{c}{d} \in \SL_2(\Z)$ and
+We must consider two different cases. Recall that we have $\SmallMatrix{a}{b}{c}{d} \in \SL_2(\Z)$, i.e. $ad - bc = 1$ and
 \[ M = \SimpleMatrix{a 1_2}{b S}{c S^{-1}}{d 1_2} \in \Sp_2(\curlO) . \]
 
-Case 1: $c=0$. Define $T := \frac{b}{d} S$. Then we have
-\[ M =
+Case 1: $c=0$. Then we have $ad=1$. Define $T := \frac{b}{d} S$. Then we have
+\begin{align*}
+& \Trans\left(T\right) \Rot\left(\frac{1}{d} 1_2\right) \\
+=\quad &
 \SimpleMatrix{1_2}{T}{}{1_2}
-\SimpleMatrix{\frac{1}{d} 1_2}{}{}{d 1_2} . \]
+\SimpleMatrix{\frac{1}{d} 1_2}{}{}{d 1_2} \\
+=\quad &
+\SimpleMatrix{\frac{1}{d}1_2}{dT}{}{d 1_2}
+=
+\SimpleMatrix{a 1_2}{bS}{}{d 1_2} \\
+=\quad& M .
+\end{align*}
 
-Case 2: $c\neq 0$. Define $U := \frac{d}{c} S$. Then we have
-\[ M =
-\SimpleMatrix{1_2}{-\frac{a}{c}S}{}{1_2}
-\SimpleMatrix{-\frac{1}{c}S^T}{}{}{-cS^{-1}}
+Case 2: $c\neq 0$. Then we have
+\begin{align*}
+& \Trans\left(\frac{a}{c}S\right) \Rot\left(-\frac{1}{c}S\right) (-J_2) \Trans\left(-\frac{d}{c}S\right)^{-1} \\
+=\quad & \SimpleMatrix{1_2}{\frac{a}{c}S}{}{1_2}
+\SimpleMatrix{-\frac{1}{c}\overline{S}^T}{}{}{-cS^{-1}}
 (-J_2)
-\SimpleMatrix{1_2}{-\frac{d}{c}S}{}{1_2} . \]
+\SimpleMatrix{1_2}{-\frac{d}{c}S}{}{1_2}^{-1} \\
+=\quad &
+\SimpleMatrix{-\frac{1}{c}\overline{S}^T}{-a 1_2}{}{-cS^{-1}}
+\SimpleMatrix{}{1_2}{-1_2}{}
+\SimpleMatrix{1_2}{\frac{d}{c}S}{}{1_2} \\
+=\quad &
+\SimpleMatrix{-\frac{1}{c}\overline{S}^T}{a 1_2}{}{-cS^{-1}}
+\SimpleMatrix{}{1_2}{-1_2}{-\frac{d}{c}S} \\
+=\quad &
+\SimpleMatrix{a 1_2}{-\frac{1}{c}\overline{S}^T + \frac{ad}{c}S}{cS^{-1}}{d 1_2} \\
+=\quad &
+M.
+\end{align*}
 
 \end{remark}
 

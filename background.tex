@@ -41,6 +41,13 @@ $\Sp_n(R)$ is also called the \defword{unitary group}. Note that \cite{Dern01Her
 % In dem Zusammenhang waren auch vektorwertigen Modulformen, die auch nicht relevant für mich sind.
 Also note that $M = \SmallMatrix{a}{b}{c}{d} \in \Sp_1(\Z)$ $\Leftrightarrow$ $ad - bc = 1$ $\Leftrightarrow$ $M \in \SL_2(\Z)$. Thus, $\Sp_1(\Z) = \SL_2(\Z)$. % Notiz 5.4.13
 
+In addition, for a ring $R \subseteq \C$, define
+\begin{align*}
+\Rot(U) & = \SimpleMatrix{\overline{U}^T}{}{}{U^{-1}} \in \Sp_2(R), & U \in \GL_2(R) \\
+\Trans(H) & = \SimpleMatrix{1_2}{H}{}{1_2} \in \Sp_2(R),  & H \in \Her_2(R)
+\end{align*}
+and note that we have $J_2 = \SmallMatrix{}{-1_2}{1_2}{} \in \Sp_2(R)$. Those tree types of matrices form a generator set for the group $\Sp_2(R)$.
+
 For $Z \in \M_n(\C)$, we call
 \[ \Re(Z) = \frac{1}{2} \left(Z + \overline{Z}^{T}\right) \in \M_n(\C) \]
 the \defword{real} part and
