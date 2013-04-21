@@ -1,5 +1,6 @@
-from sage.matrix.matrix_integer_dense import Matrix_integer_dense
+
 from sage.matrix.constructor import matrix
+from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
 from sage.modules.free_module import FreeModule
 from sage.rings.number_field.number_field import QQ, ZZ
@@ -83,11 +84,10 @@ def modform(D, HermWeight):
 		# Step 4. Calculate restriction matrix.
 		calc.calcMatrix()
 		M_S = calc.getMatrix()
-		assert isinstance(M_S, Matrix_integer_dense)
 
 		precLimit = M_S.row_count() # \cF(S)
 
-		# These are the Elliptic modular forms.
+		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
 		l = S.det()
 		mf = ModularForms(Gamma0(l), 2 * HermWeight)
 		fe_expansion_matrix_l = matrix(QQ, [b.qexp(precLimit).padded_list(precLimit) for b in mf.basis()])
