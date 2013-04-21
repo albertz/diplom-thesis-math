@@ -82,10 +82,12 @@ def modform(D, HermWeight):
 		if Verbose: print "trying S=", S, "det=", S.det()
 
 		# Step 4. Calculate restriction matrix.
+		if Verbose: print "calc restriction matrix...",
 		calc.calcMatrix()
 		M_S = calc.getMatrix()
+		if Verbose: print "done", M_S
 
-		precLimit = M_S.row_count() # \cF(S)
+		precLimit = M_S.nrows() # \cF(S)
 
 		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
 		l = S.det()
@@ -96,7 +98,9 @@ def modform(D, HermWeight):
 		# or:  fe_expansion_matrix[:n2,:].row_module()
 		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
 
+		if Verbose: print "calc restriction_fe_expansions...",
 		restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S.column_module() )
+		if Verbose: print "done"
 		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
 
 		herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S )
