@@ -94,15 +94,14 @@ def modform(D, HermWeight):
 		mf = ModularForms(Gamma0(l), 2 * HermWeight)
 		fe_expansion_matrix_l = matrix(QQ, [b.qexp(precLimit).padded_list(precLimit) for b in mf.basis()])
 		fe_expansion_matrix_l.echelonize()
-		print "fe_expansion_matrix_l:", fe_expansion_matrix_l
 
 		# or:  fe_expansion_matrix[:n2,:].row_module()
 		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
 
-		if Verbose: sys.stdout.write("calc M_S.column_module()..."); sys.stdout.flush()
-		M_S_column_module = M_S.column_module()
+		if Verbose: sys.stdout.write("calc M_S_module..."); sys.stdout.flush()
+		M_S_module = M_S.column_module()
 		if Verbose: print "done"
-		restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S_column_module )
+		restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S_module )
 		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
 
 		herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S )
