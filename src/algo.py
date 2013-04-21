@@ -5,7 +5,7 @@ from sage.modular.modform.constructor import ModularForms
 from sage.modules.free_module import FreeModule
 from sage.rings.number_field.number_field import QQ, ZZ
 from sage.rings.power_series_ring import PowerSeriesRing
-
+import sys
 import algo_cython as C
 
 def reloadC():
@@ -82,10 +82,10 @@ def modform(D, HermWeight):
 		if Verbose: print "trying S=", S, "det=", S.det()
 
 		# Step 4. Calculate restriction matrix.
-		if Verbose: print "calc restriction matrix...",
+		if Verbose: sys.stdout.write("calc restriction matrix..."); sys.stdout.flush()
 		calc.calcMatrix()
 		M_S = calc.getMatrix()
-		if Verbose: print "done", M_S
+		if Verbose: print "done:", M_S
 
 		precLimit = M_S.nrows() # \cF(S)
 
@@ -94,13 +94,15 @@ def modform(D, HermWeight):
 		mf = ModularForms(Gamma0(l), 2 * HermWeight)
 		fe_expansion_matrix_l = matrix(QQ, [b.qexp(precLimit).padded_list(precLimit) for b in mf.basis()])
 		fe_expansion_matrix_l.echelonize()
+		print "fe_expansion_matrix_l:", fe_expansion_matrix_l
 
 		# or:  fe_expansion_matrix[:n2,:].row_module()
 		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
 
-		if Verbose: print "calc restriction_fe_expansions...",
-		restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S.column_module() )
+		if Verbose: sys.stdout.write("calc M_S.column_module()..."); sys.stdout.flush()
+		M_S_column_module = M_S.column_module()
 		if Verbose: print "done"
+		restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S_column_module )
 		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
 
 		herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S )
