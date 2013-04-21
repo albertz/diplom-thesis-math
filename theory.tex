@@ -55,7 +55,7 @@ Thus, $f$ is an Elliptic modular form of weight $2k$ to $\Gamma_0(l)$.
 \end{lemma}
 
 
-\begin{remark}
+\begin{remark}\label{remark-nu}
 Let us analyze the case $\nu \not\equiv 1$. According to \cite{Dern01Herm}, only for $\Delta \equiv 0 \pmod{4}$, there is a single non-trivial Abel character $\nu$. This $\nu$ has the following properties (see \cite{Dern01Herm}):
 \begin{align*}
 \nu(J_2) & = 1 , \\
@@ -131,7 +131,7 @@ $\Gamma(\mathcal{L}) \supseteq \Gamma_0(l)$ for $l \in \Z^+, ls^{-1} \in \mathca
 We want to calculate a generating set for the Fourier expansions of Hermitian modular forms. Now we will formulate the main algorithm of our work.
 
 \begin{algo}
-We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta$ (for now, $\Delta \in \Set{3,4,8}$). Then we select some form weight $k \in \Z$ ($k \in \Set{1,\dots,20}$ or so), let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximum order (see chapter \ref{maxorder}) and some subgroup $\Gamma$ of $\Sp_2(\curlO)$. Then we select an abel character $\nu \colon \Gamma \rightarrow \C^\times$ of $\Sp_2(\curlO)$.
+We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta$ (for now, $\Delta \in \Set{3,4,8}$). Then we select some form weight $k \in \Z$ ($k \in \Set{1,\dots,20}$ or so), let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximum order (see chapter \ref{maxorder}) and some subgroup $\Gamma$ of $\Sp_2(\curlO)$. Then we select an abel character $\nu \colon \Gamma \rightarrow \C^\times$ of $\Sp_2(\curlO)$ (we just use $\nu \equiv 1$, see \cref{remark-nu}).
 
 We define the index set
 \[ \Lambda := \Set{0 \le \SimpleMatrix{a}{b}{\overline b}{c} \in \M_2(\curlO^\#)}{a,c \in \Z } . \]
