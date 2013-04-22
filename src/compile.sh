@@ -19,7 +19,8 @@ cython \
 	algo_cython.pyx
 
 CppOpts="-std=gnu++11 -ftrapv"
-[ "$(uname)" == "Darwin" ] && CppOpts="$CppOpts -stdlib=libc++"
+[ "$(uname)" == "Darwin" ] && CppOpts="$CppOpts -stdlib=libc++"]
+[ "$(uname)" == "Linux" ] && CppOpts="$CppOpts -fPIC"
 
 c++ \
 	$CppOpts \
