@@ -58,7 +58,7 @@ def modform(D, HermWeight, B_cF=10):
 	if D == -3:
 		# dern2003graded, Thm 7
 		R = PowerSeriesRing(ZZ, name="t", default_prec = HermWeight + 1)
-		t = R.an_element()
+		t = R.gen()
 		dims = (1 + t**45) / (1 - t**4 ) / ( 1 - t**6 ) / ( 1 - t**9 ) / ( 1 - t**10 ) / ( 1 - t**12 )
 		dim = dims[HermWeight]
 	#elif D == -4:
