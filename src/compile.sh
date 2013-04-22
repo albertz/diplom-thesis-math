@@ -5,7 +5,8 @@ SageDir="/Applications/sage-5.4"
 
 SageDevelDir="$SageDir/devel/sage"
 SageLocalIncludeDir="$SageDir/local/include"
-SageCLibIncludeDir="$SageDevelDir/c_lib/include"
+SageCLibDir="$SageDevelDir/c_lib"
+SageCLibIncludeDir="$SageCLibDir/include"
 SageExtIncludeDir="$SageDevelDir/sage/ext"
 PythonIncludeDir="$SageLocalIncludeDir/python2.7"
 
@@ -33,7 +34,7 @@ c++ \
 	algo_cython.cpp
 
 if [ "$(uname)" == "Linux" ]; then
-c++ -shared algo_cython.o  -lc -o algo_cython.so
+c++ -shared algo_cython.o -lc -L $SageCLibDir -lcsage -o algo_cython.so
 
 elif [ "$(uname)" == "Darwin" ]; then
 libtool -dynamic \
