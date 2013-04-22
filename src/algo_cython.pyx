@@ -73,6 +73,6 @@ cdef class Calc:
 		"""
 		M = MatrixSpace(ZZ, self.calc.matrixRowCount, self.calc.matrixColumnCount)
 		cdef Matrix_integer_dense m = M.zero_matrix().__copy__()
-		self.calc.getMatrix(<mpz_t*>m._entries)
+		self.calc.getMatrix(m._entries)
 		return m
 
