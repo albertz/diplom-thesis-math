@@ -43,6 +43,9 @@ Verbose = True
 def modform(D, HermWeight, B_cF=10):
 	"Main algo"
 
+	if HermWeight % 3 != 0:
+		raise TypeError, "the modulform is trivial/zero if HermWeight is not divisible by 3"
+
 	calc = C.Calc()
 	calc.init(D = D, HermWeight = HermWeight, B_cF=B_cF)
 	calc.calcReducedCurlF()
