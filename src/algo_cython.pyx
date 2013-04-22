@@ -42,6 +42,7 @@ cdef M2T_O_matrix(M2T_O m, int D):
 	return matrix(2, 2, [m.a, b, b.conjugate(), m.c])
 
 cdef class Calc:
+	# You need a recent Cython (e.g. >=0.19) for this.
 	cdef ReductionMatrices_Calc calc
 	cdef int D, HermWeight
 	cdef public size_t matrixColumnCount
