@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SageDir="/Applications/sage-5.4"
+SageDir="/Applications/sage-5.8"
 [ \! -d $SageDir ] && SageDir=~/sage-5.8
 
 SageDevelDir="$SageDir/devel/sage"
