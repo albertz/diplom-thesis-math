@@ -40,11 +40,11 @@ def test_algo_calcMatrix():
 
 Verbose = True
 
-def modform(D, HermWeight):
+def modform(D, HermWeight, B_cF=10):
 	"Main algo"
 
 	calc = C.Calc()
-	calc.init(D = D, HermWeight = HermWeight, B_cF=10)
+	calc.init(D = D, HermWeight = HermWeight, B_cF=B_cF)
 	calc.calcReducedCurlF()
 	reducedCurlFSize = calc.matrixColumnCount
 
@@ -116,3 +116,4 @@ def modform(D, HermWeight):
 
 	# TODO:
 	# Otherwise, reconstruct fourier expansion.
+	return herm_modform_fe_expannsion
