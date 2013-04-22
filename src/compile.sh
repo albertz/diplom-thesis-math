@@ -18,9 +18,11 @@ cython \
 	--cplus \
 	algo_cython.pyx
 
+CppOpts="-std=gnu++11 -ftrapv"
+[ "$(uname)" == "Darwin" ] && CppOpts="$CppOpts -stdlib=libc++"
+
 c++ \
-	-std=gnu++11 -stdlib=libc++ \
-	-ftrapv \
+	$CppOpts \
 	-I $PythonIncludeDir \
 	-I $SageDevelDir \
 	-I $SageLocalIncludeDir \
@@ -29,16 +31,17 @@ c++ \
 	-c \
 	algo_cython.cpp
 
-# on linux:
-#["ld"] +
-#["-L/usr/local/lib"] +
-#infiles +
-#options +
-#["-lc"] +
-#["-shared", "-o", outfile]
+if [ "$(uname)" == "Linux" ]; then
+ld algo_cython.o -L/usr/local/lib -lc -shared -o algo_cython.so
 
-# mac:
+elif [ "$(uname)" == "Darwin" ]; then
 libtool -dynamic \
 	algo_cython.o \
 	-undefined dynamic_lookup \
 	-o algo_cython.so
+
+else
+echo "no linker"
+exit 1
+fi
+
