@@ -95,7 +95,7 @@ $\SSpaceN{n}{k}{\Gamma}$ denotes the vector space of such Siegel modular forms.
 \subsection{Elliptic modular forms}
 These are functions over $\SiegelHalfPlane_1 = \Set{z \in \C}{\Im(z) > 0} \subseteq \C$ which is called the \defword{Poincaré upper half plane}.
 
-We have $\Gamma$ as a subgroup of $\SL_2(\Z)$. A \defword{Elliptic modular form} with weight $k \in \Z$ over $\Gamma$ is a holomorphic function
+We have $\Gamma$ as a subgroup of $\Sp_1(\Z) = \SL_2(\Z)$. A \defword{Elliptic modular form} with weight $k \in \Z$ over $\Gamma$ is a holomorphic function
 \[ f \colon \SiegelHalfPlane_1 \rightarrow \C \]
 with
 \begin{align*}
@@ -107,11 +107,16 @@ Note that most authors write $M \tau := \frac{a \tau + b}{b \tau + c}$.
 
 $\ESpace{k}{\Gamma}$ denotes the vector space of such Elliptic modular forms.
 
-Note that we have $\SL_2(\Z) = \Sp_1(\Z)$. We can see that Elliptic modular forms are Siegel modular forms of degree $n=1$. Thus we have $\ESpace{k}{\Gamma} = \SSpaceN{1}{k}{\Gamma}$.
+Note that Elliptic modular forms are Siegel modular forms of degree $n=1$. Thus we have $\ESpace{k}{\Gamma} = \SSpaceN{1}{k}{\Gamma}$.
 
 In this work, we use a specific subgroup of $\Sp_1(\Z)$. We define
 \[ \Gamma_0(l) := \Set{\SimpleMatrix{a}{b}{c}{d} \in \Sp_1(\Z)}{c \equiv 0 \pmod{l}} \subseteq \Sp_1(\Z) \subseteq \M_2(\Z) \]
 as a subgroup of $\Sp_1(\Z)$.
+
+An \defword{Elliptic modular cusp form} is an Elliptic modular form $f \colon \SiegelHalfPlane_1 \rightarrow \C$ with
+\[ \lim_{t \rightarrow \infty} f(i t) = 0 . \]
+
+We can represent the cusps with $\Gamma \backslash \Q$.
 
 \subsection{Hermitian modular forms}
 
