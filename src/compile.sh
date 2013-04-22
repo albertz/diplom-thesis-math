@@ -33,7 +33,7 @@ c++ \
 	algo_cython.cpp
 
 if [ "$(uname)" == "Linux" ]; then
-ld algo_cython.o -L/usr/local/lib -lc -shared -o algo_cython.so
+ld  -dynamic-linker algo_cython.o -L/usr/local/lib -lc -shared -o algo_cython.so
 
 elif [ "$(uname)" == "Darwin" ]; then
 libtool -dynamic \
