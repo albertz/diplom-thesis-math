@@ -46,13 +46,13 @@ cdef class Calc:
 	cdef ReductionMatrices_Calc calc
 	cdef int D, HermWeight
 	cdef public size_t matrixColumnCount
-	def init(self, int D, int HermWeight):
+	def init(self, int D, int HermWeight, int B_cF=20):
 		self.D = D
 		self.HermWeight = HermWeight
 		self.calc.init(D, HermWeight)
 		# start limit
 		# this is never changed at the moment
-		self.calc.curlF.B = 20
+		self.calc.curlF.B = B_cF
 	def getNextS(self):
 		"""
 		:rtype : Matrix_symbolic_dense

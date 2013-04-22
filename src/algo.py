@@ -44,7 +44,7 @@ def modform(D, HermWeight):
 	"Main algo"
 
 	calc = C.Calc()
-	calc.init(D = D, HermWeight = HermWeight)
+	calc.init(D = D, HermWeight = HermWeight, B_cF=10)
 	calc.calcReducedCurlF()
 	reducedCurlFSize = calc.matrixColumnCount
 
