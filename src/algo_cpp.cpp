@@ -221,15 +221,6 @@ struct ReductionMatrices_Calc {
 		matrixColumnCount = reducedCurlFList.size();
 	}
 		
-	// a_F(T)
-	ValueOfA evalA(ElemOfF aRepr, ElemOfF T) {
-		struct hermitian_form_with_character_evaluation reduced;
-		reduce_GL(T, D, reduced);
-		if(aRepr == reduced.matrix)
-			return reduced.character.value(D, -HermWeight);
-		return 0;
-	}
-	
 	std::vector<ValueOfA> matrix; // flat. format: [[0]*ColumnCount]*RowCount
 	size_t matrixRowCount, matrixColumnCount;
 	void calcMatrix() {
