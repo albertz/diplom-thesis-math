@@ -198,10 +198,6 @@ struct ReductionMatrices_Calc {
 		}
 	}
 	
-	//CurlO curlO;
-	//Gamma gamma;
-	//Character nu;
-	
 	CurlS_Generator curlS;
 	PrecisionF curlF;
 	
