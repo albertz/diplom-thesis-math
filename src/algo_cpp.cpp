@@ -20,7 +20,8 @@ struct CurlS_Generator {
 	std::list<ElemOfS> matrices;
 	std::list<ElemOfS>::iterator begin() { return matrices.begin(); }
 	std::list<ElemOfS>::iterator end() { return matrices.end(); }
-
+	size_t size() { return matrices.size(); }
+	
 	/*
 	Just now, we iterare reduced matrices in Her_2(\Z).
 	This might not be correct, we might need all reduced
@@ -221,6 +222,7 @@ struct ReductionMatrices_Calc {
 	size_t matrixRowCount, matrixColumnCount;
 	void calcMatrix() {
 		matrixRowCount = 0;
+		LOGIC_CHECK(curlS.size() > 0);
 		for(ElemOfS S : curlS) {
 			matrixRowCount += calcPrecisionDimension(curlF, S);
 		}
