@@ -106,10 +106,15 @@ def modform(D, HermWeight, B_cF=10):
 		if Verbose: print "done"
 		restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S_module )
 		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
-		herm_modform_fe_expannsion_S += M_S.right_kernel().basis_matrix()
 		herm_modform_fe_expannsion_S_module = herm_modform_fe_expannsion_S.column_module()
+		if Verbose: sys.stdout.write("calc M_S_right_kernel..."); sys.stdout.flush()
+		M_S_right_kernel = M_S.matrix_over_field().right_kernel()
+		if Verbose: print "done"
+		herm_modform_fe_expannsion_S_module += M_S_right_kernel
 
+		if Verbose: sys.stdout.write("intersecting herm_modform_fe_expannsion..."); sys.stdout.flush()
 		herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S_module )
+		if Verbose: print "done"
 		current_dimension = herm_modform_fe_expannsion.dimension()
 		print "current dimension:", current_dimension, "wanted:", dim
 		assert current_dimension >= dim
