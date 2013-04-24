@@ -62,6 +62,7 @@ cdef class Calc:
 	def curlS_clearMatrices(self):
 		self.calc.curlS.clearMatrices()
 	def calcReducedCurlF(self):
+		if self.D == 0: raise RuntimeError, "you have to call init first"
 		self.calc.calcReducedCurlF()
 		self.matrixColumnCount = self.calc.matrixColumnCount
 	def calcMatrix(self):
