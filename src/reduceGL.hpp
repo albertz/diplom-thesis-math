@@ -128,20 +128,14 @@ inline void reduce_GL(M2T_Odual matrix, int D, struct hermitian_form_with_charac
 
 	// the discriminant will be -D det(M)
 	// FIXME: the discriminant can become too big
-	if( D >= 0 ) {
-		std::cerr << "reduce_GL: we expect negative D. D = " << D << std::endl;
-		abort();
-	}
+	DOMAIN_CHECK(D < 0);
 	// see http://en.wikipedia.org/wiki/Fundamental_discriminant
-	if( (Mod(D, 4) != 1) && !(Mod(D, 4) == 0 && (Mod(Div(D, 4), 4) == 2 || Mod(Div(D, 4), 4) == 3)) ) {
-		std::cerr << "reduce_GL: D must be a fundamental discriminant. D = " << D << std::endl;
-		abort();
-	}
+	// D must be a fundamental discriminant
+	DOMAIN_CHECK( (Mod(D, 4) == 1) || (Mod(D, 4) == 0 && (Mod(Div(D, 4), 4) == 2 || Mod(Div(D, 4), 4) == 3)) );
 	DOMAIN_CHECK(Mod(D*D - D, 4) == 0);
-	if( a < 0 || c < 0 || matrix.det4D(D) < 0 ) {
-		std::cerr << "reduce_GL: invalid input: " << matrix << ", " << D << std::endl;
-		abort();
-	}
+	DOMAIN_CHECK(a >= 0);
+	DOMAIN_CHECK(c >= 0);
+	DOMAIN_CHECK(matrix.det4D(D) >= 0);
 
 	int q, r;
 	int tmp;
