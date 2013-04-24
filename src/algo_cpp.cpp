@@ -230,18 +230,6 @@ struct ReductionMatrices_Calc {
 		return 0;
 	}
 	
-	// a_F[S](n)
-	ValueOfA evalA_S_n(ElemOfF aRepr, ElemOfS S, int n) {
-		// = \sum_{T \in \cF, tr(ST) = n} a_F(T)
-		ValueOfA sum = 0;
-		for(ElemOfF T : curlF) {
-			if(trace(S,T) == n) {
-				sum += evalA(aRepr, T);
-			}
-		}
-		return sum;
-	}
-
 	std::vector<ValueOfA> matrix; // flat. format: [[0]*ColumnCount]*RowCount
 	size_t matrixRowCount, matrixColumnCount;
 	void calcMatrix() {
