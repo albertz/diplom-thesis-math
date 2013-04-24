@@ -84,7 +84,9 @@ def modform(D, HermWeight, B_cF=10):
 		curlS += [S]
 		if Verbose: print "trying S=", S, "det=", S.det()
 
-		# Step 4. Calculate restriction matrix.
+		# Step 4. Calculate restriction matrix. Via calc.calcMatrix() (algo_cpp.cpp).
+		# Note that calcMatrix() depends on the current internal calc.curlS set
+		# and on the internal calc.curlF. curlF only depends on B_cF which is not changed here.
 		if Verbose: sys.stdout.write("calc restriction matrix..."); sys.stdout.flush()
 		calc.calcMatrix()
 		M_S = calc.getMatrix() # matrix over integer ring
