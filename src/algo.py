@@ -87,7 +87,8 @@ def modform(D, HermWeight, B_cF=10):
 		# Step 4. Calculate restriction matrix.
 		if Verbose: sys.stdout.write("calc restriction matrix..."); sys.stdout.flush()
 		calc.calcMatrix()
-		M_S = calc.getMatrix()
+		M_S = calc.getMatrix() # matrix over integer ring
+		M_S = M_S.matrix_over_field() # matrix over rational field
 		if Verbose: print "done:", M_S
 
 		precLimit = M_S.nrows() # \cF(S)
@@ -108,7 +109,7 @@ def modform(D, HermWeight, B_cF=10):
 		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
 		herm_modform_fe_expannsion_S_module = herm_modform_fe_expannsion_S.column_module()
 		if Verbose: sys.stdout.write("calc M_S_right_kernel..."); sys.stdout.flush()
-		M_S_right_kernel = M_S.matrix_over_field().right_kernel()
+		M_S_right_kernel = M_S.right_kernel()
 		if Verbose: print "done"
 		herm_modform_fe_expannsion_S_module += M_S_right_kernel
 
