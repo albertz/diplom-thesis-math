@@ -167,21 +167,30 @@ is a holomorphic function
 \[ f \colon \HalfPlane_n \rightarrow \C \]
 with
 \begin{align*}
-(1) \ \ & f | M = \nu(M) f \quad\forall\ M = \SmallMatrix{A}{B}{C}{D} \in \Gamma, Z \in \HalfPlane_n , \\
+(1) \ \ & f | M = f \quad\forall\ M \in \Gamma, Z \in \HalfPlane_n , \\
 (2) \ \ & \text{for } n = 1 \colon \ \text{$f$ is holomorphic in all cusps} .
 \end{align*}
 
 $\HSpaceN{n}{k}{\Gamma}$
 denotes the vector space of such Hermitian modular forms.
 
-Let $\nu \colon \Gamma \rightarrow \C^\times$ be an Abel character of $\Sp_n(\curlO)$.
+As it can be done for Siegel modular forms, we generalize this further by introducing a \defword{Multiplicative character} $\nu \colon \Gamma \rightarrow \C^\times$. Thus, for $M_1, M_2 \in \Gamma$, we have $\nu(M_1) \cdot \nu(M_2) = \nu(M_1 \cdot M_2)$.
 
+A \defword{Hermitian modular form} over $\Gamma$ and $\nu$
+is a holomorphic function
+\[ f \colon \HalfPlane_n \rightarrow \C \]
+with
+\begin{align*}
+(1) \ \ & f | M = \nu(M) f \quad\forall\ M \in \Gamma, Z \in \HalfPlane_n , \\
+(2) \ \ & \text{for } n = 1 \colon \ \text{$f$ is holomorphic in all cusps} .
+\end{align*}
 
 %$[\Gamma, k, \nu]$ <- früher und Dern, aber jetzt:
 $\HSpaceN{n}{k}{\Gamma,\nu}$
 denotes the vector space of such Hermitian modular forms.
 
-In this work, we will concentrate on Hermitian modular forms of degree $n=2$. We will start with $\Delta \in \Set{3,4,8}$.
+In this work, we will always use Hermitian modular forms of degree $n=2$.
+%We will start with $\Delta \in \Set{3,4,8}$.
 % weight k is fixed in the algorithm, but the algorithm allows any k.
 
 \subsubsection{Properties}
