@@ -74,11 +74,11 @@ Let $M = \SmallMatrix{a}{b}{c}{d} \in \Gamma$ and $\tau \in \SiegelHalfPlane_1$.
 We define the \defword{translated function} $f | M \colon \SiegelHalfPlane_1 \rightarrow \C$ as
 \[ (f | M) (\tau) :=  (c \tau + d)^{-k} \cdot f(M \tau) . \]
 
-Then, an \defword{Elliptic modular form} with weight $k \in \Z$ over $\Gamma$ is a holomorphic function
+An \defword{Elliptic modular form} with weight $k \in \Z$ over $\Gamma$ is a holomorphic function
 \[ f \colon \SiegelHalfPlane_1 \rightarrow \C \]
 with
 \begin{align*}
-(1) \ \ & f | M  = f \quad \forall \ M = \SmallMatrix{a}{b}{c}{d} \in \Gamma, \\
+(1) \ \ & f | M  = f \quad \forall \ M \in \Gamma, \\
 (2) \ \ & f(\tau) = O(1) \quad \text{for } \tau \rightarrow i \infty .
 \end{align*}
 
@@ -101,7 +101,7 @@ More general cusps: $\Gamma \backslash \SL_2(\Q) \div \Gamma_{\infty, \Q}$, wher
 
 \subsection{Siegel modular forms}
 
-\defword{Siegel modular forms} are a generalization of Elliptic modular forms.
+\defword{Siegel modular forms} are a generalization of Elliptic modular forms for higher dimensions.
 Let
 \[ \SiegelHalfPlane_n := \Set{Z \in \M_n^T(\C)}{\Im(Z) > 0} \]
 be the \defword{Siegel upper half space}.
@@ -109,6 +109,7 @@ We call $\Sp_n(\Z)$ the \defword{Siegel modular group}.
 Siegel modular forms are holomorphic functions $\SiegelHalfPlane_n \rightarrow \C$ for a given \defword{degree} $n \in \N$.
 
 The \defword{translation group} $\Gamma$ is a subgroup of $\Sp_n(\Z)$. For $M = \SmallMatrix{A}{B}{C}{D} \in \Gamma$ and $Z \in \SiegelHalfPlane_n$, we write
+%with $Z = S \tau$. https://mail.google.com/mail/u/0/#label/Diplomarbeit/13b471d95eb713e9
 \[ M \cdot Z := (A Z + B) \cdot (C Z + D)^{-1} . \]
 Generalizing the Elliptic translation, the Siegel \defword{translated function} $f | M \colon \SiegelHalfPlane_n \rightarrow \C$ is defined as   
 \[ ( f | M ) (Z) :=
@@ -130,47 +131,51 @@ with
 (2) \ \ & \text{for } n = 1 \colon f(Z) = O(1) \quad \text{for } Z \rightarrow i \infty
 \end{align*}
 
-Note that many authors define the transformed function $f | M$ for $M = \SmallMatrix{A}{B}{C}{D} \in \Gamma$ with  
-\[ \left( f | M \right) (Z) :=
-f(M \cdot Z) \cdot \det(CZ + D)^{-k} \]
-%with $Z = S \tau$. https://mail.google.com/mail/u/0/#label/Diplomarbeit/13b471d95eb713e9
-with $Z \in \SiegelHalfPlane_n$, where $M \cdot Z := (A Z + B) \cdot (C Z + D)^{-1}$. Then the first property of Siegel modular forms can be written as
-\[ f | M = f \quad \forall\ M \in \Gamma . \]
-
 $\SSpaceN{n}{k}{\Gamma}$ denotes the vector space of such Siegel modular forms.
 
 Note that Elliptic modular forms are Siegel modular forms of degree $n=1$. Thus we have $\ESpace{k}{\Gamma} = \SSpaceN{1}{k}{\Gamma}$.
 
-Siegel modular forms aren't directly used in this work. However, the idea of this work is inspired by \cite{PoorYuen07Comp} and they are using them. Also, they are a generalization of Elliptic modular forms.
+Siegel modular forms aren't directly used in this work. However, the idea of this work is inspired by \cite{PoorYuen07Comp} and they are using them.
 
 
 \subsection{Hermitian modular forms}
 
-Let $\HalfPlane_n :=  \Set{ Z \in \M_n(\C) }{ \Im(Z) > 0}$ be the \defword{Hermitian upper half space}. Note that these matrices are not symmetric as the Siegel upper half space $\SiegelHalfPlane_n$ but we have $\SiegelHalfPlane_n \subseteq \HalfPlane_n$ and $\SiegelHalfPlane_1 = \HalfPlane_1 \subseteq \C$.
+Let
+\[ \HalfPlane_n :=  \Set{ Z \in \M_n(\C) }{ \Im(Z) > 0} \]
+be the \defword{Hermitian upper half space}. Note that these matrices are not symmetric as the Siegel upper half space $\SiegelHalfPlane_n$ but we have $\SiegelHalfPlane_n \subseteq \HalfPlane_n$ and $\SiegelHalfPlane_1 = \HalfPlane_1 \subseteq \C$.
+
+\defword{Hermitian modular forms} are holomorphic functions $\HalfPlane_n \rightarrow \C$. They are a generalization of Siegel modular forms where the \defword{translation group} $\Gamma$ is not a subgroup of $\Sp_n(\Z)$ but a subgroup of $\Sp_n(\curlO)$ for some $\curlO \subseteq \C$.
 
 % Def 1.8 bei Dern
 % Bei Dern: j((A B C D),Z) = det(CZ + D)
 % Multiplikatorsystem -> multiplier
 
-Let $\Delta \in \N$ so that we have the imaginary quadratic number field $\Q(\sqrt{-\Delta})$ where $-\Delta$ is the fundamental discriminant.
+More specificially,
+let $\Delta \in \N$ so that we have the imaginary quadratic number field $\Q(\sqrt{-\Delta})$ where $-\Delta$ is the fundamental discriminant.
 Then, let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximum order.
 We call $\Sp_n(\curlO)$ the \defword{Hermitian modular group}.
 Let $\Gamma$ be a subgroup of $\Sp_n(\curlO)$.
-Let $\nu \colon \Gamma \rightarrow \C^\times$ be an Abel character of $\Sp_n(\curlO)$.
+
+Again, with $M = \SmallMatrix{A}{B}{C}{D} \in \Gamma$, $Z \in \HalfPlane_n$, $M \cdot Z := (A Z + B) \cdot (C Z + D)^{-1}$ as for Siegel modular forms and the \defword{weight} $k \in \Z$, we define the \defword{translated function} $f | M \colon \HalfPlane_n \rightarrow \C$ as
+\[ (f|M) (Z) = \det(CZ + D)^{-k} \cdot f(M \cdot Z) .\]
 
 A \defword{Hermitian modular form}
-of degree $n\in\N$
-with weight $k\in \Z$
-over $\Gamma$ and $\nu$
+of \defword{degree} $n\in\N$
+with \defword{weight} $k\in \Z$
+over $\Gamma$
 is a holomorphic function
 \[ f \colon \HalfPlane_n \rightarrow \C \]
 with
 \begin{align*}
-(1) \ \ & f((A Z + B) \cdot (C Z + D)^{-1}) = \nu(M) \det(CZ + D)^k f(Z), \quad M = \SmallMatrix{A}{B}{C}{D} \in \Gamma, Z \in \HalfPlane_n , \\
+(1) \ \ & f | M = \nu(M) f \quad\forall\ M = \SmallMatrix{A}{B}{C}{D} \in \Gamma, Z \in \HalfPlane_n , \\
 (2) \ \ & \text{for } n = 1 \colon \ \text{$f$ is holomorphic in all cusps} .
 \end{align*}
 
-Again as for Siegel modular forms, most authors write $M \cdot Z := (A Z + B) \cdot (C Z + D)^{-1}$.
+$\HSpaceN{n}{k}{\Gamma}$
+denotes the vector space of such Hermitian modular forms.
+
+Let $\nu \colon \Gamma \rightarrow \C^\times$ be an Abel character of $\Sp_n(\curlO)$.
+
 
 %$[\Gamma, k, \nu]$ <- früher und Dern, aber jetzt:
 $\HSpaceN{n}{k}{\Gamma,\nu}$
