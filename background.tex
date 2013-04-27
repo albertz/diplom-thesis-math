@@ -64,7 +64,7 @@ We say that some function $f \colon \mathcal{A} \rightarrow \mathcal{B}$ with $\
 
 \subsection{Elliptic modular forms}
 \defword{Elliptic modular forms} are holomorphic functions over the set
-\[ \SiegelHalfPlane_1 = \Set{z \in \C}{\Im(z) > 0} \subseteq \C \]
+\[ \SiegelHalfPlane_1 := \Set{z \in \C}{\Im(z) > 0} \subseteq \C \]
 which is called the \defword{Poincaré upper half plane}.
 
 Let $f$ be a holomorphic function $\SiegelHalfPlane_1 \rightarrow \C$. Let $\Gamma$ be a subgroup of $\Sp_1(\Z) = \SL_2(\Z)$. \defword{Modular forms} are functions which are invariant with regard to a specific \defword{translation}. In this case, the translation is given by some $M \in \Gamma$ and a \defword{weight} $k \in \Z$. We also call $\Gamma$ the \defword{translation group}.
@@ -87,8 +87,6 @@ Thus, (1) yields the equation
 
 $\ESpace{k}{\Gamma}$ denotes the vector space of such Elliptic modular forms.
 
-Note that Elliptic modular forms are Siegel modular forms of degree $n=1$. Thus we have $\ESpace{k}{\Gamma} = \SSpaceN{1}{k}{\Gamma}$.
-
 In this work, we use a specific subgroup of $\Sp_1(\Z)$. We define
 \[ \Gamma_0(l) := \Set{\SimpleMatrix{a}{b}{c}{d} \in \Sp_1(\Z)}{c \equiv 0 \pmod{l}} \subseteq \Sp_1(\Z) \subseteq \M_2(\Z) \]
 as a subgroup of $\Sp_1(\Z)$.
@@ -103,10 +101,19 @@ More general cusps: $\Gamma \backslash \SL_2(\Q) \div \Gamma_{\infty, \Q}$, wher
 
 \subsection{Siegel modular forms}
 
-Siegel modular forms aren't directly used in this work. However, the idea of this work is inspired by \cite{PoorYuen07Comp} and they are using them. Also, they are a generalization of Elliptic modular forms.
-
-Let $\SiegelHalfPlane_n := \Set{Z \in \M_n^T(\C)}{\Im(Z) > 0}$ be the \defword{Siegel upper half space}.
+\defword{Siegel modular forms} are a generalization of Elliptic modular forms.
+Let
+\[ \SiegelHalfPlane_n := \Set{Z \in \M_n^T(\C)}{\Im(Z) > 0} \]
+be the \defword{Siegel upper half space}.
 We call $\Sp_n(\Z)$ the \defword{Siegel modular group}.
+Siegel modular forms are holomorphic functions $\SiegelHalfPlane_n \rightarrow \C$ for a given \defword{degree} $n \in \N$.
+
+The \defword{translation group} $\Gamma$ is a subgroup of $\Sp_n(\Z)$. For $M = \SmallMatrix{A}{B}{C}{D} \in \Gamma$ and $Z \in \SiegelHalfPlane_n$, we write
+\[ M \cdot Z := (A Z + B) \cdot (C Z + D)^{-1} . \]
+Generalizing the Elliptic translation, the Siegel \defword{translated function} $f | M \colon \SiegelHalfPlane_n \rightarrow \C$ is defined as   
+\[ ( f | M ) (Z) :=
+\det(CZ + D)^{-k} \cdot f(M \cdot Z) \]
+
 
 % Groß/Kleinschreibung:
 % Hermitian modular form
@@ -115,7 +122,7 @@ We call $\Sp_n(\Z)$ the \defword{Siegel modular group}.
 
 % Skript Krieg, p.49. Aber die folgende Def ist woanders her, glaub ich...?
 % cusp = Spitzenform
-A \defword{Siegel modular form} of degree $n\in\N$ with weight $k \in \Z$ for some $\Gamma \subseteq \Sp_n(\Z)$, $\Gamma$ subgroup of $\Sp_n(\Z)$, is a holomorphic function
+A \defword{Siegel modular form} of degree $n\in\N$ with weight $k \in \Z$ over $\Gamma$ is a holomorphic function
 \[ f \colon \SiegelHalfPlane_n \rightarrow \C \]
 with
 \begin{align*}
@@ -131,6 +138,10 @@ with $Z \in \SiegelHalfPlane_n$, where $M \cdot Z := (A Z + B) \cdot (C Z + D)^{
 \[ f | M = f \quad \forall\ M \in \Gamma . \]
 
 $\SSpaceN{n}{k}{\Gamma}$ denotes the vector space of such Siegel modular forms.
+
+Note that Elliptic modular forms are Siegel modular forms of degree $n=1$. Thus we have $\ESpace{k}{\Gamma} = \SSpaceN{1}{k}{\Gamma}$.
+
+Siegel modular forms aren't directly used in this work. However, the idea of this work is inspired by \cite{PoorYuen07Comp} and they are using them. Also, they are a generalization of Elliptic modular forms.
 
 
 \subsection{Hermitian modular forms}
