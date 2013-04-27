@@ -8,6 +8,11 @@ from sage.rings.power_series_ring import PowerSeriesRing
 import sys
 import algo_cython as C
 
+# via Martin. while this is not in Sage:
+import imp
+cusp_expansions = imp.load_source("cusp_expansions", "../../cusp_expansions.py")
+
+
 def reloadC():
 	"""
 	This is just for testing to reload the C (Cython) module
