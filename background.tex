@@ -63,17 +63,27 @@ We say that some function $f \colon \mathcal{A} \rightarrow \mathcal{B}$ with $\
 
 
 \subsection{Elliptic modular forms}
-\defword{Elliptic modular forms} are holomorphic functions over $\SiegelHalfPlane_1 = \Set{z \in \C}{\Im(z) > 0} \subseteq \C$ which is called the \defword{Poincaré upper half plane}.
+\defword{Elliptic modular forms} are holomorphic functions over the set
+\[ \SiegelHalfPlane_1 = \Set{z \in \C}{\Im(z) > 0} \subseteq \C \]
+which is called the \defword{Poincaré upper half plane}.
 
-We have $\Gamma$ as a subgroup of $\Sp_1(\Z) = \SL_2(\Z)$. An \defword{Elliptic modular form} with weight $k \in \Z$ over $\Gamma$ is a holomorphic function
+Let $f$ be a holomorphic function $\SiegelHalfPlane_1 \rightarrow \C$.
+Let $\Gamma$ be a subgroup of $\Sp_1(\Z) = \SL_2(\Z)$. And let $k \in \Z$ be the \defword{weight} of our modular form. Let $M = \SmallMatrix{a}{b}{c}{d} \in \Gamma$ and $\tau \in \SiegelHalfPlane_1$. We write
+\[ M \tau := \frac{a \tau + b}{b \tau + c} . \]
+Modular forms are functions which are invariant with regard to a specific translation. In this case, the translation is given by $M$.
+We define the \defword{translated function} $f | M \colon \SiegelHalfPlane_1 \rightarrow \C$ as
+\[ (f | M) (\tau) :=  (c \tau + d)^{-k} \cdot f(M \tau) . \]
+
+Then, an \defword{Elliptic modular form} with weight $k \in \Z$ over $\Gamma$ is a holomorphic function
 \[ f \colon \SiegelHalfPlane_1 \rightarrow \C \]
 with
 \begin{align*}
-(1) \ \ & f\left(\frac{a \tau + b}{b \tau + c}\right) = (c \tau + d)^k \cdot f(\tau) \quad \forall \ \SmallMatrix{a}{b}{c}{d} \in \Gamma, \tau \in \SiegelHalfPlane_1 \\
-(2) \ \ & f(\tau) = O(1) \quad \text{for } \tau \rightarrow i \infty
+(1) \ \ & f | M  = f \quad \forall \ M = \SmallMatrix{a}{b}{c}{d} \in \Gamma, \\
+(2) \ \ & f(\tau) = O(1) \quad \text{for } \tau \rightarrow i \infty .
 \end{align*}
 
-Note that most authors write $M \tau := \frac{a \tau + b}{b \tau + c}$.
+Thus, (1) yields the equation
+\[ f\left(\frac{a \tau + b}{b \tau + c}\right) = (c \tau + d)^k \cdot f(\tau) \quad \forall \ \SmallMatrix{a}{b}{c}{d} \in \Gamma, \tau \in \SiegelHalfPlane_1 . \]
 
 $\ESpace{k}{\Gamma}$ denotes the vector space of such Elliptic modular forms.
 
