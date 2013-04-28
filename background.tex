@@ -67,12 +67,15 @@ We say that some function $f \colon \mathcal{A} \rightarrow \mathcal{B}$ with $\
 \[ \SiegelHalfPlane_1 := \Set{z \in \C}{\Im(z) > 0} \subseteq \C \]
 which is called the \defword{Poincaré upper half plane}.
 
-Let $f$ be a holomorphic function $\SiegelHalfPlane_1 \rightarrow \C$. Let $\Gamma$ be a subgroup of $\Sp_1(\Z) = \SL_2(\Z)$. \defword{Modular forms} are functions which are invariant with regard to a specific \defword{translation}. In this case, the translation is given by some $M \in \Gamma$ and a \defword{weight} $k \in \Z$. We also call $\Gamma$ the \defword{translation group}.
+Let $f$ be a holomorphic function $\SiegelHalfPlane_1 \rightarrow \C$. \defword{Modular forms} are functions which are invariant with regard to a specific \defword{translation}. In this case, the translation is given by some $M \in \Sp_1(\Z) = \SL_2(\Z)$ and a \defword{weight} $k \in \Z$.
 
-Let $M = \SmallMatrix{a}{b}{c}{d} \in \Gamma$ and $\tau \in \SiegelHalfPlane_1$. We write
+Let $M = \SmallMatrix{a}{b}{c}{d} \in \Sp_1(\Z)$ and $\tau \in \SiegelHalfPlane_1$. We write
 \[ M \tau := \frac{a \tau + b}{c \tau + d} . \]
+Note that we have $\Im(M\tau) = \frac{\Im(\tau)}{(c\Re(\tau)+d)^2 + (c \Im(\tau))^2} > 0$ and thus $M \tau \in \SiegelHalfPlane_1$.
 We define the \defword{translated function} $f | M \colon \SiegelHalfPlane_1 \rightarrow \C$ as
 \[ (f | M) (\tau) :=  (c \tau + d)^{-k} \cdot f(M \tau) . \]
+
+Let $\Gamma$ be a subgroup of $\Sp_1(\Z)$. We also call $\Gamma$ the \defword{translation group}.
 
 An \defword{Elliptic modular form} with weight $k \in \Z$ over $\Gamma$ is a holomorphic function
 \[ f \colon \SiegelHalfPlane_1 \rightarrow \C \]
@@ -108,9 +111,10 @@ be the \defword{Siegel upper half space}.
 We call $\Sp_n(\Z)$ the \defword{Siegel modular group}.
 Siegel modular forms are holomorphic functions $\SiegelHalfPlane_n \rightarrow \C$ for a given \defword{degree} $n \in \N$.
 
-The \defword{translation group} $\Gamma$ is a subgroup of $\Sp_n(\Z)$. For $M = \SmallMatrix{A}{B}{C}{D} \in \Gamma$ and $Z \in \SiegelHalfPlane_n$, we write
+The \defword{translation group} $\Gamma$ is a subgroup of $\Sp_n(\Z)$. For $M = \SmallMatrix{A}{B}{C}{D} \in \Sp_n(\Z)$ and $Z \in \SiegelHalfPlane_n$, we write
 %with $Z = S \tau$. https://mail.google.com/mail/u/0/#label/Diplomarbeit/13b471d95eb713e9
 \[ M \cdot Z := (A Z + B) \cdot (C Z + D)^{-1} . \]
+Again, we can confirm that $M\cdot Z \in \SiegelHalfPlane_n$.
 Generalizing the Elliptic translation, the Siegel \defword{translated function} $f | M \colon \SiegelHalfPlane_n \rightarrow \C$ is defined as   
 \[ ( f | M ) (Z) :=
 \det(CZ + D)^{-k} \cdot f(M \cdot Z) \]
@@ -156,7 +160,7 @@ Then, let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximum order.
 We call $\Sp_n(\curlO)$ the \defword{Hermitian modular group}.
 Let $\Gamma$ be a subgroup of $\Sp_n(\curlO)$.
 
-Again, with $M = \SmallMatrix{A}{B}{C}{D} \in \Gamma$, $Z \in \HalfPlane_n$, $M \cdot Z := (A Z + B) \cdot (C Z + D)^{-1}$ as for Siegel modular forms and the \defword{weight} $k \in \Z$, we define the \defword{translated function} $f | M \colon \HalfPlane_n \rightarrow \C$ as
+Again, with $M = \SmallMatrix{A}{B}{C}{D} \in \Sp_n(\curlO)$, $Z \in \HalfPlane_n$, $M \cdot Z := (A Z + B) \cdot (C Z + D)^{-1} \in \HalfPlane_n$ as for Siegel modular forms and the \defword{weight} $k \in \Z$, we define the \defword{translated function} $f | M \colon \HalfPlane_n \rightarrow \C$ as
 \[ (f|M) (Z) := \det(CZ + D)^{-k} \cdot f(M \cdot Z) .\]
 
 A \defword{Hermitian modular form}
