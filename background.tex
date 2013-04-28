@@ -151,7 +151,7 @@ be the \defword{Hermitian upper half space}. Note that these matrices are not sy
 % Multiplikatorsystem -> multiplier
 
 More specificially,
-let $\Delta \in \N$ so that we have the imaginary quadratic number field $\Q(\sqrt{-\Delta})$ where $-\Delta$ is the fundamental discriminant.
+let $\Delta \in \N$ so that we have the imaginary quadratic number field $\K := \Q(\sqrt{-\Delta})$ where $-\Delta$ is the fundamental discriminant.
 Then, let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximum order.
 We call $\Sp_n(\curlO)$ the \defword{Hermitian modular group}.
 Let $\Gamma$ be a subgroup of $\Sp_n(\curlO)$.
@@ -188,6 +188,16 @@ with
 %$[\Gamma, k, \nu]$ <- früher und Dern, aber jetzt:
 $\HSpaceN{n}{k}{\Gamma,\nu}$
 denotes the vector space of such Hermitian modular forms.
+
+For $f \in \HSpaceN{n}{k}{\Gamma,\nu}$, define the \defword{Siegel $\Phi$-operator} as
+\[ (f | \Phi) (Z') := \lim_{t \rightarrow \infty} f\left( \begin{array}{cc}
+Z' & 0 \\
+0 & it
+\end{array}  \right), \quad Z' \in \HalfPlane_{n-1} . \]
+Then (see \cite{Dern01Herm}), $f|\Phi \colon \HalfPlane_{n-1} \rightarrow \C$ is a well-defined Hermitian modular form of degree $n-1$.
+
+A Hermitian modular form $f \in \HSpaceN{n}{k}{\Gamma,\nu}$ is a \defword{Hermitian modular cusp form}, if and only if for all $R \in \Sp_n(\K)$, it holds
+\[ (f|R) | \Phi \equiv 0 . \]
 
 In this work, we will always use Hermitian modular forms of degree $n=2$.
 %We will start with $\Delta \in \Set{3,4,8}$.
