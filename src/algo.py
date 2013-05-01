@@ -1,5 +1,5 @@
 
-from sage.matrix.constructor import matrix
+from sage.matrix.constructor import matrix, Matrix
 from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
 from sage.modules.free_module import FreeModule
@@ -42,6 +42,25 @@ def test_algo_calcMatrix():
 
 	calc.calcMatrix()
 	return calc.getMatrix()
+
+
+def solveR(M, S):
+	"""
+	Let M = [[a,b;c,d]] \in \SL_2(\ZZ).
+	Let S \in \Her_2(\curlO) and S > 0.
+	Define tM = [[a I, b S; c S^{-1}, d I]] \in \Sp_2(\K).
+	We find gamma \in \Sp_2(\curlO), R \in \Sp_2(\K)
+	such that tM = gamma R.
+	"""
+	assert isinstance(M, Matrix)
+	assert isinstance(S, Matrix)
+	assert S.nrows() == 2 and S.ncols() == 2
+	assert M.nrows() == 2 and M.ncols() == 2
+	assert S[0][0] > 0 and S[1][1] > 0
+	assert S.det() > 0
+	assert M.det() == 1
+	
+	pass
 
 Verbose = True
 
