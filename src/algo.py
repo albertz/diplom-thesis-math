@@ -1,14 +1,16 @@
-from sage.all import CC
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
 from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
 from sage.modules.free_module import FreeModule
 from sage.rings.integer import Integer
+from sage.symbolic.all import I
 from sage.rings.arith import gcd, xgcd
 from sage.rings.number_field.number_field import QQ, ZZ
 from sage.rings.power_series_ring import PowerSeriesRing
 import sys
+from sage.symbolic.ring import SymbolicRing
+from sage.symbolic.expression import Expression
 import algo_cython as C
 
 # via Martin. while this is not in Sage:
@@ -62,6 +64,7 @@ def solveR(M, S):
 	assert S[0][0] > 0 and S[1][1] > 0 and S.det() > 0, "S is not positive definite"
 	assert M.det() == 1, "M is not in \SL_2(\ZZ)"
 	Ring = S.base_ring()
+	print "Ring:",Ring
 
 	A1 = matrix(Ring, 2,2, M[0][0])
 	B1 = M[0][1] * S
@@ -83,6 +86,7 @@ def solveR(M, S):
 			[0,c4,0,d4]
 		)
 	J = make4x4matrix_embed(0,0,-1,-1,1,1,0,0)
+	print tM1.conjugate_transpose() * J * tM1
 	assert tM1.conjugate_transpose() * J * tM1 == J
 	l = C1.denominator()
 	Cg11 = C1[0][0] * l / gcd(A1[0][0] * l, C1[0][0] * l)
@@ -133,12 +137,12 @@ def test_solveR():
 	a=2
 	b=c=d=1
 	s=5
-	t=Integer(2)
+	t=I
 	u=1
-	M = matrix(ZZ, 2, 2, [a,b,c,d])
-	S = matrix(CC, 2, 2, [s,t,t.conjugate(),u])
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S)
-	print gamma, "*", R, "==", tM
+	print gamma, "*\n", R, "==\n", tM
 
 
 Verbose = True
