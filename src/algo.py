@@ -1,8 +1,11 @@
-
-from sage.matrix.constructor import matrix, Matrix
+from sage.all import CC
+from sage.matrix.constructor import matrix
+from sage.matrix.matrix2 import Matrix
 from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
 from sage.modules.free_module import FreeModule
+from sage.rings.integer import Integer
+from sage.rings.arith import gcd, xgcd
 from sage.rings.number_field.number_field import QQ, ZZ
 from sage.rings.power_series_ring import PowerSeriesRing
 import sys
@@ -56,11 +59,87 @@ def solveR(M, S):
 	assert isinstance(S, Matrix)
 	assert S.nrows() == 2 and S.ncols() == 2
 	assert M.nrows() == 2 and M.ncols() == 2
-	assert S[0][0] > 0 and S[1][1] > 0
-	assert S.det() > 0
-	assert M.det() == 1
-	
-	pass
+	assert S[0][0] > 0 and S[1][1] > 0 and S.det() > 0, "S is not positive definite"
+	assert M.det() == 1, "M is not in \SL_2(\ZZ)"
+	Ring = S.base_ring()
+
+	A1 = matrix(Ring, 2,2, M[0][0])
+	B1 = M[0][1] * S
+	C1 = M[1][0] * S.inverse()
+	D1 = matrix(Ring, 2,2, M[1][1])
+	def make4x4matrix(A1,B1,C1,D1):
+		return matrix(Ring, 4,4,
+			[A1[0][0],A1[0][1],B1[0][0],B1[0][1]] +
+			[A1[1][0],A1[1][1],B1[1][0],B1[1][1]] +
+			[C1[0][0],C1[0][1],D1[0][0],D1[0][1]] +
+			[C1[1][0],C1[1][1],D1[1][0],D1[1][1]]
+		)
+	tM = tM1 = make4x4matrix(A1,B1,C1,D1)
+	def make4x4matrix_embed(a1,a4,b1,b4,c1,c4,d1,d4):
+		return matrix(Ring, 4,4,
+			[a1,0,b1,0] +
+			[0,a4,0,b4] +
+			[c1,0,d1,0] +
+			[0,c4,0,d4]
+		)
+	J = make4x4matrix_embed(0,0,-1,-1,1,1,0,0)
+	assert tM1.conjugate_transpose() * J * tM1 == J
+	l = C1.denominator()
+	Cg11 = C1[0][0] * l / gcd(A1[0][0] * l, C1[0][0] * l)
+	Dg11 = -A1[0][0] * l / gcd(A1[0][0] * l, C1[0][0] * l)
+	d,Ag11,Bg11 = xgcd(Dg11, -Cg11)
+	assert d == 1
+	Dg14 = Ag14 = 0
+	Bg14 = 1
+	Cg14 = -1
+	G1 = make4x4matrix_embed(Ag11,Ag14,Bg11,Bg14,Cg11,Cg14,Dg11,Dg14)
+	tM2 = G1 * tM1
+	assert tM2[2][0] == 0
+	assert tM2[3][0] == 0
+	c22,c24 = tM2[2][1],tM2[3][1]
+	Dg23 = c24 / gcd(c22,c24)
+	Dg24 = -c22 / gcd(c22,c24)
+	d,Dg21,Dg22 = xgcd(Dg24, -Dg23)
+	assert d == 1
+	Dg2 = matrix(Ring, 2,2, [Dg21,Dg22,Dg23,Dg24])
+	assert Dg2.det() == 1
+	Ag2 = Dg2.conjugate_transpose().inverse()
+	G2 = make4x4matrix(Ag2,matrix(Ring,2,2,0),matrix(Ring,2,2,0),Dg2)
+	tM3 = G2 * tM2
+	assert tM3[2][0] == 0
+	assert tM3[3][0] == 0
+	assert tM3[3][1] == 0
+	assert tM3[0][0] == 0 # a_3,1 in our proof
+	Cg34 = Bg34 = 0
+	Ag34 = Dg34 = 1
+	a32,c32 = tM3[0][1],tM3[2][1]
+	Cg31 = c32 / gcd(a32, c32)
+	Dg31 = -a32 / gcd(a32, c32)
+	d,Ag31,Bg31 = xgcd(Dg31, -Cg31)
+	assert d == 1
+	G3 = make4x4matrix_embed(Ag31,Ag34,Bg31,Bg34,Cg31,Cg34,Dg31,Dg34)
+	tM4 = G3 * tM3
+	assert tM4[2][0] == 0
+	assert tM4[2][1] == 0
+	assert tM4[3][0] == 0
+	assert tM4[3][1] == 0
+
+	R = tM4
+	gamma = G1.inverse() * G2.inverse() * G3.inverse()
+	assert tM == gamma * R
+	return gamma, R, tM
+
+def test_solveR():
+	a=2
+	b=c=d=1
+	s=5
+	t=Integer(2)
+	u=1
+	M = matrix(ZZ, 2, 2, [a,b,c,d])
+	S = matrix(CC, 2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S)
+	print gamma, "*", R, "==", tM
+
 
 Verbose = True
 
