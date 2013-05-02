@@ -221,6 +221,7 @@ def modform(D, HermWeight, B_cF=10):
 		mf = ModularForms(Gamma0(l), 2 * HermWeight)
 		fe_expansion_matrix_l = matrix(QQ, [b.qexp(precLimit).padded_list(precLimit) for b in mf.basis()])
 		fe_expansion_matrix_l.echelonize()
+		assert fe_expansion_matrix_l.rank() == precLimit
 
 		# or:  fe_expansion_matrix[:n2,:].row_module()
 		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
@@ -244,9 +245,10 @@ def modform(D, HermWeight, B_cF=10):
 		assert current_dimension >= dim
 
 		# cusp info:
-		#ce = cusp_expansions.ModularFormsCuspExpansions._for_modular_forms(level, weight)
+		ce = cusp_expansions.ModularFormsCuspExpansions._for_modular_forms(l, HermWeight*2)
 		# f in ModularForms(l, 2 k), M = [[a,b;c,d]] the cusp representation with c = M \infty.
-		#ce.expansion_at((a, b, c, d), f)
+		# f_M = ce.expansion_at((a, b, c, d), f)
+		# this calculates f|M
 
 		# Step 5. dimension check
 		if dim == current_dimension:
