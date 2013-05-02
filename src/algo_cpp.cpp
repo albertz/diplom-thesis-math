@@ -242,7 +242,8 @@ struct ReductionMatrices_Calc {
 			size_t column = reducedCurlFMap[reduced.matrix];
 			size_t rowStart = 0;
 			for(ElemOfS S : curlS) {
-				int traceNum = trace(S,T);
+				// TODO: trace(S,T) or trace(S,reduced.matrix) ?
+				int traceNum = trace(S,reduced.matrix);
 				size_t row = rowStart + traceNum;
 				rowStart += calcPrecisionDimension(curlF, S);
 				if(row >= rowStart) continue;
@@ -276,7 +277,8 @@ struct ReductionMatrices_Calc {
 			size_t column = reducedCurlFMap[reduced.matrix];
 			size_t rowStart = 0;
 			for(ElemOfS S : curlS) {
-				int traceNum = trace(S,T);
+				// n = tr(T tS S tS^*)
+				int traceNum = trace(S,reduced.matrix);
 				size_t row = rowStart + traceNum;
 				rowStart += calcPrecisionDimension(curlF, S);
 				if(row >= rowStart) continue;
