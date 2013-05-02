@@ -5,7 +5,7 @@ from sage.modular.modform.constructor import ModularForms
 from sage.modules.free_module import FreeModule
 from sage.rings.integer import Integer
 from sage.symbolic.all import I
-from sage.rings.arith import gcd, xgcd
+from sage.rings.arith import xgcd as orig_xgcd
 from sage.rings.number_field.number_field import QQ, ZZ
 from sage.rings.power_series_ring import PowerSeriesRing
 import sys
@@ -48,6 +48,22 @@ def test_algo_calcMatrix():
 	calc.calcMatrix()
 	return calc.getMatrix()
 
+def xgcd(a,b):
+	if a.imag() == 0 and b.imag() == 0:
+		return orig_xgcd(a,b)
+	if a.imag() != 0:
+		if (I*a).imag() != 0: raise NotImplementedError
+		d,p,q = xgcd(I*a,b)
+		return d,I*p,q
+	if b.imag() != 0:
+		if (I*b).imag() != 0: raise NotImplementedError
+		d,p,q = xgcd(a,I*b)
+		return d,p,I*q
+	assert False
+
+def gcd(a,b):
+	d,_,_ = xgcd(a, b)
+	return d
 
 def solveR(M, S):
 	"""
@@ -64,7 +80,6 @@ def solveR(M, S):
 	assert S[0][0] > 0 and S[1][1] > 0 and S.det() > 0, "S is not positive definite"
 	assert M.det() == 1, "M is not in \SL_2(\ZZ)"
 	Ring = S.base_ring()
-	print "Ring:",Ring
 
 	A1 = matrix(Ring, 2,2, M[0][0])
 	B1 = M[0][1] * S
@@ -86,7 +101,6 @@ def solveR(M, S):
 			[0,c4,0,d4]
 		)
 	J = make4x4matrix_embed(0,0,-1,-1,1,1,0,0)
-	print tM1.conjugate_transpose() * J * tM1
 	assert tM1.conjugate_transpose() * J * tM1 == J
 	l = C1.denominator()
 	Cg11 = C1[0][0] * l / gcd(A1[0][0] * l, C1[0][0] * l)
@@ -131,6 +145,7 @@ def solveR(M, S):
 	R = tM4
 	gamma = G1.inverse() * G2.inverse() * G3.inverse()
 	assert tM == gamma * R
+	assert gamma.conjugate_transpose() * J * gamma == J
 	return gamma, R, tM
 
 def test_solveR():
