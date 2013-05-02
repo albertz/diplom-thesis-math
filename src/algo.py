@@ -14,8 +14,7 @@ from sage.symbolic.expression import Expression
 import algo_cython as C
 
 # via Martin. while this is not in Sage:
-import imp
-cusp_expansions = imp.load_source("cusp_expansions", "../../cusp_expansions.py")
+import cusp_expansions
 
 
 def reloadC():
@@ -243,6 +242,11 @@ def modform(D, HermWeight, B_cF=10):
 		current_dimension = herm_modform_fe_expannsion.dimension()
 		print "current dimension:", current_dimension, "wanted:", dim
 		assert current_dimension >= dim
+
+		# cusp info:
+		#ce = cusp_expansions.ModularFormsCuspExpansions._for_modular_forms(level, weight)
+		# f in ModularForms(l, 2 k), M = [[a,b;c,d]] the cusp representation with c = M \infty.
+		#ce.expansion_at((a, b, c, d), f)
 
 		# Step 5. dimension check
 		if dim == current_dimension:
