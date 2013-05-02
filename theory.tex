@@ -126,9 +126,6 @@ To avoid such complications, we will use $\nu \equiv 1$ for the rest of our work
 
 We want to calculate a generating set for the Fourier expansions of Hermitian modular forms. Now we will formulate the main algorithm of our work.
 
-\begin{algo}
-We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta$ (for now, $\Delta \in \Set{3,4,8}$). Then we select some form weight $k \in \Z$ ($k \in \Set{1,\dots,20}$ or so), let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximum order (see chapter \ref{maxorder}) and some subgroup $\Gamma$ of $\Sp_2(\curlO)$. Then we select an abel character $\nu \colon \Gamma \rightarrow \C^\times$ of $\Sp_2(\curlO)$ (we just use $\nu \equiv 1$, see \cref{remark-nu}).
-
 We define the index set
 \[ \Lambda := \Set{0 \le \SimpleMatrix{a}{b}{\overline b}{c} \in \M_2(\curlO^\#)}{a,c \in \Z } \]
 as the index for the Fourier coefficients of the Fourier expansions of our Hermitian modular forms.
@@ -144,9 +141,12 @@ We use $a[S] \colon \N_0 \rightarrow \Q$ for the Fourier coefficients of $f[S]$,
 This gives us
 \[ a[S] (n) = \sum_{T \in \Lambda, \tr(S T) = n} a(T) . \]
 
-Fix $B \in \N$ as a limit. Select a precision
+Fix $B_\F \in \N$ as a limit. Select a precision
 \[ \F := \Set{\SimpleMatrix{a}{b}{\overline b}{c} \in \Lambda}{0 \le a , c < B} \subseteq \Lambda . \]
 % \Lambda sind die die Indizes der Fourier-Entwicklung einer Hermitischen Modulform.
+
+\begin{algo}
+We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta$ (for now, $\Delta \in \Set{3,4,8}$). Then we select some form weight $k \in \Z$ ($k \in \Set{1,\dots,20}$ or so), let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximum order (see chapter \ref{maxorder}) and some subgroup $\Gamma$ of $\Sp_2(\curlO)$. Then we select an abel character $\nu \colon \Gamma \rightarrow \C^\times$ of $\Sp_2(\curlO)$ (we just use $\nu \equiv 1$, see \cref{remark-nu}).
 
 \begin{enumerate}
 %or: http://www.latex-community.org/forum/viewtopic.php?f=4&t=2209
