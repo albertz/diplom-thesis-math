@@ -220,6 +220,8 @@ struct ReductionMatrices_Calc {
 		
 	std::vector<ValueOfA> matrix; // flat. format: [[0]*ColumnCount]*RowCount
 	size_t matrixRowCount, matrixColumnCount;
+	
+	// this calcs the matrix for the map f \mapsto f[S]
 	void calcMatrix() {
 		matrixRowCount = 0;
 		LOGIC_CHECK(curlS.size() > 0);
@@ -233,6 +235,40 @@ struct ReductionMatrices_Calc {
 		matrix.clear();
 		matrix.resize(matrixRowCount * matrixColumnCount);
 
+		// reduce_GL is expensive, thus we iterate through curlF only once.
+		for(ElemOfF T : curlF) {
+			struct hermitian_form_with_character_evaluation reduced;
+			reduce_GL(T, D, reduced);
+			size_t column = reducedCurlFMap[reduced.matrix];
+			size_t rowStart = 0;
+			for(ElemOfS S : curlS) {
+				int traceNum = trace(S,T);
+				size_t row = rowStart + traceNum;
+				rowStart += calcPrecisionDimension(curlF, S);
+				if(row >= rowStart) continue;
+				size_t matrixIndex = row * matrixColumnCount + column;
+				matrix[matrixIndex] += reduced.character.value(D, -HermWeight);
+			}
+		}
+	}
+	
+	// this calcs the matrix for the map f \mapsto (f|R)[S],
+	// where R = [[tS,tT;0,tU]] and tS,tT,tU \in M2T_O.
+	// R is not in \Sp_2 and tU != tS^*^-1 because we might have
+	// multiplied the whole matrix to have it all in \curlO.
+	void calcMatrixTranslated(const M2T_O& tS, const M2T_O& tT) {
+		matrixRowCount = 0;
+		LOGIC_CHECK(curlS.size() > 0);
+		for(ElemOfS S : curlS) {
+			matrixRowCount += calcPrecisionDimension(curlF, S);
+		}
+		
+		LOGIC_CHECK(reducedCurlFList.size() > 0);
+		LOGIC_CHECK(reducedCurlFList.size() == matrixColumnCount);
+		
+		matrix.clear();
+		matrix.resize(matrixRowCount * matrixColumnCount);
+		
 		// reduce_GL is expensive, thus we iterate through curlF only once.
 		for(ElemOfF T : curlF) {
 			struct hermitian_form_with_character_evaluation reduced;

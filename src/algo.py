@@ -272,6 +272,10 @@ def modform(D, HermWeight, B_cF=10):
 				# this calculates f|M
 				f_M = ce.expansion_at(M, g_inbase)
 
+				print f_M
+
+
+
 		# Step 5. dimension check
 		if dim == current_dimension:
 			break
