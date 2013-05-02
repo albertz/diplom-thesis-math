@@ -9,7 +9,6 @@ from sage.symbolic.all import I
 from sage.rings.arith import xgcd as orig_xgcd
 from sage.rings.number_field.number_field import QQ, ZZ
 from sage.rings.power_series_ring import PowerSeriesRing
-import sys
 from sage.symbolic.ring import SymbolicRing
 from sage.symbolic.expression import Expression
 import algo_cython as C
@@ -160,6 +159,10 @@ def test_solveR():
 	gamma,R,tM = solveR(M, S)
 	return gamma,R,tM
 
+# our own verbose function because I just want our msgs, not other stuff
+def verbose(msg):
+	print msg
+
 def modform(D, HermWeight, B_cF=10):
 	"Main algo"
 
@@ -216,10 +219,11 @@ def modform(D, HermWeight, B_cF=10):
 
 		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
 		l = S.det()
+		l = ZZ(l)
 		mf = ModularForms(Gamma0(l), 2 * HermWeight)
 		fe_expansion_matrix_l = matrix(QQ, [b.qexp(precLimit).padded_list(precLimit) for b in mf.basis()])
 		fe_expansion_matrix_l.echelonize()
-		assert fe_expansion_matrix_l.rank() == precLimit
+		#assert fe_expansion_matrix_l.rank() == precLimit, "{0} != {1}".format(fe_expansion_matrix_l.rank(), precLimit)
 
 		# or:  fe_expansion_matrix[:n2,:].row_module()
 		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
