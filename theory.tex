@@ -130,10 +130,19 @@ We want to calculate a generating set for the Fourier expansions of Hermitian mo
 We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta$ (for now, $\Delta \in \Set{3,4,8}$). Then we select some form weight $k \in \Z$ ($k \in \Set{1,\dots,20}$ or so), let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximum order (see chapter \ref{maxorder}) and some subgroup $\Gamma$ of $\Sp_2(\curlO)$. Then we select an abel character $\nu \colon \Gamma \rightarrow \C^\times$ of $\Sp_2(\curlO)$ (we just use $\nu \equiv 1$, see \cref{remark-nu}).
 
 We define the index set
-\[ \Lambda := \Set{0 \le \SimpleMatrix{a}{b}{\overline b}{c} \in \M_2(\curlO^\#)}{a,c \in \Z } . \]
+\[ \Lambda := \Set{0 \le \SimpleMatrix{a}{b}{\overline b}{c} \in \M_2(\curlO^\#)}{a,c \in \Z } \]
+as the index for the Fourier coefficients of the Fourier expansions of our Hermitian modular forms.
 
-Then, for a holomorphic function $f \colon \HalfPlane_2 \rightarrow \C$, we write its Fourier expansion as
-\[ f(Z) = \sum_{T \in \Lambda} a(T) e^{2 \pi i \cdot \tr(T Z)} . \]
+For a holomorphic function $f \colon \HalfPlane_2 \rightarrow \C$, we write its Fourier expansion as
+\[ f(Z) = \sum_{T \in \Lambda} a(T) \cdot e^{2 \pi i \cdot \tr(T Z)} \]
+with its Fourier coefficients $a \colon \Lambda \rightarrow \Q$.
+
+For any $S \in \PM_2(\curlO)$, for the restricted function $f[S] \colon \HalfPlane_1 \rightarrow \C$, this gives us
+\[ f[S](\tau) = \sum_{T \in \Lambda} a(T) \cdot e^{2 \pi i \cdot \tr(T S \tau)} . \]
+We use $a[S] \colon \N_0 \rightarrow \Q$ for the Fourier coefficients of $f[S]$, i.e. we have
+\[ f[S](\tau) = \sum_{n \in \N_0} a[S](n) \cdot e^{2 \pi i n \tau} . \]
+This gives us
+\[ a[S] (n) = \sum_{T \in \Lambda, \tr(S T) = n} a(T) . \]
 
 Fix $B \in \N$ as a limit. Select a precision
 \[ \F := \Set{\SimpleMatrix{a}{b}{\overline b}{c} \in \Lambda}{0 \le a , c < B} \subseteq \Lambda . \]
@@ -153,9 +162,7 @@ Fix $B \in \N$ as a limit. Select a precision
 \item
 \newcommand{\FPrecisionLimit}[1]{\F(#1)}
 We set
-\[ \mathcal{M}_{k,\mathcal{S},\F}^H := \Set{ (a [S])_{S\in\mathcal{S}} }{\text{$a \in \Q^\F$ is $\GL_2(\curlO)$ invariant}} \subseteq \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}} , \]
-where
-\[ a[S] := \N_0 \rightarrow \Q, n \mapsto \sum_{T \in \Lambda, \tr(S T) = n} a(T), \]
+\[ \mathcal{M}_{k,\mathcal{S},\F}^H := \Set{ (a [S])_{S\in\mathcal{S}} }{\text{$a \in \Q^\F$ is $\GL_2(\curlO)$ invariant}} \subseteq \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}} . \]
 The elements $a \in \Q^\F$ are Fourier expansions of Elliptic modular forms ($\HalfPlane_1 \rightarrow \C$) and $a(T) \in \Q$ for $T \in \F \subseteq \M_2(\curlO^\#)$ are the Fourier coefficients.
 Recall that $a$ being invariant under $\GL_2(\curlO)$ means that we have
 \[ \det(U)^k a(T[U]) = a(T) \; \forall\ U \in \GL_2(\curlO) . \]
