@@ -146,6 +146,7 @@ def solveR(M, S):
 	gamma = G1.inverse() * G2.inverse() * G3.inverse()
 	assert tM == gamma * R
 	assert gamma.conjugate_transpose() * J * gamma == J
+	assert R.submatrix(0,0,2,2) * R.submatrix(2,2,2,2).conjugate_transpose() == 1
 	return gamma, R, tM
 
 def test_solveR():
@@ -157,8 +158,7 @@ def test_solveR():
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S)
-	print gamma, "*\n", R, "==\n", tM
-
+	return gamma,R,tM
 
 Verbose = True
 
