@@ -49,12 +49,15 @@ Recall that we have $S = \overline{S}^T$ and $ad  - bc = 1$. Verify that we have
 
 Thus, because $f$ is a Hermitian modular form, we have
 \begin{align*}
-& f\left(S \frac{a \tau + b}{c \tau + d} \right) \\
+& f[S] \left(\SmallMatrix{a}{b}{c}{d} \tau\right) \\
+=\quad & f\left(S \frac{a \tau + b}{c \tau + d} \right) \\
 =\quad & f\left( M \cdot S \tau \right) \\
 =\quad & \nu(M) \cdot \det(c S^{-1} S \tau + d 1_2)^k \cdot f(S \tau) \\
-=\quad & (c \tau + d)^{2k} \cdot f(S \tau) .
+=\quad & (c \tau + d)^{2k} \cdot f[S](\tau) .
 \end{align*}
-Thus, $f$ is an Elliptic modular form of weight $2k$ to $\Gamma_0(l)$.
+This is the same as
+\[ (f[S]) |_{2k} \SmallMatrix{a}{b}{c}{d} = f[S] . \]
+It follows that $f[S]$ is an Elliptic modular form of weight $2k$ to $\Gamma_0(l)$.
 \endproof
 \end{lemma}
 
