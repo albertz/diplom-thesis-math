@@ -1,6 +1,7 @@
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
 from sage.misc.misc import verbose
+from sage.modular.arithgroup.congroup_sl2z import SL2Z
 from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
 from sage.modules.free_module import FreeModule
@@ -244,6 +245,10 @@ def modform(D, HermWeight, B_cF=10):
 		verbose("current dimension: %i, wanted: %i" % (current_dimension, dim))
 		assert current_dimension >= dim
 
+		# Step 5. dimension check
+		if dim == current_dimension:
+			break
+
 		# cusp info:
 		ce = cusp_expansions.ModularFormsCuspExpansions._for_modular_forms(l, HermWeight*2)
 		for cusp in Gamma0(l).cusps():
@@ -257,12 +262,15 @@ def modform(D, HermWeight, B_cF=10):
 				assert _div == 1
 				M = matrix(ZZ,2,2,[a,b,c,d])
 				del a,b,c,d
+			M = SL2Z(M)
 
-			for g in M_S.columns():
+			for f in herm_modform_fe_expannsion_S_module.gens():
+				g = M_S * f
+				if g == 0: continue
+				g_inbase = fe_expansion_matrix_l.solve_left(g)
 				# g in ModularForms(l, 2 k), M = [[a,b;c,d]] the cusp representation with c = M \infty.
 				# this calculates f|M
-				f_M = ce.expansion_at(M, g)
-
+				f_M = ce.expansion_at(M, g_inbase)
 
 		# Step 5. dimension check
 		if dim == current_dimension:
