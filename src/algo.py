@@ -1,5 +1,6 @@
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
+from sage.misc.misc import verbose
 from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
 from sage.modules.free_module import FreeModule
@@ -159,8 +160,6 @@ def test_solveR():
 	gamma,R,tM = solveR(M, S)
 	return gamma,R,tM
 
-Verbose = True
-
 def modform(D, HermWeight, B_cF=10):
 	"Main algo"
 
@@ -193,7 +192,7 @@ def modform(D, HermWeight, B_cF=10):
 	else:
 		raise NotImplementedError, "dimension calculation of Hermitian modular form with D = %i not implemented" % D
 
-	print "current dimension:", herm_modform_fe_expannsion.dimension(), "wanted:", dim
+	verbose("current dimension: %i, wanted: %i" % (herm_modform_fe_expannsion.dimension(), dim))
 
 	while True:
 		# Step 3. Iterate S \in Mat_2^T(Z). Add to curlS. iterate by denominator.
@@ -203,16 +202,15 @@ def modform(D, HermWeight, B_cF=10):
 		calc.curlS_clearMatrices()
 		S = calc.getNextS()
 		curlS += [S]
-		if Verbose: print "trying S=", S, "det=", S.det()
+		verbose("trying S={0}, det={1}".format(S, S.det()))
 
 		# Step 4. Calculate restriction matrix. Via calc.calcMatrix() (algo_cpp.cpp).
 		# Note that calcMatrix() depends on the current internal calc.curlS set
 		# and on the internal calc.curlF. curlF only depends on B_cF which is not changed here.
-		if Verbose: sys.stdout.write("calc restriction matrix..."); sys.stdout.flush()
+		verbose("calc restriction matrix...")
 		calc.calcMatrix()
 		M_S = calc.getMatrix() # matrix over integer ring
 		M_S = M_S.matrix_over_field() # matrix over rational field
-		if Verbose: print "done:", M_S
 
 		precLimit = M_S.nrows() # \cF(S)
 
@@ -226,28 +224,25 @@ def modform(D, HermWeight, B_cF=10):
 		# or:  fe_expansion_matrix[:n2,:].row_module()
 		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
 
-		if Verbose: sys.stdout.write("calc M_S_module..."); sys.stdout.flush()
+		verbose("calc M_S_module...")
 		M_S_module = M_S.column_module()
-		if Verbose: print "done"
 		restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S_module )
 		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
 		herm_modform_fe_expannsion_S_module = herm_modform_fe_expannsion_S.column_module()
-		if Verbose: sys.stdout.write("calc M_S_right_kernel..."); sys.stdout.flush()
+		verbose("calc M_S_right_kernel...")
 		M_S_right_kernel = M_S.right_kernel()
-		if Verbose: print "done"
 		herm_modform_fe_expannsion_S_module += M_S_right_kernel
 
-		if Verbose: sys.stdout.write("intersecting herm_modform_fe_expannsion..."); sys.stdout.flush()
+		verbose("intersecting herm_modform_fe_expannsion...")
 		herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S_module )
-		if Verbose: print "done"
 		current_dimension = herm_modform_fe_expannsion.dimension()
-		print "current dimension:", current_dimension, "wanted:", dim
+		verbose("current dimension: %i, wanted: %i" % (current_dimension, dim))
 		assert current_dimension >= dim
 
 		# cusp info:
 		ce = cusp_expansions.ModularFormsCuspExpansions._for_modular_forms(l, HermWeight*2)
 		# f in ModularForms(l, 2 k), M = [[a,b;c,d]] the cusp representation with c = M \infty.
-		# f_M = ce.expansion_at((a, b, c, d), f)
+		#f_M = ce.expansion_at((a, b, c, d), f)
 		# this calculates f|M
 
 		# Step 5. dimension check
