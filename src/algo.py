@@ -5,6 +5,7 @@ from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
 from sage.modules.free_module import FreeModule
 from sage.rings.integer import Integer
+from sage.rings.infinity import Infinity
 from sage.symbolic.all import I
 from sage.rings.arith import xgcd as orig_xgcd
 from sage.rings.number_field.number_field import QQ, ZZ
@@ -245,9 +246,23 @@ def modform(D, HermWeight, B_cF=10):
 
 		# cusp info:
 		ce = cusp_expansions.ModularFormsCuspExpansions._for_modular_forms(l, HermWeight*2)
-		# f in ModularForms(l, 2 k), M = [[a,b;c,d]] the cusp representation with c = M \infty.
-		#f_M = ce.expansion_at((a, b, c, d), f)
-		# this calculates f|M
+		for cusp in Gamma0(l).cusps():
+			if cusp == Infinity: continue
+			if cusp == 0:
+				M = matrix(ZZ,2,2,[0,-1,1,0])
+			else:
+				a = cusp.numerator()
+				c = cusp.denominator()
+				_div, d, b = xgcd(a, -c)
+				assert _div == 1
+				M = matrix(ZZ,2,2,[a,b,c,d])
+				del a,b,c,d
+
+			for g in M_S.columns():
+				# g in ModularForms(l, 2 k), M = [[a,b;c,d]] the cusp representation with c = M \infty.
+				# this calculates f|M
+				f_M = ce.expansion_at(M, g)
+
 
 		# Step 5. dimension check
 		if dim == current_dimension:
