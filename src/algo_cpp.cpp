@@ -5,7 +5,7 @@
 #include <vector>
 #include <list>
 #include <gmp.h>
-
+#include <iostream>
 
 // In many cases, we wont use this variable and hardcode
 // it for degree 2. However, we define it here,
@@ -218,10 +218,9 @@ struct ReductionMatrices_Calc {
 		matrixColumnCount = reducedCurlFList.size();
 	}
 		
+	// this calcs the matrix for the map f \mapsto f[S]
 	std::vector<ValueOfA> matrix; // flat. format: [[0]*ColumnCount]*RowCount
 	size_t matrixRowCount, matrixColumnCount;
-	
-	// this calcs the matrix for the map f \mapsto f[S]
 	void calcMatrix() {
 		matrixRowCount = 0;
 		LOGIC_CHECK(curlS.size() > 0);
@@ -247,68 +246,83 @@ struct ReductionMatrices_Calc {
 				rowStart += calcPrecisionDimension(curlF, S);
 				if(row >= rowStart) continue;
 				size_t matrixIndex = row * matrixColumnCount + column;
-				matrix[matrixIndex] += reduced.character.value(D, -HermWeight);
+				auto a_T = reduced.character.value(D, -HermWeight);
+				matrix[matrixIndex] += a_T;
 			}
 		}
 	}
-	
-	// this calcs the matrix for the map f \mapsto (f|R)[S],
-	// where R = [[tS,tT;0,tU]] and tS,tT,tU \in M2T_O.
-	// (a|R_i)[S](n) = det((tS)^{-1}^{*})^{-k} * \sum_{T, tr(T * tS * S * tS^{*}) = n} a(T) * e^{\pi i tr(T * tT * tS^{*})}
 
-	// R is not in \Sp_2 and tU != tS^*^-1 because we might have
-	// multiplied the whole matrix to have it all in \curlO.
-	void calcMatrixTranslated(const M2_O& tS, const M2_O& tT) {
-		matrixRowCount = 0;
+	void getMatrix(mpz_t* out) {
+		for(size_t i = 0; i < matrixColumnCount * matrixRowCount; ++i) {
+			mpz_set_si((mpz_ptr)out, matrix[i]);
+			++out;
+		}
+	}
+	
+	// This calcs the matrix for the map f \mapsto (f|R)[S] up to a factor,
+	// where R = [[tS,tT;0,tS^{-1}^{*}]] and tS,tT \in Mat_2(\K).
+	// We have
+	//   (a|R_i)[S](n) =
+	//     det((tS)^{-1}^{*})^{-k}
+	//     * \sum_{T, tr(T * tS * S * tS^{*}) = n} a(T) * e^{2 \pi i tr(T * tT * tS^{*})}
+	// The function just calculates the function without the det(..) factor.
+	// The parameters given to this function might be multiplied with some factor l
+	// so that they are in \curlO.
+	// Note that the right part are elements of the CyclomoticField(l*l).
+	std::vector<ValueOfA> matrixTrans; // flat. format: [[[0]*ColumnCount]*RowCount]*ZetaOrder
+	size_t matrixSizeTrans, matrixRowCountTrans, matrixColumnCountTrans;
+	void calcMatrixTranslated(const M2_O& tS, const M2_O& tT, const Int l) {
+		using namespace std;
+		
+		matrixRowCountTrans = 0;
 		LOGIC_CHECK(curlS.size() > 0);
 		for(ElemOfS S : curlS) {
-			matrixRowCount += calcPrecisionDimension(curlF, S);
+			matrixRowCountTrans += calcPrecisionDimension(curlF, S);
 		}
 		
 		LOGIC_CHECK(reducedCurlFList.size() > 0);
 		LOGIC_CHECK(reducedCurlFList.size() == matrixColumnCount);
 		
-		matrix.clear();
-		matrix.resize(matrixRowCount * matrixColumnCount);
+		matrixTrans.clear();
+		matrixSizeTrans = matrixRowCount * matrixColumnCount;
+		matrixTrans.resize(matrixSizeTrans * l);
 		
 		// reduce_GL is expensive, thus we iterate through curlF only once.
 		for(ElemOfF T : curlF) {
-			M2_Odual T_M2 = M2_Odual_from_M2T_Odual(T, curlF.D);
+			M2_Odual T_M2 = M2_Odual_from_M2T_Odual(T, D);
 			struct hermitian_form_with_character_evaluation reduced;
 			reduce_GL(T, D, reduced);
 			size_t column = reducedCurlFMap[reduced.matrix];
 			size_t rowStart = 0;
 			for(ElemOfS S : curlS) {
-				M2_O S_M2 = M2_O_from_M2T_O(S, curlF.D);
+				M2_O S_M2 = M2_O_from_M2T_O(S, D);
 				// n = tr(T tS S tS^*)
-				int traceNum =
+				Int traceNum =
 					T_M2
-					.mulMat(tS, curlF.D)
-					.mulMat(S_M2, curlF.D)
-					.mulMat(tS.conjugate_transpose(curlF.D), curlF.D)
+					.mulMat(tS, D)
+					.mulMat(S_M2, D)
+					.mulMat(tS.conjugate_transpose(D), D)
 					.trace()
-					.asInt(curlF.D);
+					.asInt(D);
+				cout << "traceNum=" << traceNum << ", l=" << l << endl;
+				LOGIC_CHECK(Mod(traceNum, l*l) == 0);
+				traceNum /= l*l;
 				size_t row = rowStart + traceNum;
 				rowStart += calcPrecisionDimension(curlF, S);
 				if(row >= rowStart) continue;
 				size_t matrixIndex = row * matrixColumnCount + column;
-				auto value = reduced.character.value(D, -HermWeight);
+				auto a_T = reduced.character.value(D, -HermWeight);
 				// factor = tr(T tT tS^*)
-				auto factor =
+				auto factor_exp =
 					T_M2
-					.mulMat(tT, curlF.D)
-					.mulMat(tS.conjugate_transpose(curlF.D), curlF.D)
+					.mulMat(tT, D)
+					.mulMat(tS.conjugate_transpose(D), D)
 					.trace()
-					.asInt(curlF.D);
-				matrix[matrixIndex] += factor * value;
+					.asInt(D);
+				factor_exp = Mod(factor_exp, l*l);
+				matrixIndex += factor_exp * matrixSizeTrans;
+				matrix[matrixIndex] += a_T;
 			}
-		}
-	}
-	
-	void getMatrix(mpz_t* out) {
-		for(size_t i = 0; i < matrixColumnCount * matrixRowCount; ++i) {
-			mpz_set_si((mpz_ptr)out, matrix[i]);
-			++out;
 		}
 	}
 	
