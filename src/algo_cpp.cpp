@@ -243,7 +243,7 @@ struct ReductionMatrices_Calc {
 			size_t rowStart = 0;
 			for(ElemOfS S : curlS) {
 				// TODO: trace(S,T) or trace(S,reduced.matrix) ?
-				int traceNum = trace(S,reduced.matrix);
+				int traceNum = trace(S,T);
 				size_t row = rowStart + traceNum;
 				rowStart += calcPrecisionDimension(curlF, S);
 				if(row >= rowStart) continue;
@@ -274,13 +274,21 @@ struct ReductionMatrices_Calc {
 		
 		// reduce_GL is expensive, thus we iterate through curlF only once.
 		for(ElemOfF T : curlF) {
+			M2_Odual T_M2 = M2_Odual_from_M2T_Odual(T, curlF.D);
 			struct hermitian_form_with_character_evaluation reduced;
 			reduce_GL(T, D, reduced);
 			size_t column = reducedCurlFMap[reduced.matrix];
 			size_t rowStart = 0;
 			for(ElemOfS S : curlS) {
+				M2_O S_M2 = M2_O_from_M2T_O(S, curlF.D);
 				// n = tr(T tS S tS^*)
-				int traceNum = trace(S,reduced.matrix);
+				int traceNum =
+					T_M2
+					.mulMat(tS, curlF.D)
+					.mulMat(S_M2, curlF.D)
+					.mulMat(tS.conjugate_transpose(curlF.D), curlF.D)
+					.trace()
+					.asInt(curlF.D);
 				size_t row = rowStart + traceNum;
 				rowStart += calcPrecisionDimension(curlF, S);
 				if(row >= rowStart) continue;
@@ -288,7 +296,7 @@ struct ReductionMatrices_Calc {
 				auto value = reduced.character.value(D, -HermWeight);
 				// factor = tr(T tT tS^*)
 				auto factor =
-					M2_Odual_from_M2T_Odual(T, curlF.D)
+					T_M2
 					.mulMat(tT, curlF.D)
 					.mulMat(tS.conjugate_transpose(curlF.D), curlF.D)
 					.trace()
