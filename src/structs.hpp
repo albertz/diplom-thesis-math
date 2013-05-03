@@ -162,7 +162,7 @@ inline std::ostream& operator<<(std::ostream& os, const M2T& m) {
 struct ElemOfCurlO {
 	// We represent `b = b1 + b2 (D + \sqrt{D})/2`.
 	Int b1, b2;
-	ElemOfCurlO() : b1(0), b2(0) {}
+	ElemOfCurlO(Int _b1 = 0, Int _b2 = 0) : b1(_b1), b2(_b2) {}
 	ElemOfCurlO conjugate(const int D) const {
 		ElemOfCurlO res;
 		res.b1 = b1 + b2 * D;
@@ -186,6 +186,14 @@ struct ElemOfCurlO {
 
 struct M2_O {
 	ElemOfCurlO a,b,c,d;
+	M2_O(ElemOfCurlO _a = 0, ElemOfCurlO _b = 0, ElemOfCurlO _c = 0, ElemOfCurlO _d = 0)
+	: a(_a), b(_b), c(_c), d(_d) {}
+	M2_O(const M2T_O& m, const int D) {
+		a = m.a;
+		b = ElemOfCurlO(m.b1, m.b2);
+		c = b.conjugate(D);
+		d = m.c;
+	}
 	M2_O conjugate_transpose(const int D) const {
 		M2_O res;
 		res.a = a.conjugate(D);
