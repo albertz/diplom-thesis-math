@@ -291,8 +291,9 @@ struct ReductionMatrices_Calc {
 					M2_Odual_from_M2T_Odual(T, curlF.D)
 					.mulMat(tT, curlF.D)
 					.mulMat(tS.conjugate_transpose(curlF.D), curlF.D)
-					.trace();
-				matrix[matrixIndex] += factor.asInt(curlF.D) * value;
+					.trace()
+					.asInt(curlF.D);
+				matrix[matrixIndex] += factor * value;
 			}
 		}
 	}
