@@ -169,7 +169,7 @@ struct ElemOfCurlO {
 		res.b2 = -b2;
 		return res;
 	}
-	ElemOfCurlO add(const ElemOfCurlO& other) const {
+	ElemOfCurlO operator+(const ElemOfCurlO& other) const {
 		ElemOfCurlO res;
 		res.b1 = b1 + other.b1;
 		res.b2 = b2 + other.b2;
@@ -184,36 +184,89 @@ struct ElemOfCurlO {
 	}
 };
 
-struct M2_O {
-	ElemOfCurlO a,b,c,d;
-	M2_O(ElemOfCurlO _a = 0, ElemOfCurlO _b = 0, ElemOfCurlO _c = 0, ElemOfCurlO _d = 0)
-	: a(_a), b(_b), c(_c), d(_d) {}
-	M2_O(const M2T_O& m, const int D) {
-		a = m.a;
-		b = ElemOfCurlO(m.b1, m.b2);
-		c = b.conjugate(D);
-		d = m.c;
+struct ElemOfCurlOdual {
+	// We represent `b = b1 / \sqrt{D} + b2 (1 + \sqrt{D})/2`.
+	Int b1, b2;
+	ElemOfCurlOdual(Int _b1 = 0, Int _b2 = 0) : b1(_b1), b2(_b2) {}
+	ElemOfCurlOdual conjugate(const int D) const {
+		ElemOfCurlOdual res;
+		res.b1 = -b1 - b2 * D;
+		res.b2 = b2;
+		return res;
 	}
-	M2_O conjugate_transpose(const int D) const {
-		M2_O res;
+	ElemOfCurlOdual operator+(const ElemOfCurlOdual& other) const {
+		ElemOfCurlOdual res;
+		res.b1 = b1 + other.b1;
+		res.b2 = b2 + other.b2;
+		return res;
+	}
+	ElemOfCurlOdual mul(const ElemOfCurlO& other, const int D) const {
+		DOMAIN_CHECK(Mod(D - D*D, 4) == 0);
+		ElemOfCurlOdual res;
+		res.b1 = b1 * other.b1 + b2 * other.b2 * Div(D - D*D, 4);
+		res.b2 = b1 * other.b2 + b2 * other.b1 + b2 * other.b2 * D;
+		return res;
+	}
+	Int asInt(const int D) const {
+		DOMAIN_CHECK(2 * b1 == -b2 * D); // must be in \RR
+		DOMAIN_CHECK(Mod(b2, 2) == 0); // and in \ZZ
+		return Div(b2, 2);
+	}
+};
+
+
+
+
+template<typename ElemType>
+struct _M2_withD {
+	ElemType a,b,c,d; // [[a,b],[c,d]]
+	_M2_withD(ElemType _a = 0, ElemType _b = 0, ElemType _c = 0, ElemType _d = 0)
+	: a(_a), b(_b), c(_c), d(_d) {}
+	_M2_withD conjugate_transpose(const int D) const {
+		_M2_withD res;
 		res.a = a.conjugate(D);
 		res.b = c.conjugate(D);
 		res.c = b.conjugate(D);
 		res.d = d.conjugate(D);
 		return res;
 	}
-	M2_O mul(const M2T& other, const int D) const {
-		M2_O res;
+	template<typename OtherMatrixType>
+	_M2_withD mulMat(const OtherMatrixType& other, const int D) const {
+		_M2_withD res;
 		res.a = a.mul(other.a, D) + b.mul(other.c, D);
 		res.b = a.mul(other.b, D) + b.mul(other.d, D);
 		res.c = c.mul(other.a, D) + d.mul(other.c, D);
 		res.d = c.mul(other.b, D) + d.mul(other.d, D);
 		return res;
 	}
-	ElemOfCurlO trace() const {
-		return a.add(c);
+	ElemType trace() const {
+		return a + c;
 	}
 };
+
+typedef _M2_withD<ElemOfCurlO> M2_O;
+typedef _M2_withD<ElemOfCurlOdual> M2_Odual;
+
+static inline M2_O M2_O_from_M2T_O(const M2T_O& m, const int D) {
+	M2_O res;
+	res.a = m.a;
+	res.b = ElemOfCurlO(m.b1, m.b2);
+	res.c = res.b.conjugate(D);
+	res.d = m.c;
+	return res;
+}
+
+static inline M2_Odual M2_Odual_from_M2T_Odual(const M2T_Odual& m, const int D) {
+	M2_Odual res;
+	res.a = m.a;
+	res.b = ElemOfCurlOdual(m.b1, m.b2);
+	res.c = res.b.conjugate(D);
+	res.d = m.c;
+	return res;
+}
+
+
+
 
 template<typename T>
 struct Matrix2 {

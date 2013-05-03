@@ -259,7 +259,7 @@ struct ReductionMatrices_Calc {
 
 	// R is not in \Sp_2 and tU != tS^*^-1 because we might have
 	// multiplied the whole matrix to have it all in \curlO.
-	void calcMatrixTranslated(const M2T_O& tS, const M2T_O& tT) {
+	void calcMatrixTranslated(const M2_O& tS, const M2_O& tT) {
 		matrixRowCount = 0;
 		LOGIC_CHECK(curlS.size() > 0);
 		for(ElemOfS S : curlS) {
@@ -287,8 +287,12 @@ struct ReductionMatrices_Calc {
 				size_t matrixIndex = row * matrixColumnCount + column;
 				auto value = reduced.character.value(D, -HermWeight);
 				// factor = tr(T tT tS^*)
-				auto factor = 1;
-				matrix[matrixIndex] += factor * value;
+				auto factor =
+					M2_Odual_from_M2T_Odual(T, curlF.D)
+					.mulMat(tT, curlF.D)
+					.mulMat(tS.conjugate_transpose(curlF.D), curlF.D)
+					.trace();
+				matrix[matrixIndex] += factor.asInt(curlF.D) * value;
 			}
 		}
 	}
