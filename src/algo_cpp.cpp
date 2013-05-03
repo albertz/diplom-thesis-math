@@ -255,6 +255,8 @@ struct ReductionMatrices_Calc {
 	
 	// this calcs the matrix for the map f \mapsto (f|R)[S],
 	// where R = [[tS,tT;0,tU]] and tS,tT,tU \in M2T_O.
+	// (a|R_i)[S](n) = det((tS)^{-1}^{*})^{-k} * \sum_{T, tr(T * tS * S * tS^{*}) = n} a(T) * e^{\pi i tr(T * tT * tS^{*})}
+
 	// R is not in \Sp_2 and tU != tS^*^-1 because we might have
 	// multiplied the whole matrix to have it all in \curlO.
 	void calcMatrixTranslated(const M2T_O& tS, const M2T_O& tT) {
@@ -283,7 +285,10 @@ struct ReductionMatrices_Calc {
 				rowStart += calcPrecisionDimension(curlF, S);
 				if(row >= rowStart) continue;
 				size_t matrixIndex = row * matrixColumnCount + column;
-				matrix[matrixIndex] += reduced.character.value(D, -HermWeight);
+				auto value = reduced.character.value(D, -HermWeight);
+				// factor = tr(T tT tS^*)
+				auto factor = 1;
+				matrix[matrixIndex] += factor * value;
 			}
 		}
 	}
