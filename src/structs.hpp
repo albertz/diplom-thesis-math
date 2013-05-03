@@ -140,7 +140,7 @@ struct M2T_O {
 	Int det(const int D) {
 		return a*c - absBsquare(D);
 	}
-	Int gcd() const { return ::gcd(a, b1, b2, c); }
+	Int gcd() const { return ::gcd(a, b1, b2, c); }	
 };
 inline std::ostream& operator<<(std::ostream& os, const M2T_O& m) {
 	return os << "M2T_O(" << m.a << "," << m.b1 << "," << m.b2 << "," << m.c << ")";
@@ -158,6 +158,45 @@ inline std::ostream& operator<<(std::ostream& os, const M2T& m) {
 	return os << "M2T(" << m.a << "," << m.b << "," << m.c << ")";
 }
 
+
+struct ElemOfCurlO {
+	// We represent `b = b1 + b2 (D + \sqrt{D})/2`.
+	Int b1, b2;
+	ElemOfCurlO() : b1(0), b2(0) {}
+	ElemOfCurlO conjugate(const int D) const {
+		ElemOfCurlO res;
+		res.b1 = b1 + b2 * D;
+		res.b2 = -b2;
+		return res;
+	}
+	ElemOfCurlO mul(const ElemOfCurlO& other, const int D) const {
+		DOMAIN_CHECK(Mod(D*D*3+D, 4) == 0);
+		ElemOfCurlO res;
+		res.b1 = b1 * other.b1 + b2 * other.b2 * Div(D*D*3 + D, 4);
+		res.b2 = b1 * other.b2 + b2 * other.b1 - D * b2 * other.b2;
+		return res;
+	}
+};
+
+struct M2_O {
+	ElemOfCurlO a,b,c,d;
+	M2_O conjugate_transpose(const int D) const {
+		M2_O res;
+		res.a = a.conjugate(D);
+		res.b = c.conjugate(D);
+		res.c = b.conjugate(D);
+		res.d = d.conjugate(D);
+		return res;
+	}
+	M2_O mul(const M2T& other, const int D) const {
+		M2_O res;
+		res.a = a.mul(other.a, D) + b.mul(other.c, D);
+		res.b = a.mul(other.b, D) + b.mul(other.d, D);
+		res.c = c.mul(other.a, D) + d.mul(other.c, D);
+		res.d = c.mul(other.b, D) + d.mul(other.d, D);
+		return res;
+	}
+};
 
 template<typename T>
 struct Matrix2 {
