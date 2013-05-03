@@ -169,6 +169,12 @@ struct ElemOfCurlO {
 		res.b2 = -b2;
 		return res;
 	}
+	ElemOfCurlO add(const ElemOfCurlO& other) const {
+		ElemOfCurlO res;
+		res.b1 = b1 + other.b1;
+		res.b2 = b2 + other.b2;
+		return res;
+	}
 	ElemOfCurlO mul(const ElemOfCurlO& other, const int D) const {
 		DOMAIN_CHECK(Mod(D*D*3+D, 4) == 0);
 		ElemOfCurlO res;
@@ -195,6 +201,9 @@ struct M2_O {
 		res.c = c.mul(other.a, D) + d.mul(other.c, D);
 		res.d = c.mul(other.b, D) + d.mul(other.d, D);
 		return res;
+	}
+	ElemOfCurlO trace() const {
+		return a.add(c);
 	}
 };
 
