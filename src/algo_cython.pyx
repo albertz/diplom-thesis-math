@@ -5,7 +5,6 @@ include "stdsage.pxi"
 include "cdefs.pxi"
 
 from sage.functions.other import sqrt as ssqrt
-from sage.all import CC
 from sage.rings.integer_ring import ZZ
 from sage.matrix.matrix_space import MatrixSpace
 from sage.matrix.matrix_integer_dense cimport Matrix_integer_dense
