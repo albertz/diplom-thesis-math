@@ -285,7 +285,7 @@ struct ReductionMatrices_Calc {
 		
 		matrixTrans.clear();
 		matrixSizeTrans = matrixRowCount * matrixColumnCount;
-		matrixTrans.resize(matrixSizeTrans * l);
+		matrixTrans.resize(matrixSizeTrans * l*l);
 		
 		// reduce_GL is expensive, thus we iterate through curlF only once.
 		for(ElemOfF T : curlF) {
