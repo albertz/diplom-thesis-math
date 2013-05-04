@@ -270,22 +270,26 @@ struct ReductionMatrices_Calc {
 	// so that they are in \curlO.
 	// Note that the right part are elements of the CyclomoticField(l*l).
 	std::vector<ValueOfA> matrixTrans; // flat. format: [[[0]*ColumnCount]*RowCount]*ZetaOrder
-	size_t matrixSizeTrans, matrixRowCountTrans, matrixColumnCountTrans;
+	size_t matrixRowCountTrans, matrixColumnCountTrans, matrixCountTrans;
+	size_t matrixRowDenomTrans;
 	void calcMatrixTranslated(const M2_O& tS, const M2_O& tT, const Int l) {
 		using namespace std;
+		
+		matrixColumnCountTrans = matrixColumnCount;
+		LOGIC_CHECK(matrixColumnCountTrans > 0);
 		
 		matrixRowCountTrans = 0;
 		LOGIC_CHECK(curlS.size() > 0);
 		for(ElemOfS S : curlS) {
 			matrixRowCountTrans += calcPrecisionDimension(curlF, S);
 		}
-		
-		LOGIC_CHECK(reducedCurlFList.size() > 0);
-		LOGIC_CHECK(reducedCurlFList.size() == matrixColumnCount);
+
+		matrixRowDenomTrans = l * l;
+		matrixRowCountTrans *= matrixRowDenomTrans;
 		
 		matrixTrans.clear();
-		matrixSizeTrans = matrixRowCount * matrixColumnCount;
-		matrixTrans.resize(matrixSizeTrans * l*l);
+		matrixCountTrans = l * l;
+		matrixTrans.resize(matrixRowCountTrans * matrixColumnCountTrans * matrixCountTrans);
 		
 		// reduce_GL is expensive, thus we iterate through curlF only once.
 		for(ElemOfF T : curlF) {
@@ -306,9 +310,8 @@ struct ReductionMatrices_Calc {
 					.asInt(D);
 				cout << "traceNum=" << traceNum << ", l=" << l << endl;
 				LOGIC_CHECK(Mod(traceNum, l*l) == 0);
-				traceNum /= l*l;
-				size_t row = rowStart + traceNum;
-				rowStart += calcPrecisionDimension(curlF, S);
+				size_t row = rowStart + traceNum * matrixRowDenomTrans;
+				rowStart += calcPrecisionDimension(curlF, S) * matrixRowDenomTrans;
 				if(row >= rowStart) continue;
 				size_t matrixIndex = row * matrixColumnCount + column;
 				auto a_T = reduced.character.value(D, -HermWeight);
@@ -320,9 +323,17 @@ struct ReductionMatrices_Calc {
 					.trace()
 					.asInt(D);
 				factor_exp = Mod(factor_exp, l*l);
-				matrixIndex += factor_exp * matrixSizeTrans;
+				matrixIndex += factor_exp * matrixRowCountTrans * matrixColumnCountTrans;
 				matrix[matrixIndex] += a_T;
 			}
+		}
+	}
+	
+	void getMatrixTrans(mpz_t* out, int matrixIndex) {
+		LOGIC_CHECK(matrixIndex >= 0 && matrixIndex < matrixCountTrans);
+		for(size_t i = 0; i < matrixColumnCountTrans * matrixRowCountTrans; ++i) {
+			mpz_set_si((mpz_ptr)out, matrixTrans[matrixIndex * matrixRowCountTrans * matrixColumnCountTrans + i]);
+			++out;
 		}
 	}
 	

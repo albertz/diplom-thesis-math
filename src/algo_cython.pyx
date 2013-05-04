@@ -13,6 +13,14 @@ from sage.matrix.matrix_integer_dense import Matrix_integer_dense
 
 cdef extern from "algo_cpp.cpp":
 	void test_algo()
+	cdef cppclass ElemOfCurlO:
+		int b1,b2
+	cdef cppclass ElemOfCurlOdual:
+		int b1,b2
+	cdef cppclass M2_O:
+		ElemOfCurlO a,b,c,d
+	cdef cppclass M2_Odual:
+		ElemOfCurlOdual a,b,c,d
 	cdef cppclass M2T_O:
 		int a,b1,b2,c
 	cdef cppclass CurlS_Generator:
@@ -25,20 +33,29 @@ cdef extern from "algo_cpp.cpp":
 		void init(int D, int HermWeight) except +
 		PrecisionF curlF
 		CurlS_Generator curlS
-		size_t matrixRowCount, matrixColumnCount
 		void calcReducedCurlF() except +
+
 		void calcMatrix() except +
+		size_t matrixRowCount, matrixColumnCount
 		void getMatrix(mpz_t* out)
+
+		void calcMatrixTranslated(const M2_O& tS, const M2_O& tT, const int l) except +
+		size_t matrixRowCountTrans, matrixColumnCountTrans, matrixCountTrans;
+		size_t matrixRowDenomTrans;
+		void getMatrixTrans(mpz_t* out, int matrixIndex)
 
 def test():
 	test_algo()
 
-cdef M2T_O_matrix(M2T_O m, int D):
+cdef M2T_O_fromC(M2T_O m, int D):
 	"""
 	:rtype : Matrix_symbolic_dense
 	"""
 	b = m.b1 + m.b2 * (D + ssqrt(D)) * 0.5
 	return matrix(2, 2, [m.a, b, b.conjugate(), m.c])
+
+def M2T_O_toC(m, int D):
+	pass
 
 cdef class Calc:
 	# You need a recent Cython (e.g. >=0.19) for this.
@@ -57,7 +74,7 @@ cdef class Calc:
 		:rtype : Matrix_symbolic_dense
 		"""
 		cdef M2T_O m = self.calc.curlS.getNextS()
-		return M2T_O_matrix(m, self.D)
+		return M2T_O_fromC(m, self.D)
 	def curlS_clearMatrices(self):
 		self.calc.curlS.clearMatrices()
 	def calcReducedCurlF(self):
@@ -65,14 +82,15 @@ cdef class Calc:
 		self.calc.calcReducedCurlF()
 		self.matrixColumnCount = self.calc.matrixColumnCount
 	def calcMatrix(self):
-		if self.D == 0: raise RuntimeError, "you have to call init first"
-		self.calc.calcMatrix()
-	def getMatrix(self):
 		"""
 		:rtype : Matrix_integer_dense
 		"""
+		if self.D == 0: raise RuntimeError, "you have to call init first"
+		self.calc.calcMatrix()
 		M = MatrixSpace(ZZ, self.calc.matrixRowCount, self.calc.matrixColumnCount)
 		cdef Matrix_integer_dense m = M.zero_matrix().__copy__()
 		self.calc.getMatrix(m._entries)
 		return m
-
+	def calcMatrixTrans(self, tS, tT):
+		cdef M2_O _tS
+		cdef M2_O _tT

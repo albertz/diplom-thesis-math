@@ -213,8 +213,7 @@ def modform(D, HermWeight, B_cF=10):
 		# Note that calcMatrix() depends on the current internal calc.curlS set
 		# and on the internal calc.curlF. curlF only depends on B_cF which is not changed here.
 		verbose("calc restriction matrix...")
-		calc.calcMatrix()
-		M_S = calc.getMatrix() # matrix over integer ring
+		M_S = calc.calcMatrix() # matrix over integer ring
 		M_S = M_S.matrix_over_field() # matrix over rational field
 
 		precLimit = M_S.nrows() # \cF(S)
