@@ -167,27 +167,19 @@ def solveR(M, S):
 	return gamma, R, tM
 
 def test_solveR():
-	a=2
-	b=c=d=1
-	s=5
-	t=I
-	u=1
+	a,b,c,d = 2,1,1,1
+	s,t,u = 5,I,1
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S)
 
-	a=0
-	b=-1
-	c=1
-	d=0
-	s=1
-	t=0
-	u=2
+	a,b,c,d = 0,-1,1,0
+	s,t,u = 1,0,2
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S)
 
-	a,b,c,d=1,0,2,1
+	a,b,c,d = 1,0,2,1
 	s,t,u = 1,0,4
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
