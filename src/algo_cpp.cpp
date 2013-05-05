@@ -288,7 +288,7 @@ struct ReductionMatrices_Calc {
 	
 		// TODO: WARNING: All the stuff about matrixRowDenomTrans and trace (below) has to be studied and worked out.
 		matrixRowDenomTrans = l * l;
-		//matrixRowCountTrans *= matrixRowDenomTrans;
+		matrixRowCountTrans *= matrixRowDenomTrans;
 		
 		matrixTrans.clear();
 		matrixCountTrans = l * l;
@@ -319,9 +319,8 @@ struct ReductionMatrices_Calc {
 					.trace()
 					.asInt(D);
 				//cout << "traceNum=" << traceNum << ", T_M2=" << T_M2 << ", S_M2 = " << S_M2 << endl;
-				LOGIC_CHECK(Mod(traceNum, l*l) == 0);
-				size_t row = rowStart + traceNum / matrixRowDenomTrans;
-				rowStart += calcPrecisionDimension(curlF, S); //* matrixRowDenomTrans;
+				size_t row = rowStart + traceNum;
+				rowStart += calcPrecisionDimension(curlF, S) * matrixRowDenomTrans;
 				if(row >= rowStart) continue;
 				size_t matrixIndex = row * matrixColumnCount + column;
 				auto a_T = reduced.character.value(D, -HermWeight);
