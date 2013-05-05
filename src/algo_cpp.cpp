@@ -272,7 +272,7 @@ struct ReductionMatrices_Calc {
 	std::vector<ValueOfA> matrixTrans; // flat. format: [[[0]*ColumnCount]*RowCount]*ZetaOrder
 	size_t matrixRowCountTrans, matrixColumnCountTrans, matrixCountTrans;
 	size_t matrixRowDenomTrans;
-	void calcMatrixTranslated(const M2_O& tS, const M2_O& tT, const Int l) {
+	void calcMatrixTrans(const M2_O& tS, const M2_O& tT, const Int l) {
 		using namespace std;
 		
 		matrixColumnCountTrans = matrixColumnCount;
