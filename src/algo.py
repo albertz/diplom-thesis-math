@@ -330,10 +330,36 @@ def modform(D, HermWeight, B_cF=10):
 				# g in ModularForms(l, 2 k), M = [[a,b;c,d]] the cusp representation with c = M \infty.
 				# this calculates f|M
 				f_M_denom, f_M = ce.expansion_at(M, g_inbase)
+				print (f_M_denom, f_M)
 
-				print (f, f_M_denom, f_M)
+				f_R = reduceMatTrans * f
+				print f_R
 
+				assert reduceMatTransDenom % f_M_denom == 0, "{0}".format((f_M_denom, reduceMatTransDenom))
+				assert len(f_M) * reduceMatTransDenom / f_M_denom <= len(f_R)
 
+				def check_equal():
+					factor = None
+					for idx in range(len(f_M) * reduceMatTransDenom / f_M_denom):
+						f_R_i = f_R[idx]
+						if idx % (reduceMatTransDenom / f_M_denom) == 0:
+							f_M_i = f_M[idx * f_M_denom / reduceMatTransDenom]
+							if f_M_i == 0 and f_R_i == 0: continue
+							if f_M_i == 0: return False
+							if f_R_i == 0: return False
+							if factor is None:
+								factor = f_R_i / f_M_i
+								assert factor * f_M_i == f_R_i
+								print "factor =", factor
+							f_M_i *= factor
+							if f_R_i != f_M_i: return False
+						else:
+							if f_R_i != 0: return False
+					return True
+				if not check_equal():
+					print "not equal"
+				else:
+					print "equal"
 
 		# Step 5. dimension check
 		if dim == current_dimension:
