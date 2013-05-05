@@ -184,7 +184,10 @@ struct ElemOfCurlO {
 	}
 };
 inline std::ostream& operator<<(std::ostream& os, const ElemOfCurlO& m) {
-	return os << "ElemOfCurlO(" << m.b1 << "," << m.b2 << ")";
+	if(m.b1) os << m.b1;
+	if(m.b1 && m.b2) os << "+";
+	if(m.b2) os << m.b2 << "(D+sqrt(D))/2";
+	return os;
 }
 
 struct ElemOfCurlOdual {
