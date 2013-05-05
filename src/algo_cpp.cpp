@@ -274,6 +274,7 @@ struct ReductionMatrices_Calc {
 	size_t matrixRowDenomTrans;
 	void calcMatrixTrans(const M2_O& tS, const M2_O& tT, const Int l) {
 		using namespace std;
+		cout << "calcMatrixTrans: tS = " << tS << ", tT = " << tT << ", l = " << l << endl;
 		
 		matrixColumnCountTrans = matrixColumnCount;
 		LOGIC_CHECK(matrixColumnCountTrans > 0);

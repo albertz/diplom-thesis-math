@@ -183,6 +183,9 @@ struct ElemOfCurlO {
 		return res;
 	}
 };
+inline std::ostream& operator<<(std::ostream& os, const ElemOfCurlO& m) {
+	return os << "ElemOfCurlO(" << m.b1 << "," << m.b2 << ")";
+}
 
 struct ElemOfCurlOdual {
 	// We represent `b = b1 / \sqrt{D} + b2 (1 + \sqrt{D})/2`.
@@ -213,6 +216,9 @@ struct ElemOfCurlOdual {
 		return Div(b2, 2);
 	}
 };
+inline std::ostream& operator<<(std::ostream& os, const ElemOfCurlOdual& m) {
+	return os << "ElemOfCurlOdual(" << m.b1 << "," << m.b2 << ")";
+}
 
 
 
@@ -243,6 +249,10 @@ struct _M2_withD {
 		return a + c;
 	}
 };
+template<typename ElemType>
+std::ostream& operator<<(std::ostream& os, const _M2_withD<ElemType>& m) {
+	return os << "M2(" << m.a << "," << m.b << "," << m.c << "," << m.d << ")";
+}
 
 typedef _M2_withD<ElemOfCurlO> M2_O;
 typedef _M2_withD<ElemOfCurlOdual> M2_Odual;
