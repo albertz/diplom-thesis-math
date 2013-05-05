@@ -302,6 +302,11 @@ struct ReductionMatrices_Calc {
 			for(ElemOfS S : curlS) {
 				M2_O S_M2 = M2_O_from_M2T_O(S, D);
 				// n = tr(T tS S tS^*)
+				auto t1 = T_M2.mulMat(tS, D);
+				auto t2 = t1.mulMat(S_M2, D);
+				auto _t3 = tS.conjugate_transpose(D);
+				auto t3 = t2.mulMat(_t3, D);
+				auto t4 = t3.trace();
 				Int traceNum =
 					T_M2
 					.mulMat(tS, D)
@@ -309,7 +314,7 @@ struct ReductionMatrices_Calc {
 					.mulMat(tS.conjugate_transpose(D), D)
 					.trace()
 					.asInt(D);
-				cout << "traceNum=" << traceNum << ", T_M2=" << T_M2 << ", S_M2 = " << S_M2 << ", trace(T_M2 * tS * S_M2 * tS^*) = " << T_M2.mulMat(tS, D).mulMat(S_M2, D).mulMat(tS.conjugate_transpose(D), D).trace() << endl;
+				cout << "traceNum=" << traceNum << ", T_M2=" << T_M2 << ", S_M2 = " << S_M2 << endl;
 				LOGIC_CHECK(Mod(traceNum, l*l) == 0);
 				size_t row = rowStart + traceNum * matrixRowDenomTrans;
 				rowStart += calcPrecisionDimension(curlF, S) * matrixRowDenomTrans;
