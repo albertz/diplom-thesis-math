@@ -104,8 +104,10 @@ def solveR(M, S):
 	J = make4x4matrix_embed(0,0,-1,-1,1,1,0,0)
 	assert tM1.conjugate_transpose() * J * tM1 == J
 	l = C1.denominator()
-	Cg11 = C1[0][0] * l / gcd(A1[0][0] * l, C1[0][0] * l)
-	Dg11 = -A1[0][0] * l / gcd(A1[0][0] * l, C1[0][0] * l)
+	d = gcd(A1[0][0] * l, C1[0][0] * l)
+	if not d: d = 1
+	Cg11 = C1[0][0] * l / d
+	Dg11 = -A1[0][0] * l / d
 	d,Ag11,Bg11 = xgcd(Dg11, -Cg11)
 	assert d == 1
 	Dg14 = Ag14 = 0
@@ -116,8 +118,10 @@ def solveR(M, S):
 	assert tM2[2][0] == 0
 	assert tM2[3][0] == 0
 	c22,c24 = tM2[2][1],tM2[3][1]
-	Dg23 = c24 / gcd(c22,c24)
-	Dg24 = -c22 / gcd(c22,c24)
+	d = gcd(c22,c24)
+	if not d: d = 1
+	Dg23 = c24 / d
+	Dg24 = -c22 / d
 	d,Dg21,Dg22 = xgcd(Dg24, -Dg23)
 	assert d == 1
 	Dg2 = matrix(Ring, 2,2, [Dg21,Dg22,Dg23,Dg24])
@@ -132,8 +136,10 @@ def solveR(M, S):
 	Cg34 = Bg34 = 0
 	Ag34 = Dg34 = 1
 	a32,c32 = tM3[0][1],tM3[2][1]
-	Cg31 = c32 / gcd(a32, c32)
-	Dg31 = -a32 / gcd(a32, c32)
+	d = gcd(a32, c32)
+	if not d: d = 1
+	Cg31 = c32 / d
+	Dg31 = -a32 / d
 	d,Ag31,Bg31 = xgcd(Dg31, -Cg31)
 	assert d == 1
 	G3 = make4x4matrix_embed(Ag31,Ag34,Bg31,Bg34,Cg31,Cg34,Dg31,Dg34)
