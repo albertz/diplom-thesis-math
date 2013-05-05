@@ -127,6 +127,6 @@ cdef class Calc:
 		ms = [None] * self.matrixCountTrans
 		for i in range(self.matrixCountTrans):
 			m = M.zero_matrix().__copy__()
-			self.calc.getMatrix((<Matrix_integer_dense> m)._entries)
+			self.calc.getMatrixTrans((<Matrix_integer_dense> m)._entries, i)
 			ms[i] = m
 		return ms
