@@ -9,7 +9,7 @@ from sage.rings.integer import Integer
 from sage.rings.infinity import Infinity
 from sage.symbolic.all import I
 from sage.rings.arith import xgcd as orig_xgcd
-from sage.rings.number_field.number_field import QQ, ZZ
+from sage.rings.number_field.number_field import QQ, ZZ, CyclotomicField
 from sage.rings.power_series_ring import PowerSeriesRing
 from sage.symbolic.ring import SymbolicRing
 from sage.symbolic.expression import Expression
@@ -18,6 +18,11 @@ import algo_cython as C
 # via Martin. while this is not in Sage:
 import cusp_expansions
 
+
+
+# our own verbose function because I just want our msgs, not other stuff
+def verbose(msg):
+	print msg
 
 def reloadC():
 	"""
@@ -191,9 +196,23 @@ def test_solveR():
 
 	return gamma,R,tM
 
-# our own verbose function because I just want our msgs, not other stuff
-def verbose(msg):
-	print msg
+
+def calcMatrixTrans(calc, R, l):
+	tS = R.submatrix(0,0,2,2)
+	tT = R.submatrix(2,0,2,2)
+	ms = calc.calcMatrixTrans(tS * l, tT * l, l)
+
+	K = CyclotomicField(11)
+	zeta = K.gen()
+	#Kcoords = zeta.coordinates_in_terms_of_powers()
+	#Kcoord_matrix = matrix(ZZ, [Kcoords(zeta**l) for l in range(11)])
+
+	m = matrix(calc.matrixRowCountTrans, calc.matrixColumnCountTrans, 0)
+	for i in range(calc.matrixCountTrans):
+		m += ms[i] * (zeta ** i)
+
+	print  calc.matrixRowDenomTrans, m
+	return calc.matrixRowDenomTrans, m
 
 def modform(D, HermWeight, B_cF=10):
 	"Main algo"
@@ -297,14 +316,11 @@ def modform(D, HermWeight, B_cF=10):
 			except Exception:
 				print (M, S)
 				raise
-			tS = R.submatrix(0,0,2,2)
-			tT = R.submatrix(2,0,2,2)
 			try:
-				ms = calc.calcMatrixTrans(tS * l, tT * l, l)
+				reduceMatTransDenom, reduceMatTrans = calcMatrixTrans(calc, R, l)
 			except Exception:
-				print (S, tS * l, tT * l, l)
+				print (S, R * l, l)
 				raise
-			print ms
 
 			M = SL2Z(M)
 			for f in herm_modform_fe_expannsion_S_module.gens():
@@ -313,7 +329,7 @@ def modform(D, HermWeight, B_cF=10):
 				g_inbase = fe_expansion_matrix_l.solve_left(g)
 				# g in ModularForms(l, 2 k), M = [[a,b;c,d]] the cusp representation with c = M \infty.
 				# this calculates f|M
-				f_M = ce.expansion_at(M, g_inbase)
+				f_M_denom, f_M = ce.expansion_at(M, g_inbase)
 
 				print f_M
 
