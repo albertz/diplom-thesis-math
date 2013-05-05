@@ -274,7 +274,7 @@ struct ReductionMatrices_Calc {
 	size_t matrixRowDenomTrans;
 	void calcMatrixTrans(const M2_O& tS, const M2_O& tT, const Int l) {
 		using namespace std;
-		cout << "calcMatrixTrans: tS = " << tS << ", tT = " << tT << ", l = " << l << endl;
+		cout << "calcMatrixTrans: tS = " << tS << ", tT = " << tT << ", tS^* = " << tS.conjugate_transpose(D) << ", l = " << l << endl;
 		
 		matrixColumnCountTrans = matrixColumnCount;
 		LOGIC_CHECK(matrixColumnCountTrans > 0);
@@ -309,7 +309,7 @@ struct ReductionMatrices_Calc {
 					.mulMat(tS.conjugate_transpose(D), D)
 					.trace()
 					.asInt(D);
-				cout << "traceNum=" << traceNum << ", l=" << l << endl;
+				cout << "traceNum=" << traceNum << ", T_M2=" << T_M2 << ", " << endl;
 				LOGIC_CHECK(Mod(traceNum, l*l) == 0);
 				size_t row = rowStart + traceNum * matrixRowDenomTrans;
 				rowStart += calcPrecisionDimension(curlF, S) * matrixRowDenomTrans;
