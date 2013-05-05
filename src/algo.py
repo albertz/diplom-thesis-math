@@ -261,8 +261,14 @@ def modform(D, HermWeight, B_cF=10):
 				assert _div == 1
 				M = matrix(ZZ,2,2,[a,b,c,d])
 				del a,b,c,d
-			M = SL2Z(M)
 
+			gamma, R, tM = solveR(M, S)
+			tS = tM.submatrix(0,0,2,2)
+			tT = tM.submatrix(2,0,2,2)
+			ms = calc.calcMatrixTrans(tS * l, tT * l, l)
+			print ms
+
+			M = SL2Z(M)
 			for f in herm_modform_fe_expannsion_S_module.gens():
 				g = M_S * f
 				if g == 0: continue
