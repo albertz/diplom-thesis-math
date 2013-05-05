@@ -39,9 +39,9 @@ cdef extern from "algo_cpp.cpp":
 		size_t matrixRowCount, matrixColumnCount
 		void getMatrix(mpz_t* out)
 
-		void calcMatrixTrans(const M2_O& tS, const M2_O& tT, const int l) except +
-		size_t matrixRowCountTrans, matrixColumnCountTrans, matrixCountTrans;
-		size_t matrixRowDenomTrans;
+		void calcMatrixTrans(const M2_O& tS, const M2_O& tT, int l) except +
+		size_t matrixRowCountTrans, matrixColumnCountTrans, matrixCountTrans
+		size_t matrixRowDenomTrans
 		void getMatrixTrans(mpz_t* out, int matrixIndex) except +
 
 def test():
@@ -54,13 +54,13 @@ cdef M2T_O_fromC(M2T_O m, int D):
 	b = m.b1 + m.b2 * (D + ssqrt(D)) * 0.5
 	return matrix(2, 2, [m.a, b, b.conjugate(), m.c])
 
-cdef O_toC(a, int D):
+cdef ElemOfCurlO O_toC(a, int D):
 	cdef ElemOfCurlO b
 	b.b2 = ZZ(a.imag() * 2 / ssqrt(-D))
 	b.b1 = ZZ(a.real() - b.b2 * D / 2)
 	return b
 
-cdef M2_O_toC(m, int D):
+cdef M2_O M2_O_toC(m, int D):
 	assert m.nrows() == 2 and m.ncols() == 2
 	cdef M2_O _m
 	_m.a = O_toC(m[0][0], D)
@@ -111,13 +111,13 @@ cdef class Calc:
 		self.calc.getMatrix(m._entries)
 		return m
 
-	def calcMatrixTrans(self, tS, tT):
+	def calcMatrixTrans(self, tS, tT, l):
 		if self.D == 0: raise RuntimeError, "you have to call init first"
 		cdef M2_O _tS
 		cdef M2_O _tT
 		_tS = M2_O_toC(tS, self.D)
 		_tT = M2_O_toC(tT, self.D)
-		self.calc.calcMatrixTrans(_tS, _tT)
+		self.calc.calcMatrixTrans(_tS, _tT, l)
 		self.matrixRowCountTrans = self.calc.matrixRowCountTrans
 		self.matrixColumnCountTrans = self.calc.matrixColumnCountTrans
 		self.matrixCountTrans = self.calc.matrixCountTrans
@@ -126,7 +126,7 @@ cdef class Calc:
 		M = MatrixSpace(ZZ, self.calc.matrixRowCount, self.calc.matrixColumnCount)
 		ms = [None] * self.matrixCountTrans
 		for i in range(self.matrixCountTrans):
-			cdef Matrix_integer_dense m = M.zero_matrix().__copy__()
-			self.calc.getMatrix(m._entries)
+			m = M.zero_matrix().__copy__()
+			self.calc.getMatrix((<Matrix_integer_dense> m)._entries)
 			ms[i] = m
 		return ms
