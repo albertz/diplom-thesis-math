@@ -325,7 +325,7 @@ struct ReductionMatrices_Calc {
 					.asInt(D);
 				factor_exp = Mod(factor_exp, l*l);
 				matrixIndex += factor_exp * matrixRowCountTrans * matrixColumnCountTrans;
-				matrix[matrixIndex] += a_T;
+				matrixTrans[matrixIndex] += a_T;
 			}
 		}
 	}
