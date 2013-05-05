@@ -261,7 +261,7 @@ struct _M2_withD {
 		return res;
 	}
 	ElemType trace() const {
-		return a + c;
+		return a + d;
 	}
 };
 template<typename ElemType>
