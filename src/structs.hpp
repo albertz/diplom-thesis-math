@@ -194,11 +194,18 @@ inline std::ostream& operator<<(std::ostream& os, const ElemOfCurlO& m) {
 struct ElemOfCurlOdual {
 	// We represent `b = b1 / \sqrt{D} + b2 (1 + \sqrt{D})/2`.
 	Int b1, b2;
-	ElemOfCurlOdual(Int _b1 = 0, Int _b2 = 0) : b1(_b1), b2(_b2) {}
+	ElemOfCurlOdual() : b1(0), b2(0) {}
+	ElemOfCurlOdual(Int _b1, Int _b2) : b1(_b1), b2(_b2) {}
 	ElemOfCurlOdual conjugate(const int D) const {
 		ElemOfCurlOdual res;
 		res.b1 = -b1 - b2 * D;
 		res.b2 = b2;
+		return res;
+	}
+	static ElemOfCurlOdual fromInt(Int a, const int D) {
+		ElemOfCurlOdual res;
+		res.b1 = -a * D;
+		res.b2 = a * 2;
 		return res;
 	}
 	ElemOfCurlOdual operator+(const ElemOfCurlOdual& other) const {
@@ -234,7 +241,7 @@ inline std::ostream& operator<<(std::ostream& os, const ElemOfCurlOdual& m) {
 template<typename ElemType>
 struct _M2_withD {
 	ElemType a,b,c,d; // [[a,b],[c,d]]
-	_M2_withD(ElemType _a = 0, ElemType _b = 0, ElemType _c = 0, ElemType _d = 0)
+	_M2_withD(ElemType _a = ElemType(), ElemType _b = ElemType(), ElemType _c = ElemType(), ElemType _d = ElemType())
 	: a(_a), b(_b), c(_c), d(_d) {}
 	_M2_withD conjugate_transpose(const int D) const {
 		_M2_withD res;
@@ -276,10 +283,10 @@ static inline M2_O M2_O_from_M2T_O(const M2T_O& m, const int D) {
 
 static inline M2_Odual M2_Odual_from_M2T_Odual(const M2T_Odual& m, const int D) {
 	M2_Odual res;
-	res.a = m.a;
+	res.a = ElemOfCurlOdual::fromInt(m.a, D);
 	res.b = ElemOfCurlOdual(m.b1, m.b2);
 	res.c = res.b.conjugate(D);
-	res.d = m.c;
+	res.d = ElemOfCurlOdual::fromInt(m.c, D);
 	return res;
 }
 
