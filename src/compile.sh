@@ -16,6 +16,7 @@ cython \
 	-I $SageLocalIncludeDir \
 	-I $SageCLibIncludeDir \
 	-I $SageExtIncludeDir \
+	--line-directives \
 	--cplus \
 	algo_cython.pyx
 
@@ -30,11 +31,12 @@ c++ \
 	-I $SageLocalIncludeDir \
 	-I $SageCLibIncludeDir \
 	-I $SageExtIncludeDir \
+	-ggdb \
 	-c \
 	algo_cython.cpp
 
 if [ "$(uname)" == "Linux" ]; then
-c++ -shared algo_cython.o -lc -L $SageCLibDir -lcsage -o algo_cython.so
+c++ -shared algo_cython.o -ggdb -lc -L $SageCLibDir -lcsage -o algo_cython.so
 
 elif [ "$(uname)" == "Darwin" ]; then
 libtool -dynamic \
