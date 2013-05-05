@@ -320,10 +320,11 @@ def modform(D, HermWeight, B_cF=10):
 			except Exception:
 				print (S, R * l, l)
 				raise
-			print reduceMatTransDenom, reduceMatTrans
+			#print reduceMatTransDenom, reduceMatTrans
 
 			M = SL2Z(M)
-			for f in herm_modform_fe_expannsion_S_module.gens():
+			bad_gens = []
+			for f in herm_modform_fe_expannsion.gens():
 				g = M_S * f
 				if g == 0: continue
 				g_inbase = fe_expansion_matrix_l.solve_left(g)
@@ -357,14 +358,26 @@ def modform(D, HermWeight, B_cF=10):
 							if f_R_i != 0: return False
 					return True
 				if not check_equal():
-					print "not equal"
+					print "not equal:", reduceMatTransDenom, f_R, f_M_denom, f_M
+					bad_gens += [f]
 				else:
-					print "equal"
+					print "equal!"
 
-		# Step 5. dimension check
+			if bad_gens:
+				print "reducing dimensions by cusp info:", len(bad_gens), "(from %i)" % current_dimension
+				good_gens = [f for f in herm_modform_fe_expannsion.gens() if f not in bad_gens]
+				herm_modform_fe_expannsion = herm_modform_fe_expannsion.vector_space_span(good_gens)
+
+				current_dimension = herm_modform_fe_expannsion.dimension()
+				verbose("new current dimension: %i, wanted: %i" % (current_dimension, dim))
+				assert current_dimension >= dim
+
+				# Step 5. dimension check
+				if dim == current_dimension:
+					break
+
 		if dim == current_dimension:
 			break
-
 
 	# TODO:
 	# Otherwise, reconstruct fourier expansion.
