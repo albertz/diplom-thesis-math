@@ -297,8 +297,8 @@ def modform(D, HermWeight, B_cF=10):
 			except Exception:
 				print (M, S)
 				raise
-			tS = tM.submatrix(0,0,2,2)
-			tT = tM.submatrix(2,0,2,2)
+			tS = R.submatrix(0,0,2,2)
+			tT = R.submatrix(2,0,2,2)
 			try:
 				ms = calc.calcMatrixTrans(tS * l, tT * l, l)
 			except Exception:
