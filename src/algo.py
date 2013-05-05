@@ -187,6 +187,12 @@ def test_solveR():
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S)
 
+	a,b,c,d=1,0,2,1
+	s,t,u = 1,0,4
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S)
+
 	return gamma,R,tM
 
 # our own verbose function because I just want our msgs, not other stuff
