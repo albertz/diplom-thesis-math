@@ -207,11 +207,10 @@ def calcMatrixTrans(calc, R, l):
 	#Kcoords = zeta.coordinates_in_terms_of_powers()
 	#Kcoord_matrix = matrix(ZZ, [Kcoords(zeta**l) for l in range(11)])
 
-	m = matrix(calc.matrixRowCountTrans, calc.matrixColumnCountTrans, 0)
+	m = matrix(calc.matrixRowCountTrans, calc.matrixColumnCountTrans)
 	for i in range(calc.matrixCountTrans):
 		m += ms[i] * (zeta ** i)
 
-	print  calc.matrixRowDenomTrans, m
 	return calc.matrixRowDenomTrans, m
 
 def modform(D, HermWeight, B_cF=10):
@@ -321,6 +320,7 @@ def modform(D, HermWeight, B_cF=10):
 			except Exception:
 				print (S, R * l, l)
 				raise
+			print reduceMatTransDenom, reduceMatTrans
 
 			M = SL2Z(M)
 			for f in herm_modform_fe_expannsion_S_module.gens():
@@ -331,7 +331,7 @@ def modform(D, HermWeight, B_cF=10):
 				# this calculates f|M
 				f_M_denom, f_M = ce.expansion_at(M, g_inbase)
 
-				print f_M
+				print (f, f_M_denom, f_M)
 
 
 
