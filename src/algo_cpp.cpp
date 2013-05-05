@@ -319,7 +319,7 @@ struct ReductionMatrices_Calc {
 					.asInt(D);
 				//cout << "traceNum=" << traceNum << ", T_M2=" << T_M2 << ", S_M2 = " << S_M2 << endl;
 				LOGIC_CHECK(Mod(traceNum, l*l) == 0);
-				size_t row = rowStart + traceNum * matrixRowDenomTrans;
+				size_t row = rowStart + traceNum / matrixRowDenomTrans;
 				rowStart += calcPrecisionDimension(curlF, S) * matrixRowDenomTrans;
 				if(row >= rowStart) continue;
 				size_t matrixIndex = row * matrixColumnCount + column;
