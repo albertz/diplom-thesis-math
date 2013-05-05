@@ -112,6 +112,7 @@ def solveR(M, S):
 	if not d: d = 1
 	Cg11 = C1[0][0] * l / d
 	Dg11 = -A1[0][0] * l / d
+	del l, d
 	d,Ag11,Bg11 = xgcd(Dg11, -Cg11)
 	assert d == 1, "{0}".format(tM1)
 	Dg14 = Ag14 = 0
@@ -126,6 +127,7 @@ def solveR(M, S):
 	if not d: d = 1
 	Dg23 = c24 / d
 	Dg24 = -c22 / d
+	del d
 	d,Dg21,Dg22 = xgcd(Dg24, -Dg23)
 	if d == 0:
 		G2 = I4
@@ -146,10 +148,12 @@ def solveR(M, S):
 		Cg34 = Bg34 = 0
 		Ag34 = Dg34 = 1
 		a32,c32 = tM3[0][1],tM3[2][1]
-		d = gcd(a32, c32)
+		l = matrix(1,2,(a32,c32)).denominator()
+		d = gcd(a32 * l, c32 * l)
 		if not d: d = 1
-		Cg31 = c32 / d
-		Dg31 = -a32 / d
+		Cg31 = c32 * l / d
+		Dg31 = -a32 * l / d
+		del l, d
 		d,Ag31,Bg31 = xgcd(Dg31, -Cg31)
 		assert d == 1
 		G3 = make4x4matrix_embed(Ag31,Ag34,Bg31,Bg34,Cg31,Cg34,Dg31,Dg34)
