@@ -331,10 +331,10 @@ def modform(D, HermWeight, B_cF=10):
 				# g in ModularForms(l, 2 k), M = [[a,b;c,d]] the cusp representation with c = M \infty.
 				# this calculates f|M
 				f_M_denom, f_M = ce.expansion_at(M, g_inbase)
-				print (f_M_denom, f_M)
+				#print (f_M_denom, f_M)
 
 				f_R = reduceMatTrans * f
-				print f_R
+				#print f_R
 
 				assert reduceMatTransDenom % f_M_denom == 0, "{0}".format((f_M_denom, reduceMatTransDenom))
 				assert len(f_M) * reduceMatTransDenom / f_M_denom <= len(f_R)
@@ -351,7 +351,7 @@ def modform(D, HermWeight, B_cF=10):
 							if factor is None:
 								factor = f_R_i / f_M_i
 								assert factor * f_M_i == f_R_i
-								print "factor =", factor
+								#print "factor =", factor
 							f_M_i *= factor
 							if f_R_i != f_M_i: return False
 						else:
