@@ -80,7 +80,10 @@ def solveR(M, S):
 	assert M.nrows() == 2 and M.ncols() == 2
 	assert S[0][0] > 0 and S[1][1] > 0 and S.det() > 0, "S is not positive definite"
 	assert M.det() == 1, "M is not in \SL_2(\ZZ)"
-	Ring = S.base_ring()
+	#Ring = S.base_ring()
+	#print type(Ring), Ring
+	#Ring = SymbolicRing()
+	Ring = I.base_ring() # Symbolic Ring
 
 	A1 = matrix(Ring, 2,2, M[0][0])
 	B1 = M[0][1] * S
@@ -102,6 +105,7 @@ def solveR(M, S):
 			[0,c4,0,d4]
 		)
 	J = make4x4matrix_embed(0,0,-1,-1,1,1,0,0)
+	I4 = make4x4matrix_embed(1,1,0,0,0,0,1,1)
 	assert tM1.conjugate_transpose() * J * tM1 == J
 	l = C1.denominator()
 	d = gcd(A1[0][0] * l, C1[0][0] * l)
@@ -109,7 +113,7 @@ def solveR(M, S):
 	Cg11 = C1[0][0] * l / d
 	Dg11 = -A1[0][0] * l / d
 	d,Ag11,Bg11 = xgcd(Dg11, -Cg11)
-	assert d == 1
+	assert d == 1, "{0}".format(tM1)
 	Dg14 = Ag14 = 0
 	Bg14 = 1
 	Cg14 = -1
@@ -123,26 +127,32 @@ def solveR(M, S):
 	Dg23 = c24 / d
 	Dg24 = -c22 / d
 	d,Dg21,Dg22 = xgcd(Dg24, -Dg23)
-	assert d == 1
-	Dg2 = matrix(Ring, 2,2, [Dg21,Dg22,Dg23,Dg24])
-	assert Dg2.det() == 1
-	Ag2 = Dg2.conjugate_transpose().inverse()
-	G2 = make4x4matrix(Ag2,matrix(Ring,2,2,0),matrix(Ring,2,2,0),Dg2)
+	if d == 0:
+		G2 = I4
+	else:
+		assert d == 1, "{0}".format(tM2)
+		Dg2 = matrix(Ring, 2,2, [Dg21,Dg22,Dg23,Dg24])
+		assert Dg2.det() == 1
+		Ag2 = Dg2.conjugate_transpose().inverse()
+		G2 = make4x4matrix(Ag2,matrix(Ring,2,2,0),matrix(Ring,2,2,0),Dg2)
 	tM3 = G2 * tM2
 	assert tM3[2][0] == 0
 	assert tM3[3][0] == 0
 	assert tM3[3][1] == 0
-	assert tM3[0][0] == 0 # a_3,1 in our proof
-	Cg34 = Bg34 = 0
-	Ag34 = Dg34 = 1
-	a32,c32 = tM3[0][1],tM3[2][1]
-	d = gcd(a32, c32)
-	if not d: d = 1
-	Cg31 = c32 / d
-	Dg31 = -a32 / d
-	d,Ag31,Bg31 = xgcd(Dg31, -Cg31)
-	assert d == 1
-	G3 = make4x4matrix_embed(Ag31,Ag34,Bg31,Bg34,Cg31,Cg34,Dg31,Dg34)
+	if tM3[2][1] == 0:
+		G3 = I4
+	else:
+		assert tM3[0][0] == 0 # a_3,1 in our proof
+		Cg34 = Bg34 = 0
+		Ag34 = Dg34 = 1
+		a32,c32 = tM3[0][1],tM3[2][1]
+		d = gcd(a32, c32)
+		if not d: d = 1
+		Cg31 = c32 / d
+		Dg31 = -a32 / d
+		d,Ag31,Bg31 = xgcd(Dg31, -Cg31)
+		assert d == 1
+		G3 = make4x4matrix_embed(Ag31,Ag34,Bg31,Bg34,Cg31,Cg34,Dg31,Dg34)
 	tM4 = G3 * tM3
 	assert tM4[2][0] == 0
 	assert tM4[2][1] == 0
@@ -165,6 +175,18 @@ def test_solveR():
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S)
+
+	a=0
+	b=-1
+	c=1
+	d=0
+	s=1
+	t=0
+	u=2
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S)
+
 	return gamma,R,tM
 
 # our own verbose function because I just want our msgs, not other stuff
@@ -268,7 +290,11 @@ def modform(D, HermWeight, B_cF=10):
 				M = matrix(ZZ,2,2,[a,b,c,d])
 				del a,b,c,d
 
-			gamma, R, tM = solveR(M, S)
+			try:
+				gamma, R, tM = solveR(M, S)
+			except:
+				print repr((M, S))
+				raise
 			tS = tM.submatrix(0,0,2,2)
 			tT = tM.submatrix(2,0,2,2)
 			ms = calc.calcMatrixTrans(tS * l, tT * l, l)
