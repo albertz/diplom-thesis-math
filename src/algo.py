@@ -294,12 +294,16 @@ def modform(D, HermWeight, B_cF=10):
 
 			try:
 				gamma, R, tM = solveR(M, S)
-			except:
-				print repr((M, S))
+			except Exception:
+				print (M, S)
 				raise
 			tS = tM.submatrix(0,0,2,2)
 			tT = tM.submatrix(2,0,2,2)
-			ms = calc.calcMatrixTrans(tS * l, tT * l, l)
+			try:
+				ms = calc.calcMatrixTrans(tS * l, tT * l, l)
+			except Exception:
+				print (S, tS * l, tT * l, l)
+				raise
 			print ms
 
 			M = SL2Z(M)
