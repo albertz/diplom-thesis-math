@@ -397,24 +397,37 @@ void test_algo_calcReducedCurlF() {
 
 void test_algo() {
 	using namespace std;
-	ReductionMatrices_Calc calc;
-	calc.init(-4, 10);
-	calc.curlF.B = 20;
-	calc.calcReducedCurlF();
-	calc.curlS.getNextS();
-	calc.curlS.getNextS();
 	
 	{
-		Timer timer("calcMatrix");
-		calc.calcMatrix();
+		ReductionMatrices_Calc calc;
+		calc.init(-4, 10);
+		calc.curlF.B = 20;
+		calc.calcReducedCurlF();
+		calc.curlS.getNextS();
+		calc.curlS.getNextS();
+		
+		{
+			Timer timer("calcMatrix");
+			calc.calcMatrix();
+		}
+		{
+			size_t c = 0;
+			for(ElemOfF T : calc.curlF) { ++c; (void)T; }
+			cout << "size of curlF: " << c << endl;
+		}
+		cout << "size of reducedMatrix(curlF): " << calc.reducedCurlFList.size() << endl;
+		cout << "size of matrix: " << calc.matrix.size() << endl;
+		//calc.dumpMatrix();
 	}
+
 	{
-		size_t c = 0;
-		for(ElemOfF T : calc.curlF) { ++c; (void)T; }
-		cout << "size of curlF: " << c << endl;
+		ReductionMatrices_Calc calc;
+		const int D = -3;
+		calc.init(D, 6);
+		calc.curlF.B = 5;
+		calc.calcReducedCurlF();
+		calc.curlS.matrices.push_back(M2T_O(1,0,0,4));
+		calc.calcMatrixTrans(M2_O_from_M2T_O(M2T_O(4,0,0,4), D), M2_O_from_M2T_O(M2T_O(8,0,0,2), D), 4);
 	}
-	cout << "size of reducedMatrix(curlF): " << calc.reducedCurlFList.size() << endl;
-	cout << "size of matrix: " << calc.matrix.size() << endl;
-	//calc.dumpMatrix();
 }
 
