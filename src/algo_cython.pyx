@@ -123,7 +123,7 @@ cdef class Calc:
 		self.matrixCountTrans = self.calc.matrixCountTrans
 		self.matrixRowDenomTrans = self.calc.matrixRowDenomTrans
 
-		M = MatrixSpace(ZZ, self.calc.matrixRowCount, self.calc.matrixColumnCount)
+		M = MatrixSpace(ZZ, self.calc.matrixRowCountTrans, self.calc.matrixColumnCountTrans)
 		ms = [None] * self.matrixCountTrans
 		for i in range(self.matrixCountTrans):
 			m = M.zero_matrix().__copy__()
