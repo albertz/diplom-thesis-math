@@ -309,7 +309,7 @@ struct ReductionMatrices_Calc {
 					.mulMat(tS.conjugate_transpose(D), D)
 					.trace()
 					.asInt(D);
-				cout << "traceNum=" << traceNum << ", T_M2=" << T_M2 << ", " << endl;
+				cout << "traceNum=" << traceNum << ", T_M2=" << T_M2 << ", S_M2 = " << S_M2 << endl;
 				LOGIC_CHECK(Mod(traceNum, l*l) == 0);
 				size_t row = rowStart + traceNum * matrixRowDenomTrans;
 				rowStart += calcPrecisionDimension(curlF, S) * matrixRowDenomTrans;
