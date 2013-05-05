@@ -282,6 +282,7 @@ struct ReductionMatrices_Calc {
 		matrixRowCountTrans = 0;
 		LOGIC_CHECK(curlS.size() > 0);
 		for(ElemOfS S : curlS) {
+			// TODO: is calcPrecisionDimension correct here?
 			matrixRowCountTrans += calcPrecisionDimension(curlF, S);
 		}
 
