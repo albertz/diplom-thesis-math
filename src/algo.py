@@ -37,7 +37,7 @@ class PersistentCache:
 		self.dict[key] = value
 		try:
 			save(self.dict, self.name)
-		except:
+		except Exception:
 			print self.name, self.dict
 			raise
 	def __contains__(self, item):
