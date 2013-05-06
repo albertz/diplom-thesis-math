@@ -1,6 +1,7 @@
 from collections import defaultdict
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
+from sage.misc.db import save, load
 from sage.misc.misc import verbose
 from sage.modular.arithgroup.congroup_sl2z import SL2Z
 from sage.modular.congroup import Gamma0
@@ -20,6 +21,23 @@ import algo_cython as C
 import cusp_expansions
 
 
+class PersistentCache:
+	def __init__(self, name):
+		self.name = name
+		self.dict = {}
+		try:
+			self.dict = load(self.name)
+		except Exception:
+			pass
+		else:
+			assert isinstance(self.dict, dict)
+	def __getitem__(self, item):
+		return self.dict[item]
+	def __setitem__(self, key, value):
+		self.dict[key] = value
+		save(self.dict, self.name)
+	def __contains__(self, item):
+		return item in self.dict
 
 # our own verbose function because I just want our msgs, not other stuff
 def verbose(msg):
@@ -198,7 +216,7 @@ def test_solveR():
 	return gamma,R,tM
 
 
-matrixTransCache = {} # by (calc.params,calc.curlS,R,l)
+matrixTransCache = PersistentCache("matrixTrans.cache.sobj") # by (calc.params,calc.curlS,R,l)
 
 def calcMatrixTrans(calc, R, l):
 	tS = R.submatrix(0,0,2,2)
@@ -239,19 +257,19 @@ def calcElliptViaReduct(calc, f, R, l):
 	return denom, g
 
 
-cuspExpansionsCache = {}
-def cuspExpansions(l, HermWeight):
-	cacheIdx = (l, HermWeight)
+cuspExpansionsCache = PersistentCache("cuspExpansions.cache.sobj")
+def cuspExpansions(level, weight):
+	cacheIdx = (level, weight)
 	if cacheIdx in cuspExpansionsCache:
 		return cuspExpansionsCache[cacheIdx]
-	ce = cusp_expansions.ModularFormsCuspExpansions._for_modular_forms(l, HermWeight*2)
+	ce = cusp_expansions.ModularFormsCuspExpansions._for_modular_forms(level, weight)
 	cuspExpansionsCache[cacheIdx] = ce
 	return ce
 
-ellipBaseMatrixCache = defaultdict(lambda: (None,-1)) # level,weight -> mat,prec
+ellipBaseMatrixCache = PersistentCache("ellipBaseMatrix.cache.sobj") # level,weight -> mat,prec
 def getElliptModule(level, weight, precision):
 	cacheIdx = (level, weight)
-	if ellipBaseMatrixCache[cacheIdx][1] >= precision:
+	if cacheIdx in ellipBaseMatrixCache and ellipBaseMatrixCache[cacheIdx][1] >= precision:
 		return ellipBaseMatrixCache[cacheIdx][0][:,:precision]
 	n = 2
 	while n < precision:
@@ -261,6 +279,16 @@ def getElliptModule(level, weight, precision):
 	fe_expansion_matrix_l.echelonize()
 	ellipBaseMatrixCache[cacheIdx] = (fe_expansion_matrix_l, n)
 	return fe_expansion_matrix_l[:,:precision]
+
+
+restrMatrixCache = PersistentCache("restrMatrix.cache.sobj") # by (calc.params,calc.curlS)
+def calcRestrictMatrix(calc):
+	cacheIdx = (calc.params, calc.curlS)
+	if cacheIdx in restrMatrixCache:
+		return restrMatrixCache[cacheIdx]
+	mat = calc.calcMatrix()
+	restrMatrixCache[cacheIdx] = mat
+	return mat
 
 def modform(D, HermWeight, B_cF=10):
 	"Main algo"
@@ -311,6 +339,7 @@ def modform(D, HermWeight, B_cF=10):
 		# and on the internal calc.curlF. curlF only depends on B_cF which is not changed here.
 		verbose("calc restriction matrix...")
 		M_S = calc.calcMatrix() # matrix over integer ring
+		print "done"
 		M_S = M_S.matrix_over_field() # matrix over rational field
 		#print M_S
 
@@ -346,7 +375,7 @@ def modform(D, HermWeight, B_cF=10):
 			break
 
 		# cusp info:
-		ce = cuspExpansions(l, HermWeight)
+		ce = cuspExpansions(l, 2*HermWeight)
 		for cusp in Gamma0(l).cusps():
 			if cusp == Infinity: continue
 			if cusp == 0:
