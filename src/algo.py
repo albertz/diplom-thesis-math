@@ -462,7 +462,7 @@ def modform(D, HermWeight, B_cF=10):
 		l = S.det()
 		l = ZZ(l)
 		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
-		verbose("get elliptic modform space ...")
+		verbose("get elliptic modform space with precision %i ..." % precLimit)
 		fe_expansion_matrix_l = getElliptModule(l, 2*HermWeight, precLimit)
 		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
 		#print ell_modform_fe_expansions_l
