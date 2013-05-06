@@ -21,6 +21,9 @@ import cusp_expansions
 
 
 
+# It seems that Sage load/save uses the standard pickle module.
+# The standard pickle cannot save the Sage Expression objects for some reason.
+# We extend the standard pickler.
 import pickle, types, marshal, sys
 Unpickler = pickle.Unpickler
 CellType = type((lambda x: lambda: x)(0).func_closure[0])
