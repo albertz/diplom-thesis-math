@@ -252,7 +252,7 @@ ellipBaseMatrixCache = defaultdict(lambda: (None,-1)) # level,weight -> mat,prec
 def getElliptModule(level, weight, precision):
 	cacheIdx = (level, weight)
 	if ellipBaseMatrixCache[cacheIdx][1] >= precision:
-		return ellipBaseMatrixCache[cacheIdx][0][:,:precision].row_module()
+		return ellipBaseMatrixCache[cacheIdx][0][:,:precision]
 	n = 2
 	while n < precision:
 		n **= 2
@@ -260,7 +260,7 @@ def getElliptModule(level, weight, precision):
 	fe_expansion_matrix_l = matrix(QQ, [b.qexp(n).padded_list(n) for b in mf.basis()])
 	fe_expansion_matrix_l.echelonize()
 	ellipBaseMatrixCache[cacheIdx] = (fe_expansion_matrix_l, n)
-	return fe_expansion_matrix_l[:,:precision].row_module()
+	return fe_expansion_matrix_l[:,:precision]
 
 def modform(D, HermWeight, B_cF=10):
 	"Main algo"
@@ -319,7 +319,8 @@ def modform(D, HermWeight, B_cF=10):
 		l = S.det()
 		l = ZZ(l)
 		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
-		ell_modform_fe_expansions_l = getElliptModule(l, 2*HermWeight, precLimit)
+		fe_expansion_matrix_l = getElliptModule(l, 2*HermWeight, precLimit)
+		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
 		#print ell_modform_fe_expansions_l
 
 		verbose("calc M_S_module...")
