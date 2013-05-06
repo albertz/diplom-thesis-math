@@ -1,7 +1,6 @@
 from collections import defaultdict
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
-from sage.misc.db import save, load
 from sage.misc.misc import verbose
 from sage.modular.arithgroup.congroup_sl2z import SL2Z
 from sage.modular.congroup import Gamma0
@@ -20,6 +19,107 @@ import algo_cython as C
 # via Martin. while this is not in Sage:
 import cusp_expansions
 
+
+
+import pickle, types, marshal, sys
+Unpickler = pickle.Unpickler
+CellType = type((lambda x: lambda: x)(0).func_closure[0])
+def makeCell(value): return (lambda: value).func_closure[0]
+def getModuleDict(modname): return __import__(modname).__dict__
+class Pickler(pickle.Pickler):
+	def __init__(self, *args, **kwargs):
+		if not "protocol" in kwargs:
+			kwargs["protocol"] = pickle.HIGHEST_PROTOCOL
+		pickle.Pickler.__init__(self, *args, **kwargs)
+	dispatch = pickle.Pickler.dispatch.copy()
+
+	def save_func(self, obj):
+		try:
+			self.save_global(obj)
+			return
+		except pickle.PicklingError:
+			pass
+		assert type(obj) is types.FunctionType
+		self.save(types.FunctionType)
+		self.save((
+			obj.func_code,
+			obj.func_globals,
+			obj.func_name,
+			obj.func_defaults,
+			obj.func_closure,
+			))
+		self.write(pickle.REDUCE)
+		self.memoize(obj)
+	dispatch[types.FunctionType] = save_func
+
+	def save_code(self, obj):
+		assert type(obj) is types.CodeType
+		self.save(marshal.loads)
+		self.save((marshal.dumps(obj),))
+		self.write(pickle.REDUCE)
+		self.memoize(obj)
+	dispatch[types.CodeType] = save_code
+
+	def save_cell(self, obj):
+		assert type(obj) is CellType
+		self.save(makeCell)
+		self.save((obj.cell_contents,))
+		self.write(pickle.REDUCE)
+		self.memoize(obj)
+	dispatch[CellType] = save_cell
+
+	# We also search for module dicts and reference them.
+	def intellisave_dict(self, obj):
+		if len(obj) <= 5: # fastpath
+			self.save_dict(obj)
+			return
+		for modname, mod in sys.modules.iteritems():
+			if not mod: continue
+			moddict = mod.__dict__
+			if obj is moddict:
+				self.save(getModuleDict)
+				self.save((modname,))
+				self.write(pickle.REDUCE)
+				self.memoize(obj)
+				return
+		self.save_dict(obj)
+	dispatch[types.DictionaryType] = intellisave_dict
+
+	# Some types in the types modules are not correctly referenced,
+	# such as types.FunctionType. This is fixed here.
+	def fixedsave_type(self, obj):
+		try:
+			self.save_global(obj)
+			return
+		except pickle.PicklingError:
+			pass
+		for modname in ["types"]:
+			moddict = sys.modules[modname].__dict__
+			for modobjname,modobj in moddict.iteritems():
+				if modobj is obj:
+					self.write(pickle.GLOBAL + modname + '\n' + modobjname + '\n')
+					self.memoize(obj)
+					return
+		self.save_global(obj)
+	dispatch[types.TypeType] = fixedsave_type
+
+	# avoid pickling instances of ourself. this mostly doesn't make sense and leads to trouble.
+	# however, also doesn't break. it mostly makes sense to just ignore.
+	def __getstate__(self): return None
+	def __setstate__(self, state): pass
+
+# We dont use these:
+#from sage.misc.db import save, load
+# But these:
+def save(obj, filename):
+	f = open(filename, "w")
+	pickler = Pickler(f)
+	pickler.dump(obj)
+def load(filename):
+	f = open(filename)
+	unpickler = Unpickler(f)
+	obj = unpickler.load()
+	return obj
 
 class PersistentCache:
 	def __init__(self, name):
