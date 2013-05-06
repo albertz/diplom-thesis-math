@@ -216,7 +216,7 @@ def test_solveR():
 	return gamma,R,tM
 
 
-matrixTransCache = PersistentCache("matrixTrans.cache.sobj") # by (calc.params,calc.curlS,R,l)
+matrixTransCache = {} # not pickable? #PersistentCache("matrixTrans.cache.sobj") # by (calc.params,calc.curlS,R,l)
 
 def calcMatrixTrans(calc, R, l):
 	tS = R.submatrix(0,0,2,2)
@@ -257,7 +257,7 @@ def calcElliptViaReduct(calc, f, R, l):
 	return denom, g
 
 
-cuspExpansionsCache = PersistentCache("cuspExpansions.cache.sobj")
+cuspExpansionsCache = {} # not pickable? PersistentCache("cuspExpansions.cache.sobj")
 def cuspExpansions(level, weight):
 	cacheIdx = (level, weight)
 	if cacheIdx in cuspExpansionsCache:
