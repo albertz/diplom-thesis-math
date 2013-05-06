@@ -1,3 +1,4 @@
+from collections import defaultdict
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
 from sage.misc.misc import verbose
@@ -247,6 +248,20 @@ def cuspExpansions(l, HermWeight):
 	cuspExpansionsCache[cacheIdx] = ce
 	return ce
 
+ellipBaseMatrixCache = defaultdict(lambda: (None,-1)) # level,weight -> mat,prec
+def getElliptModule(level, weight, precision):
+	cacheIdx = (level, weight)
+	if ellipBaseMatrixCache[cacheIdx][1] >= precision:
+		return ellipBaseMatrixCache[cacheIdx][0][:precision,:].row_module()
+	n = 1
+	while n < precision:
+		n **= 2
+	mf = ModularForms(Gamma0(level), weight)
+	fe_expansion_matrix_l = matrix(QQ, [b.qexp(n).padded_list(n) for b in mf.basis()])
+	fe_expansion_matrix_l.echelonize()
+	ellipBaseMatrixCache[cacheIdx] = (fe_expansion_matrix_l, n)
+	return fe_expansion_matrix_l[:precision,:].row_module()
+
 def modform(D, HermWeight, B_cF=10):
 	"Main algo"
 
@@ -300,16 +315,10 @@ def modform(D, HermWeight, B_cF=10):
 
 		precLimit = M_S.nrows() # \cF(S)
 
-		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
 		l = S.det()
 		l = ZZ(l)
-		mf = ModularForms(Gamma0(l), 2 * HermWeight)
-		fe_expansion_matrix_l = matrix(QQ, [b.qexp(precLimit).padded_list(precLimit) for b in mf.basis()])
-		fe_expansion_matrix_l.echelonize()
-		#assert fe_expansion_matrix_l.rank() == precLimit, "{0} != {1}".format(fe_expansion_matrix_l.rank(), precLimit)
-
-		# or:  fe_expansion_matrix[:n2,:].row_module()
-		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
+		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
+		ell_modform_fe_expansions_l = getElliptModule(l, 2*HermWeight)
 
 		verbose("calc M_S_module...")
 		M_S_module = M_S.column_module()
