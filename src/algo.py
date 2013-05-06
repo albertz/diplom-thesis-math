@@ -218,7 +218,7 @@ def calcMatrixTrans(calc, R, l):
 	return calc.matrixRowDenomTrans, m
 
 def calcElliptViaReduct(calc, f, R, l):
-	cacheIdx = (calc.params,calc.curlS,R,l)
+	cacheIdx = (calc.params,tuple(calc.curlS),R,l)
 	if cacheIdx in matrixTransCache:
 		calcRes = matrixTransCache[cacheIdx]
 	else:
