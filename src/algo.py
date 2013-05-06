@@ -320,6 +320,12 @@ def test_solveR():
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S)
 
+	a,b,c,d = 1,0,3,1
+	s,t,u = 1,2,16
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S)
+
 	return gamma,R,tM
 
 
