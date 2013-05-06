@@ -365,7 +365,7 @@ def calcElliptViaReduct(calc, f, R, l):
 	return denom, g
 
 
-cuspExpansionsCache = {} # not pickable? PersistentCache("cuspExpansions.cache.sobj")
+cuspExpansionsCache = PersistentCache("cuspExpansions.cache.sobj")
 def cuspExpansions(level, weight):
 	cacheIdx = (level, weight)
 	if cacheIdx in cuspExpansionsCache:
@@ -447,7 +447,6 @@ def modform(D, HermWeight, B_cF=10):
 		# and on the internal calc.curlF. curlF only depends on B_cF which is not changed here.
 		verbose("calc restriction matrix...")
 		M_S = calcRestrictMatrix(calc) # matrix over integer ring
-		print "done"
 		M_S = M_S.matrix_over_field() # matrix over rational field
 		#print M_S
 
