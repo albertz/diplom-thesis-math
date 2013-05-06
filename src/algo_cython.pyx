@@ -86,7 +86,7 @@ cdef class Calc:
 		# this is never changed at the moment
 		self.calc.curlF.B = B_cF
 		self.params = (D,HermWeight,B_cF)
-		self.curlS = []
+		self.curlS = ()
 
 	def getNextS(self):
 		"""
@@ -94,12 +94,13 @@ cdef class Calc:
 		"""
 		cdef M2T_O m = self.calc.curlS.getNextS()
 		S = M2T_O_fromC(m, self.D)
-		self.curlS += [S]
+		S.set_immutable()
+		self.curlS += (S,)
 		return S
 
 	def curlS_clearMatrices(self):
 		self.calc.curlS.clearMatrices()
-		self.curlS = []
+		self.curlS = ()
 
 	def calcReducedCurlF(self):
 		if self.D == 0: raise RuntimeError, "you have to call init first"
