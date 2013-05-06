@@ -1,4 +1,3 @@
-from collections import defaultdict
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
 from sage.misc.misc import verbose
