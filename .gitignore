@@ -27,3 +27,6 @@ src/build/Xcode/build
 /.idea/workspace.xml
 /.idea/dictionaries/
 
+
+# for src/algo.py
+*.cache.sobj
