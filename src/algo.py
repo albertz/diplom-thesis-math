@@ -339,6 +339,7 @@ def modform(D, HermWeight, B_cF=10):
 			except Exception:
 				print (M, S)
 				raise
+			R.set_immutable() # for calcElliptViaReduct in cache index for hashing
 
 			M = SL2Z(M)
 			usable_gens = []
