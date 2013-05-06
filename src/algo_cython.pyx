@@ -75,6 +75,8 @@ cdef class Calc:
 	cdef int D, HermWeight
 	cdef public size_t matrixColumnCount
 	cdef public size_t matrixRowCountTrans, matrixColumnCountTrans, matrixCountTrans, matrixRowDenomTrans
+	cdef public object params
+	cdef public object curlS
 
 	def init(self, int D, int HermWeight, int B_cF=20):
 		self.D = D
@@ -83,16 +85,21 @@ cdef class Calc:
 		# start limit
 		# this is never changed at the moment
 		self.calc.curlF.B = B_cF
+		self.params = (D,HermWeight,B_cF)
+		self.curlS = []
 
 	def getNextS(self):
 		"""
 		:rtype : Matrix_symbolic_dense
 		"""
 		cdef M2T_O m = self.calc.curlS.getNextS()
-		return M2T_O_fromC(m, self.D)
+		S = M2T_O_fromC(m, self.D)
+		self.curlS += [S]
+		return S
 
 	def curlS_clearMatrices(self):
 		self.calc.curlS.clearMatrices()
+		self.curlS = []
 
 	def calcReducedCurlF(self):
 		if self.D == 0: raise RuntimeError, "you have to call init first"
