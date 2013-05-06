@@ -202,7 +202,7 @@ def calcMatrixTrans(calc, R, l):
 	tT = R.submatrix(2,0,2,2)
 	ms = calc.calcMatrixTrans(tS * l, tT * l, l)
 
-	K = CyclotomicField(11)
+	K = CyclotomicField(calc.matrixCountTrans)
 	zeta = K.gen()
 	#Kcoords = zeta.coordinates_in_terms_of_powers()
 	#Kcoord_matrix = matrix(ZZ, [Kcoords(zeta**l) for l in range(11)])
