@@ -237,6 +237,16 @@ def calcElliptViaReduct(calc, f, R, l):
 		g += ms[i] * f * (zeta ** i)
 	return denom, g
 
+
+cuspExpansionsCache = {}
+def cuspExpansions(l, HermWeight):
+	cacheIdx = (l, HermWeight)
+	if cacheIdx in cuspExpansionsCache:
+		return cuspExpansionsCache[cacheIdx]
+	ce = cusp_expansions.ModularFormsCuspExpansions._for_modular_forms(l, HermWeight*2)
+	cuspExpansionsCache[cacheIdx] = ce
+	return ce
+
 def modform(D, HermWeight, B_cF=10):
 	"Main algo"
 
@@ -306,7 +316,7 @@ def modform(D, HermWeight, B_cF=10):
 		restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S_module )
 		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
 		herm_modform_fe_expannsion_S_module = herm_modform_fe_expannsion_S.column_module()
-		veborse("dimension of column module: %i" % herm_modform_fe_expannsion_S_module.dimension())
+		verbose("dimension of column module: %i" % herm_modform_fe_expannsion_S_module.dimension())
 		verbose("calc M_S_right_kernel...")
 		M_S_right_kernel = M_S.right_kernel()
 		verbose("dimension of right kernel: %i" % M_S_right_kernel.dimension())
@@ -323,7 +333,7 @@ def modform(D, HermWeight, B_cF=10):
 			break
 
 		# cusp info:
-		ce = cusp_expansions.ModularFormsCuspExpansions._for_modular_forms(l, HermWeight*2)
+		ce = cuspExpansions(l, HermWeight)
 		for cusp in Gamma0(l).cusps():
 			if cusp == Infinity: continue
 			if cusp == 0:
@@ -352,7 +362,7 @@ def modform(D, HermWeight, B_cF=10):
 				usable_gens += [g]
 				g_inbase = fe_expansion_matrix_l.solve_left(g)
 				# g in ModularForms(l, 2 k), M = [[a,b;c,d]] the cusp representation with c = M \infty.
-				# this calculates f|M
+				# this calculates f[S]|M
 				f_M_denom, f_M = ce.expansion_at(M, g_inbase)
 				#print (f_M_denom, f_M)
 
