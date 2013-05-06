@@ -197,10 +197,14 @@ def test_solveR():
 	return gamma,R,tM
 
 
+matrixTransCache = {} # by (calc.params,calc.curlS,R,l)
+
 def calcMatrixTrans(calc, R, l):
 	tS = R.submatrix(0,0,2,2)
 	tT = R.submatrix(2,0,2,2)
 	ms = calc.calcMatrixTrans(tS * l, tT * l, l)
+
+	return calc.matrixRowDenomTrans, ms
 
 	K = CyclotomicField(calc.matrixCountTrans)
 	zeta = K.gen()
@@ -212,6 +216,26 @@ def calcMatrixTrans(calc, R, l):
 		m += ms[i] * (zeta ** i)
 
 	return calc.matrixRowDenomTrans, m
+
+def calcElliptViaReduct(calc, f, R, l):
+	cacheIdx = (calc.params,calc.curlS,R,l)
+	if cacheIdx in matrixTransCache:
+		calcRes = matrixTransCache[cacheIdx]
+	else:
+		try:
+			calcRes = calcMatrixTrans(calc, R, l)
+		except Exception:
+			print (calc.params, calc.curlS, R * l, l)
+			raise
+		matrixTransCache[cacheIdx] = calcRes
+
+	denom, ms = calcRes
+	g = 0
+	K = CyclotomicField(calc.matrixCountTrans)
+	zeta = K.gen()
+	for i in range(calc.matrixCountTrans):
+		g += ms[i] * f * (zeta ** i)
+	return denom, g
 
 def modform(D, HermWeight, B_cF=10):
 	"Main algo"
@@ -315,36 +339,32 @@ def modform(D, HermWeight, B_cF=10):
 			except Exception:
 				print (M, S)
 				raise
-			try:
-				reduceMatTransDenom, reduceMatTrans = calcMatrixTrans(calc, R, l)
-			except Exception:
-				print (S, R * l, l)
-				raise
-			#print reduceMatTransDenom, reduceMatTrans
 
 			M = SL2Z(M)
+			usable_gens = []
 			bad_gens = []
 			for f in herm_modform_fe_expannsion.gens():
 				g = M_S * f
 				if g == 0: continue
+				usable_gens += [g]
 				g_inbase = fe_expansion_matrix_l.solve_left(g)
 				# g in ModularForms(l, 2 k), M = [[a,b;c,d]] the cusp representation with c = M \infty.
 				# this calculates f|M
 				f_M_denom, f_M = ce.expansion_at(M, g_inbase)
 				#print (f_M_denom, f_M)
 
-				f_R = reduceMatTrans * f
+				f_R_denom, f_R = calcElliptViaReduct(calc, f, R, l)
 				#print f_R
 
-				assert reduceMatTransDenom % f_M_denom == 0, "{0}".format((f_M_denom, reduceMatTransDenom))
-				assert len(f_M) * reduceMatTransDenom / f_M_denom <= len(f_R)
+				assert f_R_denom % f_M_denom == 0, "{0}".format((f_M_denom, f_R_denom))
+				assert len(f_M) * f_R_denom / f_M_denom <= len(f_R)
 
 				def check_equal():
 					factor = None
-					for idx in range(len(f_M) * reduceMatTransDenom / f_M_denom):
+					for idx in range(len(f_M) * f_R_denom / f_M_denom):
 						f_R_i = f_R[idx]
-						if idx % (reduceMatTransDenom / f_M_denom) == 0:
-							f_M_i = f_M[idx * f_M_denom / reduceMatTransDenom]
+						if idx % (f_R_denom / f_M_denom) == 0:
+							f_M_i = f_M[idx * f_M_denom / f_R_denom]
 							if f_M_i == 0 and f_R_i == 0: continue
 							if f_M_i == 0: return False
 							if f_R_i == 0: return False
@@ -358,11 +378,12 @@ def modform(D, HermWeight, B_cF=10):
 							if f_R_i != 0: return False
 					return True
 				if not check_equal():
-					print "not equal:", reduceMatTransDenom, f_R, f_M_denom, f_M
+					print "not equal:", f_R_denom, f_R, f_M_denom, f_M
 					bad_gens += [f]
 				else:
 					print "equal!"
 
+			print "usable_gens:", len(usable_gens)
 			if bad_gens:
 				print "reducing dimensions by cusp info:", len(bad_gens), "(from %i)" % current_dimension
 				good_gens = [f for f in herm_modform_fe_expannsion.gens() if f not in bad_gens]
