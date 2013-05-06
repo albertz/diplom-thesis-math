@@ -376,7 +376,6 @@ def modform(D, HermWeight, B_cF=10):
 			break
 
 		# cusp info:
-		ce = cuspExpansions(l, 2*HermWeight)
 		for cusp in Gamma0(l).cusps():
 			if cusp == Infinity: continue
 			if cusp == 0:
@@ -406,6 +405,7 @@ def modform(D, HermWeight, B_cF=10):
 				g_inbase = fe_expansion_matrix_l.solve_left(g)
 				# g in ModularForms(l, 2 k), M = [[a,b;c,d]] the cusp representation with c = M \infty.
 				# this calculates f[S]|M
+				ce = cuspExpansions(l, 2*HermWeight)
 				f_M_denom, f_M = ce.expansion_at(M, g_inbase)
 				#print (f_M_denom, f_M)
 
