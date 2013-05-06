@@ -469,14 +469,16 @@ def modform(D, HermWeight, B_cF=10):
 
 		verbose("calc M_S_module...")
 		M_S_module = M_S.column_module()
+		verbose("dimension of M_S column module: %i" % M_S_module.dimension())
 		#print M_S_module
 		restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S_module )
+		verbose("dimension of restriction_fe_expansions: %i" % restriction_fe_expansions.dimension())
 		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
 		herm_modform_fe_expannsion_S_module = herm_modform_fe_expannsion_S.column_module()
-		verbose("dimension of column module: %i" % herm_modform_fe_expannsion_S_module.dimension())
+		verbose("dimension of herm column module: %i" % herm_modform_fe_expannsion_S_module.dimension())
 		verbose("calc M_S_right_kernel...")
 		M_S_right_kernel = M_S.right_kernel()
-		verbose("dimension of right kernel: %i" % M_S_right_kernel.dimension())
+		verbose("dimension of M_S right kernel: %i" % M_S_right_kernel.dimension())
 		herm_modform_fe_expannsion_S_module += M_S_right_kernel
 
 		verbose("intersecting herm_modform_fe_expannsion...")
