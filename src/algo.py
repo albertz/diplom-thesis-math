@@ -254,11 +254,12 @@ def solveR(M, S):
 	assert tM2[2][0] == 0
 	assert tM2[3][0] == 0
 	c22,c24 = tM2[2][1],tM2[3][1]
-	d = gcd(c22,c24)
+	l = matrix(1,2,(c22,c24)).denominator()
+	d = gcd(c22 * l, c24 * l)
 	if not d: d = 1
-	Dg23 = c24 / d
-	Dg24 = -c22 / d
-	del d
+	Dg23 = c24 * l / d
+	Dg24 = -c22 * l / d
+	del l, d
 	d,Dg21,Dg22 = xgcd(Dg24, -Dg23)
 	if d == 0:
 		G2 = I4
