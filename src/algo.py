@@ -253,7 +253,7 @@ def getElliptModule(level, weight, precision):
 	cacheIdx = (level, weight)
 	if ellipBaseMatrixCache[cacheIdx][1] >= precision:
 		return ellipBaseMatrixCache[cacheIdx][0][:precision,:].row_module()
-	n = 1
+	n = 2
 	while n < precision:
 		n **= 2
 	mf = ModularForms(Gamma0(level), weight)
