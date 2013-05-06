@@ -323,7 +323,7 @@ def test_solveR():
 	return gamma,R,tM
 
 
-matrixTransCache = {} # not pickable? #PersistentCache("matrixTrans.cache.sobj") # by (calc.params,calc.curlS,R,l)
+matrixTransCache = PersistentCache("matrixTrans.cache.sobj") # by (calc.params,calc.curlS,R,l)
 
 def calcMatrixTrans(calc, R, l):
 	tS = R.submatrix(0,0,2,2)
