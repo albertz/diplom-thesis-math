@@ -35,7 +35,11 @@ class PersistentCache:
 		return self.dict[item]
 	def __setitem__(self, key, value):
 		self.dict[key] = value
-		save(self.dict, self.name)
+		try:
+			save(self.dict, self.name)
+		except:
+			print self.name, self.dict
+			raise
 	def __contains__(self, item):
 		return item in self.dict
 
