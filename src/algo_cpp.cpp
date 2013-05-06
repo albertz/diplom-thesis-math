@@ -197,6 +197,8 @@ struct ReductionMatrices_Calc {
 			// then: Mod(HermWeight, 3) == j
 			// TODO...
 		}
+
+		DOMAIN_CHECK(Mod(HermWeight, 3) == 0); // the modulform is trivial/zero if HermWeight is not divisible by 3
 	}
 	
 	CurlS_Generator curlS;
@@ -408,7 +410,7 @@ void test_algo() {
 	
 	{
 		ReductionMatrices_Calc calc;
-		calc.init(-4, 10);
+		calc.init(-4, 18);
 		calc.curlF.B = 20;
 		calc.calcReducedCurlF();
 		calc.curlS.getNextS();
@@ -429,13 +431,23 @@ void test_algo() {
 	}
 
 	{
+
 		ReductionMatrices_Calc calc;
 		const int D = -3;
 		calc.init(D, 6);
-		calc.curlF.B = 5;
+		calc.curlF.B = 10;
 		calc.calcReducedCurlF();
 		calc.curlS.matrices.push_back(M2T_O(1,0,0,4));
-		calc.calcMatrixTrans(M2_O_from_M2T_O(M2T_O(4,0,0,4), D), M2_O_from_M2T_O(M2T_O(8,0,0,2), D), 4);
+
+		{
+			Timer timer("calcMatrixTrans");
+			calc.calcMatrixTrans(M2_O_from_M2T_O(M2T_O(4,0,0,4), D), M2_O_from_M2T_O(M2T_O(8,0,0,2), D), 4);
+		}
+
+		{
+			Timer timer("calcMatrixTrans");
+			calc.calcMatrixTrans(M2_O_from_M2T_O(M2T_O(-2,0,0,1), D), M2_O_from_M2T_O(M2T_O(0,0,0,0), D), 2);
+		}
 	}
 }
 
