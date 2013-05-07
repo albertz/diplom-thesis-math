@@ -123,7 +123,7 @@ cdef class Calc:
 
 	def dumpMatrix(self):
 		self.calc.dumpMatrix()
-		
+
 	def _getMatrixTrans(self, M, int i):
 		cdef Matrix_integer_dense m = M.zero_matrix().__copy__()
 		self.calc.getMatrixTrans(m._entries, i)

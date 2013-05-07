@@ -337,18 +337,20 @@ def calcMatrixTrans(calc, R, l):
 	# Each matrix is for a zeta**i factor, where zeta is the n-th root of unity.
 	# And n = calc.matrixCountTrans.
 	assert len(ms) == calc.matrixCountTrans
-	level = len(ms)
+	order = len(ms)
 
-	K = CyclotomicField(calc.matrixCountTrans)
+	K = CyclotomicField(order)
 	zeta = K.gen()
 	Kcoords = zeta.coordinates_in_terms_of_powers()
 
-	new_ms = [matrix(QQ, ms[0].nrows(), ms[0].ncols())] * len(K.power_basis())
-	for l in range(level):
+	assert len(K.power_basis()) == K.degree()
+	new_ms = [matrix(QQ, ms[0].nrows(), ms[0].ncols()) for i in range(K.degree())]
+	for l in range(order):
 		coords = Kcoords(zeta**l)
 		for i,m in enumerate(coords):
 			new_ms[i] = ms[l] * m
-	return level, new_ms
+
+	return calc.matrixRowDenomTrans, order, new_ms
 
 def calcElliptViaReduct(calc, f, R, l):
 	tS = R.submatrix(0,0,2,2)
@@ -556,7 +558,7 @@ def modform(D, HermWeight, B_cF=10):
 
 			herm_modforms = herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
 
-			hf_R_denom, M_R = calcMatrixTrans(calc, R, l)
+			hf_R_denom, hf_R_order, M_R = calcMatrixTrans(calc, R, l)
 			print "M_R:", [ (m, m.rank()) for m in M_R ]
 			hf_R = [M_R_i * herm_modforms for M_R_i in M_R]
 
@@ -565,18 +567,22 @@ def modform(D, HermWeight, B_cF=10):
 			ce = cuspExpansions(l, 2*HermWeight)
 			print "M=", SL2Z(M)
 			hf_M_denom, expansion_M = ce.expansion_at(SL2Z(M))
+			hf_M_order = hf_M_denom # we expect that a CyclomoticField of the order of the denom can represent all entries
 			#hf_M = G_inbase * expansion_M
 			hf_M = expansion_M
 
-			assert hf_R_denom % hf_M_denom == 0, "{0}".format((hf_M_denom, hf_R_denom))
+			assert hf_R_order % hf_M_order == 0, "{0}".format((hf_M_order, hf_R_order))
 			#assert len(hf_M) * hf_R_denom / hf_M_denom <= len(hf_R) # this is about the precission
 
-			hf_R2 = toLowerCyclBase(hf_R, hf_R_denom, hf_M_denom)
-			hf_M2 = toCyclPowerBase(hf_M, hf_M_denom)
+			hf_M2 = toCyclPowerBase(hf_M, hf_M_order)
+			hf_R2 = toLowerCyclBase(hf_R, hf_R_order, hf_M_order)
+			# we must work with the matrix. maybe we should transform hf_M instead to a
+			# higher order field instead, if this ever fails (I'm not sure).
+			assert hf_R2 is not None
 
-			print "r and m:"
-			print [ (m, m.rank()) for m in hf_R2 ]
+			print "m and r:"
 			print [ (m, m.rank()) for m in hf_M2 ]
+			print [ (m, m.rank()) for m in hf_R2 ]
 
 		if dim == current_dimension:
 			break
