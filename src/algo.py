@@ -575,7 +575,6 @@ def modform(D, HermWeight, B_cF=10):
 
 			print "r and m:"
 			print [ (m, m.rank()) for m in hf_R2 ]
-			print hf_M, hf_M.rank()
 			print [ (m, m.rank()) for m in hf_M2 ]
 
 		if dim == current_dimension:
