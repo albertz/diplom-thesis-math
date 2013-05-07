@@ -119,6 +119,11 @@ cdef class Calc:
 		self.calc.getMatrix(m._entries)
 		return m
 
+	def _getMatrixTrans(self, M, int i):
+		cdef Matrix_integer_dense m = M.zero_matrix().__copy__()
+		self.calc.getMatrixTrans(m._entries, i)
+		return m
+
 	def calcMatrixTrans(self, tS, tT, l):
 		if self.D == 0: raise RuntimeError, "you have to call init first"
 		cdef M2_O _tS
@@ -134,7 +139,5 @@ cdef class Calc:
 		M = MatrixSpace(ZZ, self.calc.matrixRowCountTrans, self.calc.matrixColumnCountTrans)
 		ms = [None] * self.matrixCountTrans
 		for i in range(self.matrixCountTrans):
-			m = M.zero_matrix().__copy__()
-			self.calc.getMatrixTrans((<Matrix_integer_dense?> m)._entries, i)
-			ms[i] = m
+			ms[i] = self._getMatrixTrans(M, i)
 		return ms
