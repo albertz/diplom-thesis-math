@@ -38,11 +38,13 @@ cdef extern from "algo_cpp.cpp":
 		void calcMatrix() except +
 		size_t matrixRowCount, matrixColumnCount
 		void getMatrix(mpz_t* out)
+		void dumpMatrix() except +
 
 		void calcMatrixTrans(const M2_O& tS, const M2_O& tT, int l) except +
 		size_t matrixRowCountTrans, matrixColumnCountTrans, matrixCountTrans
 		size_t matrixRowDenomTrans
 		void getMatrixTrans(mpz_t* out, int matrixIndex) except +
+		void dumpMatrixTrans(int matrixIndex) except +
 
 def test():
 	test_algo()
@@ -119,6 +121,9 @@ cdef class Calc:
 		self.calc.getMatrix(m._entries)
 		return m
 
+	def dumpMatrix(self):
+		self.calc.dumpMatrix()
+		
 	def _getMatrixTrans(self, M, int i):
 		cdef Matrix_integer_dense m = M.zero_matrix().__copy__()
 		self.calc.getMatrixTrans(m._entries, i)
@@ -141,3 +146,7 @@ cdef class Calc:
 		for i in range(self.matrixCountTrans):
 			ms[i] = self._getMatrixTrans(M, i)
 		return ms
+
+	def dumpMatrixTrans(self):
+		for i in self.matrixCountTrans:
+			self.calc.dumpMatrixTrans(i)
