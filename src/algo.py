@@ -420,7 +420,7 @@ def toLowerCyclBase(ms, level):
 	assert old_level % level == 0
 
 	new_ms = [None] * (level - 1)
-	for i in range(old_level):
+	for i in range(old_level - 1):
 		i2,rem = divmod(i, old_level / level)
 		if rem == 0:
 			new_ms[i2] = ms[i]
@@ -564,7 +564,7 @@ def modform(D, HermWeight, B_cF=10):
 			print hf_R_denom, hf_R
 
 			assert hf_R_denom % hf_M_denom == 0, "{0}".format((hf_M_denom, hf_R_denom))
-			assert len(hf_M) * hf_R_denom / hf_M_denom <= len(hf_R)
+			#assert len(hf_M) * hf_R_denom / hf_M_denom <= len(hf_R) # this is about the precission
 
 			hf_R2 = toLowerCyclBase(hf_R, hf_M_denom)
 			hf_M2 = toCyclPowerBase(hf_M, hf_M_denom)
