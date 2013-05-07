@@ -342,7 +342,7 @@ struct ReductionMatrices_Calc {
 				rowStart += calcPrecisionDimension(curlF, S) * matrixRowDenomTrans;
 				//cout << "traceNum: " << traceNum << ", next rowStart: " << rowStart << endl;
 				if(row >= rowStart) continue;
-				size_t matrixIndex = row * matrixColumnCount + column;
+				size_t matrixIndex = row * matrixColumnCountTrans + column;
 				auto a_T = reduced.character.value(D, -HermWeight);
 				// factor = tr(T tT tS^*)
 				auto factor_exp =
