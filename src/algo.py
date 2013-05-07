@@ -549,7 +549,7 @@ def modform(D, HermWeight, B_cF=10):
 			except Exception:
 				print (M, S)
 				raise
-			R.set_immutable() # for calcElliptViaReduct in cache index for hashing
+			R.set_immutable() # for caching, we need it hashable
 
 			G = M_S * herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
 			G_inbase = fe_expansion_matrix_l.solve_left(G.transpose())
