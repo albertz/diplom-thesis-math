@@ -431,17 +431,20 @@ def toCyclPowerBase(M, order):
 	zeta = K.gen()
 	Kcoords = zeta.coordinates_in_terms_of_powers()
 
-	ms = [matrix(QQ,M.nrows(),M.ncols())] * len(K.power_basis())
+	assert len(K.power_basis()) == K.degree()
+	ms = [matrix(QQ,M.nrows(),M.ncols()) for i in range(K.degree())]
 	for y in range(M.nrows()):
 		for x in range(M.ncols()):
 			try:
-				v = K(M[y,x])
+				v_ = M[y,x]
+				v = K(v_)
 				coords = Kcoords(v)
 			except TypeError:
 				print "type of {1} ({2}) is not valid in Cyclomotic field of order {0}".format(order, M[y,x], type(M[y,x]))
 				raise
-			for i,coord in enumerate(coords):
-				ms[i][y,x] = coord
+			assert len(coords) == K.degree()
+			for i in range(K.degree()):
+				ms[i][y,x] = coords[i]
 	return ms
 
 
@@ -571,9 +574,9 @@ def modform(D, HermWeight, B_cF=10):
 			hf_M2 = toCyclPowerBase(hf_M, hf_M_denom)
 
 			print "r and m:"
-			print hf_R2
-			print hf_M
-			print hf_M2
+			print [ (m, m.rank()) for m in hf_R2 ]
+			print hf_M, hf_M.rank()
+			print [ (m, m.rank()) for m in hf_M2 ]
 
 		if dim == current_dimension:
 			break
