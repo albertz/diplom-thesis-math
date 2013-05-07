@@ -580,8 +580,9 @@ def modform(D, HermWeight, B_cF=10):
 			# higher order field instead, if this ever fails (I'm not sure).
 			assert ell_R2 is not None
 			assert len(ell_M2) == len(ell_R2) # They should have the same power base & same degree now.
-
-			print "m and r:"
+			assert ell_M_order == len(ell_R2) # Actually assertion not needed but I expect that here.
+			
+			print "m and r with order %i:" % ell_M_order
 			print [ (m, m.rank()) for m in ell_M2 ]
 			print [ (m, m.rank()) for m in ell_R2 ]
 
