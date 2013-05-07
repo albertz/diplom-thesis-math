@@ -435,9 +435,10 @@ def toCyclPowerBase(M, order):
 	for y in range(M.nrows()):
 		for x in range(M.ncols()):
 			try:
-				coords = Kcoords(M[y,x])
+				v = K(M[y,x])
+				coords = Kcoords(v)
 			except TypeError:
-				print "type of {0} is not valid in Cyclomotic field of order {1}".format(M[y,x], order)
+				print "type of {1} ({2}) is not valid in Cyclomotic field of order {0}".format(order, M[y,x], type(M[y,x]))
 				raise
 			for i,coord in enumerate(coords):
 				ms[i][y,x] = coord
