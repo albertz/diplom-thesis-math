@@ -329,14 +329,10 @@ def test_solveR():
 	return gamma,R,tM
 
 
-matrixTransCache = PersistentCache("matrixTrans.cache.sobj") # by (calc.params,calc.curlS,R,l)
-
 def calcMatrixTrans(calc, R, l):
 	tS = R.submatrix(0,0,2,2)
 	tT = R.submatrix(2,0,2,2)
 	ms = calc.calcMatrixTrans(tS * l, tT * l, l)
-
-	return calc.matrixRowDenomTrans, ms
 
 	K = CyclotomicField(calc.matrixCountTrans)
 	zeta = K.gen()
@@ -351,16 +347,20 @@ def calcMatrixTrans(calc, R, l):
 
 def calcElliptViaReduct(calc, f, R, l):
 	cacheIdx = (calc.params,tuple(calc.curlS),R,l)
-	if cacheIdx in matrixTransCache:
-		calcRes, matrixCountTrans = matrixTransCache[cacheIdx]
-	else:
+#	if cacheIdx in matrixTransCache:
+#		calcRes, matrixCountTrans = matrixTransCache[cacheIdx]
+#	else:
+	if True:
+		tS = R.submatrix(0,0,2,2)
+		tT = R.submatrix(2,0,2,2)
 		try:
-			calcRes = calcMatrixTrans(calc, R, l)
+			ms = calc.calcMatrixTrans(tS * l, tT * l, l)
 		except Exception:
 			print (calc.params, calc.curlS, R * l, l)
 			raise
 		matrixCountTrans = calc.matrixCountTrans
-		matrixTransCache[cacheIdx] = calcRes, matrixCountTrans
+		calcRes = calc.matrixRowDenomTrans, ms
+#		matrixTransCache[cacheIdx] = calcRes, matrixCountTrans
 
 	denom, ms = calcRes
 	g = 0
@@ -511,7 +511,12 @@ def modform(D, HermWeight, B_cF=10):
 				raise
 			R.set_immutable() # for calcElliptViaReduct in cache index for hashing
 
-			M = SL2Z(M)
+			G = M_S * herm_modform_fe_expannsion.echelonized_basis_matrix()
+			G_inbase = fe_expansion_matrix_l.solve_left(G)
+			ce = cuspExpansions(l, 2*HermWeight)
+			hf_M_denom, expansion_M = ce.expansion_at(SL2Z(M))
+			hf_M = G_inbase * expansion_M
+
 			usable_gens = []
 			bad_gens = []
 			for f in herm_modform_fe_expannsion.gens():
@@ -522,7 +527,7 @@ def modform(D, HermWeight, B_cF=10):
 				# g in ModularForms(l, 2 k), M = [[a,b;c,d]] the cusp representation with c = M \infty.
 				# this calculates f[S]|M
 				ce = cuspExpansions(l, 2*HermWeight)
-				f_M_denom, f_M = ce.expansion_at(M, g_inbase)
+				f_M_denom, f_M = ce.expansion_at(SL2Z(M), g_inbase)
 				#print (f_M_denom, f_M)
 
 				f_R_denom, f_R = calcElliptViaReduct(calc, f, R, l)
