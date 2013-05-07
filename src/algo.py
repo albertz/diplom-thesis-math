@@ -581,15 +581,16 @@ def modform(D, HermWeight, B_cF=10):
 			assert ell_R2 is not None
 			assert len(ell_M2) == len(ell_R2) # They should have the same power base & same degree now.
 
-			#print "m and r:"
-			#print [ (m, m.rank()) for m in hf_M2 ]
-			#print [ (m, m.rank()) for m in hf_R2 ]
+			print "m and r:"
+			print [ (m, m.rank()) for m in ell_M2 ]
+			print [ (m, m.rank()) for m in ell_R2 ]
 
 			for i in range(len(ell_M2)):
 				ell_M_space = ell_M2[i].row_space()
 				ell_R_space = ell_R2[i].column_space()
 				merged = ell_M_space.intersection(ell_R_space)
-
+				if i == 0:
+					print i, ell_M_space, ell_R_space, ell_R2[i].rank(), ell_R2[i].row_space(), merged
 
 		if dim == current_dimension:
 			break
