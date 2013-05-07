@@ -556,33 +556,40 @@ def modform(D, HermWeight, B_cF=10):
 				raise
 			R.set_immutable() # for caching, we need it hashable
 
-			herm_modforms = herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
-
-			hf_R_denom, hf_R_order, M_R = calcMatrixTrans(calc, R, l)
-			print "M_R:", [ (m, m.rank()) for m in M_R ]
-			hf_R = [M_R_i * herm_modforms for M_R_i in M_R]
-
-			#G = M_S * herm_modforms
-			#G_inbase = fe_expansion_matrix_l.solve_left(G.transpose())
 			ce = cuspExpansions(l, 2*HermWeight)
-			print "M=", SL2Z(M)
-			hf_M_denom, expansion_M = ce.expansion_at(SL2Z(M))
-			hf_M_order = hf_M_denom # we expect that a CyclomoticField of the order of the denom can represent all entries
-			#hf_M = G_inbase * expansion_M
-			hf_M = expansion_M
+			ell_M_denom, expansion_M = ce.expansion_at(SL2Z(M))
+			ell_M_order = ell_M_denom # we expect that a CyclomoticField of the order of the denom can represent all entries
+			ell_M = expansion_M
 
-			assert hf_R_order % hf_M_order == 0, "{0}".format((hf_M_order, hf_R_order))
-			#assert len(hf_M) * hf_R_denom / hf_M_denom <= len(hf_R) # this is about the precission
+			herm_modforms = herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
+			ell_R_denom, ell_R_order, M_R = calcMatrixTrans(calc, R, l)
+			# ell_M rows are the elliptic FE. M_R[i] columns are the elliptic FE.
+			# We expect that M_R gives a higher precision for the ell FE. I'm not sure
+			# if this is always true but we expect it here (maybe not needed, though).
+			assert ell_M.ncols() <= M_R[0].nrows()
+			M_R = [M_R_i[:ell_M.ncols(),:] for M_R_i in M_R] # cut to have same precision
+			ell_R = [M_R_i * herm_modforms for M_R_i in M_R]
 
-			hf_M2 = toCyclPowerBase(hf_M, hf_M_order)
-			hf_R2 = toLowerCyclBase(hf_R, hf_R_order, hf_M_order)
-			# we must work with the matrix. maybe we should transform hf_M instead to a
+			# I'm not sure on this. Seems to be true and it simplifies things in the following.
+			assert ell_R_order % ell_M_order == 0, "{0}".format((ell_M_order, ell_R_order))
+
+			# Transform to same Cyclomotic Field in same power base.
+			ell_M2 = toCyclPowerBase(ell_M, ell_M_order)
+			ell_R2 = toLowerCyclBase(ell_R, ell_R_order, ell_M_order)
+			# We must work with the matrix. maybe we should transform hf_M instead to a
 			# higher order field instead, if this ever fails (I'm not sure).
-			assert hf_R2 is not None
+			assert ell_R2 is not None
+			assert len(ell_M2) == len(ell_R2) # They should have the same power base & same degree now.
 
-			print "m and r:"
-			print [ (m, m.rank()) for m in hf_M2 ]
-			print [ (m, m.rank()) for m in hf_R2 ]
+			#print "m and r:"
+			#print [ (m, m.rank()) for m in hf_M2 ]
+			#print [ (m, m.rank()) for m in hf_R2 ]
+
+			for i in range(len(ell_M2)):
+				ell_M_space = ell_M2[i].row_space()
+				ell_R_space = ell_R2[i].column_space()
+				merged = ell_M_space.intersection(ell_R_space)
+
 
 		if dim == current_dimension:
 			break
