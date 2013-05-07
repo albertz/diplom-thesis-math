@@ -404,14 +404,14 @@ def calcRestrictMatrix(calc):
 	return mat
 
 
-def toLowerCyclBase(ms, old_level, level):
+def toLowerCyclBase(ms, old_order, new_order):
 	# We expect to have ms in power_base.
 	assert isinstance(ms, list) # list of matrices
-	assert old_level % level == 0
+	assert old_order % new_order == 0
 
-	K_old = CyclotomicField(old_level)
+	K_old = CyclotomicField(old_order)
 	old_degree = int(ZZ(K_old.degree()))
-	K_new = CyclotomicField(level)
+	K_new = CyclotomicField(new_order)
 	new_degree = int(ZZ(K_new.degree()))
 	assert old_degree % new_degree == 0
 	assert len(ms) == old_degree
@@ -426,17 +426,21 @@ def toLowerCyclBase(ms, old_level, level):
 				return None
 	return new_ms
 
-def toCyclPowerBase(M, level):
-	K = CyclotomicField(level)
+def toCyclPowerBase(M, order):
+	K = CyclotomicField(order)
 	zeta = K.gen()
 	Kcoords = zeta.coordinates_in_terms_of_powers()
 
 	ms = [matrix(QQ,M.nrows(),M.ncols())] * len(K.power_basis())
 	for y in range(M.nrows()):
 		for x in range(M.ncols()):
-			coords = Kcoords(M[y,x])
-			for i in range(level - 1):
-				ms[i][y,x] = coords[i]
+			try:
+				coords = Kcoords(M[y,x])
+			except TypeError:
+				print "type of {0} is not valid in Cyclomotic field of order {1}".format(M[y,x], order)
+				raise
+			for i,coord in enumerate(coords):
+				ms[i][y,x] = coord
 	return ms
 
 
