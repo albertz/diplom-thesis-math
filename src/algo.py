@@ -337,26 +337,18 @@ def calcMatrixTrans(calc, R, l):
 	# Each matrix is for a zeta**i factor, where zeta is the n-th root of unity.
 	# And n = calc.matrixRowDenomTrans.
 	assert len(ms) == calc.matrixRowDenomTrans
+	level = len(ms)
 
-	# The last matrix is for zeta**(n-1). This is
-	# (-1,...,-1) in the base of (zeta**0,zeta**1,...,zeta**(n-2)).
-	# We transform the matrices into that base.
-	for i in range(len(ms)-1):
-		ms[i] -= ms[len(ms)-1]
-	return ms[:len(ms)-1]
-
-	return calc.matrixRowDenomTrans, ms
-
-	K = CyclotomicField(calc.matrixCountTrans)
+	K = CyclotomicField(calc.matrixRowDenomTrans)
 	zeta = K.gen()
-	#Kcoords = zeta.coordinates_in_terms_of_powers()
-	#Kcoord_matrix = matrix(ZZ, [Kcoords(zeta**l) for l in range(11)])
+	Kcoords = zeta.coordinates_in_terms_of_powers()
 
-	m = matrix(calc.matrixRowCountTrans, calc.matrixColumnCountTrans)
-	for i in range(calc.matrixCountTrans):
-		m += ms[i] * (zeta ** i)
-
-	return calc.matrixRowDenomTrans, m
+	new_ms = [matrix(QQ, ms[0].nrows(), ms[0].ncols())] * len(K.power_basis())
+	for l in range(level):
+		coords = Kcoords(zeta**l)
+		for i,m in enumerate(coords):
+			new_ms[i] = ms[l] * m
+	return level, new_ms
 
 def calcElliptViaReduct(calc, f, R, l):
 	tS = R.submatrix(0,0,2,2)
@@ -412,16 +404,21 @@ def calcRestrictMatrix(calc):
 	return mat
 
 
-def toLowerCyclBase(ms, level):
+def toLowerCyclBase(ms, old_level, level):
+	# We expect to have ms in power_base.
 	assert isinstance(ms, list) # list of matrices
-	# We expect to have ms coordinates_in_terms_of_powers base,
-	# i.e. ms[i] represents the zeta**i factor.
-	old_level = len(ms) + 1
 	assert old_level % level == 0
 
-	new_ms = [None] * (level - 1)
-	for i in range(old_level - 1):
-		i2,rem = divmod(i, old_level / level)
+	K_old = CyclotomicField(old_level)
+	old_degree = K_old.degree()
+	K_new = CyclotomicField(level)
+	new_degree = K_new.degree()
+	assert old_degree % new_degree == 0
+	assert len(ms) == old_degree
+
+	new_ms = [None] * new_degree
+	for i in range(old_degree):
+		i2,rem = divmod(i, old_degree / new_degree)
 		if rem == 0:
 			new_ms[i2] = ms[i]
 		else:
@@ -434,11 +431,10 @@ def toCyclPowerBase(M, level):
 	zeta = K.gen()
 	Kcoords = zeta.coordinates_in_terms_of_powers()
 
-	ms = [matrix(QQ,M.nrows(),M.ncols())] * (level - 1)
+	ms = [matrix(QQ,M.nrows(),M.ncols())] * len(K.power_basis())
 	for y in range(M.nrows()):
 		for x in range(M.cols()):
 			coords = Kcoords(M[y,x])
-			assert len(coords) == level - 1
 			for i in range(level - 1):
 				ms[i][y,x] = coords[i]
 	return ms
@@ -558,19 +554,19 @@ def modform(D, HermWeight, B_cF=10):
 
 			print hf_M_denom, hf_M
 
-			hf_R = calcMatrixTrans(calc, R, l)
-			hf_R_denom = len(hf_R) + 1
+			hf_R_denom, hf_R = calcMatrixTrans(calc, R, l)
 
 			print hf_R_denom, hf_R
 
 			assert hf_R_denom % hf_M_denom == 0, "{0}".format((hf_M_denom, hf_R_denom))
 			#assert len(hf_M) * hf_R_denom / hf_M_denom <= len(hf_R) # this is about the precission
 
-			hf_R2 = toLowerCyclBase(hf_R, hf_M_denom)
+			hf_R2 = toLowerCyclBase(hf_R, hf_R_denom, hf_M_denom)
 			hf_M2 = toCyclPowerBase(hf_M, hf_M_denom)
 
-			assert len(hf_R2) == len(hf_M2) == hf_M_denom - 1
-
+			print "r and m:"
+			print hf_R2
+			print hf_M2
 
 			# usable_gens = []
 			# bad_gens = []
