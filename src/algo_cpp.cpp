@@ -260,6 +260,23 @@ struct ReductionMatrices_Calc {
 			++out;
 		}
 	}
+
+	void dumpMatrix() {
+		using namespace std;
+		LOGIC_CHECK(matrix.size() == matrixRowCount * matrixColumnCount);
+		cout << "matrix " << matrixRowCount << "*" << matrixColumnCount << endl;
+		cout << "[" << endl;
+		for(size_t row = 0; row < matrixRowCount; ++row) {
+			if(row > 0) cout << "," << endl;
+			cout << " [";
+			for(size_t column = 0; column < matrixColumnCount; ++column) {
+				if(column > 0) cout << ",";
+				cout << matrix[row * matrixColumnCount + column];
+			}
+			cout << "]";
+		}
+		cout << "]" << endl;
+	}
 	
 	// This calcs the matrix for the map f \mapsto (f|R)[S] up to a factor,
 	// where R = [[tS,tT;0,tS^{-1}^{*}]] and tS,tT \in Mat_2(\K).
@@ -323,6 +340,7 @@ struct ReductionMatrices_Calc {
 				//cout << "traceNum=" << traceNum << ", T_M2=" << T_M2 << ", S_M2 = " << S_M2 << endl;
 				size_t row = rowStart + traceNum;
 				rowStart += calcPrecisionDimension(curlF, S) * matrixRowDenomTrans;
+				//cout << "traceNum: " << traceNum << ", next rowStart: " << rowStart << endl;
 				if(row >= rowStart) continue;
 				size_t matrixIndex = row * matrixColumnCount + column;
 				auto a_T = reduced.character.value(D, -HermWeight);
@@ -348,22 +366,24 @@ struct ReductionMatrices_Calc {
 		}
 	}
 	
-	void dumpMatrix() {
+	void dumpMatrixTrans(int matrixIndex) {
 		using namespace std;
-		LOGIC_CHECK(matrix.size() == matrixRowCount * matrixColumnCount);
-		cout << "matrix " << matrixRowCount << "*" << matrixColumnCount << endl;
+		LOGIC_CHECK(matrixIndex >= 0 && matrixIndex < matrixCountTrans);
+		LOGIC_CHECK(matrixTrans.size() == matrixColumnCountTrans * matrixRowCountTrans * matrixCountTrans);
+		cout << "matrix " << matrixRowCountTrans << "*" << matrixColumnCountTrans << endl;
 		cout << "[" << endl;
-		for(size_t row = 0; row < matrixRowCount; ++row) {
+		for(size_t row = 0; row < matrixRowCountTrans; ++row) {
 			if(row > 0) cout << "," << endl;
 			cout << " [";
-			for(size_t column = 0; column < matrixColumnCount; ++column) {
+			for(size_t column = 0; column < matrixColumnCountTrans; ++column) {
 				if(column > 0) cout << ",";
-				cout << matrix[row * matrixColumnCount + column];
+				cout << matrixTrans[matrixIndex * matrixRowCountTrans * matrixColumnCountTrans + row * matrixColumnCountTrans + column];
 			}
 			cout << "]";
 		}
 		cout << "]" << endl;
 	}
+
 };
 
 
