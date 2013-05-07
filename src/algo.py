@@ -335,11 +335,11 @@ def calcMatrixTrans(calc, R, l):
 	ms = calc.calcMatrixTrans(tS * l, tT * l, l)
 
 	# Each matrix is for a zeta**i factor, where zeta is the n-th root of unity.
-	# And n = calc.matrixRowDenomTrans.
-	assert len(ms) == calc.matrixRowDenomTrans
+	# And n = calc.matrixCountTrans.
+	assert len(ms) == calc.matrixCountTrans
 	level = len(ms)
 
-	K = CyclotomicField(calc.matrixRowDenomTrans)
+	K = CyclotomicField(calc.matrixCountTrans)
 	zeta = K.gen()
 	Kcoords = zeta.coordinates_in_terms_of_powers()
 
@@ -557,6 +557,7 @@ def modform(D, HermWeight, B_cF=10):
 			herm_modforms = herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
 
 			hf_R_denom, M_R = calcMatrixTrans(calc, R, l)
+			print "M_R:", [ (m, m.rank()) for m in M_R ]
 			hf_R = [M_R_i * herm_modforms for M_R_i in M_R]
 
 			#G = M_S * herm_modforms
