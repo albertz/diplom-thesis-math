@@ -334,6 +334,17 @@ def calcMatrixTrans(calc, R, l):
 	tT = R.submatrix(2,0,2,2)
 	ms = calc.calcMatrixTrans(tS * l, tT * l, l)
 
+	# Each matrix is for a zeta**i factor, where zeta is the n-th root of unity.
+	# And n = calc.matrixRowDenomTrans.
+	assert len(ms) == calc.matrixRowDenomTrans
+
+	# The last matrix is for zeta**(n-1). This is
+	# (-1,...,-1) in the base of (zeta**0,zeta**1,...,zeta**(n-2)).
+	# We transform the matrices into that base.
+	for i in range(len(ms)-1):
+		ms[i] -= ms[len(ms)-1]
+	return ms[:len(ms)-1]
+
 	return calc.matrixRowDenomTrans, ms
 
 	K = CyclotomicField(calc.matrixCountTrans)
@@ -399,6 +410,39 @@ def calcRestrictMatrix(calc):
 	mat = calc.calcMatrix()
 	restrMatrixCache[cacheIdx] = mat
 	return mat
+
+
+def toLowerCyclBase(ms, level):
+	assert isinstance(ms, list) # list of matrices
+	# We expect to have ms coordinates_in_terms_of_powers base,
+	# i.e. ms[i] represents the zeta**i factor.
+	old_level = len(ms) + 1
+	assert old_level % level == 0
+
+	new_ms = [None] * (level - 1)
+	for i in range(old_level):
+		i2,rem = divmod(i, old_level / level)
+		if rem == 0:
+			new_ms[i2] = ms[i]
+		else:
+			if ms[i] != 0:
+				return None
+	return new_ms
+
+def toCyclPowerBase(M, level):
+	K = CyclotomicField(level)
+	zeta = K.gen()
+	Kcoords = zeta.coordinates_in_terms_of_powers()
+
+	ms = [matrix(QQ,M.nrows(),M.ncols())] * (level - 1)
+	for y in range(M.nrows()):
+		for x in range(M.cols()):
+			coords = Kcoords(M[y,x])
+			assert len(coords) == level - 1
+			for i in range(level - 1):
+				ms[i][y,x] = coords[i]
+	return ms
+
 
 def modform(D, HermWeight, B_cF=10):
 	"Main algo"
@@ -506,11 +550,27 @@ def modform(D, HermWeight, B_cF=10):
 				raise
 			R.set_immutable() # for calcElliptViaReduct in cache index for hashing
 
-			G = M_S * herm_modform_fe_expannsion.echelonized_basis_matrix()
-			G_inbase = fe_expansion_matrix_l.solve_left(G)
+			G = M_S * herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
+			G_inbase = fe_expansion_matrix_l.solve_left(G.transpose())
 			ce = cuspExpansions(l, 2*HermWeight)
 			hf_M_denom, expansion_M = ce.expansion_at(SL2Z(M))
 			hf_M = G_inbase * expansion_M
+
+			print hf_M_denom, hf_M
+
+			hf_R = calcMatrixTrans(calc, R, l)
+			hf_R_denom = len(hf_R) + 1
+
+			print hf_R_denom, hf_R
+
+			assert hf_R_denom % hf_M_denom == 0, "{0}".format((hf_M_denom, hf_R_denom))
+			assert len(hf_M) * hf_R_denom / hf_M_denom <= len(hf_R)
+
+			hf_R2 = toLowerCyclBase(hf_R, hf_M_denom)
+			hf_M2 = toCyclPowerBase(hf_M, hf_M_denom)
+
+			assert len(hf_R2) == len(hf_M2) == hf_M_denom - 1
+
 
 			# usable_gens = []
 			# bad_gens = []
