@@ -573,62 +573,6 @@ def modform(D, HermWeight, B_cF=10):
 			print hf_R2
 			print hf_M2
 
-			# usable_gens = []
-			# bad_gens = []
-			# for f in herm_modform_fe_expannsion.gens():
-			# 	g = M_S * f
-			# 	if g == 0: continue
-			# 	usable_gens += [g]
-			# 	g_inbase = fe_expansion_matrix_l.solve_left(g)
-			# 	# g in ModularForms(l, 2 k), M = [[a,b;c,d]] the cusp representation with c = M \infty.
-			# 	# this calculates f[S]|M
-			# 	ce = cuspExpansions(l, 2*HermWeight)
-			# 	f_M_denom, f_M = ce.expansion_at(SL2Z(M), g_inbase)
-			# 	#print (f_M_denom, f_M)
-			#
-			# 	f_R_denom, f_R = calcElliptViaReduct(calc, f, R, l)
-			# 	#print f_R
-			#
-			# 	assert f_R_denom % f_M_denom == 0, "{0}".format((f_M_denom, f_R_denom))
-			# 	assert len(f_M) * f_R_denom / f_M_denom <= len(f_R)
-			#
-			# 	def check_equal():
-			# 		factor = None
-			# 		for idx in range(len(f_M) * f_R_denom / f_M_denom):
-			# 			f_R_i = f_R[idx]
-			# 			if idx % (f_R_denom / f_M_denom) == 0:
-			# 				f_M_i = f_M[idx * f_M_denom / f_R_denom]
-			# 				if f_M_i == 0 and f_R_i == 0: continue
-			# 				if f_M_i == 0: return False
-			# 				if f_R_i == 0: return False
-			# 				if factor is None:
-			# 					factor = f_R_i / f_M_i
-			# 					assert factor * f_M_i == f_R_i
-			# 					#print "factor =", factor
-			# 				f_M_i *= factor
-			# 				if f_R_i != f_M_i: return False
-			# 			else:
-			# 				if f_R_i != 0: return False
-			# 		return True
-			# 	if not check_equal():
-			# 		print "not equal:", f_R_denom, f_R, f_M_denom, f_M
-			# 		bad_gens += [f]
-			# 	else:
-			# 		print "equal!"
-			#
-			# print "usable_gens:", len(usable_gens)
-			# if bad_gens:
-			# 	print "reducing dimensions by cusp info:", len(bad_gens), "(from %i)" % current_dimension
-			# 	good_gens = [f for f in herm_modform_fe_expannsion.gens() if f not in bad_gens]
-			# 	herm_modform_fe_expannsion = herm_modform_fe_expannsion.vector_space_span(good_gens)
-			#
-			# 	current_dimension = herm_modform_fe_expannsion.dimension()
-			# 	verbose("new current dimension: %i, wanted: %i" % (current_dimension, dim))
-			# 	assert current_dimension >= dim
-			#
-			# 	# Step 5. dimension check
-			# 	if dim == current_dimension:
-			# 		break
 
 		if dim == current_dimension:
 			break
