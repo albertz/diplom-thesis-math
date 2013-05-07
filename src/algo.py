@@ -410,9 +410,9 @@ def toLowerCyclBase(ms, old_level, level):
 	assert old_level % level == 0
 
 	K_old = CyclotomicField(old_level)
-	old_degree = K_old.degree()
+	old_degree = int(ZZ(K_old.degree()))
 	K_new = CyclotomicField(level)
-	new_degree = K_new.degree()
+	new_degree = int(ZZ(K_new.degree()))
 	assert old_degree % new_degree == 0
 	assert len(ms) == old_degree
 
@@ -433,7 +433,7 @@ def toCyclPowerBase(M, level):
 
 	ms = [matrix(QQ,M.nrows(),M.ncols())] * len(K.power_basis())
 	for y in range(M.nrows()):
-		for x in range(M.cols()):
+		for x in range(M.ncols()):
 			coords = Kcoords(M[y,x])
 			for i in range(level - 1):
 				ms[i][y,x] = coords[i]
