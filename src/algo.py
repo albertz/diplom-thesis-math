@@ -551,17 +551,18 @@ def modform(D, HermWeight, B_cF=10):
 				raise
 			R.set_immutable() # for caching, we need it hashable
 
-			G = M_S * herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
-			G_inbase = fe_expansion_matrix_l.solve_left(G.transpose())
+			herm_modforms = herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
+
+			hf_R_denom, M_R = calcMatrixTrans(calc, R, l)
+			hf_R = [M_R_i * herm_modforms for M_R_i in M_R]
+
+			#G = M_S * herm_modforms
+			#G_inbase = fe_expansion_matrix_l.solve_left(G.transpose())
 			ce = cuspExpansions(l, 2*HermWeight)
+			print "M=", SL2Z(M)
 			hf_M_denom, expansion_M = ce.expansion_at(SL2Z(M))
-			hf_M = G_inbase * expansion_M
-
-			print hf_M_denom, hf_M
-
-			hf_R_denom, hf_R = calcMatrixTrans(calc, R, l)
-
-			print hf_R_denom, hf_R
+			#hf_M = G_inbase * expansion_M
+			hf_M = expansion_M
 
 			assert hf_R_denom % hf_M_denom == 0, "{0}".format((hf_M_denom, hf_R_denom))
 			#assert len(hf_M) * hf_R_denom / hf_M_denom <= len(hf_R) # this is about the precission
@@ -571,8 +572,8 @@ def modform(D, HermWeight, B_cF=10):
 
 			print "r and m:"
 			print hf_R2
+			print hf_M
 			print hf_M2
-
 
 		if dim == current_dimension:
 			break
