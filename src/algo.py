@@ -346,23 +346,16 @@ def calcMatrixTrans(calc, R, l):
 	return calc.matrixRowDenomTrans, m
 
 def calcElliptViaReduct(calc, f, R, l):
-	cacheIdx = (calc.params,tuple(calc.curlS),R,l)
-#	if cacheIdx in matrixTransCache:
-#		calcRes, matrixCountTrans = matrixTransCache[cacheIdx]
-#	else:
-	if True:
-		tS = R.submatrix(0,0,2,2)
-		tT = R.submatrix(2,0,2,2)
-		try:
-			ms = calc.calcMatrixTrans(tS * l, tT * l, l)
-		except Exception:
-			print (calc.params, calc.curlS, R * l, l)
-			raise
-		matrixCountTrans = calc.matrixCountTrans
-		calcRes = calc.matrixRowDenomTrans, ms
-#		matrixTransCache[cacheIdx] = calcRes, matrixCountTrans
+	tS = R.submatrix(0,0,2,2)
+	tT = R.submatrix(2,0,2,2)
+	try:
+		ms = calc.calcMatrixTrans(tS * l, tT * l, l)
+	except Exception:
+		print (calc.params, calc.curlS, R * l, l)
+		raise
+	matrixCountTrans = calc.matrixCountTrans
+	denom = calc.matrixRowDenomTrans
 
-	denom, ms = calcRes
 	g = 0
 	K = CyclotomicField(matrixCountTrans)
 	zeta, = K.gens()
