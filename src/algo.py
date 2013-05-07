@@ -348,7 +348,7 @@ def calcMatrixTrans(calc, R, l):
 	for l in range(order):
 		coords = Kcoords(zeta**l)
 		for i,m in enumerate(coords):
-			new_ms[i] = ms[l] * m
+			new_ms[i] += ms[l] * m
 
 	return calc.matrixRowDenomTrans, order, new_ms
 
