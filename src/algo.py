@@ -580,6 +580,9 @@ def modform(D, HermWeight, B_cF=10):
 			herm_modforms = herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
 			ell_R_denom, ell_R_order, M_R = calcMatrixTrans(calc, R, l)
 
+			print "1) M_R[0] rank, herm rank, mult rank:", \
+				M_R[0].rank(), herm_modforms.rank(), (M_R[0] * herm_modforms).rank()
+
 			# Not sure if this is always the case but seems so.
 			assert ell_R_denom >= ell_M_denom
 			if ell_R_denom > ell_M_denom:
@@ -597,7 +600,7 @@ def modform(D, HermWeight, B_cF=10):
 			M_R = [M_R_i[:ell_M.ncols(),:] for M_R_i in M_R] # cut to have same precision
 			assert ell_M.ncols() == M_R[0].nrows()
 
-			print "M_R[0] rank, herm rank, mult rank:", \
+			print "2) M_R[0] rank, herm rank, mult rank:", \
 				M_R[0].rank(), herm_modforms.rank(), (M_R[0] * herm_modforms).rank()
 			ell_R = [M_R_i * herm_modforms for M_R_i in M_R]
 
