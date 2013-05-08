@@ -629,10 +629,11 @@ def modform(D, HermWeight, B_cF=10):
 				herm_modform_fe_expannsion_Ci = M_R[i].solve_right( merged.basis_matrix().transpose() )
 				herm_modform_fe_expannsion_Ci_module = herm_modform_fe_expannsion_Ci.column_module()
 				herm_modform_fe_expannsion_Ci_module += M_R[i].right_kernel()
-				print i, merged.dimension(), herm_modform_fe_expannsion_Ci_module.dimension()
 
 				herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_Ci_module )
-
+				print "power", i, merged.dimension(), herm_modform_fe_expannsion_Ci_module.dimension(), \
+					current_dimension, herm_modform_fe_expannsion.dimension()
+				current_dimension = herm_modform_fe_expannsion.dimension()
 
 		if dim == current_dimension:
 			break
