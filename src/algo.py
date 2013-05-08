@@ -592,6 +592,9 @@ def modform(D, HermWeight, B_cF=10):
 				ell_R_denom = ell_M_denom
 			assert ell_R_denom == ell_M_denom
 
+			print "2) M_R[0] rank, herm rank, mult rank:", \
+				M_R[0].rank(), herm_modforms.rank(), (M_R[0] * herm_modforms).rank()
+
 			# ell_M rows are the elliptic FE. M_R[i] columns are the elliptic FE.
 			# We expect that M_R gives a higher precision for the ell FE. I'm not sure
 			# if this is always true but we expect it here (maybe not needed, though).
@@ -600,7 +603,7 @@ def modform(D, HermWeight, B_cF=10):
 			M_R = [M_R_i[:ell_M.ncols(),:] for M_R_i in M_R] # cut to have same precision
 			assert ell_M.ncols() == M_R[0].nrows()
 
-			print "2) M_R[0] rank, herm rank, mult rank:", \
+			print "3) M_R[0] rank, herm rank, mult rank:", \
 				M_R[0].rank(), herm_modforms.rank(), (M_R[0] * herm_modforms).rank()
 			ell_R = [M_R_i * herm_modforms for M_R_i in M_R]
 
