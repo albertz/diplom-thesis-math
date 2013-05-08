@@ -328,8 +328,12 @@ def test_solveR():
 
 	return gamma,R,tM
 
-
+matrixTransCache = PersistentCache("matrixTrans.cache.sobj")
 def calcMatrixTrans(calc, R, l):
+	cacheIdx = (calc.params, calc.curlS, R, l)
+	if cacheIdx in matrixTransCache:
+		return matrixTransCache[cacheIdx]
+
 	tS = R.submatrix(0,0,2,2)
 	tT = R.submatrix(2,0,2,2)
 	ms = calc.calcMatrixTrans(tS * l, tT * l, l)
@@ -350,6 +354,7 @@ def calcMatrixTrans(calc, R, l):
 		for i,m in enumerate(coords):
 			new_ms[i] += ms[l] * m
 
+	matrixTransCache[cacheIdx] = calc.matrixRowDenomTrans, order, new_ms
 	return calc.matrixRowDenomTrans, order, new_ms
 
 def calcElliptViaReduct(calc, f, R, l):
