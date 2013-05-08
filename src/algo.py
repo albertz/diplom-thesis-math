@@ -602,7 +602,6 @@ def modform(D, HermWeight, B_cF=10):
 			# Transform to same Cyclomotic Field in same power base.
 			ell_M2 = toCyclPowerBase(ell_M, ell_M_order)
 			ell_R2 = toLowerCyclBase(ell_R, ell_R_order, ell_M_order)
-			print ell_R2[0].rank()
 			# We must work with the matrix. maybe we should transform hf_M instead to a
 			# higher order field instead, if this ever fails (I'm not sure).
 			assert ell_R2 is not None
@@ -613,8 +612,14 @@ def modform(D, HermWeight, B_cF=10):
 				ell_M_space = ell_M2[i].row_space()
 				ell_R_space = ell_R2[i].column_space()
 				merged = ell_M_space.intersection(ell_R_space)
-				if i == 0:
-					print i, ell_M_space, ell_R_space, ell_R2[i].rank(), ell_R2[i].row_space(), merged
+
+				herm_modform_fe_expannsion_Ci = M_R[i].solve_right( merged.basis_matrix().transpose() )
+				herm_modform_fe_expannsion_Ci_module = herm_modform_fe_expannsion_Ci.column_module()
+				herm_modform_fe_expannsion_Ci_module += M_R[i].right_kernel()
+				print i, merged.dimension(), herm_modform_fe_expannsion_Ci_module.dimension()
+
+				herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_Ci_module )
+
 
 		if dim == current_dimension:
 			break
