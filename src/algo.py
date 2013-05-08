@@ -449,6 +449,17 @@ def toCyclPowerBase(M, order):
 				ms[i][y,x] = coords[i]
 	return ms
 
+def _takeEveryNRow(mat, n):
+	assert mat.nrows() % n == 0
+	newm = matrix(mat.base_ring(), mat.nrows() / n, mat.ncols())
+	for i in range(mat.nrows()):
+		if i % n == 0:
+			newm[i / n] = mat[i]
+		else:
+			if mat[i] != 0:
+				return None
+	return newm
+
 
 def modform(D, HermWeight, B_cF=10):
 	"Main algo"
@@ -563,11 +574,26 @@ def modform(D, HermWeight, B_cF=10):
 
 			herm_modforms = herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
 			ell_R_denom, ell_R_order, M_R = calcMatrixTrans(calc, R, l)
+
+			# Not sure if this is always the case but seems so.
+			assert ell_R_denom >= ell_M_denom
+			if ell_R_denom > ell_M_denom:
+				assert ell_R_denom % ell_M_denom == 0
+				M_R = [_takeEveryNRow(M_R_i, ell_R_denom / ell_M_denom) for M_R_i in M_R]
+				assert all([M_R_i is not None for M_R_i in M_R])
+				ell_R_denom = ell_M_denom
+			assert ell_R_denom == ell_M_denom
+
 			# ell_M rows are the elliptic FE. M_R[i] columns are the elliptic FE.
 			# We expect that M_R gives a higher precision for the ell FE. I'm not sure
 			# if this is always true but we expect it here (maybe not needed, though).
 			assert ell_M.ncols() <= M_R[0].nrows()
+			print "precision of M_R[0], ell_M:", M_R[0].nrows(), ell_M.ncols()
 			M_R = [M_R_i[:ell_M.ncols(),:] for M_R_i in M_R] # cut to have same precision
+			assert ell_M.ncols() == M_R[0].nrows()
+
+			print "M_R[0] rank, herm rank, mult rank:", \
+				M_R[0].rank(), herm_modforms.rank(), (M_R[0] * herm_modforms).rank()
 			ell_R = [M_R_i * herm_modforms for M_R_i in M_R]
 
 			# I'm not sure on this. Seems to be true and it simplifies things in the following.
@@ -576,14 +602,12 @@ def modform(D, HermWeight, B_cF=10):
 			# Transform to same Cyclomotic Field in same power base.
 			ell_M2 = toCyclPowerBase(ell_M, ell_M_order)
 			ell_R2 = toLowerCyclBase(ell_R, ell_R_order, ell_M_order)
+			print ell_R2[0].rank()
 			# We must work with the matrix. maybe we should transform hf_M instead to a
 			# higher order field instead, if this ever fails (I'm not sure).
 			assert ell_R2 is not None
 			assert len(ell_M2) == len(ell_R2) # They should have the same power base & same degree now.
-
-			print "m and r with order %i:" % ell_M_order
-			print [ (m, m.rank()) for m in ell_M2 ]
-			print [ (m, m.rank()) for m in ell_R2 ]
+			print "ell_M2[0], ell_R2[0] rank with order %i:" % ell_M_order, ell_M2[0].rank(), ell_R2[0].rank()
 
 			for i in range(len(ell_M2)):
 				ell_M_space = ell_M2[i].row_space()
