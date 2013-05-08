@@ -377,11 +377,11 @@ def calcElliptViaReduct(calc, f, R, l):
 
 
 cuspExpansionsCache = PersistentCache("cuspExpansions.cache.sobj")
-def cuspExpansions(level, weight):
-	cacheIdx = (level, weight)
+def cuspExpansions(level, weight, prec):
+	cacheIdx = (level, weight, prec)
 	if cacheIdx in cuspExpansionsCache:
 		return cuspExpansionsCache[cacheIdx]
-	ce = cusp_expansions.ModularFormsCuspExpansions._for_modular_forms(level, weight)
+	ce = cusp_expansions.ModularFormsCuspExpansions._for_modular_forms(level, weight, prec)
 	cuspExpansionsCache[cacheIdx] = ce
 	return ce
 
@@ -572,13 +572,12 @@ def modform(D, HermWeight, B_cF=10):
 				raise
 			R.set_immutable() # for caching, we need it hashable
 
-			ce = cuspExpansions(l, 2*HermWeight)
-			ell_M_denom, expansion_M = ce.expansion_at(SL2Z(M))
-			ell_M_order = ell_M_denom # we expect that a CyclomoticField of the order of the denom can represent all entries
-			ell_M = expansion_M
-
 			herm_modforms = herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
 			ell_R_denom, ell_R_order, M_R = calcMatrixTrans(calc, R, l)
+
+			ce = cuspExpansions(l, 2*HermWeight, l*l)
+			ell_M_denom, ell_M = ce.expansion_at(SL2Z(M))
+			ell_M_order = ell_M_denom # we expect that a CyclomoticField of the order of the denom can represent all entries
 
 			print "1) M_R[0] rank, herm rank, mult rank:", \
 				M_R[0].rank(), herm_modforms.rank(), (M_R[0] * herm_modforms).rank()
