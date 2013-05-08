@@ -575,7 +575,7 @@ def modform(D, HermWeight, B_cF=10):
 			herm_modforms = herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
 			ell_R_denom, ell_R_order, M_R = calcMatrixTrans(calc, R, l)
 
-			ce = cuspExpansions(l, 2*HermWeight, l*l)
+			ce = cuspExpansions(level=l, weight=2*HermWeight, prec=M_R[0].nrows())
 			ell_M_denom, ell_M = ce.expansion_at(SL2Z(M))
 			ell_M_order = ell_M_denom # we expect that a CyclomoticField of the order of the denom can represent all entries
 
@@ -597,10 +597,13 @@ def modform(D, HermWeight, B_cF=10):
 			# ell_M rows are the elliptic FE. M_R[i] columns are the elliptic FE.
 			# We expect that M_R gives a higher precision for the ell FE. I'm not sure
 			# if this is always true but we expect it here (maybe not needed, though).
-			assert ell_M.ncols() <= M_R[0].nrows()
 			print "precision of M_R[0], ell_M:", M_R[0].nrows(), ell_M.ncols()
-			M_R = [M_R_i[:ell_M.ncols(),:] for M_R_i in M_R] # cut to have same precision
-			assert ell_M.ncols() == M_R[0].nrows()
+			assert ell_M.ncols() >= M_R[0].nrows()
+			prec = min(M_R[0].nrows(), ell_M.ncols())
+			# cut to have same precision
+			M_R = [M_R_i[:prec,:] for M_R_i in M_R]
+			ell_M = ell_M[:,:prec]
+			assert ell_M.ncols() == M_R[0].nrows() == prec
 
 			print "3) M_R[0] rank, herm rank, mult rank:", \
 				M_R[0].rank(), herm_modforms.rank(), (M_R[0] * herm_modforms).rank()
