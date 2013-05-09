@@ -168,6 +168,15 @@ class PersistentCache:
 	def __init__(self, name):
 		self.name = name
 		self.dict = {}
+		self.load()
+	def __getitem__(self, item):
+		return self.dict[item]
+	def __setitem__(self, key, value):
+		self.dict[key] = value
+		self.save()
+	def __contains__(self, item):
+		return item in self.dict
+	def load(self):
 		try:
 			self.dict = load(self.name)
 		except IOError:
@@ -177,13 +186,6 @@ class PersistentCache:
 			raise
 		else:
 			assert isinstance(self.dict, dict)
-	def __getitem__(self, item):
-		return self.dict[item]
-	def __setitem__(self, key, value):
-		self.dict[key] = value
-		self.save()
-	def __contains__(self, item):
-		return item in self.dict
 	def save(self):
 		try:
 			save(self.dict, self.name)
