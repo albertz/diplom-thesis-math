@@ -377,14 +377,18 @@ def test_solveR():
 	return gamma,R,tM
 
 matrixTransCache = PersistentCache("matrixTrans.cache.sobj")
-def calcMatrixTrans(calc, R, l):
-	cacheIdx = (calc.params, calc.curlS, R, l)
+def calcMatrixTrans(calc, R):
+	tS = R.submatrix(0,0,2,2)
+	tT = R.submatrix(2,0,2,2)
+	lS = int(ZZ(tS.denominator()))
+	lT = int(ZZ(tT.denominator()))
+	tS *= lS
+	tT *= lT
+	cacheIdx = (calc.params, calc.curlS, tS, tT, lS, lT)
 	if cacheIdx in matrixTransCache:
 		return matrixTransCache[cacheIdx]
 
-	tS = R.submatrix(0,0,2,2)
-	tT = R.submatrix(2,0,2,2)
-	ms = calc.calcMatrixTrans(tS * l, tT * l, l)
+	ms = calc.calcMatrixTrans(tS, tT, lS, lT)
 
 	# Each matrix is for a zeta**i factor, where zeta is the n-th root of unity.
 	# And n = calc.matrixCountTrans.
@@ -622,7 +626,7 @@ def modform(D, HermWeight, B_cF=10):
 			R.set_immutable() # for caching, we need it hashable
 
 			herm_modforms = herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
-			ell_R_denom, ell_R_order, M_R = calcMatrixTrans(calc, R, l)
+			ell_R_denom, ell_R_order, M_R = calcMatrixTrans(calc, R)
 
 			ce = cuspExpansions(level=l, weight=2*HermWeight, prec=M_R[0].nrows())
 			ell_M_denom, ell_M = ce.expansion_at(SL2Z(M))
