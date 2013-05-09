@@ -294,7 +294,7 @@ struct ReductionMatrices_Calc {
 	size_t matrixRowDenomTrans;
 	void calcMatrixTrans(const M2_O& tS, const M2_O& tT, const Int lS, const Int lT) {
 		using namespace std;
-		cout << "calcMatrixTrans: tS = " << tS << ", tT = " << tT << ", tS^* = " << tS.conjugate_transpose(D) << ", l = " << l << endl;
+		cout << "calcMatrixTrans: tS = " << tS << ", tT = " << tT << ", tS^* = " << tS.conjugate_transpose(D) << ", lS = " << lS << ", lT = " << lT << endl;
 		
 		matrixColumnCountTrans = matrixColumnCount;
 		LOGIC_CHECK(matrixColumnCountTrans > 0);
@@ -462,12 +462,12 @@ void test_algo() {
 
 		{
 			Timer timer("calcMatrixTrans");
-			calc.calcMatrixTrans(M2_O_from_M2T_O(M2T_O(4,0,0,4), D), M2_O_from_M2T_O(M2T_O(8,0,0,2), D), 4);
+			calc.calcMatrixTrans(M2_O_from_M2T_O(M2T_O(4,0,0,4), D), M2_O_from_M2T_O(M2T_O(8,0,0,2), D), 4, 4);
 		}
 
 		{
 			Timer timer("calcMatrixTrans");
-			calc.calcMatrixTrans(M2_O_from_M2T_O(M2T_O(-2,0,0,1), D), M2_O_from_M2T_O(M2T_O(0,0,0,0), D), 2);
+			calc.calcMatrixTrans(M2_O_from_M2T_O(M2T_O(-2,0,0,1), D), M2_O_from_M2T_O(M2T_O(0,0,0,0), D), 2, 2);
 		}
 	}
 }
