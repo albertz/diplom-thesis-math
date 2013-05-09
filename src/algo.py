@@ -109,6 +109,22 @@ class Pickler(pickle.Pickler):
 		self.save_global(obj)
 	dispatch[types.TypeType] = fixedsave_type
 
+	# Wrap _batch_setitems (e.g. for dicts) so that our representations stays fixed
+	# (the order of dict.keys() can be different at each run).
+	orig_batch_setitems = pickle.Pickler._batch_setitems
+	def _batch_setitems(self, items):
+		items = sorted(items)
+		self.orig_batch_setitems(items)
+
+	# Wrap save_reduce so that we can catch a few cases (e.g. set)
+	# to fix up the representation so that it stays fixed (as for dicts).
+	orig_save_reduce = pickle.Pickler.save_reduce
+	def save_reduce(self, func, args, state=None, listitems=None, dictitems=None, obj=None):
+		if func is set:
+			assert len(args) == 1
+			args = (sorted(args[0]),)
+		self.orig_save_reduce(func=func, args=args, state=state, listitems=listitems, dictitems=dictitems, obj=obj)
+
 	# avoid pickling instances of ourself. this mostly doesn't make sense and leads to trouble.
 	# however, also doesn't break. it mostly makes sense to just ignore.
 	def __getstate__(self): return None
