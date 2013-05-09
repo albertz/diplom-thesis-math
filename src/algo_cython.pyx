@@ -40,7 +40,7 @@ cdef extern from "algo_cpp.cpp":
 		void getMatrix(mpz_t* out)
 		void dumpMatrix() except +
 
-		void calcMatrixTrans(const M2_O& tS, const M2_O& tT, int l) except +
+		void calcMatrixTrans(const M2_O& tS, const M2_O& tT, int lS, int lT) except +
 		size_t matrixRowCountTrans, matrixColumnCountTrans, matrixCountTrans
 		size_t matrixRowDenomTrans
 		void getMatrixTrans(mpz_t* out, int matrixIndex) except +
@@ -129,13 +129,13 @@ cdef class Calc:
 		self.calc.getMatrixTrans(m._entries, i)
 		return m
 
-	def calcMatrixTrans(self, tS, tT, l):
+	def calcMatrixTrans(self, tS, tT, lS, lT):
 		if self.D == 0: raise RuntimeError, "you have to call init first"
 		cdef M2_O _tS
 		cdef M2_O _tT
 		_tS = M2_O_toC(tS, self.D)
 		_tT = M2_O_toC(tT, self.D)
-		self.calc.calcMatrixTrans(_tS, _tT, l)
+		self.calc.calcMatrixTrans(_tS, _tT, lS, lT)
 		self.matrixRowCountTrans = self.calc.matrixRowCountTrans
 		self.matrixColumnCountTrans = self.calc.matrixColumnCountTrans
 		self.matrixCountTrans = self.calc.matrixCountTrans
