@@ -129,7 +129,7 @@ class PersistentCache:
 		self.dict = {}
 		try:
 			self.dict = load(self.name)
-		except Exception:
+		except IOError:
 			pass
 		else:
 			assert isinstance(self.dict, dict)
