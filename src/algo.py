@@ -1,3 +1,4 @@
+import sage
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
 from sage.misc.misc import verbose
@@ -24,7 +25,6 @@ import cusp_expansions
 # The standard pickle cannot save the Sage Expression objects for some reason.
 # We extend the standard pickler.
 import pickle, types, marshal, sys
-Unpickler = pickle.Unpickler
 CellType = type((lambda x: lambda: x)(0).func_closure[0])
 def makeCell(value): return (lambda: value).func_closure[0]
 def getModuleDict(modname): return __import__(modname).__dict__
@@ -109,6 +109,38 @@ class Pickler(pickle.Pickler):
 	# however, also doesn't break. it mostly makes sense to just ignore.
 	def __getstate__(self): return None
 	def __setstate__(self, state): pass
+
+# The extended Pickler above writes pickle-data such that the standard unpickler
+# should be able to unpickle it.
+# However, Sage has problems to generate some objects, so we catch those and automatically
+# create equivalent structures.
+class Unpickler(pickle.Unpickler):
+	dispatch = dict(pickle.Unpickler.dispatch)
+
+	def class_map(self, cls):
+		if cls is sage.structure.sequence.Sequence_generic:
+			return list
+		return cls
+
+	def wrapped_load_newobj(self):
+		args = self.stack.pop()
+		cls = self.stack[-1]
+		cls = self.class_map(cls)
+		obj = cls.__new__(cls, *args)
+		self.stack[-1] = obj
+	dispatch[pickle.NEWOBJ] = wrapped_load_newobj
+
+	def wrapped_load_build(self):
+		stack = self.stack
+		state = stack[-1]
+		inst = stack[-2]
+		if isinstance(inst, list):
+			stack.pop() # consume state
+			return
+		self.load_build()
+	dispatch[pickle.BUILD] = wrapped_load_build
+
+
 
 # We dont use these:
 #from sage.misc.db import save, load
