@@ -131,17 +131,6 @@ class Unpickler(pickle.Unpickler):
 		self.stack[-1] = obj
 	dispatch[pickle.NEWOBJ] = wrapped_load_newobj
 
-	def wrapped_load_build(self):
-		stack = self.stack
-		state = stack[-1]
-		inst = stack[-2]
-		#if isinstance(inst, list):
-		#	print "state:", state.keys()
-		#	stack.pop() # consume state
-		#	return
-		self.load_build()
-	dispatch[pickle.BUILD] = wrapped_load_build
-
 
 
 # We dont use these:
