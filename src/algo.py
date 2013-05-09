@@ -21,6 +21,8 @@ import algo_cython as C
 # via Martin. while this is not in Sage:
 import cusp_expansions
 
+# for debugging
+import better_exchook
 
 
 # It seems that Sage load/save uses the standard pickle module.
@@ -154,19 +156,24 @@ class PersistentCache:
 			self.dict = load(self.name)
 		except IOError:
 			pass
+		except Exception:
+			better_exchook.better_exchook(*sys.exc_info())
+			raise
 		else:
 			assert isinstance(self.dict, dict)
 	def __getitem__(self, item):
 		return self.dict[item]
 	def __setitem__(self, key, value):
 		self.dict[key] = value
+		self.save()
+	def __contains__(self, item):
+		return item in self.dict
+	def save(self):
 		try:
 			save(self.dict, self.name)
 		except Exception:
 			print self.name, self.dict
 			raise
-	def __contains__(self, item):
-		return item in self.dict
 
 # our own verbose function because I just want our msgs, not other stuff
 def verbose(msg):
