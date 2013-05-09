@@ -114,7 +114,7 @@ class Pickler(pickle.Pickler):
 	orig_batch_setitems = pickle.Pickler._batch_setitems
 	def _batch_setitems(self, items):
 		items = sorted(items)
-		self.orig_batch_setitems(items)
+		self.orig_batch_setitems(iter(items))
 
 	# Wrap save_reduce so that we can catch a few cases (e.g. set)
 	# to fix up the representation so that it stays fixed (as for dicts).
