@@ -285,13 +285,14 @@ struct ReductionMatrices_Calc {
 	//     det((tS)^{-1}^{*})^{-k}
 	//     * \sum_{T, tr(T * tS * S * tS^{*}) = n} a(T) * e^{2 \pi i tr(T * tT * tS^{*})}
 	// The function just calculates the function without the det(..) factor.
-	// The parameters given to this function might be multiplied with some factor l
-	// so that they are in \curlO.
-	// Note that the right part are elements of the CyclomoticField(l*l).
+	// The tS,tT parameters given to this function might be multiplied with some factors lS,lT
+	// so that the matrices are in \curlO.
+	// Note that the right part are elements of the CyclomoticField(lS*lT).
+	// The FE represent quotients of the form q^{n/l} where l = matrixRowDenomTrans = lS * lS.
 	std::vector<ValueOfA> matrixTrans; // flat. format: [[[0]*ColumnCount]*RowCount]*ZetaOrder
 	size_t matrixRowCountTrans, matrixColumnCountTrans, matrixCountTrans;
 	size_t matrixRowDenomTrans;
-	void calcMatrixTrans(const M2_O& tS, const M2_O& tT, const Int l) {
+	void calcMatrixTrans(const M2_O& tS, const M2_O& tT, const Int lS, const Int lT) {
 		using namespace std;
 		cout << "calcMatrixTrans: tS = " << tS << ", tT = " << tT << ", tS^* = " << tS.conjugate_transpose(D) << ", l = " << l << endl;
 		
@@ -306,11 +307,11 @@ struct ReductionMatrices_Calc {
 		}
 	
 		// TODO: WARNING: All the stuff about matrixRowDenomTrans and trace (below) has to be studied and worked out.
-		matrixRowDenomTrans = l * l;
+		matrixRowDenomTrans = lS * lS;
 		matrixRowCountTrans *= matrixRowDenomTrans;
 		
 		matrixTrans.clear();
-		matrixCountTrans = l * l;
+		matrixCountTrans = lS * lT;
 		matrixTrans.resize(matrixRowCountTrans * matrixColumnCountTrans * matrixCountTrans);
 		
 		// reduce_GL is expensive, thus we iterate through curlF only once.
@@ -351,7 +352,7 @@ struct ReductionMatrices_Calc {
 					.mulMat(tS.conjugate_transpose(D), D)
 					.trace()
 					.asInt(D);
-				factor_exp = Mod(factor_exp, l*l);
+				factor_exp = Mod(factor_exp, lS*lT);
 				matrixIndex += factor_exp * matrixRowCountTrans * matrixColumnCountTrans;
 				matrixTrans[matrixIndex] += a_T;
 			}
