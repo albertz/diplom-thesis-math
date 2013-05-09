@@ -8,6 +8,8 @@ from sage.modular.modform.constructor import ModularForms
 from sage.modules.free_module import FreeModule
 from sage.rings.integer import Integer
 from sage.rings.infinity import Infinity
+from sage.structure.sage_object import SageObject
+from sage.structure.sequence import Sequence_generic, Sequence
 from sage.symbolic.all import I
 from sage.rings.arith import xgcd as orig_xgcd
 from sage.rings.number_field.number_field import QQ, ZZ, CyclotomicField
@@ -117,16 +119,15 @@ class Pickler(pickle.Pickler):
 class Unpickler(pickle.Unpickler):
 	dispatch = dict(pickle.Unpickler.dispatch)
 
-	def class_map(self, cls):
-		if cls is sage.structure.sequence.Sequence_generic:
-			return list
-		return cls
+	def create(self, cls, args):
+		if cls is Sequence_generic:
+			return Sequence(list(*args))
+		return cls.__new__(cls, *args)
 
 	def wrapped_load_newobj(self):
 		args = self.stack.pop()
 		cls = self.stack[-1]
-		cls = self.class_map(cls)
-		obj = cls.__new__(cls, *args)
+		obj = self.create(cls, args)
 		self.stack[-1] = obj
 	dispatch[pickle.NEWOBJ] = wrapped_load_newobj
 
@@ -134,9 +135,10 @@ class Unpickler(pickle.Unpickler):
 		stack = self.stack
 		state = stack[-1]
 		inst = stack[-2]
-		if isinstance(inst, list):
-			stack.pop() # consume state
-			return
+		#if isinstance(inst, list):
+		#	print "state:", state.keys()
+		#	stack.pop() # consume state
+		#	return
 		self.load_build()
 	dispatch[pickle.BUILD] = wrapped_load_build
 
