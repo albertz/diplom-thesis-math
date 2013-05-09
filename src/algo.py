@@ -426,11 +426,12 @@ def calcElliptViaReduct(calc, f, R, l):
 
 cuspExpansionsCache = PersistentCache("cuspExpansions.cache.sobj")
 def cuspExpansions(level, weight, prec):
-	cacheIdx = (level, weight, prec)
+	cacheIdx = (level, weight)
 	if cacheIdx in cuspExpansionsCache:
-		return cuspExpansionsCache[cacheIdx]
+		ce_prec,ce = cuspExpansionsCache[cacheIdx]
+		if ce_prec >= prec: return ce
 	ce = cusp_expansions.ModularFormsCuspExpansions._for_modular_forms(level, weight, prec)
-	cuspExpansionsCache[cacheIdx] = ce
+	cuspExpansionsCache[cacheIdx] = prec, ce
 	return ce
 
 ellipBaseMatrixCache = PersistentCache("ellipBaseMatrix.cache.sobj") # level,weight -> mat,prec
