@@ -384,6 +384,8 @@ def calcMatrixTrans(calc, R):
 	lT = int(ZZ(tT.denominator()))
 	tS *= lS
 	tT *= lT
+	lS.set_immutable()
+	lT.set_immutable()
 	cacheIdx = (calc.params, calc.curlS, tS, tT, lS, lT)
 	if cacheIdx in matrixTransCache:
 		return matrixTransCache[cacheIdx]
