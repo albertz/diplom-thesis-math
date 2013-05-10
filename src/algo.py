@@ -652,12 +652,13 @@ def modform(D, HermWeight, B_cF=10):
 			print "M_R[0] nrows, ell_R_denom, ell_R_order, Cyclo degree:", \
 				M_R[0].nrows(), ell_R_denom, ell_R_order, CycloDegree_R
 
-			ce = cuspExpansions(level=l, weight=2*HermWeight, prec=M_R[0].nrows())
+			# The maximum precision we can use is M_R[0].nrows().
+			# However, that can be quite huge (e.g. 600).
+			ce_prec = min(precLimit * 2, M_R[0].nrows())
+
+			ce = cuspExpansions(level=l, weight=2*HermWeight, prec=ce_prec)
 			ell_M_denom, ell_M = ce.expansion_at(SL2Z(M))
 			ell_M_order = ell_M_denom # we expect that a CyclomoticField of the order of the denom can represent all entries
-
-			print "1) M_R[0] rank, herm rank, mult rank:", \
-				M_R[0].rank(), herm_modforms.rank(), (M_R[0] * herm_modforms).rank()
 
 			# Not sure if this is always the case but seems so.
 			assert ell_R_denom >= ell_M_denom
@@ -668,21 +669,18 @@ def modform(D, HermWeight, B_cF=10):
 				ell_R_denom = ell_M_denom
 			assert ell_R_denom == ell_M_denom
 
-			print "2) M_R[0] rank, herm rank, mult rank:", \
-				M_R[0].rank(), herm_modforms.rank(), (M_R[0] * herm_modforms).rank()
-
 			# ell_M rows are the elliptic FE. M_R[i] columns are the elliptic FE.
 			# We expect that M_R gives a higher precision for the ell FE. I'm not sure
 			# if this is always true but we expect it here (maybe not needed, though).
-			print "precision of M_R[0], ell_M:", M_R[0].nrows(), ell_M.ncols()
-			assert ell_M.ncols() >= M_R[0].nrows()
+			print "precision of M_R[0], ell_M, wanted:", M_R[0].nrows(), ell_M.ncols(), ce_prec
+			assert ell_M.ncols() >= ce_prec
 			prec = min(M_R[0].nrows(), ell_M.ncols())
 			# cut to have same precision
 			M_R = [M_R_i[:prec,:] for M_R_i in M_R]
 			ell_M = ell_M[:,:prec]
 			assert ell_M.ncols() == M_R[0].nrows() == prec
 
-			print "3) M_R[0] rank, herm rank, mult rank:", \
+			print "M_R[0] rank, herm rank, mult rank:", \
 				M_R[0].rank(), herm_modforms.rank(), (M_R[0] * herm_modforms).rank()
 			ell_R = [M_R_i * herm_modforms for M_R_i in M_R]
 
