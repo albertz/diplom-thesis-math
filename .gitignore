@@ -25,7 +25,7 @@ a.out
 xcuserdata
 src/build/Xcode/build
 /.idea/workspace.xml
-/.idea/work.xml
+/.idea/work.iml
 /.idea/misc.xml
 /.idea/dictionaries/
 
