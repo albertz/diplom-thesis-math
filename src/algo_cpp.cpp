@@ -45,7 +45,7 @@ struct M2T_O_PosDefSortedGeneric_Iterator : _InfIterM2T_O {
 	M2T_O_PosDefSortedGeneric_Iterator(int _D) : _InfIterM2T_O(_D) {}
 	M2T_O get() const { return cur; }
 	bool isValid() const {
-		if(cur.det(D) < 0) return false;
+		if(cur.det(D) <= 0) return false;
 		if(cur.a < 0) return false;
 		if(cur.c < 0) return false;
 		return true;
