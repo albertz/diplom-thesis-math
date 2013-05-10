@@ -645,8 +645,9 @@ def modform(D, HermWeight, B_cF=10):
 
 			herm_modforms = herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
 			ell_R_denom, ell_R_order, M_R = calcMatrixTrans(calc, R)
+			CycloDegree_R = CyclotomicField(ell_R_order).degree()
 
-			ce = cuspExpansions(level=l, weight=2*HermWeight, prec=M_R[0].nrows())
+			ce = cuspExpansions(level=l, weight=2*HermWeight, prec=M_R[0].nrows() / CycloDegree_R / ell_R_denom)
 			ell_M_denom, ell_M = ce.expansion_at(SL2Z(M))
 			ell_M_order = ell_M_denom # we expect that a CyclomoticField of the order of the denom can represent all entries
 
