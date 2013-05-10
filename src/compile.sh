@@ -2,6 +2,8 @@
 
 SageDir="/Applications/sage-5.8"
 [ \! -d $SageDir ] && SageDir=~/sage-5.8
+[ \! -d $SageDir ] && SageDir=/usr/lib/sagemath
+[ \! -d $SageDir ] && { echo "sagedir not found!"; exit 1; }
 
 SageDevelDir="$SageDir/devel/sage"
 SageLocalIncludeDir="$SageDir/local/include"
