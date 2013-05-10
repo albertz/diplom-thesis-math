@@ -123,10 +123,10 @@ struct M2T_O {
 		DOMAIN_CHECK(D < 0);
 		DOMAIN_CHECK(Mod(D*D - D, 4) == 0);
 		// Re(b) = b1 + D b2 1/2
-		// Re(b)^2 = b1^2 + D b2 + 1/4 D^2 b2^2
+		// Re(b)^2 = b1^2 + D b1 b2 + 1/4 D^2 b2^2
 		// Im(b) = sqrt{-D} b2 1/2
 		// Im(b)^2 = -D b2^2 1/4
-		return b1*b1 + D*b2 + Div(D*D-D, 4) * b2*b2;
+		return b1*b1 + D*b1*b2 + Div(D*D-D, 4) * b2*b2;
 	}
 	// = Gauss_upper( M*|b| )
 	Int absBMupper(const int D, const Int M) {

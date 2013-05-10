@@ -54,10 +54,10 @@ struct M2T_O_PosDefSortedGeneric_Iterator : _InfIterM2T_O {
 	bool _hardLimitCheck() {
 		auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
 		// det >= 0 <=> a*c - b1*b1 - D*b2 - Div(D*D-D, 4) * b2*b2 >= 0.
-		// Thus, when we have ac >= b1*b1 - (-D)*|b2| + Div(D*D-D, 4) + b2*b2,
+		// Thus, when we have ac >= b1*b1 - (-D)*(|b1*b2|+1) + Div(D*D-D, 4) * b2*b2,
 		// we are always safe that we don't miss any values. Of course,
 		// we must still check for validity because we will get invalid values.
-		return a*c >= b1*b1 - (-D) * abs(b2) + Div(D*D-D, 4) * b2*b2;
+		return a*c >= b1*b1 - (-D) * (abs(b1*b2)+1) + Div(D*D-D, 4) * b2*b2;
 	}
 	void next() {
 		auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
