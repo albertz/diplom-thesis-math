@@ -570,6 +570,9 @@ def modform(D, HermWeight, B_cF=10):
 		raise NotImplementedError, "dimension calculation of Hermitian modular form with D = %i not implemented" % D
 
 	verbose("current dimension: %i, wanted: %i" % (herm_modform_fe_expannsion.dimension(), dim))
+	if dim == 0:
+		print "dim == 0 -> exit"
+		return
 
 	while True:
 		# Step 3. Iterate S \in Mat_2^T(Z). Add to curlS. iterate by denominator.
