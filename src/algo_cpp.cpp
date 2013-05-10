@@ -477,8 +477,9 @@ void test_algo_CurlSGen() {
 	size_t denomLimit = 10;
 	while(true) {
 		++curlS;
-		if(curlS.curDenom > denomLimit) break;
-		cout << curlS.curDenom << ", " << curlS.cur << endl;
+		Int curDenom = (**curlS.iter).det(curlS.D);
+		if(curDenom > denomLimit) break;
+		cout << curDenom << ", " << (**curlS.iter) << endl;
 		++c;
 	}
 	cout << "count: " << c << endl;
