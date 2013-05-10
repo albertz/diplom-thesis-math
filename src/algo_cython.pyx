@@ -6,7 +6,7 @@ include "cdefs.pxi"
 from libcpp.string cimport string
 
 from sage.functions.other import sqrt as ssqrt
-from sage.rings.integer_ring import ZZ
+from sage.rings.number_field.number_field import QQ, ZZ
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix_space import MatrixSpace
 from sage.matrix.matrix_integer_dense cimport Matrix_integer_dense
@@ -55,7 +55,7 @@ cdef M2T_O_fromC(M2T_O m, int D):
 	"""
 	:rtype : Matrix_symbolic_dense
 	"""
-	b = m.b1 + m.b2 * (D + ssqrt(D)) * 0.5
+	b = m.b1 + m.b2 * (D + ssqrt(D)) * QQ(0.5)
 	return matrix(2, 2, [m.a, b, b.conjugate(), m.c])
 
 cdef ElemOfCurlO O_toC(a, int D):
