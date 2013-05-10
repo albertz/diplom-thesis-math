@@ -248,6 +248,11 @@ def gcd(a,b):
 	d,_,_ = xgcd(a, b)
 	return d
 
+def _simplify(a):
+	if hasattr(a, "simplify_full"):
+		return a.simplify_full()
+	return simplify(a)
+
 def solveR(M, S):
 	"""
 	Let M = [[a,b;c,d]] \in \SL_2(\ZZ).
@@ -374,6 +379,12 @@ def test_solveR():
 
 	a,b,c,d = 1,0,3,1
 	s,t,u = 1,2,16
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S)
+
+	a,b,c,d = 0,-1,1,0
+	s,t,u = 2, 0.5 * ssqrt(-3) - 0.5, 2
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S)
@@ -537,8 +548,7 @@ def _takeEveryNRow(mat, n):
 	return newm
 
 def _toInt(a):
-	if hasattr(a, "simplify_full"):
-		a = a.simplify_full()
+	a = _simplify(a)
 	a = ZZ(a)
 	a = int(a)
 	return a
