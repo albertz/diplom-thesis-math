@@ -72,7 +72,7 @@ struct M2T_O_PosDefSortedGeneric_Iterator : _InfIterM2T_O {
 			b1 = b2 = 0;
 			c ++;
 		}
-		if(c >= a) {
+		if(c > a) {
 			c = b1 = b2 = 0;
 			a ++;
 		}
