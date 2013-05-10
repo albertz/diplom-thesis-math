@@ -15,26 +15,85 @@ static const int HermDegree = 2;
 
 typedef M2T_O ElemOfS;
 
-struct CurlS_Generator {
-	int D;
-	std::list<ElemOfS> matrices;
-	std::list<ElemOfS>::iterator begin() { return matrices.begin(); }
-	std::list<ElemOfS>::iterator end() { return matrices.end(); }
-	size_t size() { return matrices.size(); }
-	
-	/*
-	Just now, we iterare reduced matrices in Her_2(\Z).
-	This might not be correct, we might need all reduced
-	matrices in Her_2(\Z) here.
-	It is not possible to iterate them by det(S)!
-	This could be a problem. Maybe it is enough to limit Im(S).
-	*/
+template<typename T>
+struct InfiniteIterIntf {
+	typedef InfiniteIterIntf Self;
+	virtual ~InfiniteIterIntf() {}
+	virtual bool isValid() const = 0;
+	virtual void next() = 0;
+	Self& operator++() {
+		do {
+			next();
+		} while(!isValid());
+		return *this;
+	}
+	virtual T operator*() const = 0;
+	virtual bool operator==(const Self& other) const {
+		return (**this) == (*other);
+	}
+	bool operator!=(const Self& other) const { return !(*this == other); }
+};
 
+struct _InfIterM2T_O : InfiniteIterIntf<M2T_O> {
+	int D;
+	_InfIterM2T_O(int _D) : D(_D) {}
+};
+
+struct M2T_O_PosDefSortedGeneric_Iterator : _InfIterM2T_O {
+	M2T_O cur;
+	M2T_O_PosDefSortedGeneric_Iterator(int _D) : _InfIterM2T_O(_D) {}
+	bool isValid() {
+		if(cur.det(D) < 0) return false;
+		if(cur.a < 0) return false;
+		if(cur.c < 0) return false;
+		return true;
+	}
+	bool _hardLimitCheck() {
+		auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
+		// det4D >= 0 <=> 4(-D)ac >= 4b1^2 - 4(-D)b1b2 + (-D)(1-D)b2^2
+		// Thus, when we have 4(-D)ac >= 4b1^2 - 4(-D)|b1b2| + (-D)(1-D)b2^2,
+		// we are always safe that we don't miss any values. Of course,
+		// we must still check for validity because we will get invalid values.
+		// 4b1^2 - 4(-D)|b1b2| = 4|b1| (|b1| - (-D)|b2|).
+		// This is always strongly monotonly increasing and sign-independent -> thus we can iterate.
+		return 4*(-F.D)*a*c >= 4*b1*b1 - 4*(-F.D)*abs(b1*b2) + (-F.D)*(1-F.D)*b2*b2;
+	}
+	void next() {
+		auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
+		if(b2 > 0) { b2 *= -1; return; }
+		b2 = -b2 + 1;
+		if(!_hardLimitCheck()) {
+			b2 = 0;
+			if(b1 > 0) { b1 *= -1; return; }
+			b1 = -b1 + 1;
+		}
+		if(!_hardLimitCheck()) {
+			b1 = b2 = 0;
+			c ++;
+		}
+		if(c >= F.B) {
+			c = b1 = b2 = 0;
+			a ++;
+		}
+		if(a >= F.B)
+			hitEnd = true;
+	}
+};
+
+struct M2T_O_PosDefSortedZZ_Iterator : _InfIterM2T_O {
 	ElemOfS cur; // matrix S
 	Int curDenom; // denom of S^-1 = det S = ac - b^2
+	
+	M2T_O_PosDefSortedZZ_Iterator(int _D) : _InfIterM2T_O(_D), curDenom(1) {}
 
-	CurlS_Generator() : curDenom(1) {}
-
+	/*
+	 Just now, we iterare reduced matrices in Her_2(\Z).
+	 This might not be correct, we might need all reduced
+	 matrices in Her_2(\Z) here.
+	 It is not possible to iterate them by det(S)!
+	 This could be a problem. Maybe it is enough to limit Im(S).
+	 */
+	
 	bool isValid() {
 		if(cur.a > cur.c) return false;
 		if(cur.det(D) != curDenom) return false;
@@ -43,13 +102,13 @@ struct CurlS_Generator {
 	}
 	void next() {
 		auto &a = cur.a, &b = cur.b1, &c = cur.c;
-
+		
 		c ++;
 		if(c <= curDenom + b*b) {
 			a = (curDenom + b*b) / c;
 			return;
 		}
-
+		
 		c = 0;
 		if(b > 0) { b *= -1; return; }
 		b = -b + 1;
@@ -61,16 +120,37 @@ struct CurlS_Generator {
 			curDenom ++;
 		}
 	}
+};
+
+
+
+struct CurlS_Generator {
+	int D;
+	std::list<ElemOfS> matrices;
+	std::list<ElemOfS>::iterator begin() { return matrices.begin(); }
+	std::list<ElemOfS>::iterator end() { return matrices.end(); }
+	size_t size() { return matrices.size(); }
+	
+	std::auto_ptr<_InfIterM2T_O> iter;
+	
+	CurlS_Generator() : D(0) {}
+	void init(_InfIterM2T_O* _iter) {
+		iter = std::auto_ptr<_InfIterM2T_O>(_iter);
+		D = iter->D;
+	}
+	
 	CurlS_Generator& operator++() {
 		do {
-			next();
-		} while(!isValid());
+			iter->next();
+		} while(!iter->isValid());
 		return *this;
 	}
 
 	M2T_O getNextS() {
-		Int oldDenom = curDenom;
+		Int oldDenom = ElemOfS(**iter).det(D);
 		++(*this); // the very first ([0,0,0]) is not valid
+		ElemOfS cur = ElemOfS(**iter);
+		Int curDenom = cur.det(D);
 		if(curDenom != oldDenom)
 			matrices.clear();
 		matrices.push_back(cur);
