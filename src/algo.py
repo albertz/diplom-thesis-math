@@ -658,7 +658,7 @@ def modform(D, HermWeight, B_cF=10):
 
 			ce = cuspExpansions(level=l, weight=2*HermWeight, prec=ce_prec)
 			ell_M_denom, ell_M = ce.expansion_at(SL2Z(M))
-			ell_M_order = ell_M_denom # we expect that a CyclomoticField of the order of the denom can represent all entries
+			ell_M_order = ell_R_order # not sure here. just try the one from R. toCyclPowerBase would fail if this doesn't work
 
 			# Not sure if this is always the case but seems so.
 			assert ell_R_denom >= ell_M_denom
