@@ -119,7 +119,7 @@ struct M2T_O {
 	M2T_O(Int _a = 0, Int _b1 = 0, Int _b2 = 0, Int _c = 0)
 	: a(_a), b1(_b1), b2(_b2), c(_c) {}
 	// = |b|^2
-	Int absBsquare(const int D) {
+	Int absBsquare(const int D) const {
 		DOMAIN_CHECK(D < 0);
 		DOMAIN_CHECK(Mod(D*D - D, 4) == 0);
 		// Re(b) = b1 + D b2 1/2
@@ -137,7 +137,7 @@ struct M2T_O {
 		if(x*x == y) return x;
 		return x + 1;
 	}
-	Int det(const int D) {
+	Int det(const int D) const {
 		return a*c - absBsquare(D);
 	}
 	Int gcd() const { return ::gcd(a, b1, b2, c); }	

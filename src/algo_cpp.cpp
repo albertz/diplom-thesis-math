@@ -21,13 +21,14 @@ struct InfiniteIterIntf {
 	virtual ~InfiniteIterIntf() {}
 	virtual bool isValid() const = 0;
 	virtual void next() = 0;
+	virtual T get() const = 0;
 	Self& operator++() {
 		do {
 			next();
 		} while(!isValid());
 		return *this;
 	}
-	virtual T operator*() const = 0;
+	virtual T operator*() const { return get(); }
 	virtual bool operator==(const Self& other) const {
 		return (**this) == (*other);
 	}
@@ -42,7 +43,8 @@ struct _InfIterM2T_O : InfiniteIterIntf<M2T_O> {
 struct M2T_O_PosDefSortedGeneric_Iterator : _InfIterM2T_O {
 	M2T_O cur;
 	M2T_O_PosDefSortedGeneric_Iterator(int _D) : _InfIterM2T_O(_D) {}
-	bool isValid() {
+	M2T_O get() const { return cur; }
+	bool isValid() const {
 		if(cur.det(D) < 0) return false;
 		if(cur.a < 0) return false;
 		if(cur.c < 0) return false;
@@ -50,13 +52,11 @@ struct M2T_O_PosDefSortedGeneric_Iterator : _InfIterM2T_O {
 	}
 	bool _hardLimitCheck() {
 		auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
-		// det4D >= 0 <=> 4(-D)ac >= 4b1^2 - 4(-D)b1b2 + (-D)(1-D)b2^2
-		// Thus, when we have 4(-D)ac >= 4b1^2 - 4(-D)|b1b2| + (-D)(1-D)b2^2,
+		// det >= 0 <=> a*c - b1*b1 - D*b2 - Div(D*D-D, 4) - b2*b2 >= 0.
+		// Thus, when we have ac >= b1*b1 - (-D)*|b2| + Div(D*D-D, 4) + b2*b2,
 		// we are always safe that we don't miss any values. Of course,
 		// we must still check for validity because we will get invalid values.
-		// 4b1^2 - 4(-D)|b1b2| = 4|b1| (|b1| - (-D)|b2|).
-		// This is always strongly monotonly increasing and sign-independent -> thus we can iterate.
-		return 4*(-F.D)*a*c >= 4*b1*b1 - 4*(-F.D)*abs(b1*b2) + (-F.D)*(1-F.D)*b2*b2;
+		return a*c >= b1*b1 - (-D) * abs(b2) + Div(D*D-D, 4) + b2*b2;
 	}
 	void next() {
 		auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
@@ -71,12 +71,10 @@ struct M2T_O_PosDefSortedGeneric_Iterator : _InfIterM2T_O {
 			b1 = b2 = 0;
 			c ++;
 		}
-		if(c >= F.B) {
+		if(c >= a) {
 			c = b1 = b2 = 0;
 			a ++;
 		}
-		if(a >= F.B)
-			hitEnd = true;
 	}
 };
 
@@ -94,7 +92,8 @@ struct M2T_O_PosDefSortedZZ_Iterator : _InfIterM2T_O {
 	 This could be a problem. Maybe it is enough to limit Im(S).
 	 */
 	
-	bool isValid() {
+	M2T_O get() const { return cur; }
+	bool isValid() const {
 		if(cur.a > cur.c) return false;
 		if(cur.det(D) != curDenom) return false;
 		if(cur.gcd() > 1) return false;
@@ -122,8 +121,6 @@ struct M2T_O_PosDefSortedZZ_Iterator : _InfIterM2T_O {
 	}
 };
 
-
-
 struct CurlS_Generator {
 	int D;
 	std::list<ElemOfS> matrices;
@@ -131,12 +128,23 @@ struct CurlS_Generator {
 	std::list<ElemOfS>::iterator end() { return matrices.end(); }
 	size_t size() { return matrices.size(); }
 	
+	std::string iterType;
 	std::auto_ptr<_InfIterM2T_O> iter;
 	
 	CurlS_Generator() : D(0) {}
-	void init(_InfIterM2T_O* _iter) {
+	void init(int _D, const std::string& _iterType) {
+		D = _D;
+		_InfIterM2T_O* _iter = NULL;
+		iterType = _iterType;
+		if(iterType == "ZZ")
+			_iter = new M2T_O_PosDefSortedZZ_Iterator(D);
+		else if(iterType == "generic")
+			_iter = new M2T_O_PosDefSortedGeneric_Iterator(D);
+		else {
+			std::cerr << "CurlS::init: iterType " << iterType << " is invalid" << std::endl;
+			LOGIC_CHECK(false);
+		}
 		iter = std::auto_ptr<_InfIterM2T_O>(_iter);
-		D = iter->D;
 	}
 	
 	CurlS_Generator& operator++() {
@@ -256,8 +264,9 @@ struct ReductionMatrices_Calc {
 		matrixRowCount = matrixColumnCount = 0;
 	}
 		
-	void init(int _D, int _HermWeight) {
-		D = curlF.D = curlS.D = _D;
+	void init(int _D, int _HermWeight, const std::string& curlSiterType) {
+		D = curlF.D = _D;
+		curlS.init(D, curlSiterType);
 		
 		DOMAIN_CHECK(D < 0);
 		// Fundamental discriminant properties on D:
@@ -501,7 +510,7 @@ void test_algo_PrecisionF() {
 void test_algo_calcReducedCurlF() {
 	using namespace std;
 	ReductionMatrices_Calc calc;
-	calc.init(-4, 10);
+	calc.init(-4, 10, "ZZ");
 	calc.curlF.B = 10;
 	calc.calcReducedCurlF();
 	cout << "size of reducedMatrix(curlF): " << calc.reducedCurlFList.size() << endl;	
@@ -512,7 +521,7 @@ void test_algo() {
 	
 	{
 		ReductionMatrices_Calc calc;
-		calc.init(-4, 18);
+		calc.init(-4, 18, "ZZ");
 		calc.curlF.B = 20;
 		calc.calcReducedCurlF();
 		calc.curlS.getNextS();
@@ -536,7 +545,7 @@ void test_algo() {
 
 		ReductionMatrices_Calc calc;
 		const int D = -3;
-		calc.init(D, 6);
+		calc.init(D, 6, "ZZ");
 		calc.curlF.B = 10;
 		calc.calcReducedCurlF();
 		calc.curlS.matrices.push_back(M2T_O(1,0,0,4));
