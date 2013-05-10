@@ -53,11 +53,11 @@ struct M2T_O_PosDefSortedGeneric_Iterator : _InfIterM2T_O {
 	}
 	bool _hardLimitCheck() {
 		auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
-		// det >= 0 <=> a*c - b1*b1 - D*b2 - Div(D*D-D, 4) - b2*b2 >= 0.
+		// det >= 0 <=> a*c - b1*b1 - D*b2 - Div(D*D-D, 4) * b2*b2 >= 0.
 		// Thus, when we have ac >= b1*b1 - (-D)*|b2| + Div(D*D-D, 4) + b2*b2,
 		// we are always safe that we don't miss any values. Of course,
 		// we must still check for validity because we will get invalid values.
-		return a*c >= b1*b1 - (-D) * abs(b2) + Div(D*D-D, 4) + b2*b2;
+		return a*c >= b1*b1 - (-D) * abs(b2) + Div(D*D-D, 4) * b2*b2;
 	}
 	void next() {
 		auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
@@ -135,6 +135,7 @@ struct CurlS_Generator {
 	CurlS_Generator() : D(0) {}
 	void init(int _D, const std::string& _iterType) {
 		D = _D;
+		DOMAIN_CHECK(D < 0);
 		_InfIterM2T_O* _iter = NULL;
 		iterType = _iterType;
 		if(iterType == "ZZ")
@@ -143,7 +144,7 @@ struct CurlS_Generator {
 			_iter = new M2T_O_PosDefSortedGeneric_Iterator(D);
 		else {
 			std::cerr << "CurlS::init: iterType " << iterType << " is invalid" << std::endl;
-			LOGIC_CHECK(false);
+			DOMAIN_CHECK(false);
 		}
 		iter = std::auto_ptr<_InfIterM2T_O>(_iter);
 	}
@@ -479,7 +480,7 @@ struct ReductionMatrices_Calc {
 
 
 
-void test_algo_CurlSGen(int D, const std::string& iterType, ssize_t denomLimit, ssizte_t countLimit) {
+void test_algo_CurlSGen(int D, const std::string& iterType, ssize_t denomLimit, ssize_t countLimit) {
 	using namespace std;
 	CurlS_Generator curlS;
 	curlS.init(D, iterType);
