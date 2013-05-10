@@ -1,11 +1,13 @@
-from sage.matrix.constructor import matrix
 
 include "interrupt.pxi"
 include "stdsage.pxi"
 include "cdefs.pxi"
 
+from libcpp.string cimport string
+
 from sage.functions.other import sqrt as ssqrt
 from sage.rings.integer_ring import ZZ
+from sage.matrix.constructor import matrix
 from sage.matrix.matrix_space import MatrixSpace
 from sage.matrix.matrix_integer_dense cimport Matrix_integer_dense
 from sage.matrix.matrix_integer_dense import Matrix_integer_dense
@@ -30,7 +32,7 @@ cdef extern from "algo_cpp.cpp":
 		int B
 	cdef cppclass ReductionMatrices_Calc:
 		ReductionMatrices_Calc()
-		void init(int D, int HermWeight) except +
+		void init(int D, int HermWeight, string curlSiterType) except +
 		PrecisionF curlF
 		CurlS_Generator curlS
 		void calcReducedCurlF() except +
@@ -80,10 +82,10 @@ cdef class Calc:
 	cdef public object params
 	cdef public object curlS
 
-	def init(self, int D, int HermWeight, int B_cF=20):
+	def init(self, int D, int HermWeight, int B_cF=20, string curlSiterType="generic"):
 		self.D = D
 		self.HermWeight = HermWeight
-		self.calc.init(D, HermWeight)
+		self.calc.init(D, HermWeight, curlSiterType)
 		# start limit
 		# this is never changed at the moment
 		self.calc.curlF.B = B_cF
