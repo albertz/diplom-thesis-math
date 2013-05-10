@@ -22,11 +22,13 @@ cython \
 	--cplus \
 	algo_cython.pyx
 
-CppOpts="-std=gnu++11 -ftrapv"
-[ "$(uname)" == "Darwin" ] && CppOpts="$CppOpts -stdlib=libc++"
-[ "$(uname)" == "Linux" ] && CppOpts="$CppOpts -fPIC"
+# Note that you either need a recent Clang or at least GCC 4.7.
+Cpp="c++"
+CppOpts="-ftrapv"
+[ "$(uname)" == "Darwin" ] && CppOpts="$CppOpts -std=gnu++11 -stdlib=libc++"
+[ "$(uname)" == "Linux" ] && CppOpts="$CppOpts -std=c++11 -fPIC"
 
-c++ \
+$Cpp \
 	$CppOpts \
 	-I $PythonIncludeDir \
 	-I $SageDevelDir \
@@ -38,7 +40,7 @@ c++ \
 	algo_cython.cpp
 
 if [ "$(uname)" == "Linux" ]; then
-c++ -shared algo_cython.o -ggdb -lc -L $SageCLibDir -lcsage -o algo_cython.so
+$Cpp -shared algo_cython.o -ggdb -lc -L $SageCLibDir -lcsage -o algo_cython.so
 
 elif [ "$(uname)" == "Darwin" ]; then
 libtool -dynamic \
