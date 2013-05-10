@@ -265,7 +265,7 @@ def solveR(M, S):
 	assert isinstance(S, Matrix)
 	assert S.nrows() == 2 and S.ncols() == 2
 	assert M.nrows() == 2 and M.ncols() == 2
-	assert S[0][0] > 0 and S[1][1] > 0 and S.det() > 0, "S is not positive definite"
+	assert _simplify(S[0][0]) > 0 and _simplify(S[1][1]) > 0 and _simplify(S.det()) > 0, "S is not positive definite"
 	assert M.det() == 1, "M is not in \SL_2(\ZZ)"
 	#Ring = S.base_ring()
 	#print type(Ring), Ring
@@ -276,6 +276,7 @@ def solveR(M, S):
 	B1 = M[0][1] * S
 	C1 = M[1][0] * S.inverse()
 	D1 = matrix(Ring, 2,2, M[1][1])
+	A1,B1,C1,D1 = [m.apply_map(_simplify) for m in [A1,B1,C1,D1]]
 	def make4x4matrix(A1,B1,C1,D1):
 		return matrix(Ring, 4,4,
 			[A1[0][0],A1[0][1],B1[0][0],B1[0][1]] +
@@ -293,7 +294,7 @@ def solveR(M, S):
 		)
 	J = make4x4matrix_embed(0,0,-1,-1,1,1,0,0)
 	I4 = make4x4matrix_embed(1,1,0,0,0,0,1,1)
-	assert tM1.conjugate_transpose() * J * tM1 == J
+	assert (tM1.conjugate_transpose() * J * tM1).apply_map(_simplify) == J
 	l = C1.denominator()
 	d = gcd(A1[0][0] * l, C1[0][0] * l)
 	if not d: d = 1
@@ -351,11 +352,11 @@ def solveR(M, S):
 	assert tM4[3][0] == 0
 	assert tM4[3][1] == 0
 
-	R = tM4
-	gamma = G1.inverse() * G2.inverse() * G3.inverse()
+	R = tM4.apply_map(_simplify)
+	gamma = (G1.inverse() * G2.inverse() * G3.inverse()).apply_map(_simplify)
 	assert tM == gamma * R
 	assert gamma.conjugate_transpose() * J * gamma == J
-	assert R.submatrix(0,0,2,2) * R.submatrix(2,2,2,2).conjugate_transpose() == 1
+	assert (R.submatrix(0,0,2,2) * R.submatrix(2,2,2,2).conjugate_transpose()).apply_map(_simplify) == 1
 	return gamma, R, tM
 
 def test_solveR():
@@ -384,7 +385,7 @@ def test_solveR():
 	gamma,R,tM = solveR(M, S)
 
 	a,b,c,d = 0,-1,1,0
-	s,t,u = 2, 0.5 * ssqrt(-3) - 0.5, 2
+	s,t,u = 2, QQ(0.5) * ssqrt(-3) - QQ(0.5), 2
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S)
