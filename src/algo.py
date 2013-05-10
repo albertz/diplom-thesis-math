@@ -436,6 +436,7 @@ def cuspExpansions(level, weight, prec):
 	if cacheIdx in cuspExpansionsCache:
 		ce_prec,ce = cuspExpansionsCache[cacheIdx]
 		if ce_prec >= prec: return ce
+	verbose("calc ModularFormsCuspExpansions at level %i with weight %i and prec %i ..." % (level, weight, prec))
 	ce = cusp_expansions.ModularFormsCuspExpansions._for_modular_forms(level, weight, prec)
 	cuspExpansionsCache[cacheIdx] = prec, ce
 	return ce
