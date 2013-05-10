@@ -536,6 +536,12 @@ def _takeEveryNRow(mat, n):
 				return None
 	return newm
 
+def _toInt(a):
+	if hasattr(a, "simplify_full"):
+		a = a.simplify_full()
+	a = ZZ(a)
+	a = int(a)
+	return a
 
 def modform(D, HermWeight, B_cF=10):
 	"Main algo"
@@ -595,7 +601,7 @@ def modform(D, HermWeight, B_cF=10):
 		precLimit = M_S.nrows() # \cF(S)
 
 		l = S.det()
-		l = ZZ(l)
+		l = _toInt(l)
 		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
 		verbose("get elliptic modform space with precision %i ..." % precLimit)
 		fe_expansion_matrix_l = getElliptModule(l, 2*HermWeight, precLimit)
