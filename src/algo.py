@@ -1,6 +1,10 @@
 import sage
+from sage.calculus.functional import simplify
+from sage.functions.other import sqrt as ssqrt
+from sage.functions.other import imag, real
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
+from sage.matrix.matrix_space import MatrixSpace
 from sage.misc.misc import verbose
 from sage.modular.arithgroup.congroup_sl2z import SL2Z
 from sage.modular.congroup import Gamma0
@@ -11,7 +15,7 @@ from sage.rings.infinity import Infinity
 from sage.structure.sage_object import SageObject
 from sage.structure.sequence import Sequence_generic, Sequence
 from sage.symbolic.all import I
-from sage.rings.arith import xgcd as orig_xgcd
+from sage.rings.arith import xgcd as orig_xgcd, lcm
 from sage.rings.number_field.number_field import QQ, ZZ, CyclotomicField
 from sage.rings.power_series_ring import PowerSeriesRing
 from sage.symbolic.ring import SymbolicRing
@@ -376,12 +380,23 @@ def test_solveR():
 
 	return gamma,R,tM
 
+def _curlO_matrix_denom(mat, D):
+	assert D < 0
+	mat_real = mat.apply_map(real)
+	mat_imag = mat.apply_map(lambda x: simplify(imag(x) * 2 / ssqrt(-D)))
+	denom_mat_real = ZZ(mat_real.denominator())
+	denom_mat_imag = ZZ(mat_imag.denominator())
+	assert denom_mat_real * mat_real in MatrixSpace(ZZ,mat.nrows(),mat.ncols())
+	assert denom_mat_imag * mat_imag in MatrixSpace(ZZ,mat.nrows(),mat.ncols())
+	denom = lcm(denom_mat_real, denom_mat_imag)
+	return int(ZZ(denom))
+
 matrixTransCache = PersistentCache("matrixTrans.cache.sobj")
 def calcMatrixTrans(calc, R):
 	tS = R.submatrix(0,0,2,2)
 	tT = R.submatrix(2,0,2,2)
-	lS = int(ZZ(tS.denominator()))
-	lT = int(ZZ(tT.denominator()))
+	lS = _curlO_matrix_denom(tS, D=calc.D)
+	lT = _curlO_matrix_denom(tT, D=calc.D)
 	tS *= lS
 	tT *= lT
 	tS.set_immutable()

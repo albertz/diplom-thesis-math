@@ -74,7 +74,7 @@ cdef M2_O M2_O_toC(m, int D):
 cdef class Calc:
 	# You need a recent Cython (e.g. >=0.19) for this.
 	cdef ReductionMatrices_Calc calc
-	cdef int D, HermWeight
+	cdef public int D, HermWeight
 	cdef public size_t matrixColumnCount
 	cdef public size_t matrixRowCountTrans, matrixColumnCountTrans, matrixCountTrans, matrixRowDenomTrans
 	cdef public object params
