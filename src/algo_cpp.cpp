@@ -479,20 +479,28 @@ struct ReductionMatrices_Calc {
 
 
 
-void test_algo_CurlSGen() {
+void test_algo_CurlSGen(int D, const std::string& iterType, ssize_t denomLimit, ssizte_t countLimit) {
 	using namespace std;
 	CurlS_Generator curlS;
-	curlS.D = -4;
+	curlS.init(D, iterType);
 	size_t c = 0;
-	size_t denomLimit = 10;
 	while(true) {
 		++curlS;
 		Int curDenom = (**curlS.iter).det(curlS.D);
-		if(curDenom > denomLimit) break;
+		if(denomLimit >= 0 && curDenom > denomLimit) break;
 		cout << curDenom << ", " << (**curlS.iter) << endl;
 		++c;
+		if(countLimit >= 0 && c > countLimit) break;
 	}
 	cout << "count: " << c << endl;
+}
+
+void test_algo_CurlSGen_ZZ() {
+	test_algo_CurlSGen(-4, "ZZ", 10, -1);
+}
+
+void test_algo_CurlSGen_generic() {
+	test_algo_CurlSGen(-3, "generic", -1, 10000);
 }
 
 void test_algo_PrecisionF() {
