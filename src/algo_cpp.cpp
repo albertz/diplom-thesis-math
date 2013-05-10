@@ -6,6 +6,7 @@
 #include <list>
 #include <gmp.h>
 #include <iostream>
+#include <memory>
 
 // In many cases, we wont use this variable and hardcode
 // it for degree 2. However, we define it here,
