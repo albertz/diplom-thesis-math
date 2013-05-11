@@ -192,10 +192,10 @@ struct ElemOfCurlO {
 		return res;
 	}
 	ElemOfCurlO mul(const ElemOfCurlO& other, const int D) const {
-		DOMAIN_CHECK(Mod(D*D*3+D, 4) == 0);
+		DOMAIN_CHECK(Mod(D*D-D, 4) == 0);
 		ElemOfCurlO res;
-		res.b1 = b1 * other.b1 + b2 * other.b2 * Div(D*D*3 + D, 4);
-		res.b2 = b1 * other.b2 + b2 * other.b1 - D * b2 * other.b2;
+		res.b1 = b1 * other.b1 - b2 * other.b2 * Div(D*D - D, 4);
+		res.b2 = b1 * other.b2 + b2 * other.b1 + D * b2 * other.b2;
 		return res;
 	}
 };
