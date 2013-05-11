@@ -10,6 +10,7 @@ from sage.modules.free_module_element import vector
 from sage.structure.sequence import Sequence_generic, Sequence
 from sage.symbolic.all import I
 from sage.rings.arith import xgcd as orig_xgcd, lcm
+from sage.rings.arith import gcd as orig_gcd
 from sage.rings.number_field.number_field import QQ, ZZ
 from sage.symbolic.ring import SymbolicRing
 from sage.symbolic.expression import Expression
@@ -203,11 +204,8 @@ class CurlO:
 	def __init__(self, D):
 		self.D = D
 		assert (D*D - D) % 4 == 0
-	def _divmod_cmp(self, a, b):
-		a1,a2 = self.as_tuple_b(a)
-		b1,b2 = self.as_tuple_b(b)
-		return cmp(abs(a1*a2), abs(b1*b2))
 	def divmod(self, a, b):
+		"Returns q,r such that a = q*b + r."
 		a1,a2 = self.as_tuple_b(a)
 		b1,b2 = self.as_tuple_b(b)
 		B = matrix([
@@ -215,32 +213,55 @@ class CurlO:
 			[b2, b1 + b2*self.D]
 		])
 		qq1,qq2 = B.solve_right(vector((a1,a2)))
+		# We want r2 = 0, i.e. imag(r) = 0.
+		# r1 = a1 - (q*b)_1 = a1 - q1*b1 + q2*b2 * (D*D-D)/4.
+		# r2 = a2 - (q*b)_2 = a2 - q1*b2 - q2*b1 - D*q2*b2 = 0.
+		# => q1 * b2 + q2 * (b1 + D*b2) = a2.
 		q1,q2 = int(qq1), int(qq2) # not sure on this
-		#print qq1,qq2,q1,q2
+		print qq1,qq2,q1,q2
 		q = self.from_tuple_b(q1,q2)
 		# q * b + r == a
 		r = _simplify(a - q * b)
-		assert self._divmod_cmp(r, b) < 0, "%r" % (((a,a1,a2), (b,b1,b2), r,),)
 		return q,r
 	def xgcd(self, a, b):
-		if self._divmod_cmp(a, b) > 0:
-			pass
-
 		a1,a2 = self.as_tuple_b(a)
 		b1,b2 = self.as_tuple_b(b)
+		if a2 == b2 == 0:
+			return orig_xgcd(a1, a2)
+		B2 = self.D + ssqrt(self.D)
+		if a1 == b1 == 0:
+			d,p,q = orig_xgcd(a2, b2)
+			return d * B2, p, q
+		if a1 == b2 == 0:
+			d,p,q = orig_xgcd(a2, b1)
+			return d * B2, p, q * B2
+		if a2 == b1 == 0:
+			d,p,q = orig_xgcd(a1, b2)
+			return d * B2, p * B2, q
 
-		#if a2 == 0 and b2 == 0:
-		#	return orig_xgcd(a,b)
-		# res.b1 = b1 * other.b1 - b2 * other.b2 * Div(D*D - D, 4);
-		# res.b2 = b1 * other.b2 + b2 * other.b1 + D * b2 * other.b2;
-		M = matrix(ZZ, [
-			[a1, -a2 * (self.D**2 - self.D)/4, b1, -b2 * (self.D**2 - self.D)/4],
-			[a2, a1 + a2*self.D, b2, b1 + b2*self.D]
-			])
-		print M
-		p1,p2,q1,q2 = M.solve_right(vector((1,0)))
-		print p1,p2,q1,q2
-		return M
+		# imag(gcd) = 0 =>
+		# a2*p1 + a1*p2 + a2*D*p2 + b2*q1 + b1*q2 + b2*D*q2 == 0
+		p1 = a1 + a2 * self.D
+		p2 = -a2
+		try:
+			p1,p2 = int(ZZ(p1)), int(ZZ(p2))
+		except Exception:
+			print p1,p2
+			raise
+		pgcd = orig_gcd(p1,p2)
+		p1,p2 = p1/pgcd, p2/pgcd
+		p = self.from_tuple_b(p1,p2)
+
+		q1 = b1 + b2 * self.D
+		q2 = -b2
+		q1,q2 = int(ZZ(q1)), int(ZZ(q2))
+		qgcd = orig_gcd(q1,q2)
+		q1,q2 = q1/qgcd, q2/qgcd
+		q = self.from_tuple_b(q1,q2)
+
+		d = a * p + b * q
+		d = _simplify(d)
+		return d, p, q
 
 	def gcd(self, a, b):
 		d,_,_ = self.xgcd(a, b)
@@ -374,7 +395,7 @@ def solveR(M, S, space):
 def test_solveR():
 	space = CurlO(-3)
 	a,b,c,d = 2,1,1,1
-	s,t,u = 5,I,1
+	s,t,u = 5,ssqrt(-3),1
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S, space)
