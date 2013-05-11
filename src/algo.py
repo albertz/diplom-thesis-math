@@ -454,6 +454,7 @@ def calcMatrixTrans(calc, R):
 			new_ms[i] += ms[l] * m
 
 	if time() - t > 2.0:
+		print "calculation of matrixTrans took %f secs" % (time() - t)
 		matrixTransCache[cacheIdx] = calc.matrixRowDenomTrans, order, new_ms
 	return calc.matrixRowDenomTrans, order, new_ms
 
