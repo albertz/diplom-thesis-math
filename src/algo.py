@@ -278,6 +278,7 @@ def solveR(M, S, space):
 	Define tM = [[a I, b S; c S^{-1}, d I]] \in \Sp_2(1/det(S) * \curlO).
 	We find gamma \in \Sp_2(\curlO), R \in \Sp_2(\K)
 	such that tM = gamma R.
+	This algorithm is written in a way that it should work in other cases, too, though.
 	"""
 	assert isinstance(M, Matrix)
 	assert isinstance(S, Matrix)
