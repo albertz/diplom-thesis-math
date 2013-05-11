@@ -371,7 +371,7 @@ def solveR(M, S, space):
 	assert tM4[3][1] == 0
 
 	R = tM4.apply_map(_simplify)
-	gamma = (G1.inverse() * G2.inverse() * G3.inverse()).apply_map(_simplify)
+	gamma = (G1.inverse() * G2.inverse() * G3.inverse()).apply_map(_simplify) # G1,G2,G3 are in \Sp_2(\curlO).
 	assert tM == gamma * R
 	assert gamma.conjugate_transpose() * J * gamma == J
 	assert (R.submatrix(0,0,2,2) * R.submatrix(2,2,2,2).conjugate_transpose()).apply_map(_simplify) == 1
