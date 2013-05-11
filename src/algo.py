@@ -516,7 +516,7 @@ def calcRestrictMatrix(calc):
 	t = time()
 	mat = calc.calcMatrix()
 	if time() - t > 2.0:
-		print "calculation of matrix took %f secs" % (time() - t)
+		print "calculation of restriction matrix took %f secs" % (time() - t)
 		restrMatrixCache[cacheIdx] = mat
 	return mat
 
