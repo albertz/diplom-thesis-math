@@ -1,3 +1,4 @@
+from time import time
 import sage
 from sage.calculus.functional import simplify
 from sage.functions.other import sqrt as ssqrt
@@ -231,21 +232,21 @@ def test_algo_calcMatrix():
 	calc.calcMatrix()
 	return calc.getMatrix()
 
-def xgcd(a,b):
+def xgcd_curlO(a,b,D):
 	if a.imag() == 0 and b.imag() == 0:
 		return orig_xgcd(a,b)
 	if a.imag() != 0:
-		if (I*a).imag() != 0: raise NotImplementedError
-		d,p,q = xgcd(I*a,b)
+		if (I*a).imag() != 0: raise NotImplementedError, "%r" % ((a,b,D),)
+		d,p,q = xgcd_curlO(I*a, b, D)
 		return d,I*p,q
 	if b.imag() != 0:
-		if (I*b).imag() != 0: raise NotImplementedError
-		d,p,q = xgcd(a,I*b)
+		if (I*b).imag() != 0: raise NotImplementedError, "%r" % ((a,b,D),)
+		d,p,q = xgcd_curlO(a, I*b, D)
 		return d,p,I*q
 	assert False
 
-def gcd(a,b):
-	d,_,_ = xgcd(a, b)
+def gcd_curlO(a,b,D):
+	d,_,_ = xgcd_curlO(a, b, D)
 	return d
 
 def _simplify(a):
@@ -253,7 +254,16 @@ def _simplify(a):
 		return a.simplify_full()
 	return simplify(a)
 
-def solveR(M, S):
+class CurlO:
+	# We set `b = b1 + b2 (D + \sqrt{D})/2`.
+	def __init__(self, D):
+		self.D = D
+	def xgcd(self, a, b):
+		pass
+	def gcd(self, a, b):
+		pass
+
+def solveR(M, S, space):
 	"""
 	Let M = [[a,b;c,d]] \in \SL_2(\ZZ).
 	Let S \in \Her_2(\curlO) and S > 0.
@@ -360,47 +370,48 @@ def solveR(M, S):
 	return gamma, R, tM
 
 def test_solveR():
+	space = CurlO(-3)
 	a,b,c,d = 2,1,1,1
 	s,t,u = 5,I,1
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
-	gamma,R,tM = solveR(M, S)
+	gamma,R,tM = solveR(M, S, space)
 
 	a,b,c,d = 0,-1,1,0
 	s,t,u = 1,0,2
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
-	gamma,R,tM = solveR(M, S)
+	gamma,R,tM = solveR(M, S, space)
 
 	a,b,c,d = 1,0,2,1
 	s,t,u = 1,0,4
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
-	gamma,R,tM = solveR(M, S)
+	gamma,R,tM = solveR(M, S, space)
 
 	a,b,c,d = 1,0,3,1
 	s,t,u = 1,2,16
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
-	gamma,R,tM = solveR(M, S)
+	gamma,R,tM = solveR(M, S, space)
 
 	a,b,c,d = 0,-1,1,0
 	s,t,u = 2, QQ(0.5) * ssqrt(-3) - QQ(0.5), 2
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
-	gamma,R,tM = solveR(M, S)
+	gamma,R,tM = solveR(M, S, space)
 
 	a,b,c,d = 1,0,3,1
 	s,t,u = 3, QQ(0.5) * ssqrt(-3) - QQ(1.5), 3
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
-	gamma,R,tM = solveR(M, S)
+	gamma,R,tM = solveR(M, S, space)
 
 	return gamma,R,tM
 
 def _curlO_matrix_denom(mat, D):
 	assert D < 0
-	mat_real = mat.apply_map(real)
+	mat_real = mat.apply_map(real * 2)
 	mat_imag = mat.apply_map(lambda x: simplify(imag(x) * 2 / ssqrt(-D)))
 	denom_mat_real = ZZ(mat_real.denominator())
 	denom_mat_imag = ZZ(mat_imag.denominator())
@@ -423,6 +434,7 @@ def calcMatrixTrans(calc, R):
 	if cacheIdx in matrixTransCache:
 		return matrixTransCache[cacheIdx]
 
+	t = time()
 	ms = calc.calcMatrixTrans(tS, tT, lS, lT)
 
 	# Each matrix is for a zeta**i factor, where zeta is the n-th root of unity.
@@ -441,7 +453,8 @@ def calcMatrixTrans(calc, R):
 		for i,m in enumerate(coords):
 			new_ms[i] += ms[l] * m
 
-	matrixTransCache[cacheIdx] = calc.matrixRowDenomTrans, order, new_ms
+	if time() - t > 2.0:
+		matrixTransCache[cacheIdx] = calc.matrixRowDenomTrans, order, new_ms
 	return calc.matrixRowDenomTrans, order, new_ms
 
 def calcElliptViaReduct(calc, f, R, l):
