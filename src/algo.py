@@ -232,19 +232,6 @@ def test_algo_calcMatrix():
 	calc.calcMatrix()
 	return calc.getMatrix()
 
-def xgcd_curlO(a,b,D):
-	if a.imag() == 0 and b.imag() == 0:
-		return orig_xgcd(a,b)
-	if a.imag() != 0:
-		if (I*a).imag() != 0: raise NotImplementedError, "%r" % ((a,b,D),)
-		d,p,q = xgcd_curlO(I*a, b, D)
-		return d,I*p,q
-	if b.imag() != 0:
-		if (I*b).imag() != 0: raise NotImplementedError, "%r" % ((a,b,D),)
-		d,p,q = xgcd_curlO(a, I*b, D)
-		return d,p,I*q
-	assert False
-
 def _simplify(a):
 	if hasattr(a, "simplify_full"):
 		return a.simplify_full()
