@@ -203,6 +203,10 @@ class CurlO:
 	def __init__(self, D):
 		self.D = D
 		assert (D*D - D) % 4 == 0
+	def _divmod_cmp(self, a, b):
+		a1,a2 = self.as_tuple_b(a)
+		b1,b2 = self.as_tuple_b(b)
+		return cmp(abs(a1*a2), abs(b1*b2))
 	def divmod(self, a, b):
 		a1,a2 = self.as_tuple_b(a)
 		b1,b2 = self.as_tuple_b(b)
@@ -216,12 +220,15 @@ class CurlO:
 		q = self.from_tuple_b(q1,q2)
 		# q * b + r == a
 		r = _simplify(a - q * b)
-		r1,r2 = self.as_tuple_b(r)
-		assert abs(r1 * r2) < abs(b1 * b2), "%r" % (((a,a1,a2), (b,b1,b2), (r,r1,r2),),)
+		assert self._divmod_cmp(r, b) < 0, "%r" % (((a,a1,a2), (b,b1,b2), r,),)
 		return q,r
 	def xgcd(self, a, b):
+		if self._divmod_cmp(a, b) > 0:
+			pass
+
 		a1,a2 = self.as_tuple_b(a)
 		b1,b2 = self.as_tuple_b(b)
+
 		#if a2 == 0 and b2 == 0:
 		#	return orig_xgcd(a,b)
 		# res.b1 = b1 * other.b1 - b2 * other.b2 * Div(D*D - D, 4);
