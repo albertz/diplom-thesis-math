@@ -262,6 +262,10 @@ class CurlO:
 		pass
 	def gcd(self, a, b):
 		pass
+	def lcm(self, a, b):
+		pass
+	def common_denom(self, a, b):
+		pass
 
 def solveR(M, S, space):
 	"""
@@ -305,13 +309,13 @@ def solveR(M, S, space):
 	J = make4x4matrix_embed(0,0,-1,-1,1,1,0,0)
 	I4 = make4x4matrix_embed(1,1,0,0,0,0,1,1)
 	assert (tM1.conjugate_transpose() * J * tM1).apply_map(_simplify) == J
-	l = C1.denominator()
-	d = gcd(A1[0][0] * l, C1[0][0] * l)
+	l = space.common_denom(A1[0][0], C1[0][0])
+	d = space.gcd(A1[0][0] * l, C1[0][0] * l)
 	if not d: d = 1
 	Cg11 = C1[0][0] * l / d
 	Dg11 = -A1[0][0] * l / d
 	del l, d
-	d,Ag11,Bg11 = xgcd(Dg11, -Cg11)
+	d,Ag11,Bg11 = space.xgcd(Dg11, -Cg11)
 	assert d == 1, "{0}".format(tM1)
 	Dg14 = Ag14 = 0
 	Bg14 = 1
@@ -321,13 +325,13 @@ def solveR(M, S, space):
 	assert tM2[2][0] == 0
 	assert tM2[3][0] == 0
 	c22,c24 = tM2[2][1],tM2[3][1]
-	l = matrix(1,2,(c22,c24)).denominator()
-	d = gcd(c22 * l, c24 * l)
+	l = space.common_denom(c22,c24)
+	d = space.gcd(c22 * l, c24 * l)
 	if not d: d = 1
 	Dg23 = c24 * l / d
 	Dg24 = -c22 * l / d
 	del l, d
-	d,Dg21,Dg22 = xgcd(Dg24, -Dg23)
+	d,Dg21,Dg22 = space.xgcd(Dg24, -Dg23)
 	if d == 0:
 		G2 = I4
 	else:
@@ -347,13 +351,13 @@ def solveR(M, S, space):
 		Cg34 = Bg34 = 0
 		Ag34 = Dg34 = 1
 		a32,c32 = tM3[0][1],tM3[2][1]
-		l = matrix(1,2,(a32,c32)).denominator()
-		d = gcd(a32 * l, c32 * l)
+		l = space.common_denom(a32,c32)
+		d = space.gcd(a32 * l, c32 * l)
 		if not d: d = 1
 		Cg31 = c32 * l / d
 		Dg31 = -a32 * l / d
 		del l, d
-		d,Ag31,Bg31 = xgcd(Dg31, -Cg31)
+		d,Ag31,Bg31 = space.xgcd(Dg31, -Cg31)
 		assert d == 1
 		G3 = make4x4matrix_embed(Ag31,Ag34,Bg31,Bg34,Cg31,Cg34,Dg31,Dg34)
 	tM4 = G3 * tM3
