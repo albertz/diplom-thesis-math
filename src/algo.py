@@ -695,13 +695,13 @@ def modform(D, HermWeight, B_cF=10):
 			else:
 				a = cusp.numerator()
 				c = cusp.denominator()
-				_div, d, b = xgcd(a, -c)
+				_div, d, b = orig_xgcd(a, -c)
 				assert _div == 1
 				M = matrix(ZZ,2,2,[a,b,c,d])
 				del a,b,c,d
 
 			try:
-				gamma, R, tM = solveR(M, S)
+				gamma, R, tM = solveR(M, S, space=CurlO(D))
 			except Exception:
 				print (M, S)
 				raise
