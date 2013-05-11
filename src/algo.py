@@ -245,10 +245,6 @@ def xgcd_curlO(a,b,D):
 		return d,p,I*q
 	assert False
 
-def gcd_curlO(a,b,D):
-	d,_,_ = xgcd_curlO(a, b, D)
-	return d
-
 def _simplify(a):
 	if hasattr(a, "simplify_full"):
 		return a.simplify_full()
@@ -259,13 +255,34 @@ class CurlO:
 	def __init__(self, D):
 		self.D = D
 	def xgcd(self, a, b):
-		pass
+		if a.imag() == 0 and b.imag() == 0:
+			return orig_xgcd(a,b)
+		if a.imag() != 0:
+			if (I*a).imag() != 0: raise NotImplementedError, "%r" % ((a,b,self.D),)
+			d,p,q = self.xgcd(I*a, b)
+			return d,I*p,q
+		if b.imag() != 0:
+			if (I*b).imag() != 0: raise NotImplementedError, "%r" % ((a,b,self.D),)
+			d,p,q = self.xgcd(a, I*b)
+			return d,p,I*q
+		assert False
 	def gcd(self, a, b):
-		pass
-	def lcm(self, a, b):
-		pass
+		d,_,_ = self.xgcd(a, b)
+		return d
 	def common_denom(self, a, b):
-		pass
+		a1,a2 = self.as_tuple_b(a)
+		b1,b2 = self.as_tuple_b(b)
+		return matrix(1,4,[a1,a2,b1,b2]).denominator()
+	def as_tuple_b(self, a):
+		b2 = imag(a) * 2 / ssqrt(-self.D)
+		b1 = real(a) - b2 * self.D / 2
+		return (b1, b2)
+	def from_tuple_b(self, b1, b2):
+		return b1 + b2 * (self.D + ssqrt(self.D)) / 2
+	def __contains__(self, item):
+		try: self.as_tuple_b(item)
+		except TypeError: return False
+		else: return True
 
 def solveR(M, S, space):
 	"""
