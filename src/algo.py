@@ -288,7 +288,7 @@ def solveR(M, S, space):
 	"""
 	Let M = [[a,b;c,d]] \in \SL_2(\ZZ).
 	Let S \in \Her_2(\curlO) and S > 0.
-	Define tM = [[a I, b S; c S^{-1}, d I]] \in \Sp_2(\K).
+	Define tM = [[a I, b S; c S^{-1}, d I]] \in \Sp_2(1/det(S) * \curlO).
 	We find gamma \in \Sp_2(\curlO), R \in \Sp_2(\K)
 	such that tM = gamma R.
 	"""
