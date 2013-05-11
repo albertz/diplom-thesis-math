@@ -6,6 +6,7 @@ from sage.matrix.matrix2 import Matrix
 from sage.matrix.matrix_space import MatrixSpace
 from sage.rings.integer import Integer
 from sage.structure.sage_object import SageObject
+from sage.modules.free_module_element import vector
 from sage.structure.sequence import Sequence_generic, Sequence
 from sage.symbolic.all import I
 from sage.rings.arith import xgcd as orig_xgcd, lcm
@@ -201,19 +202,38 @@ class CurlO:
 	# We set `b = b1 + b2 (D + \sqrt{D})/2`.
 	def __init__(self, D):
 		self.D = D
-		assert D*D - D % 4 == 0
+		assert (D*D - D) % 4 == 0
+	def divmod(self, a, b):
+		a1,a2 = self.as_tuple_b(a)
+		b1,b2 = self.as_tuple_b(b)
+		B = matrix([
+			[b1, -b2 * (self.D**2 - self.D)/4],
+			[b2, b1 + b2*self.D]
+		])
+		qq1,qq2 = B.solve_right(vector((a1,a2)))
+		q1,q2 = int(qq1), int(qq2) # not sure on this
+		#print qq1,qq2,q1,q2
+		q = self.from_tuple_b(q1,q2)
+		# q * b + r == a
+		r = _simplify(a - q * b)
+		r1,r2 = self.as_tuple_b(r)
+		assert abs(r1 * r2) < abs(b1 * b2), "%r" % (((a,a1,a2), (b,b1,b2), (r,r1,r2),),)
+		return q,r
 	def xgcd(self, a, b):
 		a1,a2 = self.as_tuple_b(a)
 		b1,b2 = self.as_tuple_b(b)
-		if a2 == 0 and b2 == 0:
-			return orig_xgcd(a,b)
+		#if a2 == 0 and b2 == 0:
+		#	return orig_xgcd(a,b)
 		# res.b1 = b1 * other.b1 - b2 * other.b2 * Div(D*D - D, 4);
 		# res.b2 = b1 * other.b2 + b2 * other.b1 + D * b2 * other.b2;
-		M = matrix([
+		M = matrix(ZZ, [
 			[a1, -a2 * (self.D**2 - self.D)/4, b1, -b2 * (self.D**2 - self.D)/4],
 			[a2, a1 + a2*self.D, b2, b1 + b2*self.D]
 			])
-		p1,p2,q1,q2 = M.solve_right((1,0))
+		print M
+		p1,p2,q1,q2 = M.solve_right(vector((1,0)))
+		print p1,p2,q1,q2
+		return M
 
 	def gcd(self, a, b):
 		d,_,_ = self.xgcd(a, b)
