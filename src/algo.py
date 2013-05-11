@@ -390,6 +390,12 @@ def test_solveR():
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S)
 
+	a,b,c,d = 1,0,3,1
+	s,t,u = 3, QQ(0.5) * ssqrt(-3) - QQ(1.5), 3
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S)
+
 	return gamma,R,tM
 
 def _curlO_matrix_denom(mat, D):
