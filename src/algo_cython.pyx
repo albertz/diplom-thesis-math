@@ -60,8 +60,12 @@ cdef M2T_O_fromC(M2T_O m, int D):
 
 cdef ElemOfCurlO O_toC(a, int D) except *:
 	cdef ElemOfCurlO b
-	b.b2 = ZZ(a.imag() * 2 / ssqrt(-D))
-	b.b1 = ZZ(a.real() - b.b2 * D / 2)
+	try:
+		b.b2 = ZZ((a.imag() * 2 / ssqrt(-D)).simplify_full())
+		b.b1 = ZZ((a.real() - b.b2 * D / 2).simplify_full())
+	except TypeError:
+		print "cannot convert %r to CurlO(%i)" % (a, D)
+		raise
 	return b
 
 cdef M2_O M2_O_toC(m, int D) except *:
