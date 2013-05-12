@@ -443,4 +443,9 @@ def _curlO_matrix_denom(mat, D):
 	assert denom_mat_real * mat_real in MatrixSpace(ZZ,mat.nrows(),mat.ncols())
 	assert denom_mat_imag * mat_imag in MatrixSpace(ZZ,mat.nrows(),mat.ncols())
 	denom = lcm(denom_mat_real, denom_mat_imag)
-	return int(ZZ(denom))
+	denom = int(ZZ(denom))
+	space = CurlO(D)
+	for y in range(mat.nrows()):
+		for x in range(mat.ncols()):
+			assert mat[y,x] * denom in space
+	return denom
