@@ -98,24 +98,6 @@ def calcMatrixTrans(calc, R):
 		matrixTransCache[cacheIdx] = calc.matrixRowDenomTrans, order, new_ms
 	return calc.matrixRowDenomTrans, order, new_ms
 
-def calcElliptViaReduct(calc, f, R, l):
-	tS = R.submatrix(0,0,2,2)
-	tT = R.submatrix(2,0,2,2)
-	try:
-		ms = calc.calcMatrixTrans(tS * l, tT * l, l)
-	except Exception:
-		print (calc.params, calc.curlS, R * l, l)
-		raise
-	matrixCountTrans = calc.matrixCountTrans
-	denom = calc.matrixRowDenomTrans
-
-	g = 0
-	K = CyclotomicField(matrixCountTrans)
-	zeta, = K.gens()
-	for i in range(matrixCountTrans):
-		g += ms[i] * f * (zeta ** i)
-	return denom, g
-
 
 cuspExpansionsCache = PersistentCache("cuspExpansions.cache.sobj")
 def cuspExpansions(level, weight, prec):
