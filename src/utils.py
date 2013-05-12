@@ -225,6 +225,9 @@ class CurlO:
 		r = _simplify(a - q * b)
 		assert _simplify(abs(r)) <= _simplify(abs(b))
 		return q,r
+	def divides(self, a, b):
+		q,r = self.divmod(a, b)
+		return r == 0
 	def xgcd(self, a, b):
 		if a == b: return a, 1, 0
 		if a == -b: return a, 1, 0
@@ -246,16 +249,25 @@ class CurlO:
 		#assert abs_a != abs_b, "%r" % ((a,b,abs_a,abs_b),)
 		if abs_a < abs_b:
 			a,b = b,a
+		# We have abs_b <= abs_a now.
 		q,r = self.divmod(a, b)
 		#assert q != 0
 		#assert _simplify(abs(r)) < _simplify(abs(b))
 		# q * b + r == a.
-		# => a (1) + b (-q) == r
+		assert q * b + r == a
+		# => a - b*q == r
 		d2,s2,t2 = self.xgcd(b, r)
 		# d2 = b * s2 + r * t2
+		assert d2 == b * s2 + r * t2
 		# => d2 = b * s2 + (a - b*q) * t2
 		# => d2 = a * t2 + b * (s2 - q * t2)
-		return d2, _simplify(t2), _simplify(s2 - q * t2)
+		d = d2
+		s = _simplify(t2)
+		t = _simplify(s2 - q * t2)
+		assert d == a * s + b * t
+		assert self.divides(a, d)
+		assert self.divides(b, d)
+		return d, s, t
 
 	def gcd(self, a, b):
 		d,_,_ = self.xgcd(a, b)
@@ -271,7 +283,9 @@ class CurlO:
 	def from_tuple_b(self, b1, b2):
 		return b1 + b2 * (self.D + ssqrt(self.D)) / 2
 	def __contains__(self, item):
-		try: self.as_tuple_b(item)
+		try:
+			b1,b2 = self.as_tuple_b(item)
+			b1,b2 = ZZ(b1), ZZ(b2)
 		except TypeError: return False
 		else: return True
 
