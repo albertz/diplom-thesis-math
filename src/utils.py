@@ -436,8 +436,8 @@ def test_solveR():
 
 def _curlO_matrix_denom(mat, D):
 	assert D < 0
-	mat_real = mat.apply_map(real * 2)
-	mat_imag = mat.apply_map(lambda x: simplify(imag(x) * 2 / ssqrt(-D)))
+	mat_real = mat.apply_map(lambda x: _simplify(real(x) * 2))
+	mat_imag = mat.apply_map(lambda x: _simplify(imag(x) * 2 / ssqrt(-D)))
 	denom_mat_real = ZZ(mat_real.denominator())
 	denom_mat_imag = ZZ(mat_imag.denominator())
 	assert denom_mat_real * mat_real in MatrixSpace(ZZ,mat.nrows(),mat.ncols())
