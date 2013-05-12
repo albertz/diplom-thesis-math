@@ -20,7 +20,7 @@ from sage.symbolic.ring import SymbolicRing
 from sage.symbolic.expression import Expression
 import algo_cython as C
 from utils import *
-from utils import _simplify # seems the above does not import "_"-prefixed symbols
+from utils import _simplify, _curlO_matrix_denom # seems the above does not import "_"-prefixed symbols
 
 # via Martin. while this is not in Sage:
 import cusp_expansions
