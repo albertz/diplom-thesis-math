@@ -206,6 +206,7 @@ class CurlO:
 		assert (D*D - D) % 4 == 0
 	def divmod(self, a, b):
 		"Returns q,r such that a = q*b + r."
+		if b == 0: raise ZeroDivisionError
 		a1,a2 = self.as_tuple_b(a)
 		b1,b2 = self.as_tuple_b(b)
 		B = matrix([
@@ -217,25 +218,44 @@ class CurlO:
 		# r1 = a1 - (q*b)_1 = a1 - q1*b1 + q2*b2 * (D*D-D)/4.
 		# r2 = a2 - (q*b)_2 = a2 - q1*b2 - q2*b1 - D*q2*b2 = 0.
 		# => q1 * b2 + q2 * (b1 + D*b2) = a2.
-		q1,q2 = int(qq1), int(qq2) # not sure on this
-		print qq1,qq2,q1,q2
+		q1,q2 = int(round(qq1)), int(round(qq2)) # not sure on this
+		print a1,a2,b1,b2,qq1,qq2,q1,q2
 		q = self.from_tuple_b(q1,q2)
 		# q * b + r == a
 		r = _simplify(a - q * b)
-		assert abs(r) < abs(b)
+		assert _simplify(abs(r)) <= _simplify(abs(b))
 		return q,r
 	def xgcd(self, a, b):
+		if a == b: return a, 1, 0
+		if a == -b: return a, 1, 0
+		if a == 1: return 1, 1, 0
+		if b == 1: return 1, 0, 1
+		if a == 0: return b, 0, 1
+		if b == 0: return a, 1, 0
 		a1,a2 = self.as_tuple_b(a)
 		b1,b2 = self.as_tuple_b(b)
 		if a2 == b2 == 0:
 			return orig_xgcd(a1, a2)
 		if a1 == b1 == 0:
-			d,p,q = orig_xgcd(a2, b2)
+			d,s,t = orig_xgcd(a2, b2)
 			B2 = self.D + ssqrt(self.D)
-			return d * B2, p, q
+			return d * B2, s, t
 
-
-		return d, p, q
+		abs_a = _simplify(abs(a))
+		abs_b = _simplify(abs(b))
+		#assert abs_a != abs_b, "%r" % ((a,b,abs_a,abs_b),)
+		if abs_a < abs_b:
+			a,b = b,a
+		q,r = self.divmod(a, b)
+		#assert q != 0
+		#assert _simplify(abs(r)) < _simplify(abs(b))
+		# q * b + r == a.
+		# => a (1) + b (-q) == r
+		d2,s2,t2 = self.xgcd(b, r)
+		# d2 = b * s2 + r * t2
+		# => d2 = b * s2 + (a - b*q) * t2
+		# => d2 = a * t2 + b * (s2 - q * t2)
+		return d2, _simplify(t2), _simplify(s2 - q * t2)
 
 	def gcd(self, a, b):
 		d,_,_ = self.xgcd(a, b)
