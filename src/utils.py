@@ -449,3 +449,14 @@ def _curlO_matrix_denom(mat, D):
 		for x in range(mat.ncols()):
 			assert mat[y,x] * denom in space
 	return denom
+
+
+# Hack for reload handling
+def reimportMeIntoAlgoModule():
+	import sys
+	if "algo" in sys.modules:
+		mod = sys.modules["algo"]
+		for attr in globals().keys():
+			if hasattr(mod, attr):
+				setattr(mod, attr, globals()[attr])
+reimportMeIntoAlgoModule()
