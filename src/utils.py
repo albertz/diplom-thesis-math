@@ -389,8 +389,8 @@ def solveR(M, S, space):
 
 	R = tM4.apply_map(_simplify)
 	gamma = (G1.inverse() * G2.inverse() * G3.inverse()).apply_map(_simplify) # G1,G2,G3 are in \Sp_2(\curlO).
-	assert tM == gamma * R
-	assert gamma.conjugate_transpose() * J * gamma == J
+	assert tM == (gamma * R).apply_map(_simplify), "\n%r ==\n%r *\n%r (=\n%r)" % (tM, gamma, R, (gamma * R).apply_map(_simplify))
+	assert (gamma.conjugate_transpose() * J * gamma).apply_map(_simplify) == J
 	assert (R.submatrix(0,0,2,2) * R.submatrix(2,2,2,2).conjugate_transpose()).apply_map(_simplify) == 1
 	return gamma, R, tM
 
