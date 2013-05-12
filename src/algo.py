@@ -71,7 +71,11 @@ def calcMatrixTrans(calc, R):
 		return matrixTransCache[cacheIdx]
 
 	t = time()
-	ms = calc.calcMatrixTrans(tS, tT, lS, lT)
+	try:
+		ms = calc.calcMatrixTrans(tS, tT, lS, lT)
+	except Exception:
+		print (cacheIdx, R)
+		raise
 
 	# Each matrix is for a zeta**i factor, where zeta is the n-th root of unity.
 	# And n = calc.matrixCountTrans.
