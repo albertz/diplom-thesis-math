@@ -58,13 +58,13 @@ cdef M2T_O_fromC(M2T_O m, int D):
 	b = m.b1 + m.b2 * (D + ssqrt(D)) * QQ(0.5)
 	return matrix(2, 2, [m.a, b, b.conjugate(), m.c])
 
-cdef ElemOfCurlO O_toC(a, int D):
+cdef ElemOfCurlO O_toC(a, int D) except *:
 	cdef ElemOfCurlO b
 	b.b2 = ZZ(a.imag() * 2 / ssqrt(-D))
 	b.b1 = ZZ(a.real() - b.b2 * D / 2)
 	return b
 
-cdef M2_O M2_O_toC(m, int D):
+cdef M2_O M2_O_toC(m, int D) except *:
 	assert m.nrows() == 2 and m.ncols() == 2
 	cdef M2_O _m
 	_m.a = O_toC(m[0][0], D)
