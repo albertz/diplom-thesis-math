@@ -272,10 +272,11 @@ class CurlO:
 	def gcd(self, a, b):
 		d,_,_ = self.xgcd(a, b)
 		return d
-	def common_denom(self, a, b):
-		a1,a2 = self.as_tuple_b(a)
-		b1,b2 = self.as_tuple_b(b)
-		return matrix(1,4,[a1,a2,b1,b2]).denominator()
+	def common_denom(self, *args):
+		tupleargs = [None] * len(args) * 2
+		for i in range(len(args)):
+			tupleargs[2*i],tupleargs[2*i+1] = self.as_tuple_b(args[i])
+		return matrix(1,len(tupleargs),tupleargs).denominator()
 	def as_tuple_b(self, a):
 		b2 = imag(a) * 2 / ssqrt(-self.D)
 		b1 = real(a) - b2 * self.D / 2
@@ -435,19 +436,11 @@ def test_solveR():
 	return gamma,R,tM
 
 def _curlO_matrix_denom(mat, D):
-	assert D < 0
-	mat_real = mat.apply_map(lambda x: _simplify(real(x) * 2))
-	mat_imag = mat.apply_map(lambda x: _simplify(imag(x) * 2 / ssqrt(-D)))
-	denom_mat_real = ZZ(mat_real.denominator())
-	denom_mat_imag = ZZ(mat_imag.denominator())
-	assert denom_mat_real * mat_real in MatrixSpace(ZZ,mat.nrows(),mat.ncols())
-	assert denom_mat_imag * mat_imag in MatrixSpace(ZZ,mat.nrows(),mat.ncols())
-	denom = lcm(denom_mat_real, denom_mat_imag)
-	denom = int(ZZ(denom))
 	space = CurlO(D)
-	for y in range(mat.nrows()):
-		for x in range(mat.ncols()):
-			assert mat[y,x] * denom in space
+	denom = space.common_denom(*mat.list())
+	denom = int(ZZ(denom))
+	for v in mat.list():
+		assert v * denom in space, "%r (D=%r)" % (mat, D)
 	return denom
 
 
