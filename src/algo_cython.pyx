@@ -6,6 +6,7 @@ include "cdefs.pxi"
 from libcpp.string cimport string
 
 from sage.functions.other import sqrt as ssqrt
+from sage.rings.integer import Integer
 from sage.rings.number_field.number_field import QQ, ZZ
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix_space import MatrixSpace
@@ -62,7 +63,7 @@ cdef ElemOfCurlO O_toC(a, int D) except *:
 	cdef ElemOfCurlO b
 	try:
 		b.b2 = ZZ((a.imag() * 2 / ssqrt(-D)).simplify_full())
-		b.b1 = ZZ((a.real() - b.b2 * D / 2).simplify_full())
+		b.b1 = ZZ((a.real() - Integer(b.b2) * D / 2).simplify_full())
 	except TypeError:
 		print "cannot convert %r to CurlO(%i)" % (a, D)
 		raise
