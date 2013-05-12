@@ -219,7 +219,7 @@ class CurlO:
 		# r2 = a2 - (q*b)_2 = a2 - q1*b2 - q2*b1 - D*q2*b2 = 0.
 		# => q1 * b2 + q2 * (b1 + D*b2) = a2.
 		q1,q2 = int(round(qq1)), int(round(qq2)) # not sure on this
-		print a1,a2,b1,b2,qq1,qq2,q1,q2
+		#print a1,a2,b1,b2,qq1,qq2,q1,q2
 		q = self.from_tuple_b(q1,q2)
 		# q * b + r == a
 		r = _simplify(a - q * b)
@@ -238,7 +238,7 @@ class CurlO:
 		a1,a2 = self.as_tuple_b(a)
 		b1,b2 = self.as_tuple_b(b)
 		if a2 == b2 == 0:
-			return orig_xgcd(a1, a2)
+			return orig_xgcd(a1, b1)
 		if a1 == b1 == 0:
 			d,s,t = orig_xgcd(a2, b2)
 			B2 = self.D + ssqrt(self.D)
@@ -337,13 +337,11 @@ def solveR(M, S, space):
 	I4 = make4x4matrix_embed(1,1,0,0,0,0,1,1)
 	assert (tM1.conjugate_transpose() * J * tM1).apply_map(_simplify) == J
 	l = space.common_denom(A1[0][0], C1[0][0])
-	d = space.gcd(A1[0][0] * l, C1[0][0] * l)
-	if not d: d = 1
-	Cg11 = C1[0][0] * l / d
-	Dg11 = -A1[0][0] * l / d
-	del l, d
-	d,Ag11,Bg11 = space.xgcd(Dg11, -Cg11)
-	assert d == 1, "{0}".format(tM1)
+	d,Ag11,Bg11 = space.xgcd(A1[0][0] * l, C1[0][0] * l)
+	Cg11 = -C1[0][0] * l / d
+	Dg11 = A1[0][0] * l / d
+	assert Ag11 * Dg11 - Bg11 * Cg11 == 1, "{0}".format(tM1)
+	assert all([x in space for x in [Ag11,Bg11,Cg11,Dg11]]), "%r" % ((A1[0][0],C1[0][0],l,d,(Ag11,Bg11,Cg11,Dg11),),)
 	Dg14 = Ag14 = 0
 	Bg14 = 1
 	Cg14 = -1
@@ -353,16 +351,14 @@ def solveR(M, S, space):
 	assert tM2[3][0] == 0
 	c22,c24 = tM2[2][1],tM2[3][1]
 	l = space.common_denom(c22,c24)
-	d = space.gcd(c22 * l, c24 * l)
-	if not d: d = 1
-	Dg23 = c24 * l / d
-	Dg24 = -c22 * l / d
-	del l, d
-	d,Dg21,Dg22 = space.xgcd(Dg24, -Dg23)
+	d,Dg21,Dg22 = space.xgcd(c22 * l, c24 * l)
 	if d == 0:
 		G2 = I4
 	else:
-		assert d == 1, "{0}".format(tM2)
+		Dg23 = -c24 * l / d
+		Dg24 = c22 * l / d
+		assert Dg21 * Dg24 - Dg22 * Dg23 == 1
+		assert all([x in space for x in [Dg21,Dg22,Dg23,Dg24]])
 		Dg2 = matrix(Ring, 2,2, [Dg21,Dg22,Dg23,Dg24])
 		assert Dg2.det() == 1
 		Ag2 = Dg2.conjugate_transpose().inverse()
@@ -379,13 +375,11 @@ def solveR(M, S, space):
 		Ag34 = Dg34 = 1
 		a32,c32 = tM3[0][1],tM3[2][1]
 		l = space.common_denom(a32,c32)
-		d = space.gcd(a32 * l, c32 * l)
-		if not d: d = 1
-		Cg31 = c32 * l / d
-		Dg31 = -a32 * l / d
-		del l, d
-		d,Ag31,Bg31 = space.xgcd(Dg31, -Cg31)
-		assert d == 1
+		d,Ag31,Bg31 = space.xgcd(a32 * l, c32 * l)
+		Cg31 = -c32 * l / d
+		Dg31 = a32 * l / d
+		assert Ag31 * Dg31 - Bg31 * Cg31 == 1
+		assert all([x in space for x in [Ag31,Bg31,Cg31,Dg31]])
 		G3 = make4x4matrix_embed(Ag31,Ag34,Bg31,Bg34,Cg31,Cg34,Dg31,Dg34)
 	tM4 = G3 * tM3
 	assert tM4[2][0] == 0
