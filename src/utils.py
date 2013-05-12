@@ -229,39 +229,12 @@ class CurlO:
 		b1,b2 = self.as_tuple_b(b)
 		if a2 == b2 == 0:
 			return orig_xgcd(a1, a2)
-		B2 = self.D + ssqrt(self.D)
 		if a1 == b1 == 0:
 			d,p,q = orig_xgcd(a2, b2)
+			B2 = self.D + ssqrt(self.D)
 			return d * B2, p, q
-		if a1 == b2 == 0:
-			d,p,q = orig_xgcd(a2, b1)
-			return d * B2, p, q * B2
-		if a2 == b1 == 0:
-			d,p,q = orig_xgcd(a1, b2)
-			return d * B2, p * B2, q
 
-		# imag(gcd) = 0 =>
-		# a2*p1 + a1*p2 + a2*D*p2 + b2*q1 + b1*q2 + b2*D*q2 == 0
-		p1 = a1 + a2 * self.D
-		p2 = -a2
-		try:
-			p1,p2 = int(ZZ(p1)), int(ZZ(p2))
-		except Exception:
-			print p1,p2
-			raise
-		pgcd = orig_gcd(p1,p2)
-		p1,p2 = p1/pgcd, p2/pgcd
-		p = self.from_tuple_b(p1,p2)
 
-		q1 = b1 + b2 * self.D
-		q2 = -b2
-		q1,q2 = int(ZZ(q1)), int(ZZ(q2))
-		qgcd = orig_gcd(q1,q2)
-		q1,q2 = q1/qgcd, q2/qgcd
-		q = self.from_tuple_b(q1,q2)
-
-		d = a * p + b * q
-		d = _simplify(d)
 		return d, p, q
 
 	def gcd(self, a, b):
