@@ -222,6 +222,7 @@ class CurlO:
 		q = self.from_tuple_b(q1,q2)
 		# q * b + r == a
 		r = _simplify(a - q * b)
+		assert abs(r) < abs(b)
 		return q,r
 	def xgcd(self, a, b):
 		a1,a2 = self.as_tuple_b(a)
