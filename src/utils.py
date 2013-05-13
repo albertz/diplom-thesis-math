@@ -209,15 +209,16 @@ class CurlO:
 		if b == 0: raise ZeroDivisionError
 		a1,a2 = self.as_tuple_b(a)
 		b1,b2 = self.as_tuple_b(b)
-		B = matrix([
-			[b1, -b2 * (self.D**2 - self.D)/4],
-			[b2, b1 + b2*self.D]
-		])
-		qq1,qq2 = B.solve_right(vector((a1,a2)))
-		# We want r2 = 0, i.e. imag(r) = 0.
-		# r1 = a1 - (q*b)_1 = a1 - q1*b1 + q2*b2 * (D*D-D)/4.
-		# r2 = a2 - (q*b)_2 = a2 - q1*b2 - q2*b1 - D*q2*b2 = 0.
-		# => q1 * b2 + q2 * (b1 + D*b2) = a2.
+
+		#B = matrix([
+		#	[b1, -b2 * (self.D**2 - self.D)/4],
+		#	[b2, b1 + b2*self.D]
+		#])
+		Bdet = b1*b1 + b1*b2*self.D + b2*b2*(self.D**2 - self.D)/4
+		qq1 = (a1*b1 + a1*b2*self.D + a2*b2*(self.D**2 - self.D)/4) / Bdet
+		qq2 = (-a1*b2 + a2*b1) / Bdet
+		assert self.from_tuple_b(qq1,qq2) * b == a
+
 		q1,q2 = int(round(qq1)), int(round(qq2)) # not sure on this
 		#print a1,a2,b1,b2,qq1,qq2,q1,q2
 		q = self.from_tuple_b(q1,q2)
