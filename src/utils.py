@@ -248,7 +248,7 @@ class CurlO:
 		abs_b = _simplify(abs(b))
 		#assert abs_a != abs_b, "%r" % ((a,b,abs_a,abs_b),)
 		if abs_a < abs_b:
-			a,b = b,a
+			return self.xgcd(b, a)
 		# We have abs_b <= abs_a now.
 		q,r = self.divmod(a, b)
 		#assert q != 0
@@ -358,7 +358,7 @@ def solveR(M, S, space):
 	else:
 		Dg23 = -c24 * l / d
 		Dg24 = c22 * l / d
-		assert Dg21 * Dg24 - Dg22 * Dg23 == 1
+		assert Dg21 * Dg24 - Dg22 * Dg23 == 1, "%r" % ([(c22,c24),(d,l),(Dg21, Dg22, Dg23, Dg24)],)
 		assert all([x in space for x in [Dg21,Dg22,Dg23,Dg24]])
 		Dg2 = matrix(Ring, 2,2, [Dg21,Dg22,Dg23,Dg24])
 		assert Dg2.det() == 1
