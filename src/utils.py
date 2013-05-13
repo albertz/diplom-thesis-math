@@ -248,7 +248,8 @@ class CurlO:
 		abs_b = _simplify(abs(b))
 		#assert abs_a != abs_b, "%r" % ((a,b,abs_a,abs_b),)
 		if abs_a < abs_b:
-			return self.xgcd(b, a)
+			d,s,t = self.xgcd(b, a)
+			return d,t,s
 		# We have abs_b <= abs_a now.
 		q,r = self.divmod(a, b)
 		#assert q != 0
