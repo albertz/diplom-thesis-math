@@ -380,7 +380,7 @@ def solveR(M, S, space):
 		d,Ag31,Bg31 = space.xgcd(a32 * l, c32 * l)
 		Cg31 = -c32 * l / d
 		Dg31 = a32 * l / d
-		assert Ag31 * Dg31 - Bg31 * Cg31 == 1
+		assert Ag31 * Dg31 - Bg31 * Cg31 == 1, "%r" % ([(a32,c32),(d,l),(Ag31,Bg31,Cg31,Dg31)],)
 		assert all([x in space for x in [Ag31,Bg31,Cg31,Dg31]])
 		G3 = make4x4matrix_embed(Ag31,Ag34,Bg31,Bg34,Cg31,Cg34,Dg31,Dg34)
 	tM4 = G3 * tM3
