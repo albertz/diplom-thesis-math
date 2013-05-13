@@ -461,6 +461,7 @@ def reimportMeIntoAlgoModule():
 	if "algo" in sys.modules:
 		mod = sys.modules["algo"]
 		for attr in globals().keys():
+			if attr.startswith("__"): continue
 			if hasattr(mod, attr):
 				setattr(mod, attr, globals()[attr])
 reimportMeIntoAlgoModule()
