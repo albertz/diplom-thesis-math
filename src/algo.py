@@ -358,6 +358,7 @@ def modform(D, HermWeight, B_cF=10):
 			assert len(ell_M2) == len(ell_R2) # They should have the same power base & same degree now.
 			print "ell_M2[0], ell_R2[0] rank with order %i:" % ell_M_order, ell_M2[0].rank(), ell_R2[0].rank()
 
+			assert len(M_R) == len(ell_M2)
 			for i in range(len(ell_M2)):
 				ell_M_space = ell_M2[i].row_space()
 				ell_R_space = ell_R2[i].column_space()
