@@ -377,6 +377,4 @@ def modform(D, HermWeight, B_cF=10):
 		if dim == current_dimension:
 			break
 
-	# TODO:
-	# Otherwise, reconstruct fourier expansion.
 	return herm_modform_fe_expannsion
