@@ -215,9 +215,11 @@ class CurlO:
 		#	[b2, b1 + b2*self.D]
 		#])
 		Bdet = b1*b1 + b1*b2*self.D + b2*b2*(self.D**2 - self.D)/4
+		Bdet = _simplify(Bdet)
+		assert Bdet > 0
 		qq1 = (a1*b1 + a1*b2*self.D + a2*b2*(self.D**2 - self.D)/4) / Bdet
 		qq2 = (-a1*b2 + a2*b1) / Bdet
-		assert self.from_tuple_b(qq1,qq2) * b == a
+		assert _simplify(self.from_tuple_b(qq1,qq2) * b - a) == 0
 
 		q1,q2 = int(round(qq1)), int(round(qq2)) # not sure on this
 		#print a1,a2,b1,b2,qq1,qq2,q1,q2
