@@ -227,7 +227,7 @@ class CurlO:
 		# q * b + r == a
 		r = _simplify(a - q * b)
 		# Note that this works for -D < 5.27. See the text.
-		assert _simplify(abs(r)) <= _simplify(abs(b))
+		assert _simplify(abs(r)) < _simplify(abs(b))
 		return q,r
 	def divides(self, a, b):
 		q,r = self.divmod(a, b)
