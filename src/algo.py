@@ -347,6 +347,7 @@ def modform(D, HermWeight, B_cF=10):
 			ell_R = [M_R_i * herm_modforms for M_R_i in M_R]
 
 			# I'm not sure on this. Seems to be true and it simplifies things in the following.
+			assert ell_M_order <= ell_R_order, "{0}".format((ell_M_order, ell_R_order))
 			assert ell_R_order % ell_M_order == 0, "{0}".format((ell_M_order, ell_R_order))
 
 			# Transform to same Cyclomotic Field in same power base.
