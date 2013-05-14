@@ -182,8 +182,9 @@ struct PrecisionF {
 	struct Iter {
 		const PrecisionF& F;
 		M2T_Odual cur;
+		Int curB;
 		bool hitEnd;
-		Iter(const PrecisionF& _F, bool _end = false) : F(_F), hitEnd(_end) {}
+		Iter(const PrecisionF& _F, bool _end = false) : F(_F), curB(0), hitEnd(_end) {}
 		
 		bool isValid() {
 			if(cur.det4D(F.D) < 0) return false;
@@ -214,11 +215,22 @@ struct PrecisionF {
 				b1 = b2 = 0;
 				c ++;
 			}
-			if(c >= F.B) {
-				c = b1 = b2 = 0;
-				a ++;
+			if(c > curB) {
+				b1 = b2 = 0;
+				if(a == curB) {
+					curB ++;
+					a = 0;
+					c = curB;
+				}
+				else {
+					a ++;
+					if(a < curB)
+						c = curB;
+					else
+						c = 0;
+				}
 			}
-			if(a >= F.B)
+			if(curB >= F.B)
 				hitEnd = true;
 		}
 		Iter& operator++() {
