@@ -336,7 +336,8 @@ struct ReductionMatrices_Calc {
 			reduce_GL(T, D, reduced);
 			size_t column = reducedCurlFMap[reduced.matrix];
 			size_t rowStart = 0;
-			for(ElemOfS S : curlS) {
+			for(auto _S = curlS.begin(); _S != curlS.end(); ++_S) {
+				ElemOfS S = *_S;
 				int traceNum = trace(S,T);
 				size_t row = rowStart + traceNum;
 				rowStart += calcPrecisionDimension(curlF, S);
