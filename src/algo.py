@@ -403,10 +403,10 @@ def modform(D, HermWeight, B_cF=10):
 		fe_expansion_matrix_l = getElliptModule(l, 2*HermWeight, precLimit)
 		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
 
-		m = M_S * herm_modform_fe_expannsion.basis_matrix()
-		print m
+		verbose("calc M_S * herm_modforms ...")
+		m = M_S * herm_modform_fe_expannsion.basis_matrix().transpose()
 
-		m_module = m.row_module()
+		m_module = m.column_module()
 		assert m_module.is_subspace(ell_modform_fe_expansions_l), \
 			"%r not subspace of %r" % (m_module, ell_modform_fe_expansions_l)
 
