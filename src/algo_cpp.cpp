@@ -511,6 +511,7 @@ void test_algo_CurlSGen_generic() {
 }
 
 void test_algo_PrecisionF() {
+#ifndef OLDGCC
 	using namespace std;
 	PrecisionF curlF;
 	curlF.D = -4;
@@ -521,6 +522,7 @@ void test_algo_PrecisionF() {
 		++c;
 	}
 	cout << "count: " << c << endl;
+#endif
 }
 
 void test_algo_calcReducedCurlF() {
@@ -547,11 +549,13 @@ void test_algo() {
 			Timer timer("calcMatrix");
 			calc.calcMatrix();
 		}
+#ifndef OLDGCC
 		{
 			size_t c = 0;
 			for(ElemOfF T : calc.curlF) { ++c; (void)T; }
 			cout << "size of curlF: " << c << endl;
 		}
+#endif
 		cout << "size of reducedMatrix(curlF): " << calc.reducedCurlFList.size() << endl;
 		cout << "size of matrix: " << calc.matrix.size() << endl;
 		//calc.dumpMatrix();
