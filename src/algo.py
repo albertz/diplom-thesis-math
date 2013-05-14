@@ -236,6 +236,7 @@ def modform(D, HermWeight, B_cF=10):
 		print "dim == 0 -> exit"
 		return
 
+	curlS_denoms = set()
 	while True:
 		# Step 3. Iterate S \in Mat_2^T(Z). Add to curlS. iterate by denominator.
 		# S_11 and S_22 (diagonal entries) are positive.
@@ -243,8 +244,11 @@ def modform(D, HermWeight, B_cF=10):
 		# S can be changed arbitrarily by GL(2, \ZZ).
 		calc.curlS_clearMatrices()
 		S = calc.getNextS()
+		l = S.det()
+		l = _toInt(l)
 		curlS += [S]
-		verbose("trying S={0}, det={1}".format(S, S.det()))
+		curlS_denoms.add(l)
+		verbose("trying S={0}, det={1}".format(S, l))
 
 		# Step 4. Calculate restriction matrix. Via calc.calcMatrix() (algo_cpp.cpp).
 		# Note that calcMatrix() depends on the current internal calc.curlS set
@@ -256,8 +260,6 @@ def modform(D, HermWeight, B_cF=10):
 
 		precLimit = M_S.nrows() # \cF(S)
 
-		l = S.det()
-		l = _toInt(l)
 		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
 		verbose("get elliptic modform space with precision %i ..." % precLimit)
 		fe_expansion_matrix_l = getElliptModule(l, 2*HermWeight, precLimit)
@@ -376,5 +378,23 @@ def modform(D, HermWeight, B_cF=10):
 
 		if dim == current_dimension:
 			break
+
+	# Test for some other S with other not-yet-seen denominator.
+	testSCount = 3
+	while testSCount > 0:
+		calc.curlS_clearMatrices()
+		S = calc.getNextS()
+		l = S.det()
+		l = _toInt(l)
+		if l in curlS_denoms: continue
+
+		curlS_denoms.add(l)
+		testSCount -= 1
+		verbose("testing with S={0}, det={1}".format(S, l))
+
+		#verbose("calc restriction matrix...")
+		#M_S = calcRestrictMatrix(calc) # matrix over integer ring
+		#M_S = M_S.matrix_over_field() # matrix over rational field
+
 
 	return herm_modform_fe_expannsion
