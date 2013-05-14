@@ -392,9 +392,22 @@ def modform(D, HermWeight, B_cF=10):
 		testSCount -= 1
 		verbose("testing with S={0}, det={1}".format(S, l))
 
-		#verbose("calc restriction matrix...")
-		#M_S = calcRestrictMatrix(calc) # matrix over integer ring
-		#M_S = M_S.matrix_over_field() # matrix over rational field
+		verbose("calc restriction matrix...")
+		M_S = calcRestrictMatrix(calc) # matrix over integer ring
+		M_S = M_S.matrix_over_field() # matrix over rational field
 
+		precLimit = M_S.nrows() # \cF(S)
+
+		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
+		verbose("get elliptic modform space with precision %i ..." % precLimit)
+		fe_expansion_matrix_l = getElliptModule(l, 2*HermWeight, precLimit)
+		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
+
+		m = M_S * herm_modform_fe_expannsion.basis_matrix()
+		print m
+
+		m_module = m.row_module()
+		assert m_module.is_subspace(ell_modform_fe_expansions_l), \
+			"%r not subspace of %r" % (m_module, ell_modform_fe_expansions_l)
 
 	return herm_modform_fe_expannsion
