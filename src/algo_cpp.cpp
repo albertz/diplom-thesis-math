@@ -301,7 +301,8 @@ struct ReductionMatrices_Calc {
 	void calcReducedCurlF() {
 		reducedCurlFMap.clear();
 		reducedCurlFList.clear();
-		for(ElemOfF T : curlF) {
+		for(auto _T = curlF.begin(); _T != curlF.end(); ++_T) {
+			ElemOfF T = *_T;
 			struct hermitian_form_with_character_evaluation reduced;
 			reduce_GL(T, D, reduced);
 			if(reducedCurlFMap.find(reduced.matrix) == reducedCurlFMap.end()) {
