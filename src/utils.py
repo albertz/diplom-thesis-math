@@ -205,7 +205,12 @@ class CurlO:
 		self.D = D
 		assert (D*D - D) % 4 == 0
 	def divmod(self, a, b):
-		"Returns q,r such that a = q*b + r."
+		"""
+		Returns q,r such that a = q*b + r.
+		"""
+		# Note that this implementation is quite naive!
+		# Later, we can do better with QuadraticForm(...). (TODO)
+		
 		if b == 0: raise ZeroDivisionError
 		a1,a2 = self.as_tuple_b(a)
 		b1,b2 = self.as_tuple_b(b)
