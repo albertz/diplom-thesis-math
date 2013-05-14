@@ -396,9 +396,9 @@ struct ReductionMatrices_Calc {
 		
 		matrixRowCountTrans = 0;
 		LOGIC_CHECK(curlS.size() > 0);
-		for(ElemOfS S : curlS) {
+		for(auto S = curlS.begin(); S != curlS.end(); ++S) {
 			// TODO: is calcPrecisionDimension correct here?
-			matrixRowCountTrans += calcPrecisionDimension(curlF, S);
+			matrixRowCountTrans += calcPrecisionDimension(curlF, (ElemOfS)*S);
 		}
 	
 		// TODO: WARNING: All the stuff about matrixRowDenomTrans and trace (below) has to be studied and worked out.
