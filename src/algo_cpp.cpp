@@ -319,8 +319,8 @@ struct ReductionMatrices_Calc {
 	void calcMatrix() {
 		matrixRowCount = 0;
 		LOGIC_CHECK(curlS.size() > 0);
-		for(ElemOfS S : curlS) {
-			matrixRowCount += calcPrecisionDimension(curlF, S);
+		for(auto S = curlS.begin(); S != curlS.end(); ++S) {
+			matrixRowCount += calcPrecisionDimension(curlF, (ElemOfS)*S);
 		}
 		
 		LOGIC_CHECK(reducedCurlFList.size() > 0);
@@ -330,7 +330,8 @@ struct ReductionMatrices_Calc {
 		matrix.resize(matrixRowCount * matrixColumnCount);
 
 		// reduce_GL is expensive, thus we iterate through curlF only once.
-		for(ElemOfF T : curlF) {
+		for(auto _T = curlF.begin(); _T != curlF.end(); ++_T) {
+			ElemOfF T = *_T;
 			struct hermitian_form_with_character_evaluation reduced;
 			reduce_GL(T, D, reduced);
 			size_t column = reducedCurlFMap[reduced.matrix];
