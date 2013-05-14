@@ -13,6 +13,8 @@ SageCLibIncludeDir="$SageCLibDir/include"
 SageExtIncludeDir="$SageDevelDir/sage/ext"
 PythonIncludeDir="$SageLocalIncludeDir/python2.7"
 
+set -x
+
 cython \
 	-I $PythonIncludeDir \
 	-I $SageDevelDir \
