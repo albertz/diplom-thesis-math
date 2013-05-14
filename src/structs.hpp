@@ -344,6 +344,7 @@ T Pow(const T& a, const T& b) {
 #include <chrono>
 #include <string>
 
+#ifndef OLDGCC
 struct Timer {
 	std::string name;
 	std::chrono::steady_clock::time_point start;
@@ -355,6 +356,9 @@ struct Timer {
 		std::cout << name << " took " << d_s << " secs" << std::endl;
 	}
 };
+#else
+struct Timer { Timer(const char*) {} };
+#endif
 
 
 #endif
