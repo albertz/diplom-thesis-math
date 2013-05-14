@@ -210,7 +210,7 @@ class CurlO:
 		"""
 		# Note that this implementation is quite naive!
 		# Later, we can do better with QuadraticForm(...). (TODO)
-		
+
 		if b == 0: raise ZeroDivisionError
 		a1,a2 = self.as_tuple_b(a)
 		b1,b2 = self.as_tuple_b(b)
