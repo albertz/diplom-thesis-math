@@ -410,13 +410,15 @@ struct ReductionMatrices_Calc {
 		matrixTrans.resize(matrixRowCountTrans * matrixColumnCountTrans * matrixCountTrans);
 		
 		// reduce_GL is expensive, thus we iterate through curlF only once.
-		for(ElemOfF T : curlF) {
+		for(auto _T = curlF.begin(); _T != curlF.end(); ++_T) {
+			ElemOfF T = *_T;
 			M2_Odual T_M2 = M2_Odual_from_M2T_Odual(T, D);
 			struct hermitian_form_with_character_evaluation reduced;
 			reduce_GL(T, D, reduced);
 			size_t column = reducedCurlFMap[reduced.matrix];
 			size_t rowStart = 0;
-			for(ElemOfS S : curlS) {
+			for(auto _S = curlS.begin(); _S != curlS.end(); ++_S) {
+				ElemOfS S = *_S;
 				M2_O S_M2 = M2_O_from_M2T_O(S, D);
 				// n = tr(T tS S tS^*)
 				/*
