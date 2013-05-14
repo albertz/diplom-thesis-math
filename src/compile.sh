@@ -27,7 +27,7 @@ cython \
 Cpp="c++"
 CppOpts="-ftrapv"
 [ "$(uname)" == "Darwin" ] && CppOpts="$CppOpts -std=gnu++11 -stdlib=libc++"
-[ "$(uname)" == "Linux" ] && CppOpts="$CppOpts -std=c++11 -fPIC"
+[ "$(uname)" == "Linux" ] && CppOpts="$CppOpts -std=c++0x -fPIC -DOLDGCC"
 
 $Cpp \
 	$CppOpts \
