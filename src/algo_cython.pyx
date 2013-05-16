@@ -4,10 +4,11 @@ include "stdsage.pxi"
 include "cdefs.pxi"
 
 from libcpp.string cimport string
+from libcpp.vector cimport vector
 
 from sage.functions.other import sqrt as ssqrt
 from sage.rings.integer import Integer
-from sage.rings.number_field.number_field import QQ, ZZ
+from sage.rings.number_field.number_field import QQ, ZZ, QuadraticField
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix_space import MatrixSpace
 from sage.matrix.matrix_integer_dense cimport Matrix_integer_dense
@@ -26,6 +27,8 @@ cdef extern from "algo_cpp.cpp":
 		ElemOfCurlOdual a,b,c,d
 	cdef cppclass M2T_O:
 		int a,b1,b2,c
+	cdef cppclass M2T_Odual:
+		int a,b1,b2,c
 	cdef cppclass CurlS_Generator:
 		M2T_O getNextS()
 		void clearMatrices()
@@ -36,6 +39,7 @@ cdef extern from "algo_cpp.cpp":
 		void init(int D, int HermWeight, string curlSiterType) except +
 		PrecisionF curlF
 		CurlS_Generator curlS
+		vector[M2T_Odual] reducedCurlFList
 		void calcReducedCurlF() except +
 
 		void calcMatrix() except +
@@ -53,11 +57,14 @@ def test():
 	test_algo()
 
 cdef M2T_O_fromC(M2T_O m, int D):
-	"""
-	:rtype : Matrix_symbolic_dense
-	"""
+	K = QuadraticField(D)
 	b = m.b1 + m.b2 * (D + ssqrt(D)) * QQ(0.5)
-	return matrix(2, 2, [m.a, b, b.conjugate(), m.c])
+	return matrix(K, 2, 2, [m.a, b, b.conjugate(), m.c])
+
+cdef M2T_Odual_fromC(M2T_O m, int D):
+	K = QuadraticField(D)
+	b = m.b1 / ssqrt(D) + m.b2 * (1 + ssqrt(D)) * QQ(0.5)
+	return matrix(K, 2, 2, [m.a, b, b.conjugate(), m.c])
 
 cdef ElemOfCurlO O_toC(a, int D) except *:
 	cdef ElemOfCurlO b
@@ -115,6 +122,9 @@ cdef class Calc:
 		if self.D == 0: raise RuntimeError, "you have to call init first"
 		self.calc.calcReducedCurlF()
 		self.matrixColumnCount = self.calc.matrixColumnCount
+
+	def getReducedCurlF(self):
+		return map(M2T_Odual_fromC, self.calc.reducedCurlFList)
 
 	def calcMatrix(self):
 		"""
