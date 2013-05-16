@@ -345,11 +345,6 @@ def solveR(M, S, space):
 		)
 	tM = tM1 = make4x4matrix(A1,B1,C1,D1)
 	def make4x4matrix_embed(a1,a4,b1,b4,c1,c4,d1,d4):
-		try:
-			a1,a4,b1,b4,c1,c4,d1,d4 = map(space.field, [a1,a4,b1,b4,c1,c4,d1,d4])
-		except TypeError:
-			print "a1,a4,b1,b4,c1,c4,d1,d4 = %r" % ((a1,a4,b1,b4,c1,c4,d1,d4),)
-			raise
 		return matrix(Ring, 4,4,
 			[a1,0,b1,0] +
 			[0,a4,0,b4] +
