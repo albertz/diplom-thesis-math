@@ -111,7 +111,7 @@ def cuspExpansions(level, weight, prec):
 	return ce
 
 ellipBaseMatrixCache = PersistentCache("ellipBaseMatrix.cache.sobj") # level,weight -> mat,prec
-def getElliptModule(level, weight, precision):
+def getElliptModFormsBasisMatrix(level, weight, precision):
 	cacheIdx = (level, weight)
 	if cacheIdx in ellipBaseMatrixCache and ellipBaseMatrixCache[cacheIdx][1] >= precision:
 		return ellipBaseMatrixCache[cacheIdx][0][:,:precision]
@@ -231,7 +231,7 @@ def test_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, testSCo
 
 		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
 		verbose("get elliptic modform space with precision %i ..." % precLimit)
-		fe_expansion_matrix_l = getElliptModule(l, 2*HermWeight, precLimit)
+		fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
 		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
 
 		verbose("calc M_S * herm_modforms ...")
@@ -452,7 +452,7 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 
 		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
 		verbose("get elliptic modform space with precision %i ..." % precLimit)
-		fe_expansion_matrix_l = getElliptModule(l, 2*HermWeight, precLimit)
+		fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
 		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
 
 		verbose("calc M_S_module...")
