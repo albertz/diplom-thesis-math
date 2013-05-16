@@ -310,7 +310,7 @@ def _takeEveryNRow(mat, n):
 
 
 
-def test_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, testSCount = 3):
+def test_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, testSCount = 10):
 	"""
 	It uses the C++ calc structure to search for additional S matrices
 	which have other denominators than those in used_curlS_denoms.
@@ -424,7 +424,7 @@ def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsi
 	This goes through all the cusps and compares the space given by `(f|R)[S]`
 	with the space of Elliptic modular forms expansion at those cusps.
 	"""
-	
+
 	assert l == S.det()
 	assert list(calc.curlS) == [S]
 	D = calc.D
