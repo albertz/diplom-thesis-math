@@ -231,7 +231,23 @@ def toCyclPowerBase(M, order):
 				ms[i][y,x] = coords[i]
 	return ms
 
+
 def _takeEveryNRow(mat, n):
+	"""
+	INPUT:
+
+	- `mat` -- a matrix with `mat.nrows()` being a multiple of `n`
+
+	- `n` -- an integer
+
+	OUTPUT:
+
+	- A matrix which has only the rows [0,n,2*n,...] or the original
+	  matrix `mat` in case every other rows are zero -
+	  otherwise ``None``.
+
+	"""
+
 	assert mat.nrows() % n == 0
 	newm = matrix(mat.base_ring(), mat.nrows() / n, mat.ncols())
 	for i in range(mat.nrows()):
@@ -241,6 +257,7 @@ def _takeEveryNRow(mat, n):
 			if mat[i] != 0:
 				return None
 	return newm
+
 
 def _toInt(a):
 	a = _simplify(a)
