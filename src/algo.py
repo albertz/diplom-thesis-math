@@ -294,6 +294,98 @@ def herm_modform_space_dim(D, HermWeight):
 		raise NotImplementedError, "dimension calculation of Hermitian modular form with D = %i not implemented" % D
 
 
+def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsion):
+	assert l == S.det()
+	assert list(calc.curlS) == [S]
+	HermWeight = calc.HermWeight
+
+	for cusp in Gamma0(l).cusps():
+		if cusp == Infinity: continue
+		if cusp == 0:
+			M = matrix(ZZ,2,2,[0,-1,1,0])
+		else:
+			a = cusp.numerator()
+			c = cusp.denominator()
+			_div, d, b = orig_xgcd(a, -c)
+			assert _div == 1
+			M = matrix(ZZ,2,2,[a,b,c,d])
+			del a,b,c,d
+
+		try:
+			gamma, R, tM = solveR(M, S, space=CurlO(D))
+		except Exception:
+			print (M, S)
+			raise
+		R.set_immutable() # for caching, we need it hashable
+
+		herm_modforms = herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
+		ell_R_denom, ell_R_order, M_R = calcMatrixTrans(calc, R)
+		CycloDegree_R = CyclotomicField(ell_R_order).degree()
+		print "M_R[0] nrows, ell_R_denom, ell_R_order, Cyclo degree:", \
+			M_R[0].nrows(), ell_R_denom, ell_R_order, CycloDegree_R
+
+		# The maximum precision we can use is M_R[0].nrows().
+		# However, that can be quite huge (e.g. 600).
+		ce_prec = min(precLimit, M_R[0].nrows())
+
+		ce = cuspExpansions(level=l, weight=2*HermWeight, prec=ce_prec)
+		ell_M_denom, ell_M = ce.expansion_at(SL2Z(M))
+		ell_M_order = ell_R_order # not sure here. just try the one from R. toCyclPowerBase would fail if this doesn't work
+		# CyclotomicField(l / prod(l.prime_divisors())) should also work.
+
+		# Not sure if this is always the case but seems so.
+		assert ell_R_denom >= ell_M_denom
+		if ell_R_denom > ell_M_denom:
+			assert ell_R_denom % ell_M_denom == 0
+			M_R = [_takeEveryNRow(M_R_i, ell_R_denom / ell_M_denom) for M_R_i in M_R]
+			assert all([M_R_i is not None for M_R_i in M_R])
+			ell_R_denom = ell_M_denom
+		assert ell_R_denom == ell_M_denom
+
+		# ell_M rows are the elliptic FE. M_R[i] columns are the elliptic FE.
+		# We expect that M_R gives a higher precision for the ell FE. I'm not sure
+		# if this is always true but we expect it here (maybe not needed, though).
+		print "precision of M_R[0], ell_M, wanted:", M_R[0].nrows(), ell_M.ncols(), ce_prec
+		assert ell_M.ncols() >= ce_prec
+		prec = min(M_R[0].nrows(), ell_M.ncols())
+		# cut to have same precision
+		M_R = [M_R_i[:prec,:] for M_R_i in M_R]
+		ell_M = ell_M[:,:prec]
+		assert ell_M.ncols() == M_R[0].nrows() == prec
+
+		print "M_R[0] rank, herm rank, mult rank:", \
+			M_R[0].rank(), herm_modforms.rank(), (M_R[0] * herm_modforms).rank()
+		ell_R = [M_R_i * herm_modforms for M_R_i in M_R]
+
+		# I'm not sure on this. Seems to be true and it simplifies things in the following.
+		assert ell_M_order <= ell_R_order, "{0}".format((ell_M_order, ell_R_order))
+		assert ell_R_order % ell_M_order == 0, "{0}".format((ell_M_order, ell_R_order))
+
+		# Transform to same Cyclomotic Field in same power base.
+		ell_M2 = toCyclPowerBase(ell_M, ell_M_order)
+		ell_R2 = toLowerCyclBase(ell_R, ell_R_order, ell_M_order)
+		# We must work with the matrix. maybe we should transform hf_M instead to a
+		# higher order field instead, if this ever fails (I'm not sure).
+		assert ell_R2 is not None
+		assert len(ell_M2) == len(ell_R2) # They should have the same power base & same degree now.
+		print "ell_M2[0], ell_R2[0] rank with order %i:" % ell_M_order, ell_M2[0].rank(), ell_R2[0].rank()
+
+		assert len(M_R) == len(ell_M2)
+		for i in range(len(ell_M2)):
+			ell_M_space = ell_M2[i].row_space()
+			ell_R_space = ell_R2[i].column_space()
+			merged = ell_M_space.intersection(ell_R_space)
+
+			herm_modform_fe_expannsion_Ci = M_R[i].solve_right( merged.basis_matrix().transpose() )
+			herm_modform_fe_expannsion_Ci_module = herm_modform_fe_expannsion_Ci.column_module()
+			herm_modform_fe_expannsion_Ci_module += M_R[i].right_kernel()
+
+			herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_Ci_module )
+			print "power", i, merged.dimension(), herm_modform_fe_expannsion_Ci_module.dimension(), \
+				current_dimension, herm_modform_fe_expannsion.dimension()
+			current_dimension = herm_modform_fe_expannsion.dimension()
+
+
 def herm_modform_space(D, HermWeight, B_cF=10):
 	"""
 	This calculates the vectorspace of Fourier expansions to
@@ -378,92 +470,9 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 		if dim == current_dimension:
 			break
 
-		# cusp info:
-		for cusp in Gamma0(l).cusps():
-			if cusp == Infinity: continue
-			if cusp == 0:
-				M = matrix(ZZ,2,2,[0,-1,1,0])
-			else:
-				a = cusp.numerator()
-				c = cusp.denominator()
-				_div, d, b = orig_xgcd(a, -c)
-				assert _div == 1
-				M = matrix(ZZ,2,2,[a,b,c,d])
-				del a,b,c,d
-
-			try:
-				gamma, R, tM = solveR(M, S, space=CurlO(D))
-			except Exception:
-				print (M, S)
-				raise
-			R.set_immutable() # for caching, we need it hashable
-
-			herm_modforms = herm_modform_fe_expannsion.echelonized_basis_matrix().transpose()
-			ell_R_denom, ell_R_order, M_R = calcMatrixTrans(calc, R)
-			CycloDegree_R = CyclotomicField(ell_R_order).degree()
-			print "M_R[0] nrows, ell_R_denom, ell_R_order, Cyclo degree:", \
-				M_R[0].nrows(), ell_R_denom, ell_R_order, CycloDegree_R
-
-			# The maximum precision we can use is M_R[0].nrows().
-			# However, that can be quite huge (e.g. 600).
-			ce_prec = min(precLimit * 2, M_R[0].nrows())
-
-			ce = cuspExpansions(level=l, weight=2*HermWeight, prec=ce_prec)
-			ell_M_denom, ell_M = ce.expansion_at(SL2Z(M))
-			ell_M_order = ell_R_order # not sure here. just try the one from R. toCyclPowerBase would fail if this doesn't work
-			# CyclotomicField(l / prod(l.prime_divisors())) should also work.
-
-			# Not sure if this is always the case but seems so.
-			assert ell_R_denom >= ell_M_denom
-			if ell_R_denom > ell_M_denom:
-				assert ell_R_denom % ell_M_denom == 0
-				M_R = [_takeEveryNRow(M_R_i, ell_R_denom / ell_M_denom) for M_R_i in M_R]
-				assert all([M_R_i is not None for M_R_i in M_R])
-				ell_R_denom = ell_M_denom
-			assert ell_R_denom == ell_M_denom
-
-			# ell_M rows are the elliptic FE. M_R[i] columns are the elliptic FE.
-			# We expect that M_R gives a higher precision for the ell FE. I'm not sure
-			# if this is always true but we expect it here (maybe not needed, though).
-			print "precision of M_R[0], ell_M, wanted:", M_R[0].nrows(), ell_M.ncols(), ce_prec
-			assert ell_M.ncols() >= ce_prec
-			prec = min(M_R[0].nrows(), ell_M.ncols())
-			# cut to have same precision
-			M_R = [M_R_i[:prec,:] for M_R_i in M_R]
-			ell_M = ell_M[:,:prec]
-			assert ell_M.ncols() == M_R[0].nrows() == prec
-
-			print "M_R[0] rank, herm rank, mult rank:", \
-				M_R[0].rank(), herm_modforms.rank(), (M_R[0] * herm_modforms).rank()
-			ell_R = [M_R_i * herm_modforms for M_R_i in M_R]
-
-			# I'm not sure on this. Seems to be true and it simplifies things in the following.
-			assert ell_M_order <= ell_R_order, "{0}".format((ell_M_order, ell_R_order))
-			assert ell_R_order % ell_M_order == 0, "{0}".format((ell_M_order, ell_R_order))
-
-			# Transform to same Cyclomotic Field in same power base.
-			ell_M2 = toCyclPowerBase(ell_M, ell_M_order)
-			ell_R2 = toLowerCyclBase(ell_R, ell_R_order, ell_M_order)
-			# We must work with the matrix. maybe we should transform hf_M instead to a
-			# higher order field instead, if this ever fails (I'm not sure).
-			assert ell_R2 is not None
-			assert len(ell_M2) == len(ell_R2) # They should have the same power base & same degree now.
-			print "ell_M2[0], ell_R2[0] rank with order %i:" % ell_M_order, ell_M2[0].rank(), ell_R2[0].rank()
-
-			assert len(M_R) == len(ell_M2)
-			for i in range(len(ell_M2)):
-				ell_M_space = ell_M2[i].row_space()
-				ell_R_space = ell_R2[i].column_space()
-				merged = ell_M_space.intersection(ell_R_space)
-
-				herm_modform_fe_expannsion_Ci = M_R[i].solve_right( merged.basis_matrix().transpose() )
-				herm_modform_fe_expannsion_Ci_module = herm_modform_fe_expannsion_Ci.column_module()
-				herm_modform_fe_expannsion_Ci_module += M_R[i].right_kernel()
-
-				herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_Ci_module )
-				print "power", i, merged.dimension(), herm_modform_fe_expannsion_Ci_module.dimension(), \
-					current_dimension, herm_modform_fe_expannsion.dimension()
-				current_dimension = herm_modform_fe_expannsion.dimension()
+		_intersect_modform_cusp_info(
+			calc=calc, S=S, l=l, precLimit=precLimit*2,
+			herm_modform_fe_expannsion=herm_modform_fe_expannsion)
 
 		if dim == current_dimension:
 			break
