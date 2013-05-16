@@ -199,6 +199,9 @@ def toLowerCyclBase(ms, old_order, new_order):
 
 	We transform the matrices in power base from `K_old` to `K_new`.
 
+	The way this is implemented works only if `old_order`
+	is a multiple of `new_order`.
+
 	INPUT:
 
 	- `ms` -- A list of matrices where every matrix is a factor to
@@ -217,7 +220,6 @@ def toLowerCyclBase(ms, old_order, new_order):
 
 	"""
 
-	# We expect to have ms in power_base.
 	assert isinstance(ms, list) # list of matrices
 	assert old_order % new_order == 0
 
