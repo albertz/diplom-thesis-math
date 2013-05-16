@@ -59,18 +59,34 @@ def test_algo_calcMatrix():
 matrixTransCache = PersistentCache("matrixTrans.cache.sobj")
 def calcMatrixTrans(calc, R):
 	"""
-	Returns a triple (denom, order, ms) where
-	ms is a list of matrices. Each matrix is a factor to
-	zeta**i where zeta is the order's root of unity,
-	i.e. zeta = CyclotomicField(order).gen().
-	And we have len(ms) == CyclotomicField(order).degree().
+	Returns a triple `(denom, order, ms)` where
+	`ms` is a list of matrices. Each matrix is a factor to
+	`zeta**i` where zeta is the order's root of unity,
+	i.e. `zeta = CyclotomicField(order).gen()`.
+	And we have `len(ms) == CyclotomicField(order).degree()`.
 
 	The matrices represent the linear map of a Hermitian
-	modular form f to the Elliptic modular form (f|R)[S].
-	(R is given as a parameter to this function. S is saved
-	internally by the calc structure.)
+	modular form `f` to the Elliptic modular form `(f|R)[S]`,
+	both represented by Fourier expansions.
+	(`R` is given as a parameter to this function. `S` is saved
+	internally by the `calc` structure.)
 
 	This uses the C++ function `Calc::calcMatrixTrans()` in  algo_cpp.cpp`.
+
+	An Elliptic modular form given by vector `v` corresponds to the expansion
+
+		\sum_{n \ge 0} v_n q^{n / denom}.
+
+	INPUT:
+
+	- `calc` -- The C++ Calc structure.
+
+	- `R` -- The transformation matrix `R` in `(f|R)[S]`.
+
+	OUTPUT:
+
+	- The triple `(denom, order, ms)` as explained above.
+
 	"""
 	tS = R.submatrix(0,0,2,2)
 	tT = R.submatrix(2,0,2,2)
