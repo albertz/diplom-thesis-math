@@ -475,6 +475,28 @@ def _toInt(a):
 	return a
 
 
+def reloadC():
+	"""
+	This is just for testing to reload the C (Cython) module
+	after it was recompiled.
+	Note that this code is very unsafe! It will likely crash
+	when you have other references on the C module.
+	This is only for debugging and development!
+	"""
+	import algo
+	C = algo.C
+	import ctypes
+	try:
+		libdl = ctypes.CDLL("libdl.so")
+	except Exception:
+		# MacOSX:
+		libdl = ctypes.CDLL("libdl.dylib")
+	libdl.dlclose.argtypes = [ctypes.c_void_p]
+	so = ctypes.PyDLL(C.__file__)
+	assert(libdl.dlclose(so._handle) == 0)
+	reload(C)
+
+
 # Hack for reload handling
 def reimportMeIntoAlgoModule():
 	import sys
