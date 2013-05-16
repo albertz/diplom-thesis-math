@@ -424,6 +424,7 @@ def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsi
 	assert list(calc.curlS) == [S]
 	D = calc.D
 	HermWeight = calc.HermWeight
+	current_dimension = herm_modform_fe_expannsion.dimension()
 
 	for cusp in Gamma0(l).cusps():
 		if cusp == Infinity: continue
