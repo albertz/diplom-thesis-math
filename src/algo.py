@@ -242,8 +242,48 @@ def test_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, testSCo
 			"%r not subspace of %r" % (m_module, ell_modform_fe_expansions_l)
 
 
+def herm_modform_indexset(D, B_cF):
+	"""
+	This is the precision of the index set for the Fourier coefficients of the
+	Hermitian modular forms (calculated by `herm_modform_space()`).
+
+	The index set \Lambda is the set of positive definite 2*2 matrices over \curlO^#.
+	\curlF \subset \Lambda is a precision such that for [a,b,c] \in \curlF,
+	we have 0 \le a,c, \le B_cF.
+
+	This function returns all the reduced matrices of \curlF. The reduction
+	is given by `reduce_GL()` in `reduceGL.hpp`.
+
+	The order of \curlF is predefined and fixed. It is such that
+	[a,b,c] < [s,t,u]  <==>  max(a,c) < max(s,u).
+	Thus, for B1 < B2, we have
+
+		L1 = herm_modform_indexset(D, B1)
+		L2 = herm_modform_indexset(D, B2)
+		assert len(L1) < len(L2)
+		assert L1 == L2[:len(L1)]
+	"""
+
+	HermWeight = 6 # Just some dummy value. The calc-init wants something valid.
+	calc = C.Calc()
+	calc.init(D=D, HermWeight=HermWeight, B_cF=B_cF)
+	calc.calcReducedCurlF()
+
+
 def herm_modform_space(D, HermWeight, B_cF=10):
-	"Main algo"
+	"""
+	This calculates the vectorspace of Fourier expansions to
+	Hermitian modular forms of weight `HermWeight` over \Gamma,
+	where \Gamma = \Sp_2(\curlO) and \curlO is the maximal order
+	of \QQ(\sqrt{D}).
+
+	Each Fourier coefficient vector is indexed up to a precision
+	\curlF which is given by `B_cF` such that for every
+	[a,b,c] \in \curlF \subset \Lambda, we have 0 \le a,c \le B_cF.
+
+	The function `herm_modform_indexset()` returns reduced matrices
+	of that precision index set \curlF.
+	"""
 
 	if HermWeight % 3 != 0:
 		raise TypeError, "the modulform is trivial/zero if HermWeight is not divisible by 3"
