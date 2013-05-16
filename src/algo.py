@@ -355,12 +355,10 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 		verbose("get elliptic modform space with precision %i ..." % precLimit)
 		fe_expansion_matrix_l = getElliptModule(l, 2*HermWeight, precLimit)
 		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
-		#print ell_modform_fe_expansions_l
 
 		verbose("calc M_S_module...")
 		M_S_module = M_S.column_module()
 		verbose("dimension of M_S column module: %i" % M_S_module.dimension())
-		#print M_S_module
 		restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S_module )
 		verbose("dimension of restriction_fe_expansions: %i" % restriction_fe_expansions.dimension())
 		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
@@ -377,7 +375,6 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 		verbose("current dimension: %i, wanted: %i" % (current_dimension, dim))
 		assert current_dimension >= dim
 
-		# Step 5. dimension check
 		if dim == current_dimension:
 			break
 
