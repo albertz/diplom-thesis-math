@@ -270,6 +270,7 @@ def herm_modform_indexset(D, B_cF):
 	calc.calcReducedCurlF()
 	return calc.getReducedCurlF()
 
+
 def herm_modform_space(D, HermWeight, B_cF=10):
 	"""
 	This calculates the vectorspace of Fourier expansions to

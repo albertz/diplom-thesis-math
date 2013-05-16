@@ -11,7 +11,7 @@ from sage.structure.sequence import Sequence_generic, Sequence
 from sage.symbolic.all import I
 from sage.rings.arith import xgcd as orig_xgcd, lcm
 from sage.rings.arith import gcd as orig_gcd
-from sage.rings.number_field.number_field import QQ, ZZ
+from sage.rings.number_field.number_field import QQ, ZZ, QuadraticField
 from sage.symbolic.ring import SymbolicRing
 from sage.symbolic.expression import Expression
 
@@ -204,6 +204,8 @@ class CurlO:
 	def __init__(self, D):
 		self.D = D
 		assert (D*D - D) % 4 == 0
+		self.field = QuadraticField(D)
+		self.Droot = self.field(D).sqrt()
 	def divmod(self, a, b):
 		"""
 		Returns q,r such that a = q*b + r.
@@ -288,11 +290,11 @@ class CurlO:
 			tupleargs[2*i],tupleargs[2*i+1] = self.as_tuple_b(args[i])
 		return matrix(1,len(tupleargs),tupleargs).denominator()
 	def as_tuple_b(self, a):
-		b2 = imag(a) * 2 / ssqrt(-self.D)
-		b1 = real(a) - b2 * self.D / 2
+		b2 = _simplify(imag(a) * 2 / ssqrt(-self.D))
+		b1 = _simplify(real(a) - b2 * self.D / 2)
 		return (b1, b2)
 	def from_tuple_b(self, b1, b2):
-		return b1 + b2 * (self.D + ssqrt(self.D)) / 2
+		return b1 + b2 * (self.D + self.Droot) / 2
 	def __contains__(self, item):
 		try:
 			b1,b2 = self.as_tuple_b(item)
@@ -322,7 +324,8 @@ def solveR(M, S, space):
 	#Ring = S.base_ring()
 	#print type(Ring), Ring
 	#Ring = SymbolicRing()
-	Ring = I.base_ring() # Symbolic Ring
+	#Ring = I.base_ring() # Symbolic Ring
+	Ring = space.field
 
 	A1 = matrix(Ring, 2,2, M[0][0])
 	B1 = M[0][1] * S
@@ -408,7 +411,7 @@ def solveR(M, S, space):
 def test_solveR():
 	space = CurlO(-3)
 	a,b,c,d = 2,1,1,1
-	s,t,u = 5,ssqrt(-3),1
+	s,t,u = 5,space.Droot,1
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S, space)
@@ -432,19 +435,19 @@ def test_solveR():
 	gamma,R,tM = solveR(M, S, space)
 
 	a,b,c,d = 0,-1,1,0
-	s,t,u = 2, QQ(0.5) * ssqrt(-3) - QQ(0.5), 2
+	s,t,u = 2, QQ(0.5) * space.Droot - QQ(0.5), 2
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S, space)
 
 	a,b,c,d = 1,0,3,1
-	s,t,u = 3, QQ(0.5) * ssqrt(-3) - QQ(1.5), 3
+	s,t,u = 3, QQ(0.5) * space.Droot - QQ(1.5), 3
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S, space)
 
 	a,b,c,d = 1,0,2,1
-	s,t,u = 3, QQ(0.5) * ssqrt(-3) - QQ(1.5), 3
+	s,t,u = 3, QQ(0.5) * space.Droot - QQ(1.5), 3
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S, space)
