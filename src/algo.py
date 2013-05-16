@@ -317,21 +317,18 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 	calc.calcReducedCurlF()
 	reducedCurlFSize = calc.matrixColumnCount
 
-	# Step 1. Iterate through square-free numbers l, starting at 1.
-	# Init curlS = {}.
-	curlS = []
-
-	herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
-
 	# Calculate the dimension of Hermitian modular form space.
 	dim = herm_modform_space_dim(D=D, HermWeight=HermWeight)
+
+	herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
+	curlS = [] # all matrices S we have visited so far
+	curlS_denoms = set() # the denominators of the visited matrices S
 
 	verbose("current dimension: %i, wanted: %i" % (herm_modform_fe_expannsion.dimension(), dim))
 	if dim == 0:
 		print "dim == 0 -> exit"
 		return
 
-	curlS_denoms = set()
 	while True:
 		# Step 3. Iterate S \in Mat_2^T(Z). Add to curlS. iterate by denominator.
 		# S_11 and S_22 (diagonal entries) are positive.
