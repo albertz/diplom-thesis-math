@@ -143,7 +143,7 @@ def getElliptModFormsBasisMatrix(level, weight, precision):
 	  modular forms over `\Gamma_0(level)` with weight `weight`
 	  such that `m.ncols() == precision`.
 	"""
-	
+
 	cacheIdx = (level, weight)
 	if cacheIdx in ellipBaseMatrixCache and ellipBaseMatrixCache[cacheIdx][1] >= precision:
 		return ellipBaseMatrixCache[cacheIdx][0][:,:precision]
@@ -191,6 +191,32 @@ def calcRestrictMatrix(calc):
 
 
 def toLowerCyclBase(ms, old_order, new_order):
+	"""
+	Let's
+
+		K_old = CyclotomicField(old_order) ,
+		K_new = CyclotomicField(new_order) .
+
+	We transform the matrices in power base from `K_old` to `K_new`.
+
+	INPUT:
+
+	- `ms` -- A list of matrices where every matrix is a factor to
+	          `zeta_old**i` where `zeta_old = K_old.gen()`
+	          and `len(ms) == K_old.degree()`.
+
+	- `old_order` -- The order of `K_old`.
+
+	- `new_order` -- The order of `K_new`.
+
+	OUTPUT:
+
+	- A list of matrices `new_ms` where every matrix is a factor to
+	  `zeta_new**i` where `zeta_new = K_new.gen()` and
+	  `len(new_ms) == K_new.degree()`.
+
+	"""
+
 	# We expect to have ms in power_base.
 	assert isinstance(ms, list) # list of matrices
 	assert old_order % new_order == 0
