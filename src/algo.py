@@ -346,9 +346,10 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 		verbose("calc restriction matrix...")
 		M_S = calcRestrictMatrix(calc) # matrix over integer ring
 		M_S = M_S.matrix_over_field() # matrix over rational field
-		#print M_S
 
-		precLimit = M_S.nrows() # \cF(S)
+		# The maximum precision of Elliptic modular forms is given in
+		# the text by \cF(S). This is also the number of rows of M_S.
+		precLimit = M_S.nrows()
 
 		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
 		verbose("get elliptic modform space with precision %i ..." % precLimit)
