@@ -195,6 +195,8 @@ class PersistentCache:
 
 
 def _simplify(a):
+	try: return QQ(a)
+	except: pass
 	if hasattr(a, "simplify_full"):
 		return a.simplify_full()
 	return simplify(a)
@@ -234,7 +236,7 @@ class CurlO:
 		# q * b + r == a
 		r = _simplify(a - q * b)
 		# Note that this works for -D < 5.27. See the text.
-		assert _simplify(abs(r)) < _simplify(abs(b))
+		assert _simplify(abs(b) - abs(r)) > 0, "|%r| < |%r|" % (r, b)
 		return q,r
 	def divides(self, a, b):
 		q,r = self.divmod(a, b)
@@ -288,13 +290,15 @@ class CurlO:
 		tupleargs = [None] * len(args) * 2
 		for i in range(len(args)):
 			tupleargs[2*i],tupleargs[2*i+1] = self.as_tuple_b(args[i])
-		return matrix(1,len(tupleargs),tupleargs).denominator()
+		return matrix(QQ, 1,len(tupleargs), tupleargs).denominator()
 	def as_tuple_b(self, a):
 		b2 = _simplify(imag(a) * 2 / ssqrt(-self.D))
 		b1 = _simplify(real(a) - b2 * self.D / 2)
 		return (b1, b2)
 	def from_tuple_b(self, b1, b2):
-		return b1 + b2 * (self.D + self.Droot) / 2
+		b1 = QQ(b1)
+		b2 = QQ(b2)
+		return self.field(b1 + b2 * (self.D + self.Droot) / 2)
 	def __contains__(self, item):
 		try:
 			b1,b2 = self.as_tuple_b(item)
@@ -328,8 +332,8 @@ def solveR(M, S, space):
 	Ring = space.field
 
 	A1 = matrix(Ring, 2,2, M[0][0])
-	B1 = M[0][1] * S
-	C1 = M[1][0] * S.inverse()
+	B1 = matrix(Ring, 2,2, M[0][1] * S)
+	C1 = matrix(Ring, 2,2, M[1][0] * S.inverse())
 	D1 = matrix(Ring, 2,2, M[1][1])
 	A1,B1,C1,D1 = [m.apply_map(_simplify) for m in [A1,B1,C1,D1]]
 	def make4x4matrix(A1,B1,C1,D1):
