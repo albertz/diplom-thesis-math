@@ -329,12 +329,10 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 		print "dim == 0 -> exit"
 		return
 
+	# Iterate S \in Mat_2^T(\curlO), S > 0.
 	while True:
-		# Step 3. Iterate S \in Mat_2^T(Z). Add to curlS. iterate by denominator.
-		# S_11 and S_22 (diagonal entries) are positive.
-		# S positive definite.
-		# S can be changed arbitrarily by GL(2, \ZZ).
-		calc.curlS_clearMatrices()
+		# Get the next S.
+		calc.curlS_clearMatrices() # In the C++ internal curlS, clear previous matrices.
 		S = calc.getNextS()
 		l = S.det()
 		l = _toInt(l)
