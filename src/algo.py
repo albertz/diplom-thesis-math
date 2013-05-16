@@ -20,7 +20,7 @@ from sage.symbolic.ring import SymbolicRing
 from sage.symbolic.expression import Expression
 import algo_cython as C
 from utils import *
-from utils import _simplify, _curlO_matrix_denom # seems the above does not import "_"-prefixed symbols
+from utils import _toInt, _curlO_matrix_denom # seems the above does not import "_"-prefixed symbols
 
 # via Martin. while this is not in Sage:
 import cusp_expansions
@@ -259,11 +259,6 @@ def _takeEveryNRow(mat, n):
 	return newm
 
 
-def _toInt(a):
-	a = _simplify(a)
-	a = ZZ(a)
-	a = int(a)
-	return a
 
 def test_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, testSCount = 3):
 	"""
