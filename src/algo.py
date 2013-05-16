@@ -271,6 +271,29 @@ def herm_modform_indexset(D, B_cF):
 	return calc.getReducedCurlF()
 
 
+def herm_modform_space_dim(D, HermWeight):
+	"""
+	Calculates and returns the dimension of the vector space
+	of Hermitian modular forms of weight `HermWeight` over \Gamma,
+	where \Gamma = \Sp_2(\curlO) and \curlO is the maximal order
+	of \QQ(\sqrt{D}).
+	"""
+
+	if D == -3:
+		# dern2003graded, Thm 7
+		R = PowerSeriesRing(ZZ, name="t", default_prec = HermWeight + 1)
+		t = R.gen()
+		dims = (1 + t**45) / (1 - t**4 ) / ( 1 - t**6 ) / ( 1 - t**9 ) / ( 1 - t**10 ) / ( 1 - t**12 )
+		return dims[HermWeight]
+	#elif D == -4:
+		# dern2003graded, Corollary 9 and Lemma 3
+		# TODO...
+		#R = PowerSeriesRing(ZZ, name="t", default_prec = HermWeight + 1)
+		#t = R.an_element()
+	else:
+		raise NotImplementedError, "dimension calculation of Hermitian modular form with D = %i not implemented" % D
+
+
 def herm_modform_space(D, HermWeight, B_cF=10):
 	"""
 	This calculates the vectorspace of Fourier expansions to
@@ -301,19 +324,7 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 	herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
 
 	# Calculate the dimension of Hermitian modular form space.
-	if D == -3:
-		# dern2003graded, Thm 7
-		R = PowerSeriesRing(ZZ, name="t", default_prec = HermWeight + 1)
-		t = R.gen()
-		dims = (1 + t**45) / (1 - t**4 ) / ( 1 - t**6 ) / ( 1 - t**9 ) / ( 1 - t**10 ) / ( 1 - t**12 )
-		dim = dims[HermWeight]
-	#elif D == -4:
-		# dern2003graded, Corollary 9 and Lemma 3
-		# TODO...
-		#R = PowerSeriesRing(ZZ, name="t", default_prec = HermWeight + 1)
-		#t = R.an_element()
-	else:
-		raise NotImplementedError, "dimension calculation of Hermitian modular form with D = %i not implemented" % D
+	dim = herm_modform_space_dim(D=D, HermWeight=HermWeight)
 
 	verbose("current dimension: %i, wanted: %i" % (herm_modform_fe_expannsion.dimension(), dim))
 	if dim == 0:
