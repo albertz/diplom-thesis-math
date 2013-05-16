@@ -294,22 +294,29 @@ def herm_modform_space_dim(D, HermWeight):
 		raise NotImplementedError, "dimension calculation of Hermitian modular form with D = %i not implemented" % D
 
 
+def cusp_matrix(cusp):
+	"""
+	Returns a matrix M such that M * \infinity == cusp.
+	"""
+	if cusp == 0:
+		return matrix(ZZ,2,2,[0,-1,1,0])
+	else:
+		a = cusp.numerator()
+		c = cusp.denominator()
+		_div, d, b = orig_xgcd(a, -c)
+		assert _div == 1
+		return matrix(ZZ,2,2,[a,b,c,d])
+
+
 def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsion):
 	assert l == S.det()
 	assert list(calc.curlS) == [S]
+	D = calc.D
 	HermWeight = calc.HermWeight
 
 	for cusp in Gamma0(l).cusps():
 		if cusp == Infinity: continue
-		if cusp == 0:
-			M = matrix(ZZ,2,2,[0,-1,1,0])
-		else:
-			a = cusp.numerator()
-			c = cusp.denominator()
-			_div, d, b = orig_xgcd(a, -c)
-			assert _div == 1
-			M = matrix(ZZ,2,2,[a,b,c,d])
-			del a,b,c,d
+		M = cusp_matrix(cusp)
 
 		try:
 			gamma, R, tM = solveR(M, S, space=CurlO(D))
