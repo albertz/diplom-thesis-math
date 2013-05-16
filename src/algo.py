@@ -126,6 +126,24 @@ def cuspExpansions(level, weight, prec):
 
 ellipBaseMatrixCache = PersistentCache("ellipBaseMatrix.cache.sobj") # level,weight -> mat,prec
 def getElliptModFormsBasisMatrix(level, weight, precision):
+	"""
+	Calculates the Echelon basis matrix of the Elliptic modular forms space.
+
+	INPUT:
+
+	- `level` -- The level for the modular group `\Gamma = \Gamma_0(level)`.
+
+	- `weight` -- The weight of the Elliptic modular forms.
+
+	- `precision` -- The precision of the Elliptic modular form Fourier expansions.
+
+	OUTPUT:
+
+	- A matrix `m` which is the Echelon basis matrix of the Elliptic
+	  modular forms over `\Gamma_0(level)` with weight `weight`
+	  such that `m.ncols() == precision`.
+	"""
+	
 	cacheIdx = (level, weight)
 	if cacheIdx in ellipBaseMatrixCache and ellipBaseMatrixCache[cacheIdx][1] >= precision:
 		return ellipBaseMatrixCache[cacheIdx][0][:,:precision]
