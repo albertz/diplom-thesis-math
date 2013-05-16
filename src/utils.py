@@ -208,6 +208,7 @@ class CurlO:
 		assert (D*D - D) % 4 == 0
 		self.field = QuadraticField(D)
 		self.Droot = self.field(D).sqrt()
+		self.DrootHalf_coordinates_in_terms_of_powers = (self.Droot / 2).coordinates_in_terms_of_powers()
 	def divmod(self, a, b):
 		"""
 		Returns q,r such that a = q*b + r.
@@ -292,8 +293,8 @@ class CurlO:
 			tupleargs[2*i],tupleargs[2*i+1] = self.as_tuple_b(args[i])
 		return matrix(QQ, 1,len(tupleargs), tupleargs).denominator()
 	def as_tuple_b(self, a):
-		b2 = _simplify(imag(a) * 2 / ssqrt(-self.D))
-		b1 = _simplify(real(a) - b2 * self.D / 2)
+		real_part, b2 = self.DrootHalf_coordinates_in_terms_of_powers(a)
+		b1 = real_part - b2 * self.D / 2
 		return (b1, b2)
 	def from_tuple_b(self, b1, b2):
 		b1 = QQ(b1)
