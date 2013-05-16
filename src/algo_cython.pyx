@@ -61,7 +61,7 @@ cdef M2T_O_fromC(M2T_O m, int D):
 	b = m.b1 + m.b2 * (D + ssqrt(D)) * QQ(0.5)
 	return matrix(K, 2, 2, [m.a, b, b.conjugate(), m.c])
 
-cdef M2T_Odual_fromC(M2T_O m, int D):
+cdef M2T_Odual_fromC(M2T_Odual m, int D):
 	K = QuadraticField(D)
 	b = m.b1 / ssqrt(D) + m.b2 * (1 + ssqrt(D)) * QQ(0.5)
 	return matrix(K, 2, 2, [m.a, b, b.conjugate(), m.c])
@@ -124,7 +124,11 @@ cdef class Calc:
 		self.matrixColumnCount = self.calc.matrixColumnCount
 
 	def getReducedCurlF(self):
-		return map(M2T_Odual_fromC, self.calc.reducedCurlFList)
+		size = self.calc.reducedCurlFList.size()
+		l = [None] * size
+		for i in range(size):
+			l[i] = M2T_Odual_fromC(self.calc.reducedCurlFList[i], self.D)
+		return l
 
 	def calcMatrix(self):
 		"""
