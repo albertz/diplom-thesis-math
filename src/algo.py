@@ -112,6 +112,9 @@ def calcMatrixTrans(calc, R):
 
 cuspExpansionsCache = PersistentCache("cuspExpansions.cache.sobj")
 def cuspExpansions(level, weight, prec):
+	"""
+	A cached version of `cusp_expansions.ModularFormsCuspExpansions._for_modular_forms()`.
+	"""
 	cacheIdx = (level, weight)
 	if cacheIdx in cuspExpansionsCache:
 		ce_prec,ce = cuspExpansionsCache[cacheIdx]
