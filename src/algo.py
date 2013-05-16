@@ -420,6 +420,11 @@ def cusp_matrix(cusp):
 
 
 def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsion):
+	"""
+	This goes through all the cusps and compares the space given by `(f|R)[S]`
+	with the space of Elliptic modular forms expansion at those cusps.
+	"""
+	
 	assert l == S.det()
 	assert list(calc.curlS) == [S]
 	D = calc.D
