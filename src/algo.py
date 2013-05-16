@@ -240,7 +240,27 @@ def toLowerCyclBase(ms, old_order, new_order):
 				return None
 	return new_ms
 
+
 def toCyclPowerBase(M, order):
+	"""
+	Let's
+
+		K = CyclotomicField(order).
+
+	INPUT:
+
+	- `M` -- A matrix over the cyclomotic field `K`.
+
+	- `order` -- The order of `K`, the cyclomotic field.
+
+	OUTPUT:
+
+	- A list of matrices `ms` in power base where every matrix
+	  is a factor to `zeta**i` where `zeta = K.gen()`
+	  and `len(ms) == K.degree()`.
+
+	"""
+
 	K = CyclotomicField(order)
 	zeta = K.gen()
 	Kcoords = zeta.coordinates_in_terms_of_powers()
