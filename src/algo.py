@@ -158,6 +158,25 @@ def getElliptModFormsBasisMatrix(level, weight, precision):
 
 restrMatrixCache = PersistentCache("restrMatrix.cache.sobj") # by (calc.params,calc.curlS)
 def calcRestrictMatrix(calc):
+	"""
+	Calculates the matrix of the linear map `f \mapsto f[S]`
+	where `f` is a Hermitian modular form.
+	(`S` as well as all other parameters are saved internally in the `calc` structure.)
+
+	This uses the C++ function `Calc::calcMatrix()` in  algo_cpp.cpp`.
+
+	INPUT:
+
+	- `calc` -- The C++ Calc structure.
+
+	OUTPUT:
+
+	- A matrix `m` which represents the linear map of the Fourier expansions.
+	  The index set of the Fourier expansions of the Hermitian modular forms
+	  can be returned by `herm_modform_indexset()`.
+
+	"""
+
 	cacheIdx = (calc.params, calc.curlS)
 	if cacheIdx in restrMatrixCache:
 		return restrMatrixCache[cacheIdx]
