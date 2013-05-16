@@ -58,12 +58,14 @@ def test():
 
 cdef M2T_O_fromC(M2T_O m, int D):
 	K = QuadraticField(D)
-	b = m.b1 + m.b2 * (D + ssqrt(D)) * QQ(0.5)
+	Droot = K(D).sqrt()
+	b = m.b1 + m.b2 * (D + Droot) * QQ(0.5)
 	return matrix(K, 2, 2, [m.a, b, b.conjugate(), m.c])
 
 cdef M2T_Odual_fromC(M2T_Odual m, int D):
 	K = QuadraticField(D)
-	b = m.b1 / ssqrt(D) + m.b2 * (1 + ssqrt(D)) * QQ(0.5)
+	Droot = K(D).sqrt()
+	b = m.b1 / Droot + m.b2 * (1 + Droot) * QQ(0.5)
 	return matrix(K, 2, 2, [m.a, b, b.conjugate(), m.c])
 
 cdef ElemOfCurlO O_toC(a, int D) except *:

@@ -268,7 +268,7 @@ def herm_modform_indexset(D, B_cF):
 	calc = C.Calc()
 	calc.init(D=D, HermWeight=HermWeight, B_cF=B_cF)
 	calc.calcReducedCurlF()
-
+	return calc.getReducedCurlF()
 
 def herm_modform_space(D, HermWeight, B_cF=10):
 	"""
