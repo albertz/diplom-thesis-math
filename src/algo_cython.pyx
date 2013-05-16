@@ -70,9 +70,14 @@ cdef M2T_Odual_fromC(M2T_Odual m, int D):
 
 cdef ElemOfCurlO O_toC(a, int D) except *:
 	cdef ElemOfCurlO b
+	K = QuadraticField(D)
+	Droot = K(D).sqrt()
+	DrootHalf_coordinates_in_terms_of_powers = (Droot / 2).coordinates_in_terms_of_powers()
 	try:
-		b.b2 = ZZ((a.imag() * 2 / ssqrt(-D)).simplify_full())
-		b.b1 = ZZ((a.real() - Integer(b.b2) * D / 2).simplify_full())
+		real_part, b2 = DrootHalf_coordinates_in_terms_of_powers(a)
+		b1 = real_part - b2 * D / 2
+		b.b1 = ZZ(b1)
+		b.b2 = ZZ(b2)
 	except TypeError:
 		print "cannot convert %r to CurlO(%i)" % (a, D)
 		raise
