@@ -199,7 +199,50 @@ def _toInt(a):
 	a = int(a)
 	return a
 
-def modform(D, HermWeight, B_cF=10):
+def test_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, testSCount = 3):
+	"""
+	It uses the C++ calc structure to search for additional S matrices
+	which have other denominators than those in used_curlS_denoms.
+	For testScount matrices with unique denominators, it calculates
+	the restriction matrix via the C++ calc structure for f \mapsto f[S].
+	When mapping herm_modform_space, we must only get Elliptic modular forms.
+	We check whether they are in ModularForms(\Gamma_0(l), prec).
+	"""
+
+	HermWeight = calc.HermWeight
+	curlS_denoms = set(used_curlS_denoms)
+
+	while testSCount > 0:
+		calc.curlS_clearMatrices()
+		S = calc.getNextS()
+		l = S.det()
+		l = _toInt(l)
+		if l in curlS_denoms: continue
+
+		curlS_denoms.add(l)
+		testSCount -= 1
+		verbose("testing with S={0}, det={1}".format(S, l))
+
+		verbose("calc restriction matrix...")
+		M_S = calcRestrictMatrix(calc) # matrix over integer ring
+		M_S = M_S.matrix_over_field() # matrix over rational field
+
+		precLimit = M_S.nrows() # \cF(S)
+
+		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
+		verbose("get elliptic modform space with precision %i ..." % precLimit)
+		fe_expansion_matrix_l = getElliptModule(l, 2*HermWeight, precLimit)
+		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
+
+		verbose("calc M_S * herm_modforms ...")
+		m = M_S * herm_modform_space.basis_matrix().transpose()
+
+		m_module = m.column_module()
+		assert m_module.is_subspace(ell_modform_fe_expansions_l), \
+			"%r not subspace of %r" % (m_module, ell_modform_fe_expansions_l)
+
+
+def herm_modform_space(D, HermWeight, B_cF=10):
 	"Main algo"
 
 	if HermWeight % 3 != 0:
@@ -323,6 +366,7 @@ def modform(D, HermWeight, B_cF=10):
 			ce = cuspExpansions(level=l, weight=2*HermWeight, prec=ce_prec)
 			ell_M_denom, ell_M = ce.expansion_at(SL2Z(M))
 			ell_M_order = ell_R_order # not sure here. just try the one from R. toCyclPowerBase would fail if this doesn't work
+			# CyclotomicField(l / prod(l.prime_divisors())) should also work.
 
 			# Not sure if this is always the case but seems so.
 			assert ell_R_denom >= ell_M_denom
@@ -380,34 +424,9 @@ def modform(D, HermWeight, B_cF=10):
 			break
 
 	# Test for some other S with other not-yet-seen denominator.
-	testSCount = 3
-	while testSCount > 0:
-		calc.curlS_clearMatrices()
-		S = calc.getNextS()
-		l = S.det()
-		l = _toInt(l)
-		if l in curlS_denoms: continue
-
-		curlS_denoms.add(l)
-		testSCount -= 1
-		verbose("testing with S={0}, det={1}".format(S, l))
-
-		verbose("calc restriction matrix...")
-		M_S = calcRestrictMatrix(calc) # matrix over integer ring
-		M_S = M_S.matrix_over_field() # matrix over rational field
-
-		precLimit = M_S.nrows() # \cF(S)
-
-		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
-		verbose("get elliptic modform space with precision %i ..." % precLimit)
-		fe_expansion_matrix_l = getElliptModule(l, 2*HermWeight, precLimit)
-		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
-
-		verbose("calc M_S * herm_modforms ...")
-		m = M_S * herm_modform_fe_expannsion.basis_matrix().transpose()
-
-		m_module = m.column_module()
-		assert m_module.is_subspace(ell_modform_fe_expansions_l), \
-			"%r not subspace of %r" % (m_module, ell_modform_fe_expansions_l)
+	test_herm_modform_space(
+		calc, herm_modform_space=herm_modform_fe_expannsion,
+		used_curlS_denoms=curlS_denoms
+		)
 
 	return herm_modform_fe_expannsion
