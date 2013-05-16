@@ -254,7 +254,7 @@ class CurlO:
 			return orig_xgcd(a1, b1)
 		if a1 == b1 == 0:
 			d,s,t = orig_xgcd(a2, b2)
-			B2 = (self.D + ssqrt(self.D)) / 2
+			B2 = (self.D + self.Droot) / 2
 			return d * B2, s, t
 
 		abs_a = _simplify(abs(a))
