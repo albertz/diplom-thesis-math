@@ -504,6 +504,8 @@ def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsi
 				current_dimension, herm_modform_fe_expannsion.dimension()
 			current_dimension = herm_modform_fe_expannsion.dimension()
 
+	return herm_modform_fe_expannsion
+
 
 def herm_modform_space(D, HermWeight, B_cF=10):
 	"""
@@ -589,7 +591,7 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 		if dim == current_dimension:
 			break
 
-		_intersect_modform_cusp_info(
+		herm_modform_fe_expannsion = _intersect_modform_cusp_info(
 			calc=calc, S=S, l=l, precLimit=precLimit*2,
 			herm_modform_fe_expannsion=herm_modform_fe_expannsion)
 
