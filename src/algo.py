@@ -58,6 +58,20 @@ def test_algo_calcMatrix():
 
 matrixTransCache = PersistentCache("matrixTrans.cache.sobj")
 def calcMatrixTrans(calc, R):
+	"""
+	Returns a triple (denom, order, ms) where
+	ms is a list of matrices. Each matrix is a factor to
+	zeta**i where zeta is the order's root of unity,
+	i.e. zeta = CyclotomicField(order).gen().
+	And we have len(ms) == CyclotomicField(order).degree().
+
+	The matrices represent the linear map of a Hermitian
+	modular form f to the Elliptic modular form (f|R)[S].
+	(R is given as a parameter to this function. S is saved
+	internally by the calc structure.)
+
+	This uses the C++ function `Calc::calcMatrixTrans()` in  algo_cpp.cpp`.
+	"""
 	tS = R.submatrix(0,0,2,2)
 	tT = R.submatrix(2,0,2,2)
 	lS = _curlO_matrix_denom(tS, D=calc.D)
