@@ -1,16 +1,11 @@
 from sage.calculus.functional import simplify
-from sage.functions.other import sqrt as ssqrt
-from sage.functions.other import imag, real
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
-from sage.matrix.matrix_space import MatrixSpace
 from sage.rings.integer import Integer
 from sage.structure.sage_object import SageObject
 from sage.modules.free_module_element import vector
 from sage.structure.sequence import Sequence_generic, Sequence
-from sage.symbolic.all import I
-from sage.rings.arith import xgcd as orig_xgcd, lcm
-from sage.rings.arith import gcd as orig_gcd
+from sage.rings.arith import xgcd as orig_xgcd
 from sage.rings.number_field.number_field import QQ, ZZ, QuadraticField
 from sage.symbolic.ring import SymbolicRing
 from sage.symbolic.expression import Expression
