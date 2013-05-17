@@ -6,7 +6,6 @@ include "cdefs.pxi"
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 
-from sage.functions.other import sqrt as ssqrt
 from sage.rings.integer import Integer
 from sage.rings.number_field.number_field import QQ, ZZ, QuadraticField
 from sage.matrix.constructor import matrix
