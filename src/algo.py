@@ -1,10 +1,6 @@
 from time import time
-from sage.calculus.functional import simplify
-from sage.functions.other import sqrt as ssqrt
-from sage.functions.other import imag, real
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
-from sage.matrix.matrix_space import MatrixSpace
 from sage.modular.arithgroup.congroup_sl2z import SL2Z
 from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
@@ -12,8 +8,7 @@ from sage.modules.free_module import FreeModule
 from sage.rings.integer import Integer
 from sage.rings.infinity import Infinity
 from sage.structure.sage_object import SageObject
-from sage.symbolic.all import I
-from sage.rings.arith import xgcd as orig_xgcd, lcm
+from sage.rings.arith import xgcd as orig_xgcd
 from sage.rings.number_field.number_field import QQ, ZZ, CyclotomicField
 from sage.rings.power_series_ring import PowerSeriesRing
 from sage.symbolic.ring import SymbolicRing
