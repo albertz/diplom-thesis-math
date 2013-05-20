@@ -148,6 +148,13 @@ Fix $B_\F \in \N$ as a limit. Select a precision of the Fourier coefficient inde
 
 The main algorithm is going to be described in \ref{main-algo}. It will start with the vectorspace of all possible Fourier expansions for the precision index set $\F$ and reduce that vectorspace.
 
+\begin{lemma}
+Given a Hermitian modular form $f$ and its Fourier expansion coefficients $a \colon \F_B \rightarrow \Q$ of the precision index set $\F_B$ and a matrix $S = [s,t,u] \in \PM_2(\curlO)$, the precision of the Fourier expansion of $f[S]$ is given by
+\[ \FPrecisionLimit{S} = B \cdot (s + u - 2 \left| t \right|) . \]
+Thus, we can calculate the Fourier expansion coefficients
+\[ a[S] \colon \underline{\FPrecisionLimit{S}} \rightarrow \Q . \]
+\end{lemma}
+
 \begin{algo}
 \label{main-algo}
 We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta$ (for now, $\Delta \in \Set{3,4,8}$). Then we select some form weight $k \in \Z$ ($k \in \Set{1,\dots,20}$ or so), let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximal order (see chapter \ref{maxorder}) and some subgroup $\Gamma$ of $\Sp_2(\curlO)$. Then we select an abel character $\nu \colon \Gamma \rightarrow \C^\times$ of $\Sp_2(\curlO)$ (we just use $\nu \equiv 1$, see \cref{remark-nu}).
@@ -164,7 +171,6 @@ We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta
 %Now, for some $S \in \mathcal{S}$:
 
 \item
-\newcommand{\FPrecisionLimit}[1]{\F(#1)}
 We set
 \[ \mathcal{M}_{k,\mathcal{S},\F}^H := \Set{ (a [S])_{S\in\mathcal{S}} }{\text{$a \in \Q^\F$ is $\GL_2(\curlO)$ invariant}} \subseteq \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}} . \]
 The elements $a \in \Q^\F$ are Fourier expansions of Elliptic modular forms ($\HalfPlane_1 \rightarrow \C$) and $a(T) \in \Q$ for $T \in \F \subseteq \M_2(\curlO^\#)$ are the Fourier coefficients.
