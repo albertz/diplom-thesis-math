@@ -149,10 +149,36 @@ Fix $B_\F \in \N$ as a limit. Select a precision of the Fourier coefficient inde
 The main algorithm is going to be described in \ref{main-algo}. It will start with the vectorspace of all possible Fourier expansions for the precision index set $\F$ and reduce that vectorspace.
 
 \begin{lemma}
+\label{lemma:fprecisionlimit}
 Given a Hermitian modular form $f$ and its Fourier expansion coefficients $a \colon \F_B \rightarrow \Q$ of the precision index set $\F_B$ and a matrix $S = [s,t,u] \in \PM_2(\curlO)$, the precision of the Fourier expansion of $f[S]$ is given by
 \[ \FPrecisionLimit{S} = B \cdot (s + u - 2 \left| t \right|) . \]
 Thus, we can calculate the Fourier expansion coefficients
-\[ a[S] \colon \underline{\FPrecisionLimit{S}} \rightarrow \Q . \]
+\[ a[S] \colon \Set{k \in N_0}{k < \FPrecisionLimit{S}} \rightarrow \Q . \]
+
+\proof
+For a given $S \in \mathcal{S}$ and limit $B \in \N$ which restricts $\F \subset \Lambda$, $\FPrecisionLimit{S} \in \N_0$ is the limit such that for any $T \in \Lambda - \F$, $\tr(S T) \ge \FPrecisionLimit{S}$. Thus, for calculating the Fourier coefficients $T \in \Lambda$ with $\tr(S T) \in \Set{0, \dots, \FPrecisionLimit{S} - 1}$, it is sufficient to enumerate the $T \in \F$.
+
+Let $S = [s,t,u]$ and $T = [a,b,c]$. Recall that $S \in \PM_2^T(\curlO)$. Then we have
+\[ \tr(S T) = as + \overline{t} b + t \overline{b} + cu = as + cu + 2 \Re(\overline{t} b) . \]
+Because $T \ge 0$, we have $ac \ge \left| b \right|^2$ and thus
+\[ \left| b \right| \le \sqrt{ac} \le \max(a,c). \]
+Thus,
+\[ 2 \Re(\overline{t} b) \ge -2 \left| t \right| \left| b \right| \ge -2 \left| t \right| \max(a,c). \]
+We also have $as + cu \ge \max(a,c) (s + u)$. Assuming $T \in \Lambda - \F$, we have $\max(a,c) \ge B$. For such $T$, we get
+\[ \tr(ST) \ge B \cdot (s + u - 2 \left| t \right|) . \]
+Given $S > 0$, we have $su > \left| t \right|^2$. Then we have
+\begin{align*}
+& s + u - 2 \left| t \right| > 0 \\
+\Leftrightarrow \quad & su + u^2 - 2 \left| t \right| u > 0 \\
+\Leftrightarrow \quad & \left( \left|t\right|^2 + u^2 - 2 \left| t \right| u \right) + (su - \left|t \right|^2) > 0 \\
+\Leftrightarrow \quad & \left(\left| t \right| - u \right)^2 + (su - \left| t \right|^2) > 0 .
+\end{align*}
+Thus, for $B > 0$, we have
+\[ B \cdot (s + u - 2 \left| t \right|) > 0 . \]
+All inequalities were sharp estimations\footnote{For example, let $S=[2,-1,1]$. Then you have $s+u-2 \left| t \right| = 1$. With $c=B$ and $a=b=1$, you hit the limit $\tr(S T) = 2 + B - 2 = B = \FPrecisionLimit{S}$. }, %
+thus we get
+\[ \FPrecisionLimit{S} = B \cdot (s + u - 2 \left| t \right|) . \]
+\endproof
 \end{lemma}
 
 \begin{algo}
@@ -182,28 +208,8 @@ Restricting the elements in $\F$ by the $\GL_2(\curlO)$-invariation makes the se
 We identify
 % Das ist der Bildbereich der Abbildung.
 \[ \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}} = \Q^N, \ \ N = \sum_{S\in\mathcal{S}} \FPrecisionLimit{S} . \]
-For a given $S \in \mathcal{S}$ and limit $B \in \N$ which restricts $\F \subset \Lambda$, $\FPrecisionLimit{S} \in \N_0$ is the limit such that for any $T \in \Lambda - \F$, $\tr(S T) \ge \FPrecisionLimit{S}$. Thus, for calculating the Fourier coefficients $T \in \Lambda$ with $\tr(S T) \in \Set{0, \dots, \FPrecisionLimit{S} - 1}$, it is sufficient to enumerate the $T \in \F$.
 
-Let $S = [s,t,u]$ and $T = [a,b,c]$. Recall that $S \in \PM_2^T(\curlO)$. Then we have
-\[ \tr(S T) = as + \overline{t} b + t \overline{b} + cu = as + cu + 2 \Re(\overline{t} b) . \]
-Because $T \ge 0$, we have $ac \ge \left| b \right|^2$ and thus
-\[ \left| b \right| \le \sqrt{ac} \le \max(a,c). \]
-Thus,
-\[ 2 \Re(\overline{t} b) \ge -2 \left| t \right| \left| b \right| \ge -2 \left| t \right| \max(a,c). \]
-We also have $as + cu \ge \max(a,c) (s + u)$. Assuming $T \in \Lambda - \F$, we have $\max(a,c) \ge B$. For such $T$, we get
-\[ \tr(ST) \ge B \cdot (s + u - 2 \left| t \right|) . \]
-Given $S > 0$, we have $su > \left| t \right|^2$. Then we have
-\begin{align*}
-& s + u - 2 \left| t \right| > 0 \\
-\Leftrightarrow \quad & su + u^2 - 2 \left| t \right| u > 0 \\
-\Leftrightarrow \quad & \left( \left|t\right|^2 + u^2 - 2 \left| t \right| u \right) + (su - \left|t \right|^2) > 0 \\
-\Leftrightarrow \quad & \left(\left| t \right| - u \right)^2 + (su - \left| t \right|^2) > 0 .
-\end{align*}
-Thus, for $B > 0$, we have
-\[ B \cdot (s + u - 2 \left| t \right|) > 0 . \]
-All inequalities were sharp estimations\footnote{For example, let $S=[2,-1,1]$. Then you have $s+u-2 \left| t \right| = 1$. With $c=B$ and $a=b=1$, you hit the limit $\tr(S T) = 2 + B - 2 = B = \FPrecisionLimit{S}$. }, %
-thus we get
-\[ \FPrecisionLimit{S} = B \cdot (s + u - 2 \left| t \right|) . \]
+See \cref{lemma:fprecisionlimit}.
 
 We want to calculate the matrix of the linear function \[
 \invar{\Q^\F}{\GL_2(\curlO)} \rightarrow \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}}, \ \ 
