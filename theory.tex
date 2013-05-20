@@ -153,7 +153,7 @@ We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta
 %\renewcommand{\theenumi}{Step \arabic{enumi}}
 \item We start with $l = 1$ and increase it but only use the square-free numbers.
 \item Set $\mathcal{S} = \{\}$,
-\item\label{NextSStep} Enumerate matrices $S \in \M_2^T(\Z)$, and set $\mathcal{S} \leftarrow \mathcal{S} \cup \{ S \}$ and for each time you add a new matrix perform the following steps.
+\item\label{NextSStep} Enumerate matrices $S \in \PM_2^T(\curlO)$, and set $\mathcal{S} \leftarrow \mathcal{S} \cup \{ S \}$ and for each time you add a new matrix perform the following steps.
 
 %Select a set of matrices $\mathcal{S} \subseteq \M_2^T(\Z)$ with $0 < S \in \mathcal{S}$.
 %Make $\mathcal{S}$ big enough.
@@ -174,9 +174,13 @@ We identify
 \[ \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}} = \Q^N, \ \ N = \sum_{S\in\mathcal{S}} \FPrecisionLimit{S} . \]
 For a given $S \in \mathcal{S}$ and limit $B \in \N$ which restricts $\F \subset \Lambda$, $\FPrecisionLimit{S} \in \N_0$ is the limit such that for any $T \in \Lambda - \F$, $\tr(S T) \ge \FPrecisionLimit{S}$. Thus, for calculating the Fourier coefficients $T \in \Lambda$ with $\tr(S T) \in \Set{0, \dots, \FPrecisionLimit{S} - 1}$, it is sufficient to enumerate the $T \in \F$.
 
-Let $S = [s,t,u]$ and $T = [a,b,c]$. Recall that $S \in \M_2^T(\Z)$. Then we have
-\[ \tr(S T) = as + \overline{t} b + t \overline{b} + cu = as + cu + 2 t \Re(b) . \]
-Because $T \ge 0$, we have $ac \ge \left| b \right|^2$ and thus $\Re(b) \le \sqrt{ac} \le \max(a,c)$. Thus, $2t \Re(b) \ge -2 \left| t \right| \max(a,c)$. We also have $as + cu \ge \max(a,c) (s + u)$. Assuming $T \in \Lambda - \F$, we have $\max(a,c) \ge B$. For such $T$, we get
+Let $S = [s,t,u]$ and $T = [a,b,c]$. Recall that $S \in \PM_2^T(\curlO)$. Then we have
+\[ \tr(S T) = as + \overline{t} b + t \overline{b} + cu = as + cu + 2 \Re(\overline{t} b) . \]
+Because $T \ge 0$, we have $ac \ge \left| b \right|^2$ and thus
+\[ \Re(b) \le \left| b \right| \le \sqrt{ac} \le \max(a,c). \]
+Thus,
+\[ 2 \Re(\overline{t} b) \ge -2 \left| t \right| \Re(b) \ge -2 \left| t \right| \max(a,c). \]
+We also have $as + cu \ge \max(a,c) (s + u)$. Assuming $T \in \Lambda - \F$, we have $\max(a,c) \ge B$. For such $T$, we get
 \[ \tr(ST) \ge B \cdot (s + u - 2 \left| t \right|) . \]
 Given $S > 0$, we have $su > t^2$. Then we have
 \begin{align*}
