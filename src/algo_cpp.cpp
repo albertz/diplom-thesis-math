@@ -553,6 +553,10 @@ void test_algo_calcReducedCurlF() {
 	ReductionMatrices_Calc calc2;
 	calc2.init(-3, 6, "generic");
 	calc2.curlF.B = 20;
+#ifndef OLDGCC
+	for(ElemOfF T : calc2.curlF) (void)T, ++c;
+	cout << "size of curlF2: " << c << endl;
+#endif
 	calc2.calcReducedCurlF();
 	cout << "size of reducedMatrix(curlF2): " << calc2.reducedCurlFList.size() << endl;
 	
