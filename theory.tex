@@ -195,14 +195,20 @@ For a given $S \in \PM_2(\curlO)$, calculating the restrictions $a \mapsto a[S]$
 \begin{remark}
 With $[a,b,c] \in \F$, we have $0\le a,c<B$, thus there are only a finite number of possible $(a,c) \in \N_0^2$. Because $0 \le [a,b,c]$, we get $ac - \left| b \right|^2 \ge 0$ and thus $b$ is also always limited. Thus, $\F$ is finite but it might be huge for even small $B$.
 For example,
-\[ \text{for } D=-3, B=10,\quad \text{we have } \; \# \F = 13398. \]
+\begin{align*}
+& \text{for } D=-3, B=10,\quad \text{we have } \; \# \F = 13398. \\
+& \text{for } D=-3, B=20,\quad \text{we have } \; \# \F = 252598.
+\end{align*}
 %
 Because we want $a \in \Q^\F$ to be Fourier expansions of Hermitian modular forms, we can assume that $a$ is invariant under $\GL_2(\curlO)$. This means that we have
 \[ \det(U)^k a(T[U]) = a(T) \quad \forall\ U \in \GL_2(\curlO) . \]
 %
 Restricting the elements in $\F$ by the $\GL_2(\curlO)$-invariation makes the set $\invar{\F}{\GL_2(\curlO)} \subseteq \F$ much smaller and better to handle in computer calculations.
 For example,
-\[ \text{for } D=-3, B=10,\quad \text{we have } \; \# \left(\invar{\F}{\GL_2(\curlO)}\right) = 420. \]
+\begin{align*}
+& \text{for } D=-3, B=10,\quad \text{we have } \; \# \left(\invar{\F}{\GL_2(\curlO)}\right) = 420, \\
+& \text{for } D=-3, B=20,\quad \text{we have } \; \# \left(\invar{\F}{\GL_2(\curlO)}\right) = 4840.
+\end{align*}
 %
 We use this set to identify a base of the finite dimension vector space $\invar{\left(\Q^\F\right)}{\GL_2(\curlO)}$.
 \end{remark}
