@@ -145,7 +145,11 @@ Fix $B_\F \in \N$ as a limit. Select a precision of the Fourier coefficient inde
 \[ \F := \F_B := \Set{\SimpleMatrix{a}{b}{\overline b}{c} \in \Lambda}{0 \le a , c < B_{\F}} \subseteq \Lambda . \]
 % \Lambda sind die die Indizes der Fourier-Entwicklung einer Hermitischen Modulform.
 
+
+The main algorithm we will describe in \ref{main-algo} will start with the vectorspace of all possible Fourier expansions for the precision index set $\F$.
+
 \begin{algo}
+\label{main-algo}
 We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta$ (for now, $\Delta \in \Set{3,4,8}$). Then we select some form weight $k \in \Z$ ($k \in \Set{1,\dots,20}$ or so), let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximal order (see chapter \ref{maxorder}) and some subgroup $\Gamma$ of $\Sp_2(\curlO)$. Then we select an abel character $\nu \colon \Gamma \rightarrow \C^\times$ of $\Sp_2(\curlO)$ (we just use $\nu \equiv 1$, see \cref{remark-nu}).
 
 \begin{enumerate}
@@ -189,6 +193,8 @@ Given $S > 0$, we have $su > \left| t \right|^2$. Then we have
 \Leftrightarrow \quad & \left( \left|t\right|^2 + u^2 - 2 \left| t \right| u \right) + (su - \left|t \right|^2) > 0 \\
 \Leftrightarrow \quad & \left(\left| t \right| - u \right)^2 + (su - \left| t \right|^2) > 0 .
 \end{align*}
+Thus, for $B > 0$, we have
+\[ B \cdot (s + u - 2 \left| t \right|) > 0 . \]
 All inequalities were sharp estimations\footnote{For example, let $S=[2,-1,1]$. Then you have $s+u-2 \left| t \right| = 1$. With $c=B$ and $a=b=1$, you hit the limit $\tr(S T) = 2 + B - 2 = B = \FPrecisionLimit{S}$. }, %
 thus we get
 \[ \FPrecisionLimit{S} = B \cdot (s + u - 2 \left| t \right|) . \]
