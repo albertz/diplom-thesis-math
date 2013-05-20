@@ -129,7 +129,10 @@ We want to calculate a generating set for the Fourier expansions of Hermitian mo
 We define the index set
 \[ \Lambda := \Set{0 \le \SimpleMatrix{a}{b}{\overline b}{c} \in \M_2(\curlO^\#)}{a,c \in \Z } \]
 as the index for the Fourier coefficients of the Fourier expansions of our Hermitian modular forms.
+\end{prelim}
 
+\begin{remark}
+\label{remark:restricted-by-S}
 For a holomorphic function $f \colon \HalfPlane_2 \rightarrow \C$, we write its Fourier expansion as
 \[ f(Z) = \sum_{T \in \Lambda} a(T) \cdot e^{2 \pi i \cdot \tr(T Z)} \]
 with its Fourier coefficients $a \colon \Lambda \rightarrow \Q$.
@@ -144,7 +147,7 @@ This gives us
 Fix $B_\F \in \N$ as a limit. Select a precision of the Fourier coefficient index
 \[ \F := \F_B := \Set{\SimpleMatrix{a}{b}{\overline b}{c} \in \Lambda}{0 \le a , c < B_{\F}} \subseteq \Lambda . \]
 % \Lambda sind die die Indizes der Fourier-Entwicklung einer Hermitischen Modulform.
-\end{prelim}
+\end{remark}
 
 The main algorithm is going to be described in \ref{main-algo}. It will start with the vectorspace of all possible Fourier expansions for the precision index set $\F$ and reduce that vectorspace.
 
@@ -152,7 +155,7 @@ The main algorithm is going to be described in \ref{main-algo}. It will start wi
 \label{lemma:fprecisionlimit}
 Given a Hermitian modular form $f$ and its Fourier expansion coefficients $a \colon \F_B \rightarrow \Q$ of the precision index set $\F_B$ and a matrix $S = [s,t,u] \in \PM_2(\curlO)$, the precision of the Fourier expansion of $f[S]$ is given by
 \[ \FPrecisionLimit{S} = B \cdot (s + u - 2 \left| t \right|) . \]
-Thus, we can calculate the Fourier expansion coefficients
+Thus, we can calculate the Fourier expansion coefficients (as described in \cref{remark:restricted-by-S})
 \[ a[S] \colon \Set{k \in N_0}{k < \FPrecisionLimit{S}} \rightarrow \Q . \]
 
 \proof
