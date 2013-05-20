@@ -540,10 +540,21 @@ void test_algo_PrecisionF() {
 void test_algo_calcReducedCurlF() {
 	using namespace std;
 	ReductionMatrices_Calc calc;
-	calc.init(-4, 10, "ZZ");
+	calc.init(-3, 6, "generic");
 	calc.curlF.B = 10;
 	calc.calcReducedCurlF();
 	cout << "size of reducedMatrix(curlF): " << calc.reducedCurlFList.size() << endl;	
+
+	ReductionMatrices_Calc calc2;
+	calc2.init(-3, 6, "generic");
+	calc2.curlF.B = 20;
+	calc2.calcReducedCurlF();
+	cout << "size of reducedMatrix(curlF2): " << calc2.reducedCurlFList.size() << endl;
+	
+	LOGIC_CHECK(calc.reducedCurlFList.size() <= calc2.reducedCurlFList.size());
+	for(size_t i = 0; i < calc.reducedCurlFList.size(); ++i) {
+		LOGIC_CHECK(calc.reducedCurlFList[i] == calc2.reducedCurlFList[i]);
+	}
 }
 
 void test_algo() {

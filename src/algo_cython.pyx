@@ -4,10 +4,10 @@ include "stdsage.pxi"
 include "cdefs.pxi"
 
 from libcpp.string cimport string
+from libcpp.vector cimport vector
 
-from sage.functions.other import sqrt as ssqrt
 from sage.rings.integer import Integer
-from sage.rings.number_field.number_field import QQ, ZZ
+from sage.rings.number_field.number_field import QQ, ZZ, QuadraticField
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix_space import MatrixSpace
 from sage.matrix.matrix_integer_dense cimport Matrix_integer_dense
@@ -26,6 +26,8 @@ cdef extern from "algo_cpp.cpp":
 		ElemOfCurlOdual a,b,c,d
 	cdef cppclass M2T_O:
 		int a,b1,b2,c
+	cdef cppclass M2T_Odual:
+		int a,b1,b2,c
 	cdef cppclass CurlS_Generator:
 		M2T_O getNextS()
 		void clearMatrices()
@@ -36,6 +38,7 @@ cdef extern from "algo_cpp.cpp":
 		void init(int D, int HermWeight, string curlSiterType) except +
 		PrecisionF curlF
 		CurlS_Generator curlS
+		vector[M2T_Odual] reducedCurlFList
 		void calcReducedCurlF() except +
 
 		void calcMatrix() except +
@@ -53,17 +56,27 @@ def test():
 	test_algo()
 
 cdef M2T_O_fromC(M2T_O m, int D):
-	"""
-	:rtype : Matrix_symbolic_dense
-	"""
-	b = m.b1 + m.b2 * (D + ssqrt(D)) * QQ(0.5)
-	return matrix(2, 2, [m.a, b, b.conjugate(), m.c])
+	K = QuadraticField(D)
+	Droot = K(D).sqrt()
+	b = m.b1 + m.b2 * (D + Droot) * QQ(0.5)
+	return matrix(K, 2, 2, [m.a, b, b.conjugate(), m.c])
+
+cdef M2T_Odual_fromC(M2T_Odual m, int D):
+	K = QuadraticField(D)
+	Droot = K(D).sqrt()
+	b = m.b1 / Droot + m.b2 * (1 + Droot) * QQ(0.5)
+	return matrix(K, 2, 2, [m.a, b, b.conjugate(), m.c])
 
 cdef ElemOfCurlO O_toC(a, int D) except *:
 	cdef ElemOfCurlO b
+	K = QuadraticField(D)
+	Droot = K(D).sqrt()
+	DrootHalf_coordinates_in_terms_of_powers = (Droot / 2).coordinates_in_terms_of_powers()
 	try:
-		b.b2 = ZZ((a.imag() * 2 / ssqrt(-D)).simplify_full())
-		b.b1 = ZZ((a.real() - Integer(b.b2) * D / 2).simplify_full())
+		real_part, b2 = DrootHalf_coordinates_in_terms_of_powers(a)
+		b1 = real_part - b2 * D / 2
+		b.b1 = ZZ(b1)
+		b.b2 = ZZ(b2)
 	except TypeError:
 		print "cannot convert %r to CurlO(%i)" % (a, D)
 		raise
@@ -115,6 +128,13 @@ cdef class Calc:
 		if self.D == 0: raise RuntimeError, "you have to call init first"
 		self.calc.calcReducedCurlF()
 		self.matrixColumnCount = self.calc.matrixColumnCount
+
+	def getReducedCurlF(self):
+		size = self.calc.reducedCurlFList.size()
+		l = [None] * size
+		for i in range(size):
+			l[i] = M2T_Odual_fromC(self.calc.reducedCurlFList[i], self.D)
+		return l
 
 	def calcMatrix(self):
 		"""

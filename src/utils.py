@@ -1,17 +1,12 @@
 from sage.calculus.functional import simplify
-from sage.functions.other import sqrt as ssqrt
-from sage.functions.other import imag, real
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
-from sage.matrix.matrix_space import MatrixSpace
 from sage.rings.integer import Integer
 from sage.structure.sage_object import SageObject
 from sage.modules.free_module_element import vector
 from sage.structure.sequence import Sequence_generic, Sequence
-from sage.symbolic.all import I
-from sage.rings.arith import xgcd as orig_xgcd, lcm
-from sage.rings.arith import gcd as orig_gcd
-from sage.rings.number_field.number_field import QQ, ZZ
+from sage.rings.arith import xgcd as orig_xgcd
+from sage.rings.number_field.number_field import QQ, ZZ, QuadraticField
 from sage.symbolic.ring import SymbolicRing
 from sage.symbolic.expression import Expression
 
@@ -195,6 +190,8 @@ class PersistentCache:
 
 
 def _simplify(a):
+	try: return QQ(a)
+	except: pass
 	if hasattr(a, "simplify_full"):
 		return a.simplify_full()
 	return simplify(a)
@@ -204,12 +201,16 @@ class CurlO:
 	def __init__(self, D):
 		self.D = D
 		assert (D*D - D) % 4 == 0
+		self.field = QuadraticField(D)
+		self.Droot = self.field(D).sqrt()
+		self.DrootHalf_coordinates_in_terms_of_powers = (self.Droot / 2).coordinates_in_terms_of_powers()
 	def divmod(self, a, b):
 		"""
 		Returns q,r such that a = q*b + r.
 		"""
 		# Note that this implementation is quite naive!
 		# Later, we can do better with QuadraticForm(...). (TODO)
+		# Also, read here: http://www.fen.bilkent.edu.tr/~franz/publ/survey.pdf
 
 		if b == 0: raise ZeroDivisionError
 		a1,a2 = self.as_tuple_b(a)
@@ -232,7 +233,7 @@ class CurlO:
 		# q * b + r == a
 		r = _simplify(a - q * b)
 		# Note that this works for -D < 5.27. See the text.
-		assert _simplify(abs(r)) < _simplify(abs(b))
+		assert _simplify(abs(b) - abs(r)) > 0, "|%r| < |%r|" % (r, b)
 		return q,r
 	def divides(self, a, b):
 		q,r = self.divmod(a, b)
@@ -250,7 +251,7 @@ class CurlO:
 			return orig_xgcd(a1, b1)
 		if a1 == b1 == 0:
 			d,s,t = orig_xgcd(a2, b2)
-			B2 = (self.D + ssqrt(self.D)) / 2
+			B2 = (self.D + self.Droot) / 2
 			return d * B2, s, t
 
 		abs_a = _simplify(abs(a))
@@ -286,13 +287,15 @@ class CurlO:
 		tupleargs = [None] * len(args) * 2
 		for i in range(len(args)):
 			tupleargs[2*i],tupleargs[2*i+1] = self.as_tuple_b(args[i])
-		return matrix(1,len(tupleargs),tupleargs).denominator()
+		return matrix(QQ, 1,len(tupleargs), tupleargs).denominator()
 	def as_tuple_b(self, a):
-		b2 = imag(a) * 2 / ssqrt(-self.D)
-		b1 = real(a) - b2 * self.D / 2
+		real_part, b2 = self.DrootHalf_coordinates_in_terms_of_powers(a)
+		b1 = real_part - b2 * self.D / 2
 		return (b1, b2)
 	def from_tuple_b(self, b1, b2):
-		return b1 + b2 * (self.D + ssqrt(self.D)) / 2
+		b1 = QQ(b1)
+		b2 = QQ(b2)
+		return self.field(b1 + b2 * (self.D + self.Droot) / 2)
 	def __contains__(self, item):
 		try:
 			b1,b2 = self.as_tuple_b(item)
@@ -322,11 +325,12 @@ def solveR(M, S, space):
 	#Ring = S.base_ring()
 	#print type(Ring), Ring
 	#Ring = SymbolicRing()
-	Ring = I.base_ring() # Symbolic Ring
+	#Ring = I.base_ring() # Symbolic Ring
+	Ring = space.field
 
 	A1 = matrix(Ring, 2,2, M[0][0])
-	B1 = M[0][1] * S
-	C1 = M[1][0] * S.inverse()
+	B1 = matrix(Ring, 2,2, M[0][1] * S)
+	C1 = matrix(Ring, 2,2, M[1][0] * S.inverse())
 	D1 = matrix(Ring, 2,2, M[1][1])
 	A1,B1,C1,D1 = [m.apply_map(_simplify) for m in [A1,B1,C1,D1]]
 	def make4x4matrix(A1,B1,C1,D1):
@@ -408,7 +412,7 @@ def solveR(M, S, space):
 def test_solveR():
 	space = CurlO(-3)
 	a,b,c,d = 2,1,1,1
-	s,t,u = 5,ssqrt(-3),1
+	s,t,u = 5,space.Droot,1
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S, space)
@@ -432,19 +436,19 @@ def test_solveR():
 	gamma,R,tM = solveR(M, S, space)
 
 	a,b,c,d = 0,-1,1,0
-	s,t,u = 2, QQ(0.5) * ssqrt(-3) - QQ(0.5), 2
+	s,t,u = 2, QQ(0.5) * space.Droot - QQ(0.5), 2
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S, space)
 
 	a,b,c,d = 1,0,3,1
-	s,t,u = 3, QQ(0.5) * ssqrt(-3) - QQ(1.5), 3
+	s,t,u = 3, QQ(0.5) * space.Droot - QQ(1.5), 3
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S, space)
 
 	a,b,c,d = 1,0,2,1
-	s,t,u = 3, QQ(0.5) * ssqrt(-3) - QQ(1.5), 3
+	s,t,u = 3, QQ(0.5) * space.Droot - QQ(1.5), 3
 	M = matrix(2, 2, [a,b,c,d])
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S, space)
@@ -458,6 +462,35 @@ def _curlO_matrix_denom(mat, D):
 	for v in mat.list():
 		assert v * denom in space, "%r (D=%r)" % (mat, D)
 	return denom
+
+
+def _toInt(a):
+	a = _simplify(a)
+	a = ZZ(a)
+	a = int(a)
+	return a
+
+
+def reloadC():
+	"""
+	This is just for testing to reload the C (Cython) module
+	after it was recompiled.
+	Note that this code is very unsafe! It will likely crash
+	when you have other references on the C module.
+	This is only for debugging and development!
+	"""
+	import algo
+	C = algo.C
+	import ctypes
+	try:
+		libdl = ctypes.CDLL("libdl.so")
+	except Exception:
+		# MacOSX:
+		libdl = ctypes.CDLL("libdl.dylib")
+	libdl.dlclose.argtypes = [ctypes.c_void_p]
+	so = ctypes.PyDLL(C.__file__)
+	assert(libdl.dlclose(so._handle) == 0)
+	reload(C)
 
 
 # Hack for reload handling
