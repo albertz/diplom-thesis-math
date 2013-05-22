@@ -424,7 +424,9 @@ def cusp_matrix(cusp):
 
 
 
-def _check_eisenstein_series_D3_weight6():
+def _check_eisenstein_series_D3_weight6(vs, B_cF):
+	D = -3
+	indexset = herm_modform_indexset(D, B_cF)
 	jacobi_coeffs_1 = {
 		(0, (0, 0)): 1,
 		(1, (0, 0)): -240,
@@ -437,23 +439,37 @@ def _check_eisenstein_series_D3_weight6():
 		(4, (1, 1)): -43920
 	}
 	from reduceGL import reduce_GL
-	def transform_matrix_jacobi1(key, value):
+	def reduce_matrix_jacobi1(key, value):
 		a, b = key
 		# In standard base of \cO^#.
 		b1, b2 = b
-		m, char = reduce_GL((a, b1, b2, 1), -3)
+		m, char = reduce_GL((a, b1, b2, 1), D)
 		# Like reduce_character_evalutation::value() in reduceGL.hpp.
-		h = 6
+		h = 6 # because D == -3
 		k = -12
 		detchar = char[1] * k
 		if detchar % h == 0: detvalue = 1
 		elif detchar % h == h/2: detvalue = -1
 		else: assert False, "detchar %i" % detchar
+		m_a, m_b1, m_b2, m_c = m
+		K = QuadraticField(D)
+		Droot = K(D).sqrt()
+		m_b = m_b1 / Droot + m_b2 * (1 + Droot) * QQ(0.5)
+		m = matrix(K, 2, 2, [m_a, m_b, m_b.conjugate(), m_c])
+		m.set_immutable()
 		return m, value * detvalue
 	jacobi_coeffs_1_transformed = dict(
-		[transform_matrix_jacobi1(key,value) for (key,value) in jacobi_coeffs_1.items()])
-	print jacobi_coeffs_1_transformed
-
+		[reduce_matrix_jacobi1(key,value) for (key,value) in jacobi_coeffs_1.items()])
+	indexmap = {}
+	for m in jacobi_coeffs_1_transformed.keys():
+		indexmap[m] = indexset.index(m)
+	for b in vs.basis():
+		v1 = [None] * len(jacobi_coeffs_1_transformed)
+		v2 = [None] * len(v1)
+		for i, (m, value) in enumerate(sorted(jacobi_coeffs_1_transformed.items())):
+			v1[i] = b[indexmap[m]]
+			v2[i] = value
+		print v1, v2
 
 def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsion):
 	"""
