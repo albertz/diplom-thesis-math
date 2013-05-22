@@ -5,8 +5,9 @@ from sage.misc.cachefunc import cached_function
 from sage.modular.arithgroup.congroup_sl2z import SL2Z
 from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
-from sage.modules.free_module import FreeModule
+from sage.modules.free_module import FreeModule, VectorSpace, span
 from sage.rings.integer import Integer
+from sage.modules.free_module_element import vector
 from sage.rings.infinity import Infinity
 from sage.structure.sage_object import SageObject
 from sage.rings.arith import xgcd as orig_xgcd
@@ -463,13 +464,19 @@ def _check_eisenstein_series_D3_weight6(vs, B_cF):
 	indexmap = {}
 	for m in jacobi_coeffs_1_transformed.keys():
 		indexmap[m] = indexset.index(m)
-	for b in vs.basis():
-		v1 = [None] * len(jacobi_coeffs_1_transformed)
-		v2 = [None] * len(v1)
-		for i, (m, value) in enumerate(sorted(jacobi_coeffs_1_transformed.items())):
-			v1[i] = b[indexmap[m]]
-			v2[i] = value
-		print v1, v2
+	reverse_indexlist = sorted([(value,key) for (key,value) in indexmap.items()])
+	def reduced_vector(v):
+		new_v = [None] * len(indexmap)
+		for i,(j,m) in enumerate(reverse_indexlist):
+			new_v[i] = v[j]
+		return vector(QQ, new_v)
+	reduced_vs_basis = map(reduced_vector, vs.basis())
+	reduced_vs = span(reduced_vs_basis, QQ)
+	vector_jac = [None] * len(indexmap)
+	for i,(j,m) in enumerate(reverse_indexlist):
+		vector_jac[i] = jacobi_coeffs_1_transformed[m]
+	lincomb = reduced_vs.linear_combination_of_basis(vector_jac)
+
 
 def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsion):
 	"""
