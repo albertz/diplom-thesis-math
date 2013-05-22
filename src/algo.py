@@ -1,6 +1,7 @@
 from time import time
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
+from sage.misc.cachefunc import cached_function
 from sage.modular.arithgroup.congroup_sl2z import SL2Z
 from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
@@ -354,6 +355,7 @@ def test_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, testSCo
 			"%r not subspace of %r" % (m_module, ell_modform_fe_expansions_l)
 
 
+@cached_function
 def herm_modform_indexset(D, B_cF):
 	"""
 	This is the precision of the index set for the Fourier coefficients of the
@@ -418,6 +420,39 @@ def cusp_matrix(cusp):
 		_div, d, b = orig_xgcd(a, -c)
 		assert _div == 1
 		return matrix(ZZ,2,2,[a,b,c,d])
+
+
+
+
+def _check_eisenstein_series_D3_weight6():
+	jacobi_coeffs_1 = {
+		(0, (0, 0)): 1,
+		(1, (0, 0)): -240,
+		(1, (1, 1)): -45,
+		(2, (0, 0)): -3690,
+		(2, (1, 1)): -1872,
+		(3, (0, 0)): -19680,
+		(3, (1, 1)): -11565,
+		(4, (0, 0)): -57840,
+		(4, (1, 1)): -43920
+	}
+	from reduceGL import reduce_GL
+	def transform_matrix_jacobi1(key, value):
+		a, b = key
+		# In standard base of \cO^#.
+		b1, b2 = b
+		m, char = reduce_GL((a, b1, b2, 1), -3)
+		# Like reduce_character_evalutation::value() in reduceGL.hpp.
+		h = 6
+		k = -12
+		detchar = char[1] * k
+		if detchar % h == 0: detvalue = 1
+		elif detchar % h == h/2: detvalue = -1
+		else: assert False, "detchar %i" % detchar
+		return m, value * detvalue
+	jacobi_coeffs_1_transformed = dict(
+		[transform_matrix_jacobi1(key,value) for (key,value) in jacobi_coeffs_1.items()])
+	print jacobi_coeffs_1_transformed
 
 
 def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsion):
