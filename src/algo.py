@@ -141,7 +141,10 @@ def getElliptModFormsBasisMatrix(level, weight, precision):
 
 	cacheIdx = (level, weight)
 	if cacheIdx in ellipBaseMatrixCache and ellipBaseMatrixCache[cacheIdx][1] >= precision:
-		return ellipBaseMatrixCache[cacheIdx][0][:,:precision]
+		fe_expansion_matrix_l = ellipBaseMatrixCache[cacheIdx][0]
+		cut_matrix = fe_expansion_matrix_l[:,:precision]
+		assert cut_matrix.rank() == fe_expansion_matrix_l.rank()
+		return cut_matrix
 	#n = 2
 	#while n < precision:
 	#	n **= 2
@@ -149,8 +152,11 @@ def getElliptModFormsBasisMatrix(level, weight, precision):
 	mf = ModularForms(Gamma0(level), weight)
 	fe_expansion_matrix_l = matrix(QQ, [b.qexp(n).padded_list(n) for b in mf.basis()])
 	fe_expansion_matrix_l.echelonize()
+	assert fe_expansion_matrix_l.rank() == mf.dimension()
 	ellipBaseMatrixCache[cacheIdx] = (fe_expansion_matrix_l, n)
-	return fe_expansion_matrix_l[:,:precision]
+	cut_matrix = fe_expansion_matrix_l[:,:precision]
+	assert cut_matrix.rank() == mf.dimension()
+	return cut_matrix
 
 
 restrMatrixCache = PersistentCache("restrMatrix.cache.sobj") # by (calc.params,calc.curlS)
@@ -568,6 +574,7 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 		verbose("get elliptic modform space with precision %i ..." % precLimit)
 		fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
 		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
+		verbose("dim of elliptic modform space: %i" % ell_modform_fe_expansions_l.dimension())
 
 		verbose("calc M_S_module...")
 		M_S_module = M_S.column_module()
@@ -592,7 +599,7 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 			break
 
 		herm_modform_fe_expannsion = _intersect_modform_cusp_info(
-			calc=calc, S=S, l=l, precLimit=precLimit*2,
+			calc=calc, S=S, l=l, precLimit=precLimit,
 			herm_modform_fe_expannsion=herm_modform_fe_expannsion)
 
 		if dim == current_dimension:
