@@ -320,12 +320,23 @@ struct Matrix2 {
 
 // calculates trace(S * T)
 // is always an integer
-inline Int trace(M2T_O S, M2T_Odual T) {
+inline Int trace_old(M2T_O S, M2T_Odual T) {
 	// = (S.a * T.a + S.b * \overline{T.b}) + (\overline{S.b} * T.b + S.b * T.b)
 	// = S.a * T.a + 2 * Re(S.b * \overline{T.b}) + S.c * T.c
 	// = S.a * T.a + S.c * T.c + (S.b1 * T.b2 - S.b2 * T.b1)
 	return S.a * T.a + S.c * T.c + S.b1 * T.b2 - S.b2 * T.b1;
 }
+
+// calculates trace(S * T)
+inline Int trace(M2T_O S, M2T_Odual T, int D) {
+	auto _S = M2_O_from_M2T_O(S, D);
+	auto _T = M2_Odual_from_M2T_Odual(T, D);
+	auto m = _T.mulMat(_S, D); // T * S because other way around is not implemented
+	auto t = m.trace().asInt(D);
+	LOGIC_CHECK(t == trace_old(S, T)); // compare with old trace-calc
+	return t;
+}
+
 
 
 template<typename T>
