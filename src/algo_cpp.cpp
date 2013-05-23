@@ -187,7 +187,7 @@ struct PrecisionF {
 		Iter(const PrecisionF& _F, bool _end = false) : F(_F), curB(0), hitEnd(_end) {}
 		
 		bool isValid() {
-			if(cur.det4D(F.D) < 0) return false;
+			if(cur.detD(F.D) < 0) return false;
 			if(cur.a < 0 || cur.a >= F.B) return false;
 			if(cur.c < 0 || cur.c >= F.B) return false;
 			return true;

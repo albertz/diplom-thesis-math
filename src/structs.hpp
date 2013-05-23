@@ -76,17 +76,18 @@ struct M2T_Odual {
 	Int a, b1, b2, c;
 	M2T_Odual(Int _a = 0, Int _b1 = 0, Int _b2 = 0, Int _c = 0)
 	: a(_a), b1(_b1), b2(_b2), c(_c) {}
-	// det4D == -D * 4 * det
+	// detD == -D * det
 	// TODO(?): if D is fundamental, we always have 4|(D*D-D), thus we could just use -D * det.
-	Int det4D(const int D) const {
+	Int detD(const int D) const {
 		DOMAIN_CHECK(D < 0);
+		DOMAIN_CHECK(Mod(D*D - D, 4) == 0);
 		// det = a*c - |b|^2
 		// Re(b) = 1/2 b2
 		// Re(b)^2 = 1/4 b2^2
 		// Im(b) = -b1/sqrt{-D} + 1/2 \sqrt{-D} b2
 		// Im(b)^2 = b1^2/(-D) - b1*b2 + 1/4 (-D) b2^2
-		// -> 4*(-D)*|b∫^2 = 4*b1^2 - 4*(-D)*b1*b2 + (D^2 - D)*b2^2
-		return a*c*4*(-D) - 4*b1*b1 + 4*(-D)*b1*b2 - (D*D - D)*b2*b2;
+		// -> (-D)*|b∫^2 = b1^2 - (-D)*b1*b2 + (D^2 - D)/4*b2^2
+		return a*c*(-D) - b1*b1 + (-D)*b1*b2 - Div(D*D-D,4)*b2*b2;
 	}
 };
 inline std::ostream& operator<<(std::ostream& os, const M2T_Odual& m) {

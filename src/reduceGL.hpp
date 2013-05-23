@@ -135,7 +135,7 @@ inline void reduce_GL(M2T_Odual matrix, int D, struct hermitian_form_with_charac
 	DOMAIN_CHECK(Mod(D*D - D, 4) == 0);
 	DOMAIN_CHECK(a >= 0);
 	DOMAIN_CHECK(c >= 0);
-	DOMAIN_CHECK(matrix.det4D(D) >= 0);
+	DOMAIN_CHECK(matrix.detD(D) >= 0);
 
 	int q, r;
 	int tmp;
