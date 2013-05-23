@@ -424,6 +424,18 @@ def cusp_matrix(cusp):
 		return matrix(ZZ,2,2,[a,b,c,d])
 
 
+def calcPrecisionDimension(B_cF, S):
+	"""
+	Like the C++ implementation of `calcPrecisionDimension()`.
+	"""
+	assert S[0,1] == S[1,0].conjugate()
+	s,t,u = S[0,0], S[0,1], S[1,1]
+	s, u = QQ(s), QQ(u)
+	precDim = B_cF * (s + u - 2 * abs(t))
+	precDim = floor(precDim)
+	return precDim
+
+
 def _calcMatrix_py(D, HermWeight, S, B_cF):
 	"""
 	This is a Python implementation of the C++ `calcMatrix()` function.
@@ -721,10 +733,9 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 	return herm_modform_fe_expannsion
 
 
-def _fast_fail_test_D3_k6():
+def _fast_fail_test_D3_k6(B_cF=5):
 	D = -3
 	HermWeight = 6
-	B_cF = 8
 	calc = C.Calc()
 	calc.init(D = D, HermWeight = HermWeight, B_cF=B_cF)
 	calc.calcReducedCurlF()
@@ -741,6 +752,7 @@ def _fast_fail_test_D3_k6():
 	M_S = M_S.matrix_over_field() # matrix over rational field
 
 	precLimit = M_S.nrows()
+	assert calcPrecisionDimension(B_cF=B_cF, S=S) == precLimit
 
 	verbose("get elliptic modform space with precision %i ..." % precLimit)
 	fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
