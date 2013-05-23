@@ -198,6 +198,7 @@ Thus,
 \end{remark}
 
 \begin{remark}
+\label{remark:reducedCurlF}
 With $[a,b,c] \in \F$, we have $0\le a,c<B$, thus there are only a finite number of possible $(a,c) \in \N_0^2$. Because $0 \le [a,b,c]$, we get $ac - \left| b \right|^2 \ge 0$ and thus $b$ is also always limited. Thus, $\F$ is finite but it might be huge for even small $B$.
 For example\footnote{This example was calculated with the code at \cite{Zeyer13Github}.},
 \begin{align*}
@@ -216,6 +217,24 @@ For example,
 \end{align*}
 %
 We use this set to identify a base of the finite dimension vector space $\invar{\left(\Q^\F\right)}{\GL_2(\curlO)}$.
+\end{remark}
+
+\begin{remark}
+From \cref{remark:restricted-by-S} and \cref{lemma:fprecisionlimit}, we have
+\[ a[S] (k) = \sum_{T \in \F, \tr(S T) = k} a(T) \]
+for $k \in \N_0, k < \F(S)$.
+
+Let $v = (v_1, \dots, v_n) \in \Q^n$ be a vector in the base of reduced indices of $\F$ as described in \cref{remark:reducedCurlF} with $n = \# \left( \invar{\F}{\GL_2(\curlO)} \right)$. And let
+\[ \invar{\F}{\GL_2(\curlO)} = (T_1, \dots, T_n). \]
+
+We have
+\[ \det(U)^k a(T_i[U]) = a(T_i) = v_i \]
+for all $i \le n$, $U \in \GL_2(\curlO)$.
+For any $T \in \F$, we can uniquely find $i \le n$ and $U \in \GL_2(\curlO)$ such that
+\[ T_i[U] = T. \]
+Then we have
+\[ a(T) = a(T_i[U]) = \det(U)^{-k} a(T_i) = \det(U)^{-k} v_i . \]
+This gives us the formula to calculate the Fourier expansion $a[S] \colon \Set{k \in N_0}{k < \FPrecisionLimit{S}} \rightarrow \Q$. 
 \end{remark}
 
 \begin{algo}
