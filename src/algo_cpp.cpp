@@ -192,29 +192,24 @@ struct PrecisionF {
 			if(cur.c < 0 || cur.c >= F.B) return false;
 			return true;
 		}
-		bool _hardLimitCheck() {
-			auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
-			// detD >= 0 <=> (-D)ac >= b1^2 - (-D)b1b2 + (-D)(1-D)/4 b2^2
-			// Thus, when we have (-D)ac >= b1^2 - (-D)|b1b2| + (-D)(1-D)/4 b2^2,
-			// we are always safe that we don't miss any values. Of course,
-			// we must still check for validity because we will get invalid values.
-			// b1^2 - (-D)|b1b2| = |b1| (|b1| - (-D)|b2|).
-			// (-D)(1-D)/4 b2^2 - (-D)|b1b2| = (-D)|b2| ((1-D)/4 |b2| - |b1|).
-			// This is also sign-independent.
-			// Thus, when we increase b1 or b2 and have a,c fixed, the right term
-			// will also increase and we will hit the limit at some point.
-			return (-F.D)*a*c >= b1*b1 - (-F.D)*abs(b1*b2) + Div((-F.D)*(1-F.D),4)*b2*b2;
+		bool _hardLimitCheckB1() {
+			auto &a = cur.a, &b1 = cur.b1, &c = cur.c;
+			return a*c*(F.D*F.D-F.D) >= b1*b1;
+		}
+		bool _hardLimitCheckB2() {
+			auto &a = cur.a, &b2 = cur.b2, &c = cur.c;
+			return a*c*4 >= b2*b2;
 		}
 		void next() {
 			auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
 			if(b2 > 0) { b2 *= -1; return; }
 			b2 = -b2 + 1;
-			if(!_hardLimitCheck()) {
+			if(!_hardLimitCheckB2()) {
 				b2 = 0;
 				if(b1 > 0) { b1 *= -1; return; }
 				b1 = -b1 + 1;
 			}
-			if(!_hardLimitCheck()) {
+			if(!_hardLimitCheckB1()) {
 				b1 = b2 = 0;
 				c ++;
 			}
