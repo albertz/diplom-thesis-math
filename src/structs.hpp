@@ -139,7 +139,7 @@ struct M2T_O {
 	// = Gauss_upper( M*|b| )
 	Int absBMupper(const int D, const Int M) {
 		DOMAIN_CHECK(M >= 0); // not implemented otherwise right now
-		if(b2 == 0) return abs(M * b1); // fast path
+		if(b2 == 0) return M * abs(b1); // fast path
 		Int y = absBsquare(D) * M * M;
 		return squareRootIntUpper(y);
 	}
