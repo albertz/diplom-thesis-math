@@ -143,13 +143,15 @@ We use $a[S] \colon \N_0 \rightarrow \Q$ for the Fourier coefficients of $f[S]$,
 \[ f[S](\tau) = \sum_{n \in \N_0} a[S](n) \cdot e^{2 \pi i n \tau} . \]
 This gives us
 \[ a[S] (n) = \sum_{T \in \Lambda, \tr(S T) = n} a(T) . \]
-
-Fix $B_\F \in \N$ as a limit. Select a precision of the Fourier coefficient index
-\[ \F := \F_B := \Set{\SimpleMatrix{a}{b}{\overline b}{c} \in \Lambda}{0 \le a , c < B_{\F}} \subseteq \Lambda . \]
-% \Lambda sind die die Indizes der Fourier-Entwicklung einer Hermitischen Modulform.
+\endproof
 \end{remark}
 
-The main algorithm is going to be described in \ref{main-algo}. It will start with the vectorspace of all possible Fourier expansions for the precision index set $\F$ and reduce that vectorspace.
+For the implementation of the algorithm, we need to define a finite precision of the index set of the Fourier coefficients of the Hermitian modular forms.
+Fix $B_\F \in \N$ as a limit. Define the precision of the Fourier coefficient index
+\[ \F := \F_B := \Set{\SimpleMatrix{a}{b}{\overline b}{c} \in \Lambda}{0 \le a , c < B_{\F}} \subseteq \Lambda . \]
+% \Lambda sind die die Indizes der Fourier-Entwicklung einer Hermitischen Modulform.
+
+The main algorithm is going to be described in \cref{main-algo}. It will start with the vectorspace of all possible Fourier expansions for the precision index set $\F$ and reduce that vectorspace.
 
 \begin{lemma}
 \label{lemma:fprecisionlimit}
