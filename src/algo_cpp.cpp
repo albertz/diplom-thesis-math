@@ -529,8 +529,8 @@ void test_algo_PrecisionF() {
 #ifndef OLDGCC
 	using namespace std;
 	PrecisionF curlF;
-	curlF.D = -4;
-	curlF.B = 20;
+	curlF.D = -3;
+	curlF.B = 10;
 	size_t c = 0;
 	for(ElemOfF T : curlF) {
 		cout << T << endl;
