@@ -349,6 +349,7 @@ struct ReductionMatrices_Calc {
 			for(auto _S = curlS.begin(); _S != curlS.end(); ++_S) {
 				ElemOfS S = *_S;
 				int traceNum = trace(S,T, D);
+				LOGIC_CHECK(traceNum >= 0);
 				size_t row = rowStart + traceNum;
 				rowStart += calcPrecisionDimension(curlF, S);
 				if(row >= rowStart) continue;
