@@ -119,7 +119,8 @@ And we have
 
 As a conclusion for now, it looks complicated to restrict $\SmallMatrix{a}{b}{c}{d}$, i.e. the translation group $\Gamma^E$ for the Elliptic modular forms, to satisfy $\nu(M)=1$. For example, for the case $c=0$, one fulfilling condition would be $2 | b$.
 
-To avoid such complications, we will use $\nu \equiv 1$ for the rest of our work.\endproof
+To avoid such complications, we will use $\nu \equiv 1$ for the rest of our work.
+\qed
 \end{remark}
 
 
@@ -182,7 +183,7 @@ Thus, for $B > 0$, we have
 \[ B \cdot (s + u - 2 \left| t \right|) > 0 . \]
 All inequalities were sharp estimations\footnote{For example, let $S=[2,-1,1]$. Then you have $s+u-2 \left| t \right| = 1$. With $c=B$ and $a=b=1$, you hit the limit $\tr(S T) = 2 + B - 2 = B = \FPrecisionLimit{S}$. }, %
 thus we get
-\[ \FPrecisionLimit{S} = B \cdot (s + u - 2 \left| t \right|) . \]
+\[ \FPrecisionLimit{S} = B \cdot (s + u - 2 \left| t \right|) . \qedhere \]
 \endproof
 \end{lemma}
 
@@ -218,6 +219,7 @@ For example,
 \end{align*}
 %
 We use this set to identify a base of the finite dimension vector space $\invar{\left(\Q^\F\right)}{\GL_2(\curlO)}$.
+\qed
 \end{remark}
 
 \begin{remark}
@@ -235,7 +237,8 @@ For any $T \in \F$, we can uniquely find $i \le n$ and $U \in \GL_2(\curlO)$ suc
 \[ T_i[U] = T. \]
 Then we have
 \[ a(T) = a(T_i[U]) = \det(U)^{-k} a(T_i) = \det(U)^{-k} v_i . \]
-This gives us the formula to calculate the Fourier expansion $a[S] \colon \Set{k \in N_0}{k < \FPrecisionLimit{S}} \rightarrow \Q$. 
+This gives us the formula to calculate the Fourier expansion $a[S] \colon \Set{k \in N_0}{k < \FPrecisionLimit{S}} \rightarrow \Q$.
+\qed
 \end{remark}
 
 \begin{algo}
