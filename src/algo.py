@@ -1,4 +1,5 @@
 from time import time
+from sage.functions.other import floor
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
 from sage.misc.cachefunc import cached_function
@@ -423,12 +424,29 @@ def cusp_matrix(cusp):
 		return matrix(ZZ,2,2,[a,b,c,d])
 
 
+def _calcMatrix_py(D, HermWeight, S, B_cF):
+	"""
+	This is a Python implementation of the C++ `calcMatrix()` function.
+	This is just for testing.
+	"""
+
+	assert S[0,1] == S[1,0].conjugate()
+	s,t,u = S[0,0], S[0,1], S[1,1]
+	indexset = herm_modform_indexset(D=D, B_cF=B_cF)
+
+	precDim = B_cF * (s + u - 2 * abs(t))
+	precDim = floor(precDim)
+	matrixRowCount = precDim
+	matrixColumnCount = len(indexset)
+
+	# ...
+	raise NotImplementedError
 
 
 def _check_eisenstein_series_D3_weight6(vs, B_cF):
 	D = -3
 	HermWeight = 6
-	indexset = herm_modform_indexset(D, B_cF)
+	indexset = herm_modform_indexset(D=D, B_cF=B_cF)
 	jacobi_coeffs_1 = {
 		(0, (0, 0)): 1,
 		(1, (0, 0)): -240,
