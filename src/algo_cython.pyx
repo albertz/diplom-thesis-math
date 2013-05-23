@@ -94,15 +94,16 @@ cdef M2_O M2_O_toC(m, int D) except *:
 cdef class Calc:
 	# You need a recent Cython (e.g. >=0.19) for this.
 	cdef ReductionMatrices_Calc calc
-	cdef public int D, HermWeight
+	cdef public int D, HermWeight, B_cF
 	cdef public size_t matrixColumnCount
 	cdef public size_t matrixRowCountTrans, matrixColumnCountTrans, matrixCountTrans, matrixRowDenomTrans
 	cdef public object params
 	cdef public object curlS
 
-	def init(self, int D, int HermWeight, int B_cF=20, string curlSiterType="generic"):
+	def init(self, int D, int HermWeight, int B_cF=10, string curlSiterType="generic"):
 		self.D = D
 		self.HermWeight = HermWeight
+		self.B_cF = B_cF
 		self.calc.init(D, HermWeight, curlSiterType)
 		# start limit
 		# this is never changed at the moment
