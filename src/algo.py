@@ -518,8 +518,8 @@ def _check_eisenstein_series_D3_weight6(vs, B_cF):
 
 
 def _extra_check_on_herm_superspace(vs, D, HermWeight, B_cF):
-	#if D == -3 and HermWeight == 6:
-	#	_check_eisenstein_series_D3_weight6(vs=vs, B_cF=B_cF)
+	if D == -3 and HermWeight == 6:
+		_check_eisenstein_series_D3_weight6(vs=vs, B_cF=B_cF)
 	pass
 
 
