@@ -439,6 +439,7 @@ def _check_eisenstein_series_D3_weight6(vs, B_cF):
 		(4, (0, 0)): -57840,
 		(4, (1, 1)): -43920
 	}
+
 	from reduceGL import reduce_GL
 	def reduce_matrix_jacobi1(key, value):
 		a, b = key
@@ -461,22 +462,32 @@ def _check_eisenstein_series_D3_weight6(vs, B_cF):
 		return m, value * detvalue
 	jacobi_coeffs_1_transformed = dict(
 		[reduce_matrix_jacobi1(key,value) for (key,value) in jacobi_coeffs_1.items()])
+
 	indexmap = {}
 	for m in jacobi_coeffs_1_transformed.keys():
 		indexmap[m] = indexset.index(m)
 	reverse_indexlist = sorted([(value,key) for (key,value) in indexmap.items()])
+
 	def reduced_vector(v):
 		new_v = [None] * len(indexmap)
 		for i,(j,m) in enumerate(reverse_indexlist):
 			new_v[i] = v[j]
 		return vector(QQ, new_v)
 	reduced_vs_basis = map(reduced_vector, vs.basis())
-	reduced_vs = span(reduced_vs_basis, QQ)
+	reduced_vs_basis_matrix = matrix(QQ, reduced_vs_basis)
+
 	vector_jac = [None] * len(indexmap)
 	for i,(j,m) in enumerate(reverse_indexlist):
 		vector_jac[i] = jacobi_coeffs_1_transformed[m]
-	lincomb = reduced_vs.linear_combination_of_basis(vector_jac)
+	vector_jac = vector(QQ, vector_jac)
 
+	try:
+		lincomb = reduced_vs_basis_matrix.solve_left(vector_jac)
+	except ValueError as e:
+		if "no solutions" in str(e):
+			return False
+		raise
+	return True
 
 def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsion):
 	"""
