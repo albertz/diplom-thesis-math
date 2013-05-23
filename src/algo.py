@@ -427,6 +427,7 @@ def cusp_matrix(cusp):
 
 def _check_eisenstein_series_D3_weight6(vs, B_cF):
 	D = -3
+	HermWeight = 6
 	indexset = herm_modform_indexset(D, B_cF)
 	jacobi_coeffs_1 = {
 		(0, (0, 0)): 1,
@@ -442,23 +443,17 @@ def _check_eisenstein_series_D3_weight6(vs, B_cF):
 
 	from reduceGL import reduce_GL
 	def reduce_matrix_jacobi1(key, value):
-		a, b = key
 		# In standard base of \cO^#.
-		b1, b2 = b
+		a, (b1, b2) = key
 		m, char = reduce_GL((a, b1, b2, 1), D)
 		# Like reduce_character_evalutation::value() in reduceGL.hpp.
 		h = 6 # because D == -3
-		k = -12
+		k = -HermWeight
 		detchar = char[1] * k
 		if detchar % h == 0: detvalue = 1
 		elif detchar % h == h/2: detvalue = -1
 		else: assert False, "detchar %i" % detchar
-		m_a, m_b1, m_b2, m_c = m
-		K = QuadraticField(D)
-		Droot = K(D).sqrt()
-		m_b = m_b1 / Droot + m_b2 * (1 + Droot) * QQ(0.5)
-		m = matrix(K, 2, 2, [m_a, m_b, m_b.conjugate(), m_c])
-		m.set_immutable()
+		m = M2T_Odual(m, D)
 		return m, value * detvalue
 	jacobi_coeffs_1_transformed = dict(
 		[reduce_matrix_jacobi1(key,value) for (key,value) in jacobi_coeffs_1.items()])
@@ -485,7 +480,7 @@ def _check_eisenstein_series_D3_weight6(vs, B_cF):
 		lincomb = reduced_vs_basis_matrix.solve_left(vector_jac)
 	except ValueError as e:
 		if "no solutions" in str(e):
-			print "reduced_vs_basis_matrix =", reduced_vs_basis_matrix
+			print "reduced_vs_basis_matrix =", reduced_vs_basis_matrix, ", rank =", reduced_vs_basis_matrix.rank()
 			print "vector_jac =", vector_jac
 			assert False
 		raise
@@ -681,7 +676,7 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 			print "M_S_right_kernel =", M_S_right_kernel
 			print "herm_modform_fe_expannsion_S_module =", herm_modform_fe_expannsion_S_module
 			raise
-		
+
 		verbose("intersecting herm_modform_fe_expannsion...")
 		herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S_module )
 		current_dimension = herm_modform_fe_expannsion.dimension()

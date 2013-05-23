@@ -307,6 +307,27 @@ def test_curlO():
 	space = CurlO(-3)
 	assert space.xgcd(1337,43) == orig_xgcd(1337,43)
 
+class CurlOdual:
+	def __init__(self, D):
+		assert D < 0
+		assert (D*D - D) % 4 == 0
+		self.D = D
+		self.field = QuadraticField(D)
+		self.Droot = self.field(D).sqrt()
+		self.DrootHalf_coordinates_in_terms_of_powers = (self.Droot / 2).coordinates_in_terms_of_powers()
+	def from_tuple_b(self, b1, b2):
+		b1, b2 = QQ(b1), QQ(b2)
+		b = b1 / self.Droot + b2 * (1 + self.Droot) * QQ(0.5)
+		return b
+
+def M2T_Odual((a, b1, b2, c), D):
+	space = CurlOdual(D)
+	b = space.from_tuple_b(b1, b2)
+	m = matrix(space.field, 2, 2, [a, b, b.conjugate(), c])
+	m.set_immutable()
+	return m
+
+
 def solveR(M, S, space):
 	"""
 	Let M = [[a,b;c,d]] \in \SL_2(\ZZ).
