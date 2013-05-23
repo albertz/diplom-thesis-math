@@ -485,9 +485,11 @@ def _check_eisenstein_series_D3_weight6(vs, B_cF):
 		lincomb = reduced_vs_basis_matrix.solve_left(vector_jac)
 	except ValueError as e:
 		if "no solutions" in str(e):
-			return False
+			print "reduced_vs_basis_matrix =", reduced_vs_basis_matrix
+			print "vector_jac =", vector_jac
+			assert False
 		raise
-	return True
+	return lincomb
 
 
 def _extra_check_on_herm_superspace(vs, D, HermWeight, B_cF):
@@ -669,11 +671,17 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 		verbose("dimension of M_S right kernel: %i" % M_S_right_kernel.dimension())
 		herm_modform_fe_expannsion_S_module += M_S_right_kernel
 
-		_extra_check_on_herm_superspace(
-			vs=herm_modform_fe_expannsion_S_module,
-			D=D, B_cF=B_cF, HermWeight=HermWeight
-		)
-
+		try:
+			_extra_check_on_herm_superspace(
+				vs=herm_modform_fe_expannsion_S_module,
+				D=D, B_cF=B_cF, HermWeight=HermWeight
+			)
+		except Exception:
+			print "restriction_fe_expansions =", restriction_fe_expansions
+			print "M_S_right_kernel =", M_S_right_kernel
+			print "herm_modform_fe_expannsion_S_module =", herm_modform_fe_expannsion_S_module
+			raise
+		
 		verbose("intersecting herm_modform_fe_expannsion...")
 		herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S_module )
 		current_dimension = herm_modform_fe_expannsion.dimension()
@@ -683,9 +691,9 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 		if dim == current_dimension:
 			break
 
-		herm_modform_fe_expannsion = _intersect_modform_cusp_info(
-			calc=calc, S=S, l=l, precLimit=precLimit,
-			herm_modform_fe_expannsion=herm_modform_fe_expannsion)
+		#herm_modform_fe_expannsion = _intersect_modform_cusp_info(
+		#	calc=calc, S=S, l=l, precLimit=precLimit,
+		#	herm_modform_fe_expannsion=herm_modform_fe_expannsion)
 
 		if dim == current_dimension:
 			break
