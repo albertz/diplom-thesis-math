@@ -141,7 +141,7 @@ struct M2T_O {
 		DOMAIN_CHECK(M >= 0); // not implemented otherwise right now
 		if(b2 == 0) return M * b1; // fast path
 		Int y = absBsquare(D) * M * M;
-		return squareRootIntUpper(y),
+		return squareRootIntUpper(y);
 	}
 	Int det(const int D) const {
 		return a*c - absBsquare(D);
