@@ -66,6 +66,13 @@ T squareRootInt(const T& y) {
 	return x;
 }
 
+template<typename T>
+T squareRootIntUpper(const T& y) {
+	T x = squareRootInt(y);
+	if(x*x == y) return x;
+	return x + 1;
+}
+
 
 struct M2T_Odual {
 	// This represents always an element in Her_2(\cO^#) from our work.
@@ -134,9 +141,7 @@ struct M2T_O {
 		DOMAIN_CHECK(M >= 0); // not implemented otherwise right now
 		if(b2 == 0) return M * b1; // fast path
 		Int y = absBsquare(D) * M * M;
-		Int x = squareRootInt(y);
-		if(x*x == y) return x;
-		return x + 1;
+		return squareRootIntUpper(y),
 	}
 	Int det(const int D) const {
 		return a*c - absBsquare(D);
