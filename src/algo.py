@@ -743,7 +743,7 @@ def _fast_fail_test_D3_k6(B_cF=5):
 	while True:
 		calc.curlS_clearMatrices()
 		S = calc.getNextS()
-		if S == matrix(2, 2, [2, -1, -1, 1]): break
+		if S == matrix(2, 2, [3, 0, 0, 1]): break
 
 	l = S.det()
 	l = _toInt(l)
