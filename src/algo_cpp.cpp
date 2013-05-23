@@ -525,7 +525,7 @@ void test_algo_PrecisionF() {
 	using namespace std;
 	PrecisionF curlF;
 	curlF.D = -3;
-	curlF.B = 10;
+	curlF.B = 6;
 	size_t c = 0;
 	for(ElemOfF T : curlF) {
 		cout << T << endl;
