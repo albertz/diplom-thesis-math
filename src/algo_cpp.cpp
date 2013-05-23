@@ -194,16 +194,16 @@ struct PrecisionF {
 		}
 		bool _hardLimitCheck() {
 			auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
-			// det4D >= 0 <=> 4(-D)ac >= 4b1^2 - 4(-D)b1b2 + (-D)(1-D)b2^2
-			// Thus, when we have 4(-D)ac >= 4b1^2 - 4(-D)|b1b2| + (-D)(1-D)b2^2,
+			// detD >= 0 <=> (-D)ac >= b1^2 - (-D)b1b2 + (-D)(1-D)/4 b2^2
+			// Thus, when we have (-D)ac >= b1^2 - (-D)|b1b2| + (-D)(1-D)/4 b2^2,
 			// we are always safe that we don't miss any values. Of course,
 			// we must still check for validity because we will get invalid values.
-			// 4b1^2 - 4(-D)|b1b2| = 4|b1| (|b1| - (-D)|b2|).
-			// (-D)(1-D)b2^2 - 4(-D)|b1b2| = (-D)|b2| ((1-D)|b2| - 4|b1|).
+			// b1^2 - (-D)|b1b2| = |b1| (|b1| - (-D)|b2|).
+			// (-D)(1-D)/4 b2^2 - (-D)|b1b2| = (-D)|b2| ((1-D)/4 |b2| - |b1|).
 			// This is also sign-independent.
 			// Thus, when we increase b1 or b2 and have a,c fixed, the right term
 			// will also increase and we will hit the limit at some point.
-			return 4*(-F.D)*a*c >= 4*b1*b1 - 4*(-F.D)*abs(b1*b2) + (-F.D)*(1-F.D)*b2*b2;
+			return (-F.D)*a*c >= b1*b1 - (-F.D)*abs(b1*b2) + Div((-F.D)*(1-F.D),4)*b2*b2;
 		}
 		void next() {
 			auto &a = cur.a, &b1 = cur.b1, &b2 = cur.b2, &c = cur.c;
