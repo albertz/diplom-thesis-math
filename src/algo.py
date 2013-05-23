@@ -489,6 +489,12 @@ def _check_eisenstein_series_D3_weight6(vs, B_cF):
 		raise
 	return True
 
+
+def _extra_check_on_herm_superspace(vs, D, HermWeight, B_cF):
+	if D == -3 and HermWeight == 6:
+		assert _check_eisenstein_series_D3_weight6(vs=vs, B_cF=B_cF)
+
+
 def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsion):
 	"""
 	This goes through all the cusps and compares the space given by `(f|R)[S]`
@@ -574,6 +580,11 @@ def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsi
 			herm_modform_fe_expannsion_Ci_module = herm_modform_fe_expannsion_Ci.column_module()
 			herm_modform_fe_expannsion_Ci_module += M_R[i].right_kernel()
 
+			_extra_check_on_herm_superspace(
+				vs=herm_modform_fe_expannsion_Ci_module,
+				D=D, B_cF=calc.B_cF, HermWeight=HermWeight
+			)
+
 			herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_Ci_module )
 			print "power", i, merged.dimension(), herm_modform_fe_expannsion_Ci_module.dimension(), \
 				current_dimension, herm_modform_fe_expannsion.dimension()
@@ -657,6 +668,11 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 		M_S_right_kernel = M_S.right_kernel()
 		verbose("dimension of M_S right kernel: %i" % M_S_right_kernel.dimension())
 		herm_modform_fe_expannsion_S_module += M_S_right_kernel
+
+		_extra_check_on_herm_superspace(
+			vs=herm_modform_fe_expannsion_S_module,
+			D=D, B_cF=B_cF, HermWeight=HermWeight
+		)
 
 		verbose("intersecting herm_modform_fe_expannsion...")
 		herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S_module )
