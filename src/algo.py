@@ -518,8 +518,8 @@ def _check_eisenstein_series_D3_weight6(vs, B_cF):
 
 
 def _extra_check_on_herm_superspace(vs, D, HermWeight, B_cF):
-	if D == -3 and HermWeight == 6:
-		_check_eisenstein_series_D3_weight6(vs=vs, B_cF=B_cF)
+	#if D == -3 and HermWeight == 6:
+	#	_check_eisenstein_series_D3_weight6(vs=vs, B_cF=B_cF)
 	pass
 
 
@@ -703,20 +703,19 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 				D=D, B_cF=B_cF, HermWeight=HermWeight
 			)
 		except Exception:
-			print "Warning: extra check failed. ignoring..."
-			#print "restriction_fe_expansions =", restriction_fe_expansions
-			#print "M_S_right_kernel =", M_S_right_kernel
-			#print "herm_modform_fe_expannsion_S_module =", herm_modform_fe_expannsion_S_module
-			#raise
-		else:
-			verbose("intersecting herm_modform_fe_expannsion...")
-			herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S_module )
-			current_dimension = herm_modform_fe_expannsion.dimension()
-			verbose("current dimension: %i, wanted: %i" % (current_dimension, dim))
-			assert current_dimension >= dim
+			print "restriction_fe_expansions =", restriction_fe_expansions
+			print "M_S_right_kernel =", M_S_right_kernel
+			print "herm_modform_fe_expannsion_S_module =", herm_modform_fe_expannsion_S_module
+			raise
 
-			if dim == current_dimension:
-				break
+		verbose("intersecting herm_modform_fe_expannsion...")
+		herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S_module )
+		current_dimension = herm_modform_fe_expannsion.dimension()
+		verbose("current dimension: %i, wanted: %i" % (current_dimension, dim))
+		assert current_dimension >= dim
+
+		if dim == current_dimension:
+			break
 
 		herm_modform_fe_expannsion = _intersect_modform_cusp_info(
 			calc=calc, S=S, l=l, precLimit=precLimit,
