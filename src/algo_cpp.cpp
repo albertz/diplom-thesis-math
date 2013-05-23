@@ -199,7 +199,10 @@ struct PrecisionF {
 			// we are always safe that we don't miss any values. Of course,
 			// we must still check for validity because we will get invalid values.
 			// 4b1^2 - 4(-D)|b1b2| = 4|b1| (|b1| - (-D)|b2|).
-			// This is always strongly monotonly increasing and sign-independent -> thus we can iterate.
+			// (-D)(1-D)b2^2 - 4(-D)|b1b2| = (-D)|b2| ((1-D)|b2| - 4|b1|).
+			// This is also sign-independent.
+			// Thus, when we increase b1 or b2 and have a,c fixed, the right term
+			// will also increase and we will hit the limit at some point.
 			return 4*(-F.D)*a*c >= 4*b1*b1 - 4*(-F.D)*abs(b1*b2) + (-F.D)*(1-F.D)*b2*b2;
 		}
 		void next() {
