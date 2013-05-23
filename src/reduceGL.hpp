@@ -80,7 +80,7 @@ inline void reduce_GL(M2T_Odual matrix, int D, struct hermitian_form_with_charac
 	 
 	 INPUT:
 	 `s` -- A tuple `(a, b1, b2, c)`; We set `b = b1 / \sqrt{D} + b2 (1 + \sqrt{D})/2`.
-	 `D` -- An negative integer; The fundamental discriminant of the underlying;
+	 `D` -- An negative integer; The fundamental discriminant of the underlying
 	 imaginary quadratic number field.
 	 
 	 OUTPUT:
