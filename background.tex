@@ -55,7 +55,10 @@ the \defword{real} part and
 the \defword{imaginary} part of $Z$ and we have $Z = \Re(Z) + i \Im(Z)$.
 Note that we usually have $\Re(Z),\Im(Z) \not\in \M_n(\R)$ but we have $\Re(Z),\Im(Z) \in \Her_n(\C)$.
 
-We say that some function $f \colon \mathcal{A} \rightarrow \mathcal{B}$ with $\mathcal{A} \subseteq \M_n(R)$, $\mathcal{B} \subseteq R$ is \defword{$k$-invariant} under some $\mathcal{X} \subseteq \M_n(R)$ where $\mathcal{A}[\mathcal{X}] \subseteq \mathcal{A}$ if and only if $\det(U)^k f(T[U]) = f(T)$ for all $T \in \mathcal{A}$, $U \in \mathcal{X}$.
+We say that some function $f \colon \mathcal{A} \rightarrow \mathcal{B}$ with $\mathcal{A} \subseteq \M_n(R)$, $\mathcal{B} \subseteq R$ is \defword{$k$-invariant} under some $\mathcal{X} \subseteq \M_n(R)$ where $\mathcal{A}[\mathcal{X}] := \Set{A[X] \in \mathcal{A}}{X \in \mathcal{X}} \subseteq \mathcal{A}$ if and only if
+\[ \det(U)^k f(T[U]) = f(T)$ for all $T \in \mathcal{A}$, $U \in \mathcal{X} . \]
+We write
+\[ \invar{\left(\mathcal{A}^\mathcal{B}\right)}{\mathcal{X}} := \Set{f \in \mathcal{A}^\mathcal{B}}{\text{$f$ is $k$-invariant under $\mathcal{X}$}} .\]
 
 %Let $S$ be a set with $G$-action. Then the set of $G$-invariants $S^G$ is the set of all $s \in S$ satisfying $g s = s$ for all $G$.  We can equip the set of functions $\F \rightarrow \C$ with the action
 %$( g f ) (T) = det(g)^k f( T[g] )$  % I'm not sure about the sign of $k$, even though this doesn't matter.
