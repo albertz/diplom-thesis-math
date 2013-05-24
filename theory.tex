@@ -212,13 +212,19 @@ For example\footnote{This example was calculated with the code at \cite{Zeyer13G
 Because we want $a \in \Q^\F$ to be a Fourier expansions of Hermitian modular forms, we can assume that $a$ is invariant under $\GL_2(\curlO)$. This means that we have
 \[ \det(U)^k a(T[U]) = a(T) \quad \forall\ U \in \GL_2(\curlO) , \]
 where $k$ is the weight of the Hermitian modular forms.
-In our algorithm we just want to look at $\invar{\Q^\F}{\GL_2(\curlO)}$ which are all the Fourier expansions which satisfy this invariation.
-For $T_1, T_2 \in \F$, define the equivalence relation
+This is the set $\invar{\Q^\F}{\GL_2(\curlO)}$, i.e. all the Fourier expansions which satisfy this invariation. In our algorithm, we can work with that set instead if we want to calculate Hermitian modular forms.
+
+Let us develop a basis of $\invar{\Q^\F}{\GL_2(\curlO)}$: For $T_1, T_2 \in \F$, define the equivalence relation
 \[ T_1 \sim_{\GL_2(\curlO)} T_2 \quad \Leftrightarrow \quad \exists\ U \in \GL_2(\curlO) \colon\ T_1[U] = T_2. \]
 Thus, we can identify a basis of $\invar{\Q^\F}{\GL_2(\curlO)}$ by $\F / { \sim_{\GL_2(\curlO)} }$.
 We use the same invariation notation as for $\Q^\F$ and write
 \[ \invarF{\F}{\GL_2(\curlO)} := \F / { \sim_{\GL_2(\curlO)} } . \]
-%
+We identify the elements in $\invarF{\F}{\GL_2(\curlO)}$ by reduced matrices%
+\footnote{%
+This is in some sense of "reduced". Details can be seen in the source code at \cite{Zeyer13Github}. There is an algorithm which, for a given matrix $T \in \F$, calculates a reduced matrix $\tilde{T}$ and a determinant character $det$ such that $\tilde{T}[U] = T$ for some $U \in \GL_2(\curlO)$ with $\det(U) = e^{2 \pi i \cdot det / {\#(\curlO^\times)}}$.
+}
+in $\F$. Then, we have $\invar{\F}{\GL_2(\curlO)} \subseteq \F$.
+
 Restricting the elements in $\F$ by the $\GL_2(\curlO)$-invariation makes the set $\invar{\F}{\GL_2(\curlO)} \subseteq \F$ much smaller and better to handle in computer calculations.
 For example,
 \begin{align*}
@@ -236,7 +242,8 @@ From \cref{remark:restricted-by-S} and \cref{lemma:fprecisionlimit}, we have
 for $k \in \N_0, k < \F(S)$.
 
 Let $v = (v_1, \dots, v_n) \in \Q^n$ be a vector in the base of reduced indices of $\F$ as described in \cref{remark:reducedCurlF} with $n = \# \left( \invar{\F}{\GL_2(\curlO)} \right)$. And let
-\[ \invar{\F}{\GL_2(\curlO)} = (T_1, \dots, T_n). \]
+\[ \invar{\F}{\GL_2(\curlO)} = (T_1, \dots, T_n) \]
+where $T_i$ are the reduced matrixes in $\F$.
 
 We have
 \[ \det(U)^k a(T_i[U]) = a(T_i) = v_i \]
