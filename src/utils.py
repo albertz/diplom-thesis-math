@@ -474,6 +474,12 @@ def test_solveR():
 	S = matrix(2, 2, [s,t,t.conjugate(),u])
 	gamma,R,tM = solveR(M, S, space)
 
+	a,b,c,d = 2,-1,3,-1
+	s,t,u = 4, QQ(-0.5) * space.Droot + QQ(5/2.0), 4
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S, space)
+
 	return gamma,R,tM
 
 def _curlO_matrix_denom(mat, D):
