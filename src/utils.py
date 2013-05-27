@@ -1,4 +1,5 @@
 from sage.calculus.functional import simplify
+from sage.functions.other import floor
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
 from sage.rings.integer import Integer
@@ -213,32 +214,7 @@ class CurlO:
 		# Later, we can do better with QuadraticForm(...). (TODO)
 		# Also, read here: http://www.fen.bilkent.edu.tr/~franz/publ/survey.pdf
 
-		a,b = map(self.maxorder, [a,b])
-		# r = a.mod(b)
-		# q = (a - r) / b
-		# assert q*b + r == a
-		# euc_r, euc_b = map(self.euclidean_func, [r, b])
-		# assert euc_r < euc_b, "%r < %r; r=%r, b=%r" % (euc_r, euc_b, r, b)
-		# #if _simplify(abs(self.field(b)) - abs(self.field(r))) > 0:
-		# return q,r
-
 		if b == 0: raise ZeroDivisionError
-
-		def factors(x):
-			fs = []
-			for q,e in x.factor():
-				for i in range(e):
-					fs += [q]
-			fs.sort(cmp=lambda x,y: cmp(*map(self.euclidean_func, [x, y])))
-			return fs
-
-		factors_a,factors_b = [factors(x) for x in [a,b]]
-		for q in factors_b:
-			if q in factors_a:
-				factors_a.remove(q)
-
-
-
 		a1,a2 = self.as_tuple_b(a)
 		b1,b2 = self.as_tuple_b(b)
 
@@ -253,14 +229,17 @@ class CurlO:
 		qq2 = (-a1*b2 + a2*b1) / Bdet
 		assert _simplify(self.from_tuple_b(qq1,qq2) * b - a) == 0
 
-		q1,q2 = int(round(qq1)), int(round(qq2)) # not sure on this
+		# not sure on this
+		q1,q2 = int(round(qq1)), int(round(qq2))
+		if (q1-qq1)*(q2-qq2) < 0:
+			q1,q2 = int(floor(qq1)), int(floor(qq2))
 		#print a1,a2,b1,b2,qq1,qq2,q1,q2
 		q = self.from_tuple_b(q1,q2)
 		# q * b + r == a
 		r = _simplify(a - q * b)
-		# Note that this works for -D < 5.27. See the text.
+		# Note that this works for -D < 5.27. See the text: 13.5.13,divmod
 		euc_r, euc_b = map(self.euclidean_func, [r, b])
-		assert euc_r < euc_b, "%r < %r; r=%r, b=%r" % (euc_r, euc_b, r, b)
+		assert euc_r < euc_b, "%r < %r; r=%r, b=%r, a=%r, b=%r" % (euc_r, euc_b, r, b, a, b)
 		return q,r
 	def euclidean_func(self, x):
 		return self.field(x).abs()
