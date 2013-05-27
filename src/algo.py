@@ -583,7 +583,7 @@ def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsi
 		# CyclotomicField(l / prod(l.prime_divisors())) should also work.
 
 		# Transform to same denom.
-		denom_lcm = lcm(ell_R_denom, ell_M_denom)
+		denom_lcm = int(lcm(ell_R_denom, ell_M_denom))
 		ell_M = _addRows(ell_M, denom_lcm / ell_M_denom)
 		M_R = [_addRows(M_R_i, denom_lcm / ell_R_denom) for M_R_i in M_R]
 		ell_R_denom = ell_M_denom = denom_lcm
