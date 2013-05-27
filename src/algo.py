@@ -11,7 +11,7 @@ from sage.rings.integer import Integer
 from sage.modules.free_module_element import vector
 from sage.rings.infinity import Infinity
 from sage.structure.sage_object import SageObject
-from sage.rings.arith import xgcd as orig_xgcd
+from sage.rings.arith import xgcd as orig_xgcd, lcm
 from sage.rings.number_field.number_field import QQ, ZZ, CyclotomicField
 from sage.rings.power_series_ring import PowerSeriesRing
 from sage.symbolic.ring import SymbolicRing
@@ -302,7 +302,7 @@ def _takeEveryNRow(mat, n):
 
 	"""
 
-	assert mat.nrows() % n == 0
+	assert mat.nrows() % n == 0, "%i, %i" % (mat.nrows(), n)
 	newm = matrix(mat.base_ring(), mat.nrows() / n, mat.ncols())
 	for i in range(mat.nrows()):
 		if i % n == 0:
@@ -312,6 +312,25 @@ def _takeEveryNRow(mat, n):
 				return None
 	return newm
 
+
+def _addRows(mat, n):
+	"""
+	INPUT:
+
+	- `mat` -- a matrix.
+	- `n` -- an integer.
+
+	OUTPUT:
+
+	- A matrix with `mat.nrows() * n` rows. Every i*n-th row is the
+	  i-th row of `mat`, every other row is zero.
+	"""
+
+	newm = matrix(mat.base_ring(), mat.nrows() * n, mat.ncols())
+	for i in range(newm.nrows()):
+		if i % n == 0:
+			newm[i] = mat[i / n]
+	return newm
 
 
 def test_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, testSCount = 10):
@@ -559,16 +578,16 @@ def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsi
 
 		ce = cuspExpansions(level=l, weight=2*HermWeight, prec=ce_prec)
 		ell_M_denom, ell_M = ce.expansion_at(SL2Z(M))
+		print "ell_M_denom, ell_M nrows:", ell_M_denom, ell_M.nrows()
 		ell_M_order = ell_R_order # not sure here. just try the one from R. toCyclPowerBase would fail if this doesn't work
 		# CyclotomicField(l / prod(l.prime_divisors())) should also work.
 
-		# Not sure if this is always the case but seems so.
-		assert ell_R_denom >= ell_M_denom
-		if ell_R_denom > ell_M_denom:
-			assert ell_R_denom % ell_M_denom == 0
-			M_R = [_takeEveryNRow(M_R_i, ell_R_denom / ell_M_denom) for M_R_i in M_R]
-			assert all([M_R_i is not None for M_R_i in M_R])
-			ell_R_denom = ell_M_denom
+		# Transform to same denom.
+		denom_lcm = lcm(ell_R_denom, ell_M_denom)
+		ell_M = _addRows(ell_M, denom_lcm / ell_M_denom)
+		M_R = [_addRows(M_R_i, denom_lcm / ell_R_denom) for M_R_i in M_R]
+		ell_R_denom = ell_M_denom = denom_lcm
+		print "new denom:", denom_lcm
 		assert ell_R_denom == ell_M_denom
 
 		# ell_M rows are the elliptic FE. M_R[i] columns are the elliptic FE.
