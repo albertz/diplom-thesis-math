@@ -202,6 +202,7 @@ class CurlO:
 		self.D = D
 		assert (D*D - D) % 4 == 0
 		self.field = QuadraticField(D)
+		self.maxorder = self.field.maximal_order()
 		self.Droot = self.field(D).sqrt()
 		self.DrootHalf_coordinates_in_terms_of_powers = (self.Droot / 2).coordinates_in_terms_of_powers()
 	def divmod(self, a, b):
@@ -212,7 +213,32 @@ class CurlO:
 		# Later, we can do better with QuadraticForm(...). (TODO)
 		# Also, read here: http://www.fen.bilkent.edu.tr/~franz/publ/survey.pdf
 
+		a,b = map(self.maxorder, [a,b])
+		# r = a.mod(b)
+		# q = (a - r) / b
+		# assert q*b + r == a
+		# euc_r, euc_b = map(self.euclidean_func, [r, b])
+		# assert euc_r < euc_b, "%r < %r; r=%r, b=%r" % (euc_r, euc_b, r, b)
+		# #if _simplify(abs(self.field(b)) - abs(self.field(r))) > 0:
+		# return q,r
+
 		if b == 0: raise ZeroDivisionError
+
+		def factors(x):
+			fs = []
+			for q,e in x.factor():
+				for i in range(e):
+					fs += [q]
+			fs.sort(cmp=lambda x,y: cmp(*map(self.euclidean_func, [x, y])))
+			return fs
+
+		factors_a,factors_b = [factors(x) for x in [a,b]]
+		for q in factors_b:
+			if q in factors_a:
+				factors_a.remove(q)
+
+
+
 		a1,a2 = self.as_tuple_b(a)
 		b1,b2 = self.as_tuple_b(b)
 
@@ -233,8 +259,11 @@ class CurlO:
 		# q * b + r == a
 		r = _simplify(a - q * b)
 		# Note that this works for -D < 5.27. See the text.
-		assert _simplify(abs(b) - abs(r)) > 0, "|%r| < |%r|" % (r, b)
+		euc_r, euc_b = map(self.euclidean_func, [r, b])
+		assert euc_r < euc_b, "%r < %r; r=%r, b=%r" % (euc_r, euc_b, r, b)
 		return q,r
+	def euclidean_func(self, x):
+		return self.field(x).abs()
 	def divides(self, a, b):
 		q,r = self.divmod(a, b)
 		return r == 0
@@ -254,10 +283,22 @@ class CurlO:
 			B2 = (self.D + self.Droot) / 2
 			return d * B2, s, t
 
-		abs_a = _simplify(abs(a))
-		abs_b = _simplify(abs(b))
+		# a,b = map(self.field, [a,b])
+		# gcd = 1
+		# factors_a,factors_b = [dict(list(x.factor())) for x in [a,b]]
+		# for q in factors_a.keys():
+		# 	if q in factors_b:
+		# 		e = min(factors_a[q], factors_b[q])
+		# 		factors_a[q] -= e
+		# 		factors_b[q] -= e
+		# 		gcd *= q * e
+
+		a,b = map(self.maxorder, [a,b])
+
+		euc_a = self.euclidean_func(a)
+		euc_b = self.euclidean_func(b)
 		#assert abs_a != abs_b, "%r" % ((a,b,abs_a,abs_b),)
-		if abs_a < abs_b:
+		if euc_a < euc_b:
 			d,s,t = self.xgcd(b, a)
 			return d,t,s
 		# We have abs_b <= abs_a now.
