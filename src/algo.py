@@ -101,11 +101,15 @@ def calcMatrixTrans(calc, R):
 		coords = Kcoords(zeta**l)
 		for i,m in enumerate(coords):
 			new_ms[i] += ms[l] * m
+	ms = new_ms
+
+	denom = calc.matrixRowDenomTrans
+	denom, ms = _reduceNRow(denom=denom, mats=ms)
 
 	if time() - t > 2.0:
 		print "calculation of matrixTrans took %f secs" % (time() - t)
-		matrixTransCache[cacheIdx] = calc.matrixRowDenomTrans, order, new_ms
-	return calc.matrixRowDenomTrans, order, new_ms
+		matrixTransCache[cacheIdx] = denom, order, ms
+	return denom, order, ms
 
 
 cuspExpansionsCache = PersistentCache("cuspExpansions.cache.sobj")
@@ -312,6 +316,36 @@ def _takeEveryNRow(mat, n):
 				return None
 	return newm
 
+
+def _reduceNRow(denom, mats):
+	"""
+	INPUT:
+
+	- `denom` -- an integer. it's a multiple of the nrows() of the matrices in `mats`.
+
+	- `mats` -- a list of matrices of the same size.
+
+	OUTPUT:
+
+	- `(denom_new, mats_new)` where `denom_new` is a new integer which divides `denom`
+	  and `mats_new` is a list of matrices of the same size, where
+
+	      mats_new[0].nrows() == mats[0].nrows() / (denom / denom_new) .
+
+	  It uses `_takeEveryNRow()` for the reduction of rows.
+	"""
+
+	for (p,e) in Integer(denom).factor():
+		assert e >= 0
+		while e > 0:
+			mats_new = [_takeEveryNRow(m, p) for m in mats]
+			if all([m is not None for m in mats_new]):
+				mats = mats_new
+				denom = denom / p
+				e -= 1
+			else:
+				break
+	return denom, mats
 
 def _addRows(mat, n):
 	"""
