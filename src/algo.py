@@ -338,6 +338,7 @@ def _reduceNRow(denom, mats):
 	for (p,e) in Integer(denom).factor():
 		assert e >= 0
 		while e > 0:
+			if mats[0].nrows() % p != 0: break
 			mats_new = [_takeEveryNRow(m, p) for m in mats]
 			if all([m is not None for m in mats_new]):
 				mats = mats_new
