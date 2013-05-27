@@ -342,7 +342,7 @@ def _reduceNRow(denom, mats):
 			mats_new = [_takeEveryNRow(m, p) for m in mats]
 			if all([m is not None for m in mats_new]):
 				mats = mats_new
-				denom = denom / p
+				denom = int(denom / p)
 				e -= 1
 			else:
 				break
