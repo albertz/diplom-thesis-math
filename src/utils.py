@@ -221,6 +221,14 @@ def persistent_cache(name, index=None, timelimit=2):
 	return decorator
 
 
+def convert_old_cache(name):
+	old_cache_fn = MyDir + "/" + name + ".cache.sobj"
+	assert os.path.exists(old_cache_fn)
+	d = load(old_cache_fn)
+	assert isinstance(d, dict)
+	new_cache = PersistentCache(name=name)
+	for key,value in d.items():
+		new_cache[key] = value
 
 
 def _simplify(a):
