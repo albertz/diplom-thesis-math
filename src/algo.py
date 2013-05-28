@@ -615,7 +615,7 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 
 		for calcfunc in calcfuncs:
 			newspace = calcfunc()
-			verbose("intersecting %r..." % calc)
+			verbose("intersecting %r..." % calcfunc)
 			herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( newspace )
 			current_dimension = herm_modform_fe_expannsion.dimension()
 			verbose("current dimension: %i, wanted: %i" % (current_dimension, dim))
