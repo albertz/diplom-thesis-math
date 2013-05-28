@@ -24,17 +24,6 @@ from utils import _toInt, _curlO_matrix_denom # seems the above does not import 
 import cusp_expansions
 
 
-def test_algo_calcMatrix():
-	calc = C.Calc()
-	calc.init(D = -4, HermWeight = 10)
-
-	calc.getNextS()
-	calc.getNextS()
-
-	calc.calcMatrix()
-	return calc.getMatrix()
-
-
 
 
 @persistent_cache(filename="matrixTrans.cache.sobj")
