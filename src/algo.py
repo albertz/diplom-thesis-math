@@ -26,7 +26,7 @@ import cusp_expansions
 
 
 
-@persistent_cache(filename="matrixTrans.cache.sobj")
+@persistent_cache(name="matrixTrans")
 def _calcMatrixTrans(calc, tS, tT, lS, lT):
 	try:
 		ms = calc.calcMatrixTrans(tS, tT, lS, lT)
@@ -99,7 +99,7 @@ def calcMatrixTrans(calc, R):
 	return _calcMatrixTrans(calc, tS, tT, lS, lT)
 
 
-cuspExpansionsCache = PersistentCache("cuspExpansions.cache.sobj")
+cuspExpansionsCache = PersistentCache(name="cuspExpansions")
 def cuspExpansions(level, weight, prec):
 	"""
 	A cached version of `cusp_expansions.ModularFormsCuspExpansions._for_modular_forms()`.
@@ -113,7 +113,8 @@ def cuspExpansions(level, weight, prec):
 	cuspExpansionsCache[cacheIdx] = prec, ce
 	return ce
 
-ellipBaseMatrixCache = PersistentCache("ellipBaseMatrix.cache.sobj") # level,weight -> mat,prec
+
+ellipBaseMatrixCache = PersistentCache(name="ellipBaseMatrix") # level,weight -> mat,prec
 def getElliptModFormsBasisMatrix(level, weight, precision):
 	"""
 	Calculates the Echelon basis matrix of the Elliptic modular forms space.
@@ -155,7 +156,7 @@ def getElliptModFormsBasisMatrix(level, weight, precision):
 	return mf.dimension(), cut_matrix
 
 
-@persistent_cache(filename="restrMatrix.cache.sobj")
+@persistent_cache(name="restrMatrix")
 def calcRestrictMatrix(calc):
 	"""
 	Calculates the matrix of the linear map `f \mapsto f[S]`

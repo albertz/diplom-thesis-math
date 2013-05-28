@@ -1,4 +1,6 @@
 from time import time
+import os
+import base64
 from sage.calculus.functional import simplify
 from sage.functions.other import floor
 from sage.matrix.constructor import matrix
@@ -20,6 +22,9 @@ import better_exchook
 # our own verbose function because I just want our msgs, not other stuff
 def verbose(msg):
 	print msg
+
+
+MyDir = os.path.dirname(__file__)
 
 
 # It seems that Sage load/save uses the standard pickle module.
@@ -164,39 +169,35 @@ def load(filename):
 class PersistentCache:
 	def __init__(self, name):
 		self.name = name
-		self.dict = {}
-		self.load()
-	def __getitem__(self, item):
-		return self.dict[item]
-	def __setitem__(self, key, value):
-		self.dict[key] = value
-		self.save()
-	def __contains__(self, item):
-		return item in self.dict
-	def load(self):
+	def _key_repr(self, key):
+		return base64.urlsafe_b64encode(key)
+	def _filename_for_key(self, key):
+		return MyDir + "/cache/" + self.name + "_" + self._key_repr(key) + ".cache"
+	def __getitem__(self, key):
 		try:
-			self.dict = load(self.name)
+			return load(self._filename_for_key(key))
 		except IOError:
-			pass
-		except Exception:
+			raise KeyError
+		except Exception as exc:
 			better_exchook.better_exchook(*sys.exc_info())
+			if isinstance(exc, KeyError): raise Exception # no KeyError exception fall-through
 			raise
-		else:
-			assert isinstance(self.dict, dict)
-	def save(self):
+	def __setitem__(self, key, value):
 		try:
-			save(self.dict, self.name)
+			save(value, self._filename_for_key(key))
 		except Exception:
-			print self.name, self.dict
+			print self.name, key
 			raise
+	def __contains__(self, key):
+		return os.path.exists(self._filename_for_key(key))
 
 
 
-def persistent_cache(filename, index=None, timelimit=2):
+def persistent_cache(name, index=None, timelimit=2):
 	def decorator(func):
 		from functools import wraps
 		import algo_cython as C
-		cache = PersistentCache(filename)
+		cache = PersistentCache(name=name)
 		@wraps(func)
 		def cached_function(*args):
 			cacheidx = ()
