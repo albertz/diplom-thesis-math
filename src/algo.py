@@ -599,7 +599,7 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 	def calc_cusp_info():
 		precLimit = calcPrecisionDimension(B_cF=B_cF, S=S)
 		return modform_cusp_info(calc=calc, S=S, l=l, precLimit=precLimit)
-	calcs = [calc_restr_info, calc_cusp_info]
+	calcfuncs = [calc_restr_info, calc_cusp_info]
 
 	# Iterate S \in Mat_2^T(\curlO), S > 0.
 	while True:
@@ -612,8 +612,8 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 		curlS_denoms.add(l)
 		verbose("trying S={0}, det={1}".format(S, l))
 
-		for calc in calcs:
-			newspace = calc()
+		for calcfunc in calcfuncs:
+			newspace = calcfunc()
 			verbose("intersecting %r..." % calc)
 			herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( newspace )
 			current_dimension = herm_modform_fe_expannsion.dimension()
