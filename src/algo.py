@@ -505,6 +505,7 @@ def modform_restriction_info(calc, S, l):
 
 	D = calc.D
 	HermWeight = calc.HermWeight
+	B_cF = calc.B_cF
 	reducedCurlFSize = calc.matrixColumnCount
 	herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
 
