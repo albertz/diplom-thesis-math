@@ -499,6 +499,63 @@ def modform_cusp_info(calc, S, l, precLimit):
 	return herm_modform_fe_expannsion
 
 
+def modform_restriction_info(calc, S, l):
+	assert l == S.det()
+	assert list(calc.curlS) == [S]
+
+	D = calc.D
+	HermWeight = calc.HermWeight
+	reducedCurlFSize = calc.matrixColumnCount
+	herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
+
+	# Step 4. Calculate restriction matrix. Via calc.calcMatrix() (algo_cpp.cpp).
+	# Note that calcMatrix() depends on the current internal calc.curlS set
+	# and on the internal calc.curlF. curlF only depends on B_cF which is not changed here.
+	verbose("calc restriction matrix...")
+	M_S = calcRestrictMatrix(calc) # matrix over integer ring
+	M_S = M_S.matrix_over_field() # matrix over rational field
+
+	# The maximum precision of Elliptic modular forms is given in
+	# the text by \cF(S). This is also the number of rows of M_S.
+	precLimit = M_S.nrows()
+
+	# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
+	verbose("get elliptic modform space with precision %i ..." % precLimit)
+	ell_dim, fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
+	if fe_expansion_matrix_l.rank() < ell_dim:
+		verbose("ignoring ell modforms because matrix is not expressive enough")
+		return herm_modform_fe_expannsion
+
+	ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
+	verbose("dim of elliptic modform space: %i" % ell_modform_fe_expansions_l.dimension())
+
+	verbose("calc M_S_module...")
+	M_S_module = M_S.column_module()
+	verbose("dimension of M_S column module: %i" % M_S_module.dimension())
+	restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S_module )
+	verbose("dimension of restriction_fe_expansions: %i" % restriction_fe_expansions.dimension())
+	herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
+	herm_modform_fe_expannsion_S_module = herm_modform_fe_expannsion_S.column_module()
+	verbose("dimension of herm column module: %i" % herm_modform_fe_expannsion_S_module.dimension())
+	verbose("calc M_S_right_kernel...")
+	M_S_right_kernel = M_S.right_kernel()
+	verbose("dimension of M_S right kernel: %i" % M_S_right_kernel.dimension())
+	herm_modform_fe_expannsion_S_module += M_S_right_kernel
+
+	try:
+		_extra_check_on_herm_superspace(
+			vs=herm_modform_fe_expannsion_S_module,
+			D=D, B_cF=B_cF, HermWeight=HermWeight
+		)
+	except Exception:
+		print "restriction_fe_expansions =", restriction_fe_expansions
+		print "M_S_right_kernel =", M_S_right_kernel
+		print "herm_modform_fe_expannsion_S_module =", herm_modform_fe_expannsion_S_module
+		raise
+
+	return herm_modform_fe_expannsion_S_module
+
+
 def herm_modform_space(D, HermWeight, B_cF=10):
 	"""
 	This calculates the vectorspace of Fourier expansions to
@@ -526,6 +583,7 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 	dim = herm_modform_space_dim(D=D, HermWeight=HermWeight)
 
 	herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
+	current_dimension = herm_modform_fe_expannsion.dimension()
 	curlS = [] # all matrices S we have visited so far
 	curlS_denoms = set() # the denominators of the visited matrices S
 
@@ -533,6 +591,15 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 	if dim == 0:
 		print "dim == 0 -> exit"
 		return
+
+	S = None
+	l = None
+	def calc_restr_info():
+		return modform_restriction_info(calc=calc, S=S, l=l)
+	def calc_cusp_info():
+		precLimit = calcPrecisionDimension(B_cF=B_cF, S=S)
+		return modform_cusp_info(calc=calc, S=S, l=l, precLimit=precLimit)
+	calcs = [calc_restr_info, calc_cusp_info]
 
 	# Iterate S \in Mat_2^T(\curlO), S > 0.
 	while True:
@@ -545,66 +612,15 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 		curlS_denoms.add(l)
 		verbose("trying S={0}, det={1}".format(S, l))
 
-		# Step 4. Calculate restriction matrix. Via calc.calcMatrix() (algo_cpp.cpp).
-		# Note that calcMatrix() depends on the current internal calc.curlS set
-		# and on the internal calc.curlF. curlF only depends on B_cF which is not changed here.
-		verbose("calc restriction matrix...")
-		M_S = calcRestrictMatrix(calc) # matrix over integer ring
-		M_S = M_S.matrix_over_field() # matrix over rational field
-
-		# The maximum precision of Elliptic modular forms is given in
-		# the text by \cF(S). This is also the number of rows of M_S.
-		precLimit = M_S.nrows()
-
-		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
-		verbose("get elliptic modform space with precision %i ..." % precLimit)
-		ell_dim, fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
-		if fe_expansion_matrix_l.rank() < ell_dim:
-			verbose("ignoring ell modforms because matrix is not expressive enough")
-		else:
-			ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
-			verbose("dim of elliptic modform space: %i" % ell_modform_fe_expansions_l.dimension())
-
-			verbose("calc M_S_module...")
-			M_S_module = M_S.column_module()
-			verbose("dimension of M_S column module: %i" % M_S_module.dimension())
-			restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S_module )
-			verbose("dimension of restriction_fe_expansions: %i" % restriction_fe_expansions.dimension())
-			herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
-			herm_modform_fe_expannsion_S_module = herm_modform_fe_expannsion_S.column_module()
-			verbose("dimension of herm column module: %i" % herm_modform_fe_expannsion_S_module.dimension())
-			verbose("calc M_S_right_kernel...")
-			M_S_right_kernel = M_S.right_kernel()
-			verbose("dimension of M_S right kernel: %i" % M_S_right_kernel.dimension())
-			herm_modform_fe_expannsion_S_module += M_S_right_kernel
-
-			try:
-				_extra_check_on_herm_superspace(
-					vs=herm_modform_fe_expannsion_S_module,
-					D=D, B_cF=B_cF, HermWeight=HermWeight
-				)
-			except Exception:
-				print "restriction_fe_expansions =", restriction_fe_expansions
-				print "M_S_right_kernel =", M_S_right_kernel
-				print "herm_modform_fe_expannsion_S_module =", herm_modform_fe_expannsion_S_module
-				raise
-
-			verbose("intersecting herm_modform_fe_expannsion...")
-			herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S_module )
+		for calc in calcs:
+			newspace = calc()
+			verbose("intersecting %r..." % calc)
+			herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( newspace )
 			current_dimension = herm_modform_fe_expannsion.dimension()
 			verbose("current dimension: %i, wanted: %i" % (current_dimension, dim))
 			assert current_dimension >= dim
-
-			if dim == current_dimension:
-				break
-
-		herm_modform_fe_expannsion = _intersect_modform_cusp_info(
-			calc=calc, S=S, l=l, precLimit=precLimit,
-			herm_modform_fe_expannsion=herm_modform_fe_expannsion)
-
-		current_dimension = herm_modform_fe_expannsion.dimension()
-		if dim == current_dimension:
-			break
+			if dim == current_dimension: break
+		if dim == current_dimension: break
 
 	# Test for some other S with other not-yet-seen denominator.
 	check_herm_modform_space(
