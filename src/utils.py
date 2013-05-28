@@ -177,7 +177,7 @@ class PersistentCache:
 		key_str = key_sstr.getvalue()
 		return base64.urlsafe_b64encode(key_str)
 	def _filename_for_key(self, key):
-		return MyDir + "/cache/" + self.name + "_" + self._key_repr(key) + ".cache"
+		return MyDir + "/cache/" + self.name + "_" + self._key_repr(key) + ".sobj"
 	def __getitem__(self, key):
 		try:
 			return load(self._filename_for_key(key))
