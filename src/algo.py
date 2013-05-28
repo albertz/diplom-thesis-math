@@ -180,7 +180,7 @@ def calcRestrictMatrix(calc):
 
 
 
-def test_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, testSCount = 10):
+def check_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, checkSCount = 10):
 	"""
 	It uses the C++ calc structure to search for additional S matrices
 	which have other denominators than those in used_curlS_denoms.
@@ -193,7 +193,7 @@ def test_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, testSCo
 	HermWeight = calc.HermWeight
 	curlS_denoms = set(used_curlS_denoms)
 
-	while testSCount > 0:
+	while checkSCount > 0:
 		calc.curlS_clearMatrices()
 		S = calc.getNextS()
 		l = S.det()
@@ -201,7 +201,7 @@ def test_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, testSCo
 		if l in curlS_denoms: continue
 
 		curlS_denoms.add(l)
-		testSCount -= 1
+		checkSCount -= 1
 		verbose("testing with S={0}, det={1}".format(S, l))
 
 		verbose("calc restriction matrix...")
@@ -215,7 +215,7 @@ def test_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, testSCo
 		ell_dim, fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
 		if fe_expansion_matrix_l.rank() < ell_dim:
 			verbose("ignoring ell modforms because matrix is not expressive enough")
-			testSCount += 1
+			checkSCount += 1
 			continue
 		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
 
@@ -607,7 +607,7 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 			break
 
 	# Test for some other S with other not-yet-seen denominator.
-	test_herm_modform_space(
+	check_herm_modform_space(
 		calc, herm_modform_space=herm_modform_fe_expannsion,
 		used_curlS_denoms=curlS_denoms
 		)
