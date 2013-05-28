@@ -8,7 +8,7 @@ from sage.structure.sage_object import SageObject
 from sage.modules.free_module_element import vector
 from sage.structure.sequence import Sequence_generic, Sequence
 from sage.rings.arith import xgcd as orig_xgcd
-from sage.rings.number_field.number_field import QQ, ZZ, QuadraticField
+from sage.rings.number_field.number_field import QQ, ZZ, QuadraticField, CyclotomicField
 from sage.symbolic.ring import SymbolicRing
 from sage.symbolic.expression import Expression
 
@@ -548,6 +548,179 @@ def _toInt(a):
 	a = ZZ(a)
 	a = int(a)
 	return a
+
+
+def takeEveryNRow(mat, n):
+	"""
+	INPUT:
+
+	- `mat` -- a matrix with `mat.nrows()` being a multiple of `n`
+
+	- `n` -- an integer
+
+	OUTPUT:
+
+	- A matrix which has only the rows [0,n,2*n,...] or the original
+	  matrix `mat` in case every other rows are zero -
+	  otherwise ``None``.
+
+	"""
+
+	assert mat.nrows() % n == 0, "%i, %i" % (mat.nrows(), n)
+	newm = matrix(mat.base_ring(), mat.nrows() / n, mat.ncols())
+	for i in range(mat.nrows()):
+		if i % n == 0:
+			newm[i / n] = mat[i]
+		else:
+			if mat[i] != 0:
+				return None
+	return newm
+
+
+def toLowerCyclBase(ms, old_order, new_order):
+	"""
+	Let's
+
+		K_old = CyclotomicField(old_order) ,
+		K_new = CyclotomicField(new_order) .
+
+	We transform the matrices in power base from `K_old` to `K_new`.
+
+	The way this is implemented works only if `old_order`
+	is a multiple of `new_order`.
+
+	INPUT:
+
+	- `ms` -- A list of matrices where every matrix is a factor to
+	          `zeta_old**i` where `zeta_old = K_old.gen()`
+	          and `len(ms) == K_old.degree()`.
+
+	- `old_order` -- The order of `K_old`.
+
+	- `new_order` -- The order of `K_new`.
+
+	OUTPUT:
+
+	- A list of matrices `new_ms` where every matrix is a factor to
+	  `zeta_new**i` where `zeta_new = K_new.gen()` and
+	  `len(new_ms) == K_new.degree()`.
+
+	"""
+
+	assert isinstance(ms, list) # list of matrices
+	assert old_order % new_order == 0
+
+	K_old = CyclotomicField(old_order)
+	old_degree = int(ZZ(K_old.degree()))
+	K_new = CyclotomicField(new_order)
+	new_degree = int(ZZ(K_new.degree()))
+	assert old_degree % new_degree == 0
+	assert len(ms) == old_degree
+
+	new_ms = [None] * new_degree
+	for i in range(old_degree):
+		i2,rem = divmod(i, old_degree / new_degree)
+		if rem == 0:
+			new_ms[i2] = ms[i]
+		else:
+			if ms[i] != 0:
+				return None
+	return new_ms
+
+
+def toCyclPowerBase(M, order):
+	"""
+	Let's
+
+		K = CyclotomicField(order).
+
+	INPUT:
+
+	- `M` -- A matrix over the cyclomotic field `K`.
+
+	- `order` -- The order of `K`, the cyclomotic field.
+
+	OUTPUT:
+
+	- A list of matrices `ms` in power base where every matrix
+	  is a factor to `zeta**i` where `zeta = K.gen()`
+	  and `len(ms) == K.degree()`.
+
+	"""
+
+	K = CyclotomicField(order)
+	zeta = K.gen()
+	Kcoords = zeta.coordinates_in_terms_of_powers()
+
+	assert len(K.power_basis()) == K.degree()
+	ms = [matrix(QQ,M.nrows(),M.ncols()) for i in range(K.degree())]
+	for y in range(M.nrows()):
+		for x in range(M.ncols()):
+			try:
+				v_ = M[y,x]
+				v = K(v_)
+				coords = Kcoords(v)
+			except TypeError:
+				print "type of {1} ({2}) is not valid in Cyclomotic field of order {0}".format(order, M[y,x], type(M[y,x]))
+				raise
+			assert len(coords) == K.degree()
+			for i in range(K.degree()):
+				ms[i][y,x] = coords[i]
+	return ms
+
+
+
+def reduceNRow(denom, mats):
+	"""
+	INPUT:
+
+	- `denom` -- an integer. it's a multiple of the nrows() of the matrices in `mats`.
+
+	- `mats` -- a list of matrices of the same size.
+
+	OUTPUT:
+
+	- `(denom_new, mats_new)` where `denom_new` is a new integer which divides `denom`
+	  and `mats_new` is a list of matrices of the same size, where
+
+	      mats_new[0].nrows() == mats[0].nrows() / (denom / denom_new) .
+
+	  It uses `takeEveryNRow()` for the reduction of rows.
+	"""
+
+	for (p,e) in Integer(denom).factor():
+		assert e >= 0
+		while e > 0:
+			if mats[0].nrows() % p != 0: break
+			mats_new = [takeEveryNRow(m, p) for m in mats]
+			if all([m is not None for m in mats_new]):
+				mats = mats_new
+				denom = int(denom / p)
+				e -= 1
+			else:
+				break
+	return denom, mats
+
+
+def addRows(mat, n):
+	"""
+	INPUT:
+
+	- `mat` -- a matrix.
+	- `n` -- an integer.
+
+	OUTPUT:
+
+	- A matrix with `mat.nrows() * n` rows. Every i*n-th row is the
+	  i-th row of `mat`, every other row is zero.
+	"""
+
+	newm = matrix(mat.base_ring(), mat.nrows() * n, mat.ncols())
+	for i in range(newm.nrows()):
+		if i % n == 0:
+			newm[i] = mat[i / n]
+	return newm
+
 
 
 def reloadC():
