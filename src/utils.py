@@ -24,7 +24,8 @@ def verbose(msg):
 	print msg
 
 
-MyDir = os.path.dirname(__file__)
+MyDir = os.path.dirname(__file__) or os.getcwd()
+MyDir = os.path.abspath(MyDir)
 
 
 # It seems that Sage load/save uses the standard pickle module.
