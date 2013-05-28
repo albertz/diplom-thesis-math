@@ -171,7 +171,11 @@ class PersistentCache:
 	def __init__(self, name):
 		self.name = name
 	def _key_repr(self, key):
-		return base64.urlsafe_b64encode(key)
+		from StringIO import StringIO
+		key_sstr = StringIO()
+		Pickler(key_sstr).dump(key)
+		key_str = key_sstr.getvalue()
+		return base64.urlsafe_b64encode(key_str)
 	def _filename_for_key(self, key):
 		return MyDir + "/cache/" + self.name + "_" + self._key_repr(key) + ".cache"
 	def __getitem__(self, key):
