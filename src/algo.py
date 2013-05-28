@@ -587,6 +587,7 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 	cacheIdx = (D, HermWeight, B_cF)
 	if cacheIdx in hermModformSpaceCache:
 		lastS, herm_modform_fe_expannsion = hermModformSpaceCache[cacheIdx]
+		verbose("resume at S=%r" % lastS)
 	else:
 		lastS = None
 		herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
