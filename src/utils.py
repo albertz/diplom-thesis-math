@@ -1,6 +1,5 @@
 from time import time
 import os
-import base64
 from sage.calculus.functional import simplify
 from sage.functions.other import floor
 from sage.matrix.constructor import matrix
@@ -175,27 +174,34 @@ class PersistentCache:
 		key_sstr = StringIO()
 		Pickler(key_sstr).dump(key)
 		key_str = key_sstr.getvalue()
-		return base64.urlsafe_b64encode(key_str)
+		import hashlib
+		m = hashlib.md5()
+		m.update(key_str)
+		return m.hexdigest()
 	def _filename_for_key(self, key):
 		return MyDir + "/cache/" + self.name + "_" + self._key_repr(key) + ".sobj"
 	def __getitem__(self, key):
 		try:
-			return load(self._filename_for_key(key))
+			cache_key, value = load(self._filename_for_key(key))
 		except IOError:
-			raise KeyError
+			raise KeyError, "cache file not found"
 		except Exception as exc:
 			better_exchook.better_exchook(*sys.exc_info())
 			if isinstance(exc, KeyError): raise Exception # no KeyError exception fall-through
 			raise
+		else:
+			if cache_key == key: return value
+			raise KeyError, "key repr collidation"
 	def __setitem__(self, key, value):
 		try:
-			save(value, self._filename_for_key(key))
+			save((key, value), self._filename_for_key(key))
 		except Exception:
 			print self.name, key
 			raise
 	def __contains__(self, key):
-		return os.path.exists(self._filename_for_key(key))
-
+		try: self.__getitem__(key)
+		except KeyError: return False
+		else: return True
 
 
 def persistent_cache(name, index=None, timelimit=2):
