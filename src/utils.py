@@ -180,6 +180,8 @@ class PersistentCache:
 		return m.hexdigest()
 	def _filename_for_key(self, key):
 		return MyDir + "/cache/" + self.name + "_" + self._key_repr(key) + ".sobj"
+	def _filename_pattern(self):
+		return MyDir + "/cache/" + self.name + "_*.sobj"
 	def __getitem__(self, key):
 		try:
 			cache_key, value = load(self._filename_for_key(key))
@@ -202,6 +204,21 @@ class PersistentCache:
 		try: self.__getitem__(key)
 		except KeyError: return False
 		else: return True
+	def items(self):
+		from glob import glob
+		for fn in glob(self._filename_pattern()):
+			try:
+				key, value = load(fn)
+			except Exception:
+				print "Exception on loading cache file %s" % fn
+				better_exchook.better_exchook(*sys.exc_info())
+				raise
+			yield key, value
+	def keys(self):
+		for key,value in self.items():
+			yield key
+	def __iter__(self):
+		return self.keys()
 
 
 def persistent_cache(name, index=None, timelimit=2):
