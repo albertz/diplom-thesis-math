@@ -148,12 +148,16 @@ def getElliptModFormsBasisMatrix(level, weight, precision):
 	n = precision
 	n = max(10, n)
 	mf = ModularForms(Gamma0(level), weight)
-	fe_expansion_matrix_l = matrix(QQ, [b.qexp(n).padded_list(n) for b in mf.basis()])
-	fe_expansion_matrix_l.echelonize()
-	assert fe_expansion_matrix_l.rank() == mf.dimension()
+	dim = mf.dimension()
+	while True:
+		fe_expansion_matrix_l = matrix(QQ, [b.qexp(n).padded_list(n) for b in mf.basis()])
+		fe_expansion_matrix_l.echelonize()
+		if fe_expansion_matrix_l.rank() == dim: break
+		n += 10
+	assert fe_expansion_matrix_l.rank() == dim, "%i != %i" % (fe_expansion_matrix_l.rank(), dim)
 	ellipBaseMatrixCache[cacheIdx] = (fe_expansion_matrix_l, n)
 	cut_matrix = fe_expansion_matrix_l[:,:precision]
-	return mf.dimension(), cut_matrix
+	return dim, cut_matrix
 
 
 @persistent_cache(name="restrMatrix")
@@ -525,7 +529,7 @@ def modform_restriction_info(calc, S, l):
 	verbose("get elliptic modform space with precision %i ..." % precLimit)
 	ell_dim, fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
 	if fe_expansion_matrix_l.rank() < ell_dim:
-		verbose("ignoring ell modforms because matrix is not expressive enough")
+		verbose("ignoring ell modforms because matrix is not expressive enough. ell_dim=%i, matr rank=%i" % (ell_dim, fe_expansion_matrix_l.rank()))
 		return herm_modform_fe_expannsion
 
 	ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
