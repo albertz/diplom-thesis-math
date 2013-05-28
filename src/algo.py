@@ -166,14 +166,14 @@ def getElliptModFormsBasisMatrix(level, weight, precision):
 	return mf.dimension(), cut_matrix
 
 
-restrMatrixCache = PersistentCache("restrMatrix.cache.sobj") # by (calc.params,calc.curlS)
+@persistent_cache(filename="restrMatrix.cache.sobj")
 def calcRestrictMatrix(calc):
 	"""
 	Calculates the matrix of the linear map `f \mapsto f[S]`
 	where `f` is a Hermitian modular form.
 	(`S` as well as all other parameters are saved internally in the `calc` structure.)
 
-	This uses the C++ function `Calc::calcMatrix()` in  algo_cpp.cpp`.
+	This uses the C++ function `Calc::calcMatrix()` in `algo_cpp.cpp`.
 
 	INPUT:
 
@@ -186,16 +186,7 @@ def calcRestrictMatrix(calc):
 	  can be returned by `herm_modform_indexset()`.
 
 	"""
-
-	cacheIdx = (calc.params, calc.curlS)
-	if cacheIdx in restrMatrixCache:
-		return restrMatrixCache[cacheIdx]
-	t = time()
-	mat = calc.calcMatrix()
-	if time() - t > 2.0:
-		print "calculation of restriction matrix took %f secs" % (time() - t)
-		restrMatrixCache[cacheIdx] = mat
-	return mat
+	return calc.calcMatrix()
 
 
 def toLowerCyclBase(ms, old_order, new_order):
@@ -347,6 +338,7 @@ def _reduceNRow(denom, mats):
 			else:
 				break
 	return denom, mats
+
 
 def _addRows(mat, n):
 	"""
