@@ -141,29 +141,31 @@ def getElliptModFormsBasisMatrix(level, weight, precision):
 
 	OUTPUT:
 
-	- A matrix `m` which is the Echelon basis matrix of the Elliptic
-	  modular forms over `\Gamma_0(level)` with weight `weight`
+	- A tuple `(dim,m)`, where `m` is a matrix which is the Echelon basis matrix of
+	  the Elliptic modular forms over `\Gamma_0(level)` with weight `weight`
 	  such that `m.ncols() == precision`.
+	  `dim` is the dimension of the modular forms. You should check that `m.rank() == dim`,
+	  otherwise it might not make sense to work with `m`.
 	"""
 
 	cacheIdx = (level, weight)
 	if cacheIdx in ellipBaseMatrixCache and ellipBaseMatrixCache[cacheIdx][1] >= precision:
 		fe_expansion_matrix_l = ellipBaseMatrixCache[cacheIdx][0]
 		cut_matrix = fe_expansion_matrix_l[:,:precision]
-		assert cut_matrix.rank() == fe_expansion_matrix_l.rank()
-		return cut_matrix
+		dim = fe_expansion_matrix_l.rank()
+		return dim, cut_matrix
 	#n = 2
 	#while n < precision:
 	#	n **= 2
 	n = precision
+	n = max(10, n)
 	mf = ModularForms(Gamma0(level), weight)
 	fe_expansion_matrix_l = matrix(QQ, [b.qexp(n).padded_list(n) for b in mf.basis()])
 	fe_expansion_matrix_l.echelonize()
 	assert fe_expansion_matrix_l.rank() == mf.dimension()
 	ellipBaseMatrixCache[cacheIdx] = (fe_expansion_matrix_l, n)
 	cut_matrix = fe_expansion_matrix_l[:,:precision]
-	assert cut_matrix.rank() == mf.dimension()
-	return cut_matrix
+	return mf.dimension(), cut_matrix
 
 
 restrMatrixCache = PersistentCache("restrMatrix.cache.sobj") # by (calc.params,calc.curlS)
@@ -400,7 +402,11 @@ def test_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, testSCo
 
 		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
 		verbose("get elliptic modform space with precision %i ..." % precLimit)
-		fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
+		ell_dim, fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
+		if fe_expansion_matrix_l.rank() < ell_dim:
+			verbose("ignoring ell modforms because matrix is not expressive enough")
+			testSCount += 1
+			continue
 		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
 
 		verbose("calc M_S * herm_modforms ...")
@@ -741,42 +747,45 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 
 		# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
 		verbose("get elliptic modform space with precision %i ..." % precLimit)
-		fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
-		ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
-		verbose("dim of elliptic modform space: %i" % ell_modform_fe_expansions_l.dimension())
+		ell_dim, fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
+		if fe_expansion_matrix_l.rank() < ell_dim:
+			verbose("ignoring ell modforms because matrix is not expressive enough")
+		else:
+			ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
+			verbose("dim of elliptic modform space: %i" % ell_modform_fe_expansions_l.dimension())
 
-		verbose("calc M_S_module...")
-		M_S_module = M_S.column_module()
-		verbose("dimension of M_S column module: %i" % M_S_module.dimension())
-		restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S_module )
-		verbose("dimension of restriction_fe_expansions: %i" % restriction_fe_expansions.dimension())
-		herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
-		herm_modform_fe_expannsion_S_module = herm_modform_fe_expannsion_S.column_module()
-		verbose("dimension of herm column module: %i" % herm_modform_fe_expannsion_S_module.dimension())
-		verbose("calc M_S_right_kernel...")
-		M_S_right_kernel = M_S.right_kernel()
-		verbose("dimension of M_S right kernel: %i" % M_S_right_kernel.dimension())
-		herm_modform_fe_expannsion_S_module += M_S_right_kernel
+			verbose("calc M_S_module...")
+			M_S_module = M_S.column_module()
+			verbose("dimension of M_S column module: %i" % M_S_module.dimension())
+			restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S_module )
+			verbose("dimension of restriction_fe_expansions: %i" % restriction_fe_expansions.dimension())
+			herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
+			herm_modform_fe_expannsion_S_module = herm_modform_fe_expannsion_S.column_module()
+			verbose("dimension of herm column module: %i" % herm_modform_fe_expannsion_S_module.dimension())
+			verbose("calc M_S_right_kernel...")
+			M_S_right_kernel = M_S.right_kernel()
+			verbose("dimension of M_S right kernel: %i" % M_S_right_kernel.dimension())
+			herm_modform_fe_expannsion_S_module += M_S_right_kernel
 
-		try:
-			_extra_check_on_herm_superspace(
-				vs=herm_modform_fe_expannsion_S_module,
-				D=D, B_cF=B_cF, HermWeight=HermWeight
-			)
-		except Exception:
-			print "restriction_fe_expansions =", restriction_fe_expansions
-			print "M_S_right_kernel =", M_S_right_kernel
-			print "herm_modform_fe_expannsion_S_module =", herm_modform_fe_expannsion_S_module
-			raise
+			try:
+				_extra_check_on_herm_superspace(
+					vs=herm_modform_fe_expannsion_S_module,
+					D=D, B_cF=B_cF, HermWeight=HermWeight
+				)
+			except Exception:
+				print "restriction_fe_expansions =", restriction_fe_expansions
+				print "M_S_right_kernel =", M_S_right_kernel
+				print "herm_modform_fe_expannsion_S_module =", herm_modform_fe_expannsion_S_module
+				raise
 
-		verbose("intersecting herm_modform_fe_expannsion...")
-		herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S_module )
-		current_dimension = herm_modform_fe_expannsion.dimension()
-		verbose("current dimension: %i, wanted: %i" % (current_dimension, dim))
-		assert current_dimension >= dim
+			verbose("intersecting herm_modform_fe_expannsion...")
+			herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_S_module )
+			current_dimension = herm_modform_fe_expannsion.dimension()
+			verbose("current dimension: %i, wanted: %i" % (current_dimension, dim))
+			assert current_dimension >= dim
 
-		if dim == current_dimension:
-			break
+			if dim == current_dimension:
+				break
 
 		herm_modform_fe_expannsion = _intersect_modform_cusp_info(
 			calc=calc, S=S, l=l, precLimit=precLimit,
