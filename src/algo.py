@@ -558,7 +558,7 @@ def modform_restriction_info(calc, S, l):
 	return herm_modform_fe_expannsion_S_module
 
 
-hermModformSpaceCache = PersistentCache("herm_modform_space__precalc.cache.sobj")
+hermModformSpaceCache = PersistentCache("herm_modform_space__precalc")
 def herm_modform_space(D, HermWeight, B_cF=10):
 	"""
 	This calculates the vectorspace of Fourier expansions to
