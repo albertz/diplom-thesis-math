@@ -2,7 +2,7 @@ from time import time
 from sage.functions.other import floor
 from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
-from sage.misc.cachefunc import cached_function
+from sage.misc.cachefunc import cached_function as sage_cached_function
 from sage.modular.arithgroup.congroup_sl2z import SL2Z
 from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
@@ -35,7 +35,39 @@ def test_algo_calcMatrix():
 	return calc.getMatrix()
 
 
-matrixTransCache = PersistentCache("matrixTrans.cache.sobj")
+
+
+@persistent_cache(filename="matrixTrans.cache.sobj")
+def _calcMatrixTrans(calc, tS, tT, lS, lT):
+	try:
+		ms = calc.calcMatrixTrans(tS, tT, lS, lT)
+	except Exception:
+		print (calc.params, calc.curlS, tS, tT, lS, lT)
+		raise
+
+	# Each matrix is for a zeta**i factor, where zeta is the n-th root of unity.
+	# And n = calc.matrixCountTrans.
+	assert len(ms) == calc.matrixCountTrans
+	order = len(ms)
+
+	K = CyclotomicField(order)
+	zeta = K.gen()
+	Kcoords = zeta.coordinates_in_terms_of_powers()
+
+	assert len(K.power_basis()) == K.degree()
+	new_ms = [matrix(QQ, ms[0].nrows(), ms[0].ncols()) for i in range(K.degree())]
+	for l in range(order):
+		coords = Kcoords(zeta**l)
+		for i,m in enumerate(coords):
+			new_ms[i] += ms[l] * m
+	ms = new_ms
+
+	denom = calc.matrixRowDenomTrans
+	denom, ms = _reduceNRow(denom=denom, mats=ms)
+
+	return denom, order, ms
+
+
 def calcMatrixTrans(calc, R):
 	"""
 	Returns a triple `(denom, order, ms)` where
@@ -75,41 +107,7 @@ def calcMatrixTrans(calc, R):
 	tT *= lT
 	tS.set_immutable()
 	tT.set_immutable()
-	cacheIdx = (calc.params, calc.curlS, tS, tT, lS, lT)
-	if cacheIdx in matrixTransCache:
-		return matrixTransCache[cacheIdx]
-
-	t = time()
-	try:
-		ms = calc.calcMatrixTrans(tS, tT, lS, lT)
-	except Exception:
-		print (cacheIdx, R)
-		raise
-
-	# Each matrix is for a zeta**i factor, where zeta is the n-th root of unity.
-	# And n = calc.matrixCountTrans.
-	assert len(ms) == calc.matrixCountTrans
-	order = len(ms)
-
-	K = CyclotomicField(order)
-	zeta = K.gen()
-	Kcoords = zeta.coordinates_in_terms_of_powers()
-
-	assert len(K.power_basis()) == K.degree()
-	new_ms = [matrix(QQ, ms[0].nrows(), ms[0].ncols()) for i in range(K.degree())]
-	for l in range(order):
-		coords = Kcoords(zeta**l)
-		for i,m in enumerate(coords):
-			new_ms[i] += ms[l] * m
-	ms = new_ms
-
-	denom = calc.matrixRowDenomTrans
-	denom, ms = _reduceNRow(denom=denom, mats=ms)
-
-	if time() - t > 2.0:
-		print "calculation of matrixTrans took %f secs" % (time() - t)
-		matrixTransCache[cacheIdx] = denom, order, ms
-	return denom, order, ms
+	return _calcMatrixTrans(calc, tS, tT, lS, lT)
 
 
 cuspExpansionsCache = PersistentCache("cuspExpansions.cache.sobj")
@@ -417,7 +415,7 @@ def test_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, testSCo
 			"%r not subspace of %r" % (m_module, ell_modform_fe_expansions_l)
 
 
-@cached_function
+@sage_cached_function
 def herm_modform_indexset(D, B_cF):
 	"""
 	This is the precision of the index set for the Fourier coefficients of the
@@ -584,7 +582,7 @@ def _extra_check_on_herm_superspace(vs, D, HermWeight, B_cF):
 	pass
 
 
-def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsion):
+def modform_cusp_info(calc, S, l, precLimit):
 	"""
 	This goes through all the cusps and compares the space given by `(f|R)[S]`
 	with the space of Elliptic modular forms expansion at those cusps.
@@ -593,14 +591,15 @@ def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsi
 	assert l == S.det()
 	assert list(calc.curlS) == [S]
 
+	D = calc.D
+	HermWeight = calc.HermWeight
+	reducedCurlFSize = calc.matrixColumnCount
+	herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
+
 	if not Integer(l).is_squarefree():
 		# The calculation of the cusp expansion space takes very long here, thus
 		# we skip them for now.
 		return herm_modform_fe_expannsion
-
-	D = calc.D
-	HermWeight = calc.HermWeight
-	current_dimension = herm_modform_fe_expannsion.dimension()
 
 	for cusp in Gamma0(l).cusps():
 		if cusp == Infinity: continue
@@ -682,7 +681,7 @@ def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsi
 
 			herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( herm_modform_fe_expannsion_Ci_module )
 			print "power", i, merged.dimension(), herm_modform_fe_expannsion_Ci_module.dimension(), \
-				current_dimension, herm_modform_fe_expannsion.dimension()
+				herm_modform_fe_expannsion.dimension()
 			current_dimension = herm_modform_fe_expannsion.dimension()
 
 	return herm_modform_fe_expannsion

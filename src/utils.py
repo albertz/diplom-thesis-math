@@ -1,3 +1,4 @@
+from time import time
 from sage.calculus.functional import simplify
 from sage.functions.other import floor
 from sage.matrix.constructor import matrix
@@ -188,6 +189,35 @@ class PersistentCache:
 		except Exception:
 			print self.name, self.dict
 			raise
+
+
+
+def persistent_cache(filename, index=None, timelimit=2):
+	def decorator(func):
+		import algo_cython as C
+		cache = PersistentCache(filename)
+		def cached_function(*args):
+			cacheidx = ()
+			if index is not None:
+				cacheidx = index(*args)
+			else:
+				for arg in args:
+					if isinstance(arg, C.Calc):
+						cacheidx += (arg.params, arg.curlS,)
+					else:
+						cacheidx += (arg,)
+			if cacheidx in cache:
+				return cache[cacheidx]
+			t = time()
+			res = func(*args)
+			if timelimit is None or time() - t > timelimit:
+				print "calculation of %r took %f secs" % (func, time() - t)
+				cache[cacheidx] = res
+			return res
+		return cached_function
+	return decorator
+
+
 
 
 def _simplify(a):
