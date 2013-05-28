@@ -586,6 +586,12 @@ def _intersect_modform_cusp_info(calc, S, l, precLimit, herm_modform_fe_expannsi
 
 	assert l == S.det()
 	assert list(calc.curlS) == [S]
+
+	if not Integer(l).is_squarefree():
+		# The calculation of the cusp expansion space takes very long here, thus
+		# we skip them for now.
+		return
+
 	D = calc.D
 	HermWeight = calc.HermWeight
 	current_dimension = herm_modform_fe_expannsion.dimension()
