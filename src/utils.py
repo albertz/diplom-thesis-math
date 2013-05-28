@@ -194,8 +194,10 @@ class PersistentCache:
 
 def persistent_cache(filename, index=None, timelimit=2):
 	def decorator(func):
+		from functools import wraps
 		import algo_cython as C
 		cache = PersistentCache(filename)
+		@wraps(func)
 		def cached_function(*args):
 			cacheidx = ()
 			if index is not None:
