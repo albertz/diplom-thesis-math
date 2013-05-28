@@ -557,6 +557,7 @@ def modform_restriction_info(calc, S, l):
 	return herm_modform_fe_expannsion_S_module
 
 
+hermModformSpaceCache = PersistentCache("herm_modform_space__precalc.cache.sobj")
 def herm_modform_space(D, HermWeight, B_cF=10):
 	"""
 	This calculates the vectorspace of Fourier expansions to
@@ -583,7 +584,13 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 	# Calculate the dimension of Hermitian modular form space.
 	dim = herm_modform_space_dim(D=D, HermWeight=HermWeight)
 
-	herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
+	cacheIdx = (D, HermWeight, B_cF)
+	if cacheIdx in hermModformSpaceCache:
+		lastS, herm_modform_fe_expannsion = hermModformSpaceCache[cacheIdx]
+	else:
+		lastS = None
+		herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
+
 	current_dimension = herm_modform_fe_expannsion.dimension()
 	curlS = [] # all matrices S we have visited so far
 	curlS_denoms = set() # the denominators of the visited matrices S
@@ -611,6 +618,12 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 		l = _toInt(l)
 		curlS += [S]
 		curlS_denoms.add(l)
+
+		if lastS is not None:
+			if S == lastS:
+				lastS = None
+			continue
+
 		verbose("trying S={0}, det={1}".format(S, l))
 
 		for calcfunc in calcfuncs:
@@ -622,6 +635,8 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 			assert current_dimension >= dim
 			if dim == current_dimension: break
 		if dim == current_dimension: break
+
+		hermModformSpaceCache[cacheIdx] = (S, herm_modform_fe_expannsion)
 
 	# Test for some other S with other not-yet-seen denominator.
 	check_herm_modform_space(
@@ -654,7 +669,8 @@ def _fast_fail_test_D3_k6(B_cF=5):
 	assert calcPrecisionDimension(B_cF=B_cF, S=S) == precLimit
 
 	verbose("get elliptic modform space with precision %i ..." % precLimit)
-	fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
+	ell_dim, fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
+	assert ell_dim == fe_expansion_matrix_l.rank()
 	ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
 	verbose("dim of elliptic modform space: %i" % ell_modform_fe_expansions_l.dimension())
 
