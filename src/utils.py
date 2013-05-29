@@ -227,7 +227,7 @@ def persistent_cache(name, index=None, timeLimit=2, ignoreNone=True):
 		import algo_cython as C
 		import inspect
 		funcargs = tuple(inspect.getargspec(func).args)
-		funcargdefaults = tuple(inspect.getargspec(func).defaults)
+		funcargdefaults = tuple(inspect.getargspec(func).defaults or [])
 		assert len(funcargdefaults) <= len(funcargs)
 		NotSpecifiedFlag = object()
 		cache = PersistentCache(name=name)
