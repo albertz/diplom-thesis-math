@@ -221,7 +221,7 @@ class PersistentCache:
 		return self.keys()
 
 
-def persistent_cache(name, index=None, timelimit=2):
+def persistent_cache(name, index=None, timeLimit=2, ignoreNone=True):
 	def decorator(func):
 		from functools import wraps
 		import algo_cython as C
@@ -241,7 +241,9 @@ def persistent_cache(name, index=None, timelimit=2):
 				return cache[cacheidx]
 			t = time()
 			res = func(*args)
-			if timelimit is None or time() - t > timelimit:
+			if res is None and ignoreNone:
+				return None
+			if timeLimit is None or time() - t > timeLimit:
 				print "calculation of %r took %f secs" % (func, time() - t)
 				cache[cacheidx] = res
 			return res
