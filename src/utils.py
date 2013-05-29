@@ -225,9 +225,29 @@ def persistent_cache(name, index=None, timeLimit=2, ignoreNone=True):
 	def decorator(func):
 		from functools import wraps
 		import algo_cython as C
+		import inspect
+		funcargs = tuple(inspect.getargspec(func).args)
+		funcargdefaults = tuple(inspect.getargspec(func).defaults)
+		assert len(funcargdefaults) <= len(funcargs)
+		NotSpecifiedFlag = object()
 		cache = PersistentCache(name=name)
 		@wraps(func)
-		def cached_function(*args):
+		def cached_function(*args, **kwargs):
+			kwargs = kwargs.copy()
+			if len(args) > len(funcargs): raise TypeError, "too many args"
+			for i,arg in enumerate(args):
+				key = funcargs[i]
+				if key in kwargs: raise TypeError, "%r specified in both args and kwargs" % arg
+				kwargs[key] = arg
+			args = list(funcargdefaults) + [NotSpecifiedFlag] * (len(funcargs) - len(funcargdefaults))
+			for key,value in kwargs.items():
+				if key not in funcargs:
+					raise TypeError, "kwarg %r is unknown" % key
+				i = funcargs.index(key)
+				args[i] = value
+			for key,value in zip(funcargs,args):
+				if value is NotSpecifiedFlag:
+					raise TypeError, "arg %r is not specified" % key
 			cacheidx = ()
 			if index is not None:
 				cacheidx = index(*args)
