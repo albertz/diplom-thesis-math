@@ -90,7 +90,7 @@ def check_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, checkS
 		calc.curlS_clearMatrices()
 		S = calc.getNextS()
 		l = S.det()
-		l = _toInt(l)
+		l = toInt(l)
 		if l in curlS_denoms: continue
 
 		curlS_denoms.add(l)

@@ -537,7 +537,7 @@ def _curlO_matrix_denom(mat, D):
 	return denom
 
 
-def _toInt(a):
+def toInt(a):
 	a = _simplify(a)
 	a = ZZ(a)
 	a = int(a)

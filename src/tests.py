@@ -19,7 +19,7 @@ def _fast_fail_test_D3_k6(B_cF=5):
 		if S == matrix(2, 2, [3, 0, 0, 1]): break
 
 	l = S.det()
-	l = _toInt(l)
+	l = toInt(l)
 
 	M_S = calcRestrictMatrix(calc) # matrix over integer ring
 	M_S = M_S.matrix_over_field() # matrix over rational field

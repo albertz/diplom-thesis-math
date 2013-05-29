@@ -298,7 +298,7 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 		calc.curlS_clearMatrices() # In the C++ internal curlS, clear previous matrices.
 		S = calc.getNextS()
 		l = S.det()
-		l = _toInt(l)
+		l = toInt(l)
 		curlS += [S]
 		curlS_denoms.add(l)
 
