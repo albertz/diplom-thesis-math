@@ -1,8 +1,7 @@
-from src import algo_cython as C
+import algo_cython as C
 from sage.matrix.constructor import matrix
-from src.utils import _toInt, verbose
-from src.helpers import calcRestrictMatrix, calcPrecisionDimension, getElliptModFormsBasisMatrix
-from src.algo import _extra_check_on_herm_superspace
+from utils import _toInt, verbose
+from helpers import *
 
 
 def _fast_fail_test_D3_k6(B_cF=5):
