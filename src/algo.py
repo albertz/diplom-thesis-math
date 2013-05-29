@@ -93,7 +93,7 @@ def modform_cusp_info(calc, S, l, precLimit):
 	if not Integer(l).is_squarefree():
 		# The calculation of the cusp expansion space takes very long here, thus
 		# we skip them for now.
-		return herm_modform_fe_expannsion
+		return None
 
 	for cusp in Gamma0(l).cusps():
 		if cusp == Infinity: continue
@@ -207,7 +207,7 @@ def modform_restriction_info(calc, S, l):
 	ell_dim, fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
 	if fe_expansion_matrix_l.rank() < ell_dim:
 		verbose("ignoring ell modforms because matrix is not expressive enough. ell_dim=%i, matr rank=%i" % (ell_dim, fe_expansion_matrix_l.rank()))
-		return herm_modform_fe_expannsion
+		return None
 
 	ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
 	verbose("dim of elliptic modform space: %i" % ell_modform_fe_expansions_l.dimension())
@@ -311,6 +311,12 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 
 		for calcfunc in calcfuncs:
 			newspace = calcfunc()
+			if newspace is None:
+				verbose("no data from %r" % calcfunc)
+				continue
+			if newspace.dimension() == reducedCurlFSize:
+				verbose("no information gain from %r" % calcfunc)
+				continue
 			verbose("intersecting %r..." % calcfunc)
 			herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( newspace )
 			current_dimension = herm_modform_fe_expannsion.dimension()
