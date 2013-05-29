@@ -1,10 +1,12 @@
 import algo_cython as C
 from sage.matrix.constructor import matrix
-from utils import _toInt, verbose
+from utils import *
 from helpers import *
 
 
 def _fast_fail_test_D3_k6(B_cF=5):
+	from checks import check_eisenstein_series_D3_weight6
+
 	D = -3
 	HermWeight = 6
 	calc = C.Calc()
@@ -45,9 +47,9 @@ def _fast_fail_test_D3_k6(B_cF=5):
 	herm_modform_fe_expannsion_S_module += M_S_right_kernel
 
 	try:
-		_extra_check_on_herm_superspace(
+		check_eisenstein_series_D3_weight6(
 			vs=herm_modform_fe_expannsion_S_module,
-			D=D, B_cF=B_cF, HermWeight=HermWeight
+			B_cF=B_cF
 		)
 	except Exception:
 		print "restriction_fe_expansions =", restriction_fe_expansions

@@ -1,4 +1,5 @@
 from sage.matrix.constructor import matrix
+from sage.modules.free_module_element import vector
 from sage.rings.number_field.number_field import QQ
 from algo import *
 
