@@ -13,10 +13,9 @@ from sage.structure.sage_object import SageObject
 from sage.symbolic.ring import SymbolicRing
 from sage.symbolic.expression import Expression
 import algo_cython as C
+from utils import *
 from helpers import *
 from checks import *
-from utils import _toInt  # seems the above does not import "_"-prefixed symbols
-
 
 
 
