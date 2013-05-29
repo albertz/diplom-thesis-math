@@ -73,9 +73,7 @@ def herm_modform_space_dim(D, HermWeight):
 
 
 
-
-
-
+@persistent_cache(name="modform_cusp_info")
 def modform_cusp_info(calc, S, l, precLimit):
 	"""
 	This goes through all the cusps and compares the space given by `(f|R)[S]`
@@ -181,6 +179,7 @@ def modform_cusp_info(calc, S, l, precLimit):
 	return herm_modform_fe_expannsion
 
 
+@persistent_cache(name="modform_restriction_info")
 def modform_restriction_info(calc, S, l):
 	assert l == S.det()
 	assert list(calc.curlS) == [S]
