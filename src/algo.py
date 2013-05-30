@@ -353,4 +353,6 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 	return herm_modform_fe_expannsion
 
 
-
+def herm_modform_space__parallel(D, HermWeight, B_cF=10, task_limit=4):
+	parallelization = Parallelization(task_limit=task_limit)
+	return herm_modform_space(D=D, HermWeight=HermWeight, B_cF=B_cF, parallelization=parallelization)
