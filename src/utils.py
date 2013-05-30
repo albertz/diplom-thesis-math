@@ -379,7 +379,7 @@ isFork = False
 
 class AsyncTask:
 	def __init__(self, func, name=None, mustExec=False):
-		self.name = name or "unnamed"
+		self.name = name or repr(func)
 		self.func = func
 		self.mustExec = mustExec
 		self.parent_pid = os.getpid()
@@ -454,10 +454,6 @@ class AsyncTask:
 			import signal
 			os.kill(self.child_pid, signal.SIGINT)
 			self.child_pid = None
-
-	@classmethod
-	def test(cls):
-		pass
 
 class ForwardedKeyboardInterrupt(Exception): pass
 
