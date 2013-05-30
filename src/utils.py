@@ -461,7 +461,47 @@ class ForwardedKeyboardInterrupt(Exception): pass
 
 
 class Parallelization:
-	pass
+	def __init__(self, task_limit=4):
+		import multiprocessing
+		self.queue = multiprocessing.Queue()
+		self.lock = multiprocessing.RLock()
+		self.task_count = 0
+		self.task_limit = task_limit
+		self.task_iter = None
+
+	def get_next_result(self):
+		from Queue import Empty
+		while True:
+			with self.lock:
+				while self.task_count < self.task_limit:
+					next_task = next(self.task_iter)
+					self._exec_task(func=next_task)
+			try: res = self.queue.get(timeout=1)
+			except Empty: pass
+			else:
+				with self.lock:
+					self.task_count -= 1
+				return res
+
+	def _exec_task(self, func, name=None):
+		task = None
+		def doCall(queue):
+			try:
+				res = func()
+				self.queue.put((task, None, res))
+			except KeyboardInterrupt as exc:
+				print "Exception in asyncCall", name, ": KeyboardInterrupt"
+				self.queue.put((task, ForwardedKeyboardInterrupt(exc), None))
+			except BaseException as exc:
+				print "Exception in asyncCall", name
+				sys.excepthook(*sys.exc_info())
+				self.queue.put((task, exc, None))
+			with self.lock:
+				self.task_count -= 1
+		task = AsyncTask(func=doCall, name=name)
+		with self.lock:
+			self.task_count += 1
+		return task
 
 
 def reloadC():
