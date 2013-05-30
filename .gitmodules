@@ -1,0 +1,3 @@
+[submodule "src/cache"]
+	path = src/cache
+	url = ssh://zeyer@demeter.matha.rwth-aachen.de/home/zeyer/diplom-thesis-math--src-cache.git
