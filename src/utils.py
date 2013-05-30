@@ -283,6 +283,9 @@ def convert_old_cache(name):
 
 
 
+# The following code is partly from [MusicPlayer](https://github.com/albertz/music-player/)
+# but all written by me, thus I transfer this part to GPL here.
+
 def attrChain(base, *attribs, **kwargs):
 	default = kwargs.get("default", None)
 	obj = base
@@ -457,6 +460,8 @@ class AsyncTask:
 		pass
 
 class ForwardedKeyboardInterrupt(Exception): pass
+
+# END of the part of MusicPlayer code.
 
 
 class Parallelization:
