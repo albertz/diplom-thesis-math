@@ -1,3 +1,4 @@
+from threading import currentThread
 from time import time
 import os
 from sage.calculus.functional import simplify
@@ -279,6 +280,187 @@ def convert_old_cache(name):
 	new_cache = PersistentCache(name=name)
 	for key,value in d.items():
 		new_cache[key] = value
+
+
+
+def attrChain(base, *attribs, **kwargs):
+	default = kwargs.get("default", None)
+	obj = base
+	for attr in attribs:
+		if obj is None: return default
+		obj = getattr(obj, attr, None)
+	if obj is None: return default
+	return obj
+
+# This is needed in some cases to avoid pickling problems with bounded funcs.
+def funcCall(attrChainArgs, args=()):
+	f = attrChain(*attrChainArgs)
+	return f(*args)
+
+class ExecingProcess:
+	def __init__(self, target, args, name):
+		self.target = target
+		self.args = args
+		self.name = name
+		self.daemon = True
+		self.pid = None
+	def start(self):
+		assert self.pid is None
+		def pipeOpen():
+			readend,writeend = os.pipe()
+			readend = os.fdopen(readend, "r")
+			writeend = os.fdopen(writeend, "w")
+			return readend,writeend
+		self.pipe_c2p = pipeOpen()
+		self.pipe_p2c = pipeOpen()
+		pid = os.fork()
+		if pid == 0: # child
+			self.pipe_c2p[0].close()
+			self.pipe_p2c[1].close()
+			args = sys.argv + [
+				"--forkExecProc",
+				str(self.pipe_c2p[1].fileno()),
+				str(self.pipe_p2c[0].fileno())]
+			os.execv(args[0], args)
+		else: # parent
+			self.pipe_c2p[1].close()
+			self.pipe_p2c[0].close()
+			self.pid = pid
+			self.pickler = Pickler(self.pipe_p2c[1])
+			self.pickler.dump(self.name)
+			self.pickler.dump(self.target)
+			self.pickler.dump(self.args)
+			self.pipe_p2c[1].flush()
+	@staticmethod
+	def checkExec():
+		if "--forkExecProc" in sys.argv:
+			argidx = sys.argv.index("--forkExecProc")
+			writeFileNo = int(sys.argv[argidx + 1])
+			readFileNo = int(sys.argv[argidx + 2])
+			readend = os.fdopen(readFileNo, "r")
+			writeend = os.fdopen(writeFileNo, "w")
+			unpickler = Unpickler(readend)
+			name = unpickler.load()
+			print "ExecingProcess child %s (pid %i)" % (name, os.getpid())
+			try:
+				target = unpickler.load()
+				args = unpickler.load()
+			except EOFError:
+				print "Error: unpickle incomplete"
+				raise SystemExit
+			ret = target(*args)
+			Pickler(writeend).dump(ret)
+			print "ExecingProcess child %s (pid %i) finished" % (name, os.getpid())
+			raise SystemExit
+
+class ExecingProcess_ConnectionWrapper(object):
+	def __init__(self, fd=None):
+		self.fd = fd
+		if self.fd:
+			from _multiprocessing import Connection
+			self.conn = Connection(fd)
+	def __getstate__(self): return self.fd
+	def __setstate__(self, state): self.__init__(state)
+	def __getattr__(self, attr): return getattr(self.conn, attr)
+
+def ExecingProcess_Pipe():
+	import socket
+	s1, s2 = socket.socketpair()
+	c1 = ExecingProcess_ConnectionWrapper(os.dup(s1.fileno()))
+	c2 = ExecingProcess_ConnectionWrapper(os.dup(s2.fileno()))
+	s1.close()
+	s2.close()
+	return c1, c2
+
+isFork = False
+
+class AsyncTask:
+	def __init__(self, func, name=None, mustExec=False):
+		self.name = name or "unnamed"
+		self.func = func
+		self.mustExec = mustExec
+		self.parent_pid = os.getpid()
+		if mustExec and sys.platform != "win32":
+			self.Process = ExecingProcess
+			self.Pipe = ExecingProcess_Pipe
+		else:
+			from multiprocessing import Process, Pipe
+			self.Process = Process
+			self.Pipe = Pipe
+		self.parent_conn, self.child_conn = self.Pipe()
+		self.proc = self.Process(
+			target = funcCall,
+			args = ((AsyncTask, "_asyncCall"), (self,)),
+			name = self.name + " worker process")
+		self.proc.daemon = True
+		self.proc.start()
+		self.child_conn.close()
+		self.child_pid = self.proc.pid
+		assert self.child_pid
+		self.conn = self.parent_conn
+
+	@staticmethod
+	def _asyncCall(self):
+		assert self.isChild
+		self.parent_conn.close()
+		self.conn = self.child_conn # we are the child
+		if not self.mustExec and sys.platform != "win32":
+			global isFork
+			isFork = True
+		try:
+			self.func(self)
+		except KeyboardInterrupt:
+			print "Exception in AsyncTask", self.name, ": KeyboardInterrupt"
+		except:
+			print "Exception in AsyncTask", self.name
+			sys.excepthook(*sys.exc_info())
+		finally:
+			self.conn.close()
+
+	def put(self, value):
+		self.conn.send(value)
+
+	def get(self):
+		thread = currentThread()
+		try:
+			thread.waitQueue = self
+			res = self.conn.recv()
+		except EOFError: # this happens when the child died
+			raise ForwardedKeyboardInterrupt()
+		except Exception:
+			raise
+		finally:
+			thread.waitQueue = None
+		return res
+
+	@property
+	def isParent(self):
+		return self.parent_pid == os.getpid()
+
+	@property
+	def isChild(self):
+		if self.isParent: return False
+		assert self.parent_pid == os.getppid()
+		return True
+
+	# This might be called from the module code.
+	# See OnRequestQueue which implements the same interface.
+	def setCancel(self):
+		self.conn.close()
+		if self.isParent and self.child_pid:
+			import signal
+			os.kill(self.child_pid, signal.SIGINT)
+			self.child_pid = None
+
+	@classmethod
+	def test(cls):
+		pass
+
+class ForwardedKeyboardInterrupt(Exception): pass
+
+
+class Parallelization:
+	pass
 
 
 def reloadC():
