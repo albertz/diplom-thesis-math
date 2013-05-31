@@ -79,6 +79,7 @@ def fork_test():
 
 
 def fork_test2():
+	# Also see here: http://www.sagemath.org/doc/reference/sage/parallel/decorate.html
 	from sage.parallel.decorate import fork
 	test_ = fork(_fork_test_func, verbose=True)
 	test_()
