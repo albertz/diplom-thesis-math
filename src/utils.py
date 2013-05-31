@@ -498,14 +498,14 @@ class Parallelization_Worker:
 	def _handle_job(self, queue, jobid, func, name):
 		try:
 			res = func()
-			queue.put((self.id, jobid, None, res))
+			queue.put((self.id, jobid, func, None, res))
 		except KeyboardInterrupt as exc:
 			print "Exception in asyncCall", name, ": KeyboardInterrupt"
-			queue.put((self.id, jobid, ForwardedKeyboardInterrupt(exc), None))
+			queue.put((self.id, jobid, func, ForwardedKeyboardInterrupt(exc), None))
 		except BaseException as exc:
 			print "Exception in asyncCall", name
 			sys.excepthook(*sys.exc_info())
-			queue.put((self.id, jobid, exc, None))
+			queue.put((self.id, jobid, func, exc, None))
 	def _work(self, queue):
 		while True:
 			jobid, func, name = queue.get()
@@ -523,11 +523,11 @@ class Parallelization_Worker:
 			if not self.task.poll(**poll_kwargs):
 				from Queue import Empty
 				raise Empty
-		selfid, jobid, exc, res = self.task.get()
+		selfid, jobid, func, exc, res = self.task.get()
 		assert selfid == self.id
 		if jobid == self.jobidcounter:
 			self.jobidcounter = 0
-		return exc, res
+		return func, exc, res
 
 
 class Parallelization:
@@ -547,11 +547,11 @@ class Parallelization:
 				self._exec_task(func=next_task)
 			for w in self.workers:
 				if w.is_ready(): continue
-				try: res = w.get_result(timeout=0.1)
+				try: exc, res = w.get_result(timeout=0.1)
 				except Empty: pass
 				else:
 					self.task_count -= 1
-					return res
+					return exc, res
 
 	def _exec_task(self, func, name=None):
 		if name is None: name=repr(func)
