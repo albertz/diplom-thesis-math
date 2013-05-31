@@ -1,8 +1,6 @@
 # Important: Keep these imports at the top so that `sage utils.py` works.
 import sys
-from sage.all import *
-from sage.calculus.predefined import x
-from sage.misc.preparser import preparse
+import sage.all
 
 from threading import currentThread
 from time import time
