@@ -1,10 +1,11 @@
+from sage.calculus.functional import simplify
 from sage.functions.other import floor
 from sage.matrix.constructor import matrix, Matrix
 from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
 from sage.rings.arith import xgcd as orig_xgcd
 from sage.rings.integer import Integer
-from sage.rings.number_field.number_field import CyclotomicField, QQ, ZZ
+from sage.rings.number_field.number_field import CyclotomicField, QQ, ZZ, QuadraticField
 from utils import *
 
 # via Martin. while this is not in Sage:
