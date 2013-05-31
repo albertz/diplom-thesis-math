@@ -1,3 +1,8 @@
+#!sage
+
+# See here:
+# http://ask.sagemath.org/question/2628/run-python-file-from-command-line-in-sage
+
 import sys
 from sage.all import *
 from sage.calculus.predefined import x
