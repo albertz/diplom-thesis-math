@@ -364,6 +364,7 @@ class ExecingProcess:
 			pickler = Pickler(writeend)
 			ret = target(readend, unpickler, writeend, pickler)
 			pickler.dump(ret)
+			writeend.flush()
 			print "ExecingProcess child %s (pid %i) finished" % (name, os.getpid())
 			raise SystemExit
 
@@ -383,8 +384,8 @@ class ExecingProcess_ConnectionWrapper(object):
 		rlist, wlist, xlist = select.select([self.readend.fileno()], [], [], timeout)
 		return bool(rlist)
 	def close(self):
-		#self.read/write.close()
-		pass
+		self.readend.close()
+		self.writeend.close()
 
 class AsyncTask:
 	def __init__(self, func, name=None):
