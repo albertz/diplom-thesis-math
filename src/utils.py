@@ -521,7 +521,7 @@ class Parallelization:
 		def __init__(self, _id):
 			self.id = _id
 			self.jobidcounter = 0
-			self.task = AsyncTask(func=self._work, name="Parallel worker")
+			self.task = AsyncTask(func=self._work, name="Parallel worker", mustExec=True)
 		def _handle_job(self, queue, jobid, func, name):
 			try:
 				res = func()
