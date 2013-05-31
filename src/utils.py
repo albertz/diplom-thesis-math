@@ -365,14 +365,29 @@ class ExecingProcess:
 			raise SystemExit
 
 class ExecingProcess_ConnectionWrapper(object):
+	# This Connection wrapper extends multiprocessing.Connection by:
+	# - Being pickable (__getstate__, __setstate__ and special __init__).
+	# - send/recv uses our own picklers.
 	def __init__(self, fd=None):
 		self.fd = fd
 		if self.fd:
-			from _multiprocessing import Connection
-			self.conn = Connection(fd)
+			#from _multiprocessing import Connection
+			#self.conn = Connection(fd)
+			self.stream = os.fdopen(fd, "w+")
+			self.pickler = Pickler(self.stream)
+			self.unpickler = Unpickler(self.stream)
 	def __getstate__(self): return self.fd
 	def __setstate__(self, state): self.__init__(state)
-	def __getattr__(self, attr): return getattr(self.conn, attr)
+	def send(self, value):
+		self.pickler.dump(value)
+		self.stream.flush()
+	def recv(self):
+		return self.unpickler.load()
+	def poll(self, timeout=None):
+		import select
+		select.select([self.stream.fileno()], [], [], timeout)
+	def close(self):
+		self.stream.close()
 
 def ExecingProcess_Pipe():
 	import socket

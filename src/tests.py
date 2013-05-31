@@ -92,3 +92,13 @@ def fork_test3(mustExec=False):
 	import utils
 	utils.asyncCall(func=_fork_test_func, mustExec=mustExec)
 
+
+def parall_test(task_limit=1):
+	import utils
+	parallelizaton = utils.Parallelization(task_limit=task_limit)
+	def task_iter_func():
+		while True:
+			yield _fork_test_func
+	parallelizaton.task_iter = task_iter_func()
+
+	print parallelizaton.get_next_result()
