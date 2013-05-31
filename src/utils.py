@@ -538,16 +538,20 @@ class Parallelization:
 	def get_next_result(self):
 		from Queue import Empty
 		while True:
-			while self.task_count < self.task_limit:
-				next_task = next(self.task_iter)
-				self._exec_task(func=next_task)
+			self._maybe_queue_tasks()
 			for w in self.workers:
 				if w.is_ready(): continue
 				try: func, exc, res = w.get_result(timeout=0.1)
 				except Empty: pass
 				else:
 					self.task_count -= 1
+					self._maybe_queue_tasks()
 					return func, exc, res
+
+	def _maybe_queue_tasks(self):
+		while self.task_count < self.task_limit:
+			next_task = next(self.task_iter)
+			self._exec_task(func=next_task)
 
 	def _exec_task(self, func, name=None):
 		if name is None: name=repr(func)
