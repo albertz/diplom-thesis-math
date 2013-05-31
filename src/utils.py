@@ -364,9 +364,7 @@ class ExecingProcess:
 				print "Error: unpickle incomplete"
 				raise SystemExit
 			pickler = Pickler(writeend)
-			ret = target(*(args + (readend, unpickler, writeend, pickler)))
-			pickler.dump(ret)
-			writeend.flush()
+			target(*(args + (readend, unpickler, writeend, pickler)))
 			print "ExecingProcess child %s (pid %i) finished" % (name, os.getpid())
 			raise SystemExit
 
@@ -443,7 +441,7 @@ class AsyncTask:
 		return res
 
 	def poll(self, **kwargs):
-		self.conn.poll(**kwargs)
+		return self.conn.poll(**kwargs)
 
 	@property
 	def isParent(self):
