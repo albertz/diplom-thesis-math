@@ -63,9 +63,12 @@ def _fork_test_func(iterator=None):
 	if not iterator:
 		import itertools
 		iterator = itertools.count()
+	x = None
 	for i in iterator:
 		m = matrix(QQ, 100, [randrange(-100,100) for i in range(100*100)])
-		print m.kernel()
+		x = m.kernel()
+		print x
+	return x
 
 def fork_test():
 	_fork_test_func(range(10))
@@ -98,7 +101,7 @@ def parall_test(task_limit=1):
 	parallelizaton = utils.Parallelization(task_limit=task_limit)
 	def task_iter_func():
 		while True:
-			yield _fork_test_func
+			yield lambda: _fork_test_func(range(10))
 	parallelizaton.task_iter = task_iter_func()
 
 	print parallelizaton.get_next_result()

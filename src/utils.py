@@ -373,21 +373,30 @@ class ExecingProcess_ConnectionWrapper(object):
 		if self.fd:
 			#from _multiprocessing import Connection
 			#self.conn = Connection(fd)
-			self.stream = os.fdopen(fd, "w+")
-			self.pickler = Pickler(self.stream)
+			self.stream = os.fdopen(fd, "r")
 			self.unpickler = Unpickler(self.stream)
 	def __getstate__(self): return self.fd
 	def __setstate__(self, state): self.__init__(state)
 	def send(self, value):
-		self.pickler.dump(value)
-		self.stream.flush()
+		assert self.fd is not None
+		from StringIO import StringIO
+		stream = StringIO()
+		pickler = Pickler(stream)
+		pickler.dump(value)
+		s = stream.getvalue()
+		while len(s):
+			written = os.write(self.fd, s)
+			s = s[written:]
 	def recv(self):
 		return self.unpickler.load()
 	def poll(self, timeout=None):
+		assert self.fd is not None
 		import select
-		select.select([self.stream.fileno()], [], [], timeout)
+		rlist, wlist, xlist = select.select([self.fd], [], [], timeout)
+		return bool(rlist)
 	def close(self):
-		self.stream.close()
+		assert self.fd is not None
+		os.close(self.fd)
 
 def ExecingProcess_Pipe():
 	import socket
@@ -616,6 +625,5 @@ reimportMeIntoAlgoModule()
 
 
 if __name__ == "__main__":
-	print "utils main"
 	ExecingProcess.checkExec()
 
