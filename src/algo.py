@@ -18,7 +18,7 @@ from helpers import *
 from checks import *
 
 
-# At the time of writing, we need these Sage patches:
+# At the time of writing, we need Sage 5.9 (5.8 might work) and these Sage patches:
 # http://trac.sagemath.org/sage_trac/ticket/14240
 # http://trac.sagemath.org/sage_trac/ticket/14497
 # Download the patch files, go to $SAGEDIR/devel/sage, do:
