@@ -342,6 +342,7 @@ class ExecingProcess:
 			self.pickler = Pickler(self.writeend)
 			self.pickler.dump(self.name)
 			self.pickler.dump(self.target)
+			self.pickler.dump(self.args)
 			self.writeend.flush()
 			self.unpickler = Unpickler(self.readend)
 
@@ -358,11 +359,12 @@ class ExecingProcess:
 			print "ExecingProcess child %s (pid %i)" % (name, os.getpid())
 			try:
 				target = unpickler.load()
+				args = unpickler.load()
 			except EOFError:
 				print "Error: unpickle incomplete"
 				raise SystemExit
 			pickler = Pickler(writeend)
-			ret = target(readend, unpickler, writeend, pickler)
+			ret = target(*(args + [readend, unpickler, writeend, pickler]))
 			pickler.dump(ret)
 			writeend.flush()
 			print "ExecingProcess child %s (pid %i) finished" % (name, os.getpid())
@@ -393,8 +395,8 @@ class AsyncTask:
 		self.func = func
 		self.parent_pid = os.getpid()
 		self.proc = ExecingProcess(
-			target = funcCall,
-			args = ((AsyncTask, "_asyncCall"), (self,)),
+			target = self._asyncCall,
+			args = (self,),
 			name = self.name + " worker process")
 		self.proc.daemon = True
 		self.proc.start()
