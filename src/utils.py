@@ -1,16 +1,11 @@
 from threading import currentThread
 from time import time
 import os
-from sage.calculus.functional import simplify
-from sage.functions.other import floor
-from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
 from sage.rings.integer import Integer
 from sage.structure.sage_object import SageObject
 from sage.modules.free_module_element import vector
 from sage.structure.sequence import Sequence_generic, Sequence
-from sage.rings.arith import xgcd as orig_xgcd
-from sage.rings.number_field.number_field import QQ, ZZ, QuadraticField, CyclotomicField
 from sage.symbolic.ring import SymbolicRing
 from sage.symbolic.expression import Expression
 
