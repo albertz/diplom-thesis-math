@@ -543,11 +543,11 @@ class Parallelization:
 				self._exec_task(func=next_task)
 			for w in self.workers:
 				if w.is_ready(): continue
-				try: exc, res = w.get_result(timeout=0.1)
+				try: func, exc, res = w.get_result(timeout=0.1)
 				except Empty: pass
 				else:
 					self.task_count -= 1
-					return exc, res
+					return func, exc, res
 
 	def _exec_task(self, func, name=None):
 		if name is None: name=repr(func)
