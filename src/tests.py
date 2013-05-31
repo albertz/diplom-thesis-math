@@ -59,12 +59,18 @@ def fast_fail_test_D3_k6(B_cF=5):
 		raise
 
 
-def _fork_test_func():
-	while True:
-		m = matrix(QQ, 100, [randrange(-100,100) for i in range(100*100)])
+def _fork_test_func(iterator=None):
+	if not iterator:
+		import itertools
+		iterator = itertools.count()
+	x = 10
+	y = 10
+	for i in iterator:
+		m = matrix(QuadraticField(-3), x, y, [randrange(-100,100) for i in range(x*y)])
 		m.right_kernel()
 
 def fork_test():
+	_fork_test_func(range(10))
 	import os
 	pid = os.fork()
 	if pid != 0:
