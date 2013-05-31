@@ -66,6 +66,10 @@ def fork_test():
 		os.waitpid(pid, 0)
 	else:
 		print "child"
-		os._exit(0)
+		try:
+			import algo
+			algo.herm_modform_space(-3, 6, 5)
+		finally:
+			os._exit(0)
 
 
