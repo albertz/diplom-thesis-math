@@ -93,7 +93,7 @@ def fork_test2():
 def fork_test3(mustExec=False):
 	_fork_test_func(range(10))
 	import utils
-	utils.asyncCall(func=_fork_test_func, mustExec=mustExec)
+	utils.asyncCall(func=_fork_test_func)
 
 
 def parall_test(task_limit=1):

@@ -1,8 +1,3 @@
-# Important: Keep these imports at the top so that `sage utils.py` works.
-# See: http://ask.sagemath.org/question/2628/run-python-file-from-command-line-in-sage
-import sys
-import sage.all
-
 from threading import currentThread
 from time import time
 import os
@@ -596,7 +591,4 @@ def reimportMeIntoAlgoModule():
 				setattr(mod, attr, globals()[attr])
 reimportMeIntoAlgoModule()
 
-
-if __name__ == "__main__":
-	ExecingProcess.checkExec()
 
