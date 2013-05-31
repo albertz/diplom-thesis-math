@@ -4,7 +4,7 @@ from utils import *
 from helpers import *
 
 
-def _fast_fail_test_D3_k6(B_cF=5):
+def fast_fail_test_D3_k6(B_cF=5):
 	from checks import check_eisenstein_series_D3_weight6
 
 	D = -3
