@@ -395,8 +395,9 @@ class ExecingProcess_ConnectionWrapper(object):
 		rlist, wlist, xlist = select.select([self.fd], [], [], timeout)
 		return bool(rlist)
 	def close(self):
-		assert self.fd is not None
-		os.close(self.fd)
+		#assert self.fd is not None
+		#os.close(self.fd)
+		self.stream.close()
 
 def ExecingProcess_Pipe():
 	import socket
