@@ -18,6 +18,13 @@ from helpers import *
 from checks import *
 
 
+# At the time of writing, we need these Sage patches:
+# http://trac.sagemath.org/sage_trac/ticket/14240
+# http://trac.sagemath.org/sage_trac/ticket/14497
+# Download the patch files, go to $SAGEDIR/devel/sage, do:
+#   hg import <patch_i>
+#   sage -b
+
 
 @sage_cached_function
 def herm_modform_indexset(D, B_cF):
