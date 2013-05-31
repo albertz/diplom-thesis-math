@@ -444,6 +444,9 @@ class AsyncTask:
 			thread.waitQueue = None
 		return res
 
+	def poll(self, **kwargs):
+		self.conn.poll(**kwargs)
+
 	@property
 	def isParent(self):
 		return self.parent_pid == os.getpid()
@@ -494,46 +497,73 @@ def asyncCall(func, name=None, mustExec=False):
 class Parallelization:
 	def __init__(self, task_limit=4):
 		import multiprocessing
-		self.queue = multiprocessing.Queue()
-		self.lock = multiprocessing.RLock()
 		self.task_count = 0
 		self.task_limit = task_limit
 		self.task_iter = None
+		self.task_queue = multiprocessing.Queue()
+		self.workes = [self.Worker(i) for i in range(self.task_limit)]
 
 	def get_next_result(self):
 		from Queue import Empty
 		while True:
-			with self.lock:
-				while self.task_count < self.task_limit:
-					next_task = next(self.task_iter)
-					self._exec_task(func=next_task)
-			try: res = self.queue.get(timeout=1)
-			except Empty: pass
-			else:
-				with self.lock:
+			while self.task_count < self.task_limit:
+				next_task = next(self.task_iter)
+				self._exec_task(func=next_task)
+			for w in self.workes:
+				if w.is_ready(): continue
+				try: res = w.get_result(timeout=0.1)
+				except Empty: pass
+				else:
 					self.task_count -= 1
-				return res
+					return res
 
-	def _exec_task(self, func, name=None):
-		task = None
-		def doCall(queue):
+	class Worker:
+		def __init__(self, _id):
+			self.id = _id
+			self.jobidcounter = 0
+			self.task = AsyncTask(func=self._work, name="Parallel worker")
+		def _handle_job(self, queue, jobid, func, name):
 			try:
 				res = func()
-				self.queue.put((task, None, res))
+				queue.put((self.id, jobid, None, res))
 			except KeyboardInterrupt as exc:
 				print "Exception in asyncCall", name, ": KeyboardInterrupt"
-				self.queue.put((task, ForwardedKeyboardInterrupt(exc), None))
+				queue.put((self.id, jobid, ForwardedKeyboardInterrupt(exc), None))
 			except BaseException as exc:
 				print "Exception in asyncCall", name
 				sys.excepthook(*sys.exc_info())
-				self.queue.put((task, exc, None))
-			with self.lock:
-				self.task_count -= 1
-		task = AsyncTask(func=doCall, name=name)
-		with self.lock:
-			self.task_count += 1
-		return task
+				queue.put((self.id, jobid, exc, None))
+		def _work(self, queue):
+			while True:
+				jobid, func, name = queue.get()
+				self._handle_job(queue=queue, jobid=jobid, func=func, name=name)
+		def put_job(self, func, name):
+			self.jobidcounter += 1
+			jobid = self.jobidcounter
+			self.task.put((jobid, func, name))
+		def is_ready(self):
+			return self.jobidcounter == 0
+		def get_result(self, block=False, timeout=None):
+			if not block or timeout is not None:
+				poll_kwargs = {}
+				if timeout is not None: poll_kwargs["timeout"] = timeout
+				if not self.task.poll(**poll_kwargs):
+					from Queue import Empty
+					raise Empty
+			selfid, jobid, exc, res = self.task.get()
+			assert selfid == self.id
+			if jobid == self.jobidcounter:
+				self.jobidcounter = 0
+			return exc, res
 
+	def _exec_task(self, func, name=None):
+		if name is None: name=repr(func)
+		self.task_count += 1
+		for w in self.workes:
+			if w.is_ready():
+				w.put_job(func=func, name=name)
+				return
+		assert False, "all workers are busy"
 
 def reloadC():
 	"""
