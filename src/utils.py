@@ -320,10 +320,18 @@ class ExecingProcess:
 		if pid == 0: # child
 			self.pipe_c2p[0].close()
 			self.pipe_p2c[1].close()
-			args = sys.argv + [
+			if "/local/bin/" in sys.argv[0]: #'/Applications/sage-5.9/local/bin/sage-ipython'
+				SageBin = os.path.normpath(os.path.dirname(sys.argv[0]) + "/../../sage")
+				assert os.path.exists(SageBin), "%r" % SageBin
+			else:
+				assert False, "add code for: %r" % sys.argv
+			args = [
+				SageBin,
+				__file__,
 				"--forkExecProc",
 				str(self.pipe_c2p[1].fileno()),
 				str(self.pipe_p2c[0].fileno())]
+			print "args:", args
 			os.execv(args[0], args)
 		else: # parent
 			self.pipe_c2p[1].close()
@@ -558,3 +566,9 @@ def reimportMeIntoAlgoModule():
 			if hasattr(mod, attr):
 				setattr(mod, attr, globals()[attr])
 reimportMeIntoAlgoModule()
+
+
+if __name__ == "__main__":
+	print "utils main"
+	ExecingProcess.checkExec()
+
