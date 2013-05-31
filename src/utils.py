@@ -337,11 +337,14 @@ class ExecingProcess:
 			self.pipe_c2p[1].close()
 			self.pipe_p2c[0].close()
 			self.pid = pid
-			self.pickler = Pickler(self.pipe_p2c[1])
+			self.writeend = self.pipe_p2c[1]
+			self.readend = self.pipe_c2p[0]
+			self.pickler = Pickler(self.writeend)
 			self.pickler.dump(self.name)
 			self.pickler.dump(self.target)
-			self.pickler.dump(self.args)
-			self.pipe_p2c[1].flush()
+			self.writeend.flush()
+			self.unpickler = Unpickler(self.readend)
+
 	@staticmethod
 	def checkExec():
 		if "--forkExecProc" in sys.argv:
@@ -355,94 +358,61 @@ class ExecingProcess:
 			print "ExecingProcess child %s (pid %i)" % (name, os.getpid())
 			try:
 				target = unpickler.load()
-				args = unpickler.load()
 			except EOFError:
 				print "Error: unpickle incomplete"
 				raise SystemExit
-			ret = target(*args)
-			Pickler(writeend).dump(ret)
+			pickler = Pickler(writeend)
+			ret = target(readend, unpickler, writeend, pickler)
+			pickler.dump(ret)
 			print "ExecingProcess child %s (pid %i) finished" % (name, os.getpid())
 			raise SystemExit
 
 class ExecingProcess_ConnectionWrapper(object):
-	# This Connection wrapper extends multiprocessing.Connection by:
-	# - Being pickable (__getstate__, __setstate__ and special __init__).
-	# - send/recv uses our own picklers.
-	def __init__(self, fd=None):
-		self.fd = fd
-		if self.fd:
-			#from _multiprocessing import Connection
-			#self.conn = Connection(fd)
-			self.stream = os.fdopen(fd, "r")
-			self.unpickler = Unpickler(self.stream)
-	def __getstate__(self): return self.fd
-	def __setstate__(self, state): self.__init__(state)
+	def __init__(self, readend, unpickler, writeend, pickler):
+		self.readend = readend
+		self.unpickler = unpickler
+		self.writeend = writeend
+		self.pickler = pickler
 	def send(self, value):
-		assert self.fd is not None
-		from StringIO import StringIO
-		stream = StringIO()
-		pickler = Pickler(stream)
-		pickler.dump(value)
-		s = stream.getvalue()
-		while len(s):
-			written = os.write(self.fd, s)
-			s = s[written:]
+		self.pickler.dump(value)
+		self.writeend.flush()
 	def recv(self):
 		return self.unpickler.load()
 	def poll(self, timeout=None):
-		assert self.fd is not None
 		import select
-		rlist, wlist, xlist = select.select([self.fd], [], [], timeout)
+		rlist, wlist, xlist = select.select([self.readend.fileno()], [], [], timeout)
 		return bool(rlist)
 	def close(self):
-		#assert self.fd is not None
-		#os.close(self.fd)
-		self.stream.close()
-
-def ExecingProcess_Pipe():
-	import socket
-	s1, s2 = socket.socketpair()
-	c1 = ExecingProcess_ConnectionWrapper(os.dup(s1.fileno()))
-	c2 = ExecingProcess_ConnectionWrapper(os.dup(s2.fileno()))
-	s1.close()
-	s2.close()
-	return c1, c2
-
-isFork = False
+		#self.read/write.close()
+		pass
 
 class AsyncTask:
-	def __init__(self, func, name=None, mustExec=False):
+	def __init__(self, func, name=None):
 		self.name = name or repr(func)
 		self.func = func
-		self.mustExec = mustExec
 		self.parent_pid = os.getpid()
-		if mustExec and sys.platform != "win32":
-			self.Process = ExecingProcess
-			self.Pipe = ExecingProcess_Pipe
-		else:
-			from multiprocessing import Process, Pipe
-			self.Process = Process
-			self.Pipe = Pipe
-		self.parent_conn, self.child_conn = self.Pipe()
-		self.proc = self.Process(
+		self.proc = ExecingProcess(
 			target = funcCall,
 			args = ((AsyncTask, "_asyncCall"), (self,)),
 			name = self.name + " worker process")
 		self.proc.daemon = True
 		self.proc.start()
-		self.child_conn.close()
 		self.child_pid = self.proc.pid
 		assert self.child_pid
-		self.conn = self.parent_conn
+		self.conn = ExecingProcess_ConnectionWrapper(
+			readend=self.proc.readend,
+			unpickler=self.proc.unpickler,
+			writeend=self.proc.writeend,
+			pickler=self.proc.pickler)
 
 	@staticmethod
-	def _asyncCall(self):
+	def _asyncCall(self, readend, unpickler, writeend, pickler):
 		assert self.isChild
-		self.parent_conn.close()
-		self.conn = self.child_conn # we are the child
-		if not self.mustExec and sys.platform != "win32":
-			global isFork
-			isFork = True
+		self.conn = ExecingProcess_ConnectionWrapper(
+			readend=readend,
+			unpickler=unpickler,
+			writeend=writeend,
+			pickler=pickler)
 		try:
 			self.func(self)
 		except KeyboardInterrupt:
@@ -494,7 +464,7 @@ class AsyncTask:
 
 class ForwardedKeyboardInterrupt(Exception): pass
 
-def asyncCall(func, name=None, mustExec=False):
+def asyncCall(func, name=None):
 	def doCall(queue):
 		res = None
 		try:
@@ -507,7 +477,7 @@ def asyncCall(func, name=None, mustExec=False):
 			print "Exception in asyncCall", name
 			sys.excepthook(*sys.exc_info())
 			queue.put((exc,None))
-	task = AsyncTask(func=doCall, name=name, mustExec=mustExec)
+	task = AsyncTask(func=doCall, name=name)
 	# If there is an unhandled exception in doCall or the process got killed/segfaulted or so,
 	# this will raise an EOFError here.
 	# However, normally, we should catch all exceptions and just reraise them here.
@@ -523,7 +493,7 @@ class Parallelization_Worker:
 	def __init__(self, _id):
 		self.id = _id
 		self.jobidcounter = 0
-		self.task = AsyncTask(func=self._work, name="Parallel worker", mustExec=True)
+		self.task = AsyncTask(func=self._work, name="Parallel worker")
 	def _handle_job(self, queue, jobid, func, name):
 		try:
 			res = func()
