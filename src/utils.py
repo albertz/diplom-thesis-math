@@ -1,4 +1,5 @@
 # Important: Keep these imports at the top so that `sage utils.py` works.
+# See: http://ask.sagemath.org/question/2628/run-python-file-from-command-line-in-sage
 import sys
 import sage.all
 
