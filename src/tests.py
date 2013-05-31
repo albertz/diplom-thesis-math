@@ -65,7 +65,7 @@ def _fork_test_func(iterator=None):
 		iterator = itertools.count()
 	for i in iterator:
 		m = matrix(QQ, 100, [randrange(-100,100) for i in range(100*100)])
-		m.kernel()
+		print m.kernel()
 
 def fork_test():
 	_fork_test_func(range(10))
