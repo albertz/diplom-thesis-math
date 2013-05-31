@@ -457,6 +457,28 @@ class AsyncTask:
 
 class ForwardedKeyboardInterrupt(Exception): pass
 
+def asyncCall(func, name=None, mustExec=False):
+	def doCall(queue):
+		res = None
+		try:
+			res = func()
+			queue.put((None,res))
+		except KeyboardInterrupt as exc:
+			print "Exception in asyncCall", name, ": KeyboardInterrupt"
+			queue.put((ForwardedKeyboardInterrupt(exc),None))
+		except BaseException as exc:
+			print "Exception in asyncCall", name
+			sys.excepthook(*sys.exc_info())
+			queue.put((exc,None))
+	task = AsyncTask(func=doCall, name=name, mustExec=mustExec)
+	# If there is an unhandled exception in doCall or the process got killed/segfaulted or so,
+	# this will raise an EOFError here.
+	# However, normally, we should catch all exceptions and just reraise them here.
+	exc,res = task.get()
+	if exc is not None:
+		raise exc
+	return res
+
 # END of the part of MusicPlayer code.
 
 
