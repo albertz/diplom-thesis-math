@@ -5,6 +5,7 @@ include "cdefs.pxi"
 
 from libcpp.string cimport string
 from libcpp.vector cimport vector
+from libcpp.list cimport list
 
 from sage.rings.integer import Integer
 from sage.rings.number_field.number_field import QQ, ZZ, QuadraticField
@@ -29,6 +30,7 @@ cdef extern from "algo_cpp.cpp":
 	cdef cppclass M2T_Odual:
 		int a,b1,b2,c
 	cdef cppclass CurlS_Generator:
+		list[M2T_O] matrices
 		M2T_O getNextS()
 		void clearMatrices()
 	cdef cppclass PrecisionF:
@@ -91,10 +93,22 @@ cdef M2_O M2_O_toC(m, int D) except *:
 	_m.d = O_toC(m[1][1], D)
 	return _m
 
+cdef M2T_O M2T_O_toC(m, int D) except *:
+	assert m.nrows() == 2 and m.ncols() == 2
+	assert m[0,1] == m[1,0].conjugate()
+	cdef M2T_O _m
+	_m.a = m[0,0]
+	_m.c = m[1,1]
+	cdef ElemOfCurlO b = O_toC(m[0,1], D)
+	_m.b1 = b.b1
+	_m.b2 = b.b2
+	return _m
+
 cdef class Calc:
 	# You need a recent Cython (e.g. >=0.19) for this.
 	cdef ReductionMatrices_Calc calc
 	cdef public int D, HermWeight, B_cF
+	cdef public object curlSiterType
 	cdef public size_t matrixColumnCount
 	cdef public size_t matrixRowCountTrans, matrixColumnCountTrans, matrixCountTrans, matrixRowDenomTrans
 	cdef public object params
@@ -104,6 +118,7 @@ cdef class Calc:
 		self.D = D
 		self.HermWeight = HermWeight
 		self.B_cF = B_cF
+		self.curlSiterType = curlSiterType
 		self.calc.init(D, HermWeight, curlSiterType)
 		# start limit
 		# this is never changed at the moment
@@ -180,9 +195,17 @@ cdef class Calc:
 			self.calc.dumpMatrixTrans(i)
 
 	def __getstate__(self):
-		print "called getstate"
-		return 42
+		return ("prot1", self.params, self.curlSiterType, self.curlS)
 
 	def __setstate__(self, state):
-		print "called setstate with", state
-
+		protocol, params, curlSiterType, curlS = state
+		assert protocol == "prot1"
+		D, HermWeight, B_cF = params
+		self.init(D=D, HermWeight=HermWeight, B_cF=B_cF, curlSiterType=curlSiterType)
+		self.calcReducedCurlF()
+		self.curlS = curlS
+		self.calc.curlS.matrices.clear()
+		cdef M2T_O _S
+		for S in curlS:
+			_S = M2T_O_toC(S, D)
+			self.calc.curlS.matrices.push_back(_S)
