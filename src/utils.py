@@ -84,6 +84,7 @@ class Pickler(pickle.Pickler):
 			return
 		for modname, mod in sys.modules.iteritems():
 			if not mod: continue
+			if modname == "__main__": continue
 			moddict = mod.__dict__
 			if obj is moddict:
 				self.save(getModuleDict)
