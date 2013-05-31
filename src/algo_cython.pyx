@@ -178,3 +178,11 @@ cdef class Calc:
 	def dumpMatrixTrans(self):
 		for i in self.matrixCountTrans:
 			self.calc.dumpMatrixTrans(i)
+
+	def __getstate__(self):
+		print "called getstate"
+		return 42
+
+	def __setstate__(self, state):
+		print "called setstate with", state
+	
