@@ -323,7 +323,7 @@ class ExecingProcess:
 				assert False, "add code for: %r" % sys.argv
 			args = [
 				SageBin,
-				__file__,
+				"run.py",
 				"--forkExecProc",
 				str(self.pipe_c2p[1].fileno()),
 				str(self.pipe_p2c[0].fileno())]
