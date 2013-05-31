@@ -331,9 +331,10 @@ class ExecingProcess:
 				"--forkExecProc",
 				str(self.pipe_c2p[1].fileno()),
 				str(self.pipe_p2c[0].fileno())]
-			print "args:", args
+			print "parent pid: %r, pid: %r, args: %r" % (os.getppid(), os.getpid(), args)
 			os.execv(args[0], args)
 		else: # parent
+			print "fork pid:", pid
 			self.pipe_c2p[1].close()
 			self.pipe_p2c[0].close()
 			self.pid = pid
@@ -451,7 +452,8 @@ class AsyncTask:
 	@property
 	def isChild(self):
 		if self.isParent: return False
-		assert self.parent_pid == os.getppid()
+		# No check. The Sage wrapper binary itself forks again, so this is wrong.
+		#assert self.parent_pid == os.getppid(), "%i, %i, %i" % (self.parent_pid, os.getppid(), os.getpid())
 		return True
 
 	# This might be called from the module code.
