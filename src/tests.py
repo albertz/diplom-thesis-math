@@ -1,3 +1,4 @@
+from sage.misc.prandom import randrange
 import algo_cython as C
 from sage.matrix.constructor import matrix
 from utils import *
@@ -58,6 +59,11 @@ def fast_fail_test_D3_k6(B_cF=5):
 		raise
 
 
+def _fork_test_func():
+	while True:
+		m = matrix(QQ, 100, [randrange(-100,100) for i in range(100*100)])
+		m.right_kernel()
+
 def fork_test():
 	import os
 	pid = os.fork()
@@ -67,9 +73,12 @@ def fork_test():
 	else:
 		print "child"
 		try:
-			import algo
-			algo.herm_modform_space(-3, 6, 5)
+			_fork_test_func()
 		finally:
 			os._exit(0)
 
 
+def fork_test2():
+	from sage.parallel.decorate import fork
+	test_ = fork(_fork_test_func, verbose=True)
+	test_()
