@@ -334,7 +334,6 @@ class ExecingProcess:
 			print "parent pid: %r, pid: %r, args: %r" % (os.getppid(), os.getpid(), args)
 			os.execv(args[0], args)
 		else: # parent
-			print "fork pid:", pid
 			self.pipe_c2p[1].close()
 			self.pipe_p2c[0].close()
 			self.pid = pid
