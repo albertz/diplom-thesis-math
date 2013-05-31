@@ -185,4 +185,4 @@ cdef class Calc:
 
 	def __setstate__(self, state):
 		print "called setstate with", state
-	
+
