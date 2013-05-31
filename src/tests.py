@@ -63,14 +63,9 @@ def _fork_test_func(iterator=None):
 	if not iterator:
 		import itertools
 		iterator = itertools.count()
-	level = 17
-	weight = 12
-	n = 50
 	for i in iterator:
-		mf = ModularForms(Gamma0(level), weight)
-		fe_expansion_matrix_l = matrix(QQ, [b.qexp(n).padded_list(n) for b in mf.basis()])
-		fe_expansion_matrix_l.echelonize()
-		fe_expansion_matrix_l.right_kernel()
+		m = matrix(QQ, 100, [randrange(-100,100) for i in range(100*100)])
+		m.kernel()
 
 def fork_test():
 	_fork_test_func(range(10))
