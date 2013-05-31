@@ -541,7 +541,7 @@ class Parallelization:
 		self.task_limit = task_limit
 		self.task_iter = None
 		self.task_queue = multiprocessing.Queue()
-		self.workes = [Parallelization_Worker(i) for i in range(self.task_limit)]
+		self.workers = [Parallelization_Worker(i) for i in range(self.task_limit)]
 
 	def get_next_result(self):
 		from Queue import Empty
@@ -549,7 +549,7 @@ class Parallelization:
 			while self.task_count < self.task_limit:
 				next_task = next(self.task_iter)
 				self._exec_task(func=next_task)
-			for w in self.workes:
+			for w in self.workers:
 				if w.is_ready(): continue
 				try: res = w.get_result(timeout=0.1)
 				except Empty: pass
@@ -560,7 +560,7 @@ class Parallelization:
 	def _exec_task(self, func, name=None):
 		if name is None: name=repr(func)
 		self.task_count += 1
-		for w in self.workes:
+		for w in self.workers:
 			if w.is_ready():
 				w.put_job(func=func, name=name)
 				return
