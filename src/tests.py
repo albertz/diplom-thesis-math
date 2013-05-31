@@ -56,3 +56,16 @@ def fast_fail_test_D3_k6(B_cF=5):
 		print "M_S_right_kernel =", M_S_right_kernel
 		print "herm_modform_fe_expannsion_S_module =", herm_modform_fe_expannsion_S_module
 		raise
+
+
+def fork_test():
+	import os
+	pid = os.fork()
+	if pid != 0:
+		print "parent, child: %i" % pid
+		os.waitpid(pid, 0)
+	else:
+		print "child"
+		os._exit(0)
+
+
