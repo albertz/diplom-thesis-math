@@ -1,10 +1,11 @@
+from sage.misc.prandom import randrange
 import algo_cython as C
 from sage.matrix.constructor import matrix
 from utils import *
 from helpers import *
 
 
-def _fast_fail_test_D3_k6(B_cF=5):
+def fast_fail_test_D3_k6(B_cF=5):
 	from checks import check_eisenstein_series_D3_weight6
 
 	D = -3
@@ -56,3 +57,51 @@ def _fast_fail_test_D3_k6(B_cF=5):
 		print "M_S_right_kernel =", M_S_right_kernel
 		print "herm_modform_fe_expannsion_S_module =", herm_modform_fe_expannsion_S_module
 		raise
+
+
+def _fork_test_func(iterator=None):
+	if not iterator:
+		import itertools
+		iterator = itertools.count()
+	x = None
+	for i in iterator:
+		m = matrix(QQ, 100, [randrange(-100,100) for i in range(100*100)])
+		x = m.kernel()
+		print x
+	return x
+
+def fork_test():
+	_fork_test_func(range(10))
+	import os
+	pid = os.fork()
+	if pid != 0:
+		print "parent, child: %i" % pid
+		os.waitpid(pid, 0)
+	else:
+		print "child"
+		try:
+			_fork_test_func()
+		finally:
+			os._exit(0)
+
+def fork_test2():
+	# Also see here: http://www.sagemath.org/doc/reference/sage/parallel/decorate.html
+	from sage.parallel.decorate import fork
+	test_ = fork(_fork_test_func, verbose=True)
+	test_()
+
+def fork_test3(mustExec=False):
+	_fork_test_func(range(10))
+	import utils
+	utils.asyncCall(func=_fork_test_func, mustExec=mustExec)
+
+
+def parall_test(task_limit=1):
+	import utils
+	parallelizaton = utils.Parallelization(task_limit=task_limit)
+	def task_iter_func():
+		while True:
+			yield lambda: _fork_test_func(range(10))
+	parallelizaton.task_iter = task_iter_func()
+
+	print parallelizaton.get_next_result()

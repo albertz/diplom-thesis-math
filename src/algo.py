@@ -18,6 +18,13 @@ from helpers import *
 from checks import *
 
 
+# At the time of writing, we need Sage 5.9 (5.8 might work) and these Sage patches:
+# http://trac.sagemath.org/sage_trac/ticket/14240
+# http://trac.sagemath.org/sage_trac/ticket/14497
+# Download the patch files, go to $SAGEDIR/devel/sage, do:
+#   hg import <patch_i>
+#   sage -b
+
 
 @sage_cached_function
 def herm_modform_indexset(D, B_cF):
@@ -187,8 +194,6 @@ def modform_restriction_info(calc, S, l):
 	D = calc.D
 	HermWeight = calc.HermWeight
 	B_cF = calc.B_cF
-	reducedCurlFSize = calc.matrixColumnCount
-	herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
 
 	# Step 4. Calculate restriction matrix. Via calc.calcMatrix() (algo_cpp.cpp).
 	# Note that calcMatrix() depends on the current internal calc.curlS set
@@ -239,7 +244,7 @@ def modform_restriction_info(calc, S, l):
 
 
 hermModformSpaceCache = PersistentCache("herm_modform_space__precalc")
-def herm_modform_space(D, HermWeight, B_cF=10):
+def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 	"""
 	This calculates the vectorspace of Fourier expansions to
 	Hermitian modular forms of weight `HermWeight` over \Gamma,
@@ -268,7 +273,10 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 	cacheIdx = (D, HermWeight, B_cF)
 	if cacheIdx in hermModformSpaceCache:
 		lastS, herm_modform_fe_expannsion = hermModformSpaceCache[cacheIdx]
-		verbose("resume at S=%r" % lastS)
+		#verbose("resume at S=%r" % lastS)
+		# Ignore for now because it doesn't work with the parallelization stuff.
+		verbose("ignore resume S=%r for now..." % lastS)
+		lastS = None
 	else:
 		lastS = None
 		herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
@@ -282,49 +290,64 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 		print "dim == 0 -> exit"
 		return
 
-	S = None
-	l = None
-	def calc_restr_info():
-		return modform_restriction_info(calc=calc, S=S, l=l)
-	def calc_cusp_info():
-		precLimit = calcPrecisionDimension(B_cF=B_cF, S=S)
-		return modform_cusp_info(calc=calc, S=S, l=l, precLimit=precLimit)
-	calcfuncs = [calc_restr_info, calc_cusp_info]
+	def task_iter_func():
+		_lastS = lastS
 
-	# Iterate S \in Mat_2^T(\curlO), S > 0.
+		S = None
+		l = None
+		def calc_restr_info():
+			return modform_restriction_info(calc=calc, S=S, l=l)
+		def calc_cusp_info():
+			precLimit = calcPrecisionDimension(B_cF=B_cF, S=S)
+			return modform_cusp_info(calc=calc, S=S, l=l, precLimit=precLimit)
+		calcfuncs = [calc_restr_info, calc_cusp_info]
+
+		# Iterate S \in Mat_2^T(\curlO), S > 0.
+		while True:
+			# Get the next S.
+			calc.curlS_clearMatrices() # In the C++ internal curlS, clear previous matrices.
+			S = calc.getNextS()
+			l = S.det()
+			l = toInt(l)
+			curlS.append(S)
+			curlS_denoms.add(l)
+
+			if _lastS is not None:
+				if S == _lastS:
+					_lastS = None
+				continue
+
+			verbose("trying S={0}, det={1}".format(S, l))
+
+			for calcfunc in calcfuncs:
+				yield calcfunc
+
+	task_iter = task_iter_func()
+	if parallelization is not None:
+		parallelization.task_iter = task_iter
+
 	while True:
-		# Get the next S.
-		calc.curlS_clearMatrices() # In the C++ internal curlS, clear previous matrices.
-		S = calc.getNextS()
-		l = S.det()
-		l = toInt(l)
-		curlS += [S]
-		curlS_denoms.add(l)
+		if parallelization is not None:
+			task, exc, newspace = parallelization.get_next_result()
+			if exc: raise exc
+		else:
+			task = next(task_iter)
+			newspace = task()
 
-		if lastS is not None:
-			if S == lastS:
-				lastS = None
+		if newspace is None:
+			verbose("no data from %r" % task)
 			continue
-
-		verbose("trying S={0}, det={1}".format(S, l))
-
-		for calcfunc in calcfuncs:
-			newspace = calcfunc()
-			if newspace is None:
-				verbose("no data from %r" % calcfunc)
-				continue
-			if newspace.dimension() == reducedCurlFSize:
-				verbose("no information gain from %r" % calcfunc)
-				continue
-			verbose("intersecting %r..." % calcfunc)
-			herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( newspace )
-			current_dimension = herm_modform_fe_expannsion.dimension()
-			verbose("current dimension: %i, wanted: %i" % (current_dimension, dim))
-			assert current_dimension >= dim
-			if dim == current_dimension: break
+		if newspace.dimension() == reducedCurlFSize:
+			verbose("no information gain from %r" % task)
+			continue
+		verbose("intersecting %r..." % task)
+		herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( newspace )
+		current_dimension = herm_modform_fe_expannsion.dimension()
+		verbose("current dimension: %i, wanted: %i" % (current_dimension, dim))
+		assert current_dimension >= dim
 		if dim == current_dimension: break
 
-		hermModformSpaceCache[cacheIdx] = (S, herm_modform_fe_expannsion)
+		hermModformSpaceCache[cacheIdx] = (None, herm_modform_fe_expannsion)
 
 	# Test for some other S with other not-yet-seen denominator.
 	check_herm_modform_space(
@@ -335,4 +358,6 @@ def herm_modform_space(D, HermWeight, B_cF=10):
 	return herm_modform_fe_expannsion
 
 
-
+def herm_modform_space__parallel(D, HermWeight, B_cF=10, task_limit=4):
+	parallelization = Parallelization(task_limit=task_limit)
+	return herm_modform_space(D=D, HermWeight=HermWeight, B_cF=B_cF, parallelization=parallelization)

@@ -1,7 +1,11 @@
 #!/bin/bash
 
-SageDir="/Applications/sage-5.8"
-[ \! -d $SageDir ] && SageDir=~/sage-5.8
+[ "$SageDir" = "" ] && {
+	SageDir="---"
+	[ "$SAGEDIR" != "" ] && SageDir=$SAGEDIR
+}
+[ \! -d $SageDir ] && SageDir="/Applications/sage-5.9"
+[ \! -d $SageDir ] && SageDir=~/sage-5.9
 [ \! -d $SageDir ] && SageDir=/usr/lib/sagemath
 [ \! -d $SageDir ] && SageDir=/usr/local/share/sage
 [ \! -d $SageDir ] && { echo "sagedir not found!"; exit 1; }

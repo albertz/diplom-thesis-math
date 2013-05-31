@@ -1,15 +1,16 @@
+# Important: Keep these imports at the top so that `sage utils.py` works.
+# See: http://ask.sagemath.org/question/2628/run-python-file-from-command-line-in-sage
+import sys
+import sage.all
+
+from threading import currentThread
 from time import time
 import os
-from sage.calculus.functional import simplify
-from sage.functions.other import floor
-from sage.matrix.constructor import matrix
 from sage.matrix.matrix2 import Matrix
 from sage.rings.integer import Integer
 from sage.structure.sage_object import SageObject
 from sage.modules.free_module_element import vector
 from sage.structure.sequence import Sequence_generic, Sequence
-from sage.rings.arith import xgcd as orig_xgcd
-from sage.rings.number_field.number_field import QQ, ZZ, QuadraticField, CyclotomicField
 from sage.symbolic.ring import SymbolicRing
 from sage.symbolic.expression import Expression
 
@@ -281,6 +282,286 @@ def convert_old_cache(name):
 		new_cache[key] = value
 
 
+
+# The following code is partly from [MusicPlayer](https://github.com/albertz/music-player/)
+# but all written by me, thus I transfer this part to GPL here.
+
+def attrChain(base, *attribs, **kwargs):
+	default = kwargs.get("default", None)
+	obj = base
+	for attr in attribs:
+		if obj is None: return default
+		obj = getattr(obj, attr, None)
+	if obj is None: return default
+	return obj
+
+# This is needed in some cases to avoid pickling problems with bounded funcs.
+def funcCall(attrChainArgs, args=()):
+	f = attrChain(*attrChainArgs)
+	return f(*args)
+
+class ExecingProcess:
+	def __init__(self, target, args, name):
+		self.target = target
+		self.args = args
+		self.name = name
+		self.daemon = True
+		self.pid = None
+	def start(self):
+		assert self.pid is None
+		def pipeOpen():
+			readend,writeend = os.pipe()
+			readend = os.fdopen(readend, "r")
+			writeend = os.fdopen(writeend, "w")
+			return readend,writeend
+		self.pipe_c2p = pipeOpen()
+		self.pipe_p2c = pipeOpen()
+		pid = os.fork()
+		if pid == 0: # child
+			self.pipe_c2p[0].close()
+			self.pipe_p2c[1].close()
+			if "/local/bin/" in sys.argv[0]: #'/Applications/sage-5.9/local/bin/sage-ipython'
+				SageBin = os.path.normpath(os.path.dirname(sys.argv[0]) + "/../../sage")
+				assert os.path.exists(SageBin), "%r" % SageBin
+			else:
+				assert False, "add code for: %r" % sys.argv
+			args = [
+				SageBin,
+				__file__,
+				"--forkExecProc",
+				str(self.pipe_c2p[1].fileno()),
+				str(self.pipe_p2c[0].fileno())]
+			print "parent pid: %r, pid: %r, args: %r" % (os.getppid(), os.getpid(), args)
+			os.execv(args[0], args)
+		else: # parent
+			self.pipe_c2p[1].close()
+			self.pipe_p2c[0].close()
+			self.pid = pid
+			self.writeend = self.pipe_p2c[1]
+			self.readend = self.pipe_c2p[0]
+			self.pickler = Pickler(self.writeend)
+			self.pickler.dump(self.name)
+			self.pickler.dump(self.target)
+			self.pickler.dump(self.args)
+			self.writeend.flush()
+			self.unpickler = Unpickler(self.readend)
+
+	@staticmethod
+	def checkExec():
+		if "--forkExecProc" in sys.argv:
+			argidx = sys.argv.index("--forkExecProc")
+			writeFileNo = int(sys.argv[argidx + 1])
+			readFileNo = int(sys.argv[argidx + 2])
+			readend = os.fdopen(readFileNo, "r")
+			writeend = os.fdopen(writeFileNo, "w")
+			unpickler = Unpickler(readend)
+			name = unpickler.load()
+			print "ExecingProcess child %s (pid %i)" % (name, os.getpid())
+			try:
+				target = unpickler.load()
+				args = unpickler.load()
+			except EOFError:
+				print "Error: unpickle incomplete"
+				raise SystemExit
+			pickler = Pickler(writeend)
+			target(*(args + (readend, unpickler, writeend, pickler)))
+			print "ExecingProcess child %s (pid %i) finished" % (name, os.getpid())
+			raise SystemExit
+
+class ExecingProcess_ConnectionWrapper(object):
+	def __init__(self, readend, unpickler, writeend, pickler):
+		self.readend = readend
+		self.unpickler = unpickler
+		self.writeend = writeend
+		self.pickler = pickler
+	def send(self, value):
+		self.pickler.dump(value)
+		self.writeend.flush()
+	def recv(self):
+		return self.unpickler.load()
+	def poll(self, timeout=None):
+		import select
+		rlist, wlist, xlist = select.select([self.readend.fileno()], [], [], timeout)
+		return bool(rlist)
+	def close(self):
+		self.readend.close()
+		self.writeend.close()
+
+class AsyncTask:
+	def __init__(self, func, name=None):
+		self.name = name or repr(func)
+		self.func = func
+		self.parent_pid = os.getpid()
+		self.proc = ExecingProcess(
+			target = self._asyncCall,
+			args = (self,),
+			name = self.name + " worker process")
+		self.proc.daemon = True
+		self.proc.start()
+		self.child_pid = self.proc.pid
+		assert self.child_pid
+		self.conn = ExecingProcess_ConnectionWrapper(
+			readend=self.proc.readend,
+			unpickler=self.proc.unpickler,
+			writeend=self.proc.writeend,
+			pickler=self.proc.pickler)
+
+	@staticmethod
+	def _asyncCall(self, readend, unpickler, writeend, pickler):
+		assert self.isChild
+		self.conn = ExecingProcess_ConnectionWrapper(
+			readend=readend,
+			unpickler=unpickler,
+			writeend=writeend,
+			pickler=pickler)
+		try:
+			self.func(self)
+		except KeyboardInterrupt:
+			print "Exception in AsyncTask", self.name, ": KeyboardInterrupt"
+		except:
+			print "Exception in AsyncTask", self.name
+			sys.excepthook(*sys.exc_info())
+		finally:
+			self.conn.close()
+
+	def put(self, value):
+		self.conn.send(value)
+
+	def get(self):
+		thread = currentThread()
+		try:
+			thread.waitQueue = self
+			res = self.conn.recv()
+		except EOFError: # this happens when the child died
+			raise ForwardedKeyboardInterrupt()
+		except Exception:
+			raise
+		finally:
+			thread.waitQueue = None
+		return res
+
+	def poll(self, **kwargs):
+		return self.conn.poll(**kwargs)
+
+	@property
+	def isParent(self):
+		return self.parent_pid == os.getpid()
+
+	@property
+	def isChild(self):
+		if self.isParent: return False
+		# No check. The Sage wrapper binary itself forks again, so this is wrong.
+		#assert self.parent_pid == os.getppid(), "%i, %i, %i" % (self.parent_pid, os.getppid(), os.getpid())
+		return True
+
+	# This might be called from the module code.
+	# See OnRequestQueue which implements the same interface.
+	def setCancel(self):
+		self.conn.close()
+		if self.isParent and self.child_pid:
+			import signal
+			os.kill(self.child_pid, signal.SIGINT)
+			self.child_pid = None
+
+class ForwardedKeyboardInterrupt(Exception): pass
+
+def asyncCall(func, name=None):
+	def doCall(queue):
+		res = None
+		try:
+			res = func()
+			queue.put((None,res))
+		except KeyboardInterrupt as exc:
+			print "Exception in asyncCall", name, ": KeyboardInterrupt"
+			queue.put((ForwardedKeyboardInterrupt(exc),None))
+		except BaseException as exc:
+			print "Exception in asyncCall", name
+			sys.excepthook(*sys.exc_info())
+			queue.put((exc,None))
+	task = AsyncTask(func=doCall, name=name)
+	# If there is an unhandled exception in doCall or the process got killed/segfaulted or so,
+	# this will raise an EOFError here.
+	# However, normally, we should catch all exceptions and just reraise them here.
+	exc,res = task.get()
+	if exc is not None:
+		raise exc
+	return res
+
+# END of the part of MusicPlayer code.
+
+
+class Parallelization_Worker:
+	def __init__(self, _id):
+		self.id = _id
+		self.jobidcounter = 0
+		self.task = AsyncTask(func=self._work, name="Parallel worker")
+	def _handle_job(self, queue, jobid, func, name):
+		try:
+			res = func()
+			queue.put((self.id, jobid, func, None, res))
+		except KeyboardInterrupt as exc:
+			print "Exception in asyncCall", name, ": KeyboardInterrupt"
+			queue.put((self.id, jobid, func, ForwardedKeyboardInterrupt(exc), None))
+		except BaseException as exc:
+			print "Exception in asyncCall", name
+			sys.excepthook(*sys.exc_info())
+			queue.put((self.id, jobid, func, exc, None))
+	def _work(self, queue):
+		while True:
+			jobid, func, name = queue.get()
+			self._handle_job(queue=queue, jobid=jobid, func=func, name=name)
+	def put_job(self, func, name):
+		self.jobidcounter += 1
+		jobid = self.jobidcounter
+		self.task.put((jobid, func, name))
+	def is_ready(self):
+		return self.jobidcounter == 0
+	def get_result(self, block=False, timeout=None):
+		if not block or timeout is not None:
+			poll_kwargs = {}
+			if timeout is not None: poll_kwargs["timeout"] = timeout
+			if not self.task.poll(**poll_kwargs):
+				from Queue import Empty
+				raise Empty
+		selfid, jobid, func, exc, res = self.task.get()
+		assert selfid == self.id
+		if jobid == self.jobidcounter:
+			self.jobidcounter = 0
+		return func, exc, res
+
+
+class Parallelization:
+	def __init__(self, task_limit=4):
+		import multiprocessing
+		self.task_count = 0
+		self.task_limit = task_limit
+		self.task_iter = None
+		self.task_queue = multiprocessing.Queue()
+		self.workers = [Parallelization_Worker(i) for i in range(self.task_limit)]
+
+	def get_next_result(self):
+		from Queue import Empty
+		while True:
+			while self.task_count < self.task_limit:
+				next_task = next(self.task_iter)
+				self._exec_task(func=next_task)
+			for w in self.workers:
+				if w.is_ready(): continue
+				try: exc, res = w.get_result(timeout=0.1)
+				except Empty: pass
+				else:
+					self.task_count -= 1
+					return exc, res
+
+	def _exec_task(self, func, name=None):
+		if name is None: name=repr(func)
+		self.task_count += 1
+		for w in self.workers:
+			if w.is_ready():
+				w.put_job(func=func, name=name)
+				return
+		assert False, "all workers are busy"
+
 def reloadC():
 	"""
 	This is just for testing to reload the C (Cython) module
@@ -313,3 +594,8 @@ def reimportMeIntoAlgoModule():
 			if hasattr(mod, attr):
 				setattr(mod, attr, globals()[attr])
 reimportMeIntoAlgoModule()
+
+
+if __name__ == "__main__":
+	ExecingProcess.checkExec()
+
