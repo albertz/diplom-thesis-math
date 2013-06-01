@@ -243,6 +243,20 @@ def modform_restriction_info(calc, S, l):
 	return herm_modform_fe_expannsion_S_module
 
 
+class IntersectSpacesTask:
+	def __init__(self, basespace, spaces):
+		self.basespace = basespace
+		self.spaces = spaces
+	def __call__(self):
+		herm_modform_fe_expannsion = self.basespace
+		for descr, space in self.spaces:
+			verbose("intersecting %r..." % descr)
+			herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( space )
+			current_dimension = herm_modform_fe_expannsion.dimension()
+			verbose("current dimension: %i" % current_dimension)
+		return herm_modform_fe_expannsion
+
+
 hermModformSpaceCache = PersistentCache("herm_modform_space__precalc")
 def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 	"""
@@ -326,19 +340,6 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 	if parallelization is not None:
 		parallelization.task_iter = task_iter
 
-	class IntersectSpacesTask:
-		def __init__(self, basespace, spaces):
-			self.basespace = basespace
-			self.spaces = spaces
-		def __call__(self):
-			herm_modform_fe_expannsion = self.basespace
-			for space in self.spaces:
-				verbose("intersecting %r..." % task)
-				herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( space )
-				current_dimension = herm_modform_fe_expannsion.dimension()
-				verbose("current dimension: %i, wanted: %i" % (current_dimension, dim))
-			return herm_modform_fe_expannsion
-
 	while True:
 		if parallelization is not None:
 			spaces = []
@@ -352,6 +353,7 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 					verbose("no information gain from %r" % task)
 					continue
 
+				spacecomment = task
 				assert newspace.dimension() >= dim, "%r, %r" % (task, newspace)
 				if newspace.dimension() < herm_modform_fe_expannsion.dimension():
 					# Swap newspace with herm_modform_fe_expannsion.
@@ -362,8 +364,9 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 							verbose("warning: we expected IntersectSpacesTask for final dim but got: %r" % task)
 					hermModformSpaceCache[cacheIdx] = (None, herm_modform_fe_expannsion)
 					verbose("new dimension: %i, wanted: %i" % (current_dimension, dim))
+					spacecomment = "<old base space>"
 
-				spaces += [newspace]
+				spaces += [spacecomment, newspace]
 
 			if spaces:
 				parallelization.exec_task(IntersectSpacesTask(herm_modform_fe_expannsion, spaces))
