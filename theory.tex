@@ -260,6 +260,12 @@ This gives us the formula to calculate the Fourier expansion $a[S] \colon \Set{k
 \qed
 \end{remark}
 
+\begin{remark}
+Restricting the space of Hermitian modular form Fourier expansion space via \cref{remark:algo-mainstep1} is probably not enough. % TODO: ref, why?
+
+Another method is to use cusps...
+\end{remark}
+
 \begin{algo}
 \label{main-algo}
 We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta$ (for now, $\Delta \in \Set{3,4,8}$). Then we select some form weight $k \in \Z$ ($k \in \Set{1,\dots,20}$ or so), let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximal order (see chapter \ref{maxorder}) and some subgroup $\Gamma$ of $\Sp_2(\curlO)$. Then we select an abel character $\nu \colon \Gamma \rightarrow \C^\times$ of $\Sp_2(\curlO)$ (we just use $\nu \equiv 1$, see \cref{remark-nu}).
