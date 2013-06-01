@@ -3,9 +3,35 @@
 import sys
 import sage.all
 
-import utils
+
+def calc_herm_modforms():
+	from sage.parallel.ncpus import ncpus
+	kwargs = {
+		"D": -3,
+		"HermWeight": 6,
+		"B_cF": 7,
+		"task_limit": ncpus(),
+	}
+	print "Calculating Hermitian modular forms with %r" % kwargs
+	import algo
+	modforms = algo.herm_modform_space__parallel(**kwargs)
+	assert modforms
+	import utils
+	utils.save(
+		modforms,
+		"herm_modforms__D%i_k%i_B%i__%i.sobj" %
+		(kwargs["D"], kwargs["HermWeight"], kwargs["B_cF"], modforms.degree())
+	)
+	print modforms
+	sys.exit(0)
+
 
 if __name__ == "__main__":
+	# Check if we are a worker process. In that case, this would not return.
+	import utils
 	utils.ExecingProcess.checkExec()
 
-	print "this Python file has no functionality (except to be run as a worker process)"
+	# Normal start up.
+	# Just do some calculation.
+	calc_herm_modforms()
+
