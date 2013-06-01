@@ -315,11 +315,11 @@ class ExecingProcess:
 		if pid == 0: # child
 			self.pipe_c2p[0].close()
 			self.pipe_p2c[1].close()
-			if "/local/bin/" in sys.argv[0]: #'/Applications/sage-5.9/local/bin/sage-ipython'
-				SageBin = os.path.normpath(os.path.dirname(sys.argv[0]) + "/../../sage")
-				assert os.path.exists(SageBin), "%r" % SageBin
+			if "/local/bin/" in sys.executable: #'/Applications/sage-5.9/local/bin/python'
+				SageBin = os.path.normpath(os.path.dirname(sys.executable) + "/../../sage")
+				assert os.path.exists(SageBin), "%r" % ([SageBin, sys.executable, sys.argv, sys.exec_prefix])
 			else:
-				assert False, "add code for: %r" % sys.argv
+				assert False, "%r" % ([sys.executable, sys.argv, sys.exec_prefix])
 			args = [
 				SageBin,
 				"run.py",
