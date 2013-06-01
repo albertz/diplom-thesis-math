@@ -260,6 +260,17 @@ class IntersectSpacesTask:
 			return None
 		return herm_modform_fe_expannsion
 
+class CalcTask:
+	def __init__(self, func, calc, kwargs):
+		# This will call func(calc, **kwargs) later.
+		self.func = func
+		self.calc_state = calc.__getstate__()
+		self.kwargs = kwargs
+	def __call__(self):
+		calc = C.Calc()
+		calc.__setstate__(self.calc_state)
+		return self.func(calc, **self.kwargs)
+
 
 hermModformSpaceCache = PersistentCache("herm_modform_space__precalc")
 def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
@@ -311,15 +322,6 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 	def task_iter_func():
 		_lastS = lastS
 
-		S = None
-		l = None
-		def calc_restr_info():
-			return modform_restriction_info(calc=calc, S=S, l=l)
-		def calc_cusp_info():
-			precLimit = calcPrecisionDimension(B_cF=B_cF, S=S)
-			return modform_cusp_info(calc=calc, S=S, l=l, precLimit=precLimit)
-		calcfuncs = [calc_restr_info, calc_cusp_info]
-
 		# Iterate S \in Mat_2^T(\curlO), S > 0.
 		while True:
 			# Get the next S.
@@ -337,8 +339,12 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 
 			verbose("trying S={0}, det={1}".format(S, l))
 
-			for calcfunc in calcfuncs:
-				yield calcfunc
+			yield CalcTask(
+				func=modform_restriction_info, calc=calc, kwargs={"S":S, "l":l})
+
+			precLimit = calcPrecisionDimension(B_cF=B_cF, S=S)
+			yield CalcTask(
+				func=modform_cusp_info, calc=calc, kwargs={"S":S, "l":l, "precLimit": precLimit})
 
 	task_iter = task_iter_func()
 	if parallelization is not None:
