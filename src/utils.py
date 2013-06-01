@@ -1,6 +1,5 @@
 from threading import currentThread
-from time import time
-import os
+import time, os
 from sage.matrix.matrix2 import Matrix
 from sage.rings.integer import Integer
 from sage.structure.sage_object import SageObject
@@ -256,12 +255,12 @@ def persistent_cache(name, index=None, timeLimit=2, ignoreNone=True):
 						cacheidx += (arg,)
 			if cacheidx in cache:
 				return cache[cacheidx]
-			t = time()
+			t = time.time()
 			res = func(*args)
 			if res is None and ignoreNone:
 				return None
-			if timeLimit is None or time() - t > timeLimit:
-				print "calculation of %r took %f secs" % (func, time() - t)
+			if timeLimit is None or time.time() - t > timeLimit:
+				print "calculation of %r took %f secs" % (func, time.time() - t)
 				cache[cacheidx] = res
 			return res
 		return cached_function

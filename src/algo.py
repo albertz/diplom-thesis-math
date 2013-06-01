@@ -353,7 +353,8 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 
 				assert newspace.dimension() >= dim, "%r, %r" % (task, newspace)
 				if newspace.dimension() < herm_modform_fe_expannsion.dimension():
-					herm_modform_fe_expannsion = newspace
+					# Swap newspace with herm_modform_fe_expannsion.
+					herm_modform_fe_expannsion, newspace = newspace, herm_modform_fe_expannsion
 					current_dimension = herm_modform_fe_expannsion.dimension()
 					if current_dimension == dim:
 						if not isinstance(task, IntersectSpacesTask):
@@ -367,8 +368,9 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 				parallelization.exec_task(IntersectSpacesTask(herm_modform_fe_expannsion, spaces))
 
 			parallelization.maybe_queue_tasks()
+			time.sleep(0.1)
 
-		else:
+		else: # no parallelization
 			task = next(task_iter)
 			newspace = task()
 
