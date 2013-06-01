@@ -255,6 +255,9 @@ class IntersectSpacesTask:
 			herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( space )
 			current_dimension = herm_modform_fe_expannsion.dimension()
 			verbose("current dimension: %i" % current_dimension)
+		if herm_modform_fe_expannsion.dimension() == self.basespace.dimension():
+			# No gain, just ignore this intersection.
+			return None
 		return herm_modform_fe_expannsion
 
 
