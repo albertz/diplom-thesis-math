@@ -203,7 +203,7 @@ Thus,
 In the algorithm, we want to work with Fourier expansions in $\Q^\F$. A canonical basis is the set $\F$. We analyze how practical this is in a Computer implementation.
 
 With $[a,b,c] \in \F$, we have $0\le a,c<B$, thus there are only a finite number of possible $(a,c) \in \N_0^2$. Because $0 \le [a,b,c]$, we get $ac - \left| b \right|^2 \ge 0$ and thus $b$ is also always limited. Thus, $\F$ is finite but it might be huge for even small $B$.
-For example\footnote{This example was calculated with the code at \cite{Zeyer13Github}.},
+For example\footnote{ This example was calculated with the code at \cite{Zeyer13Github}.},
 \begin{align*}
 & \text{for } D=-3, B=10,\quad \text{we have } \; \# \F = 21892. \\
 & \text{for } D=-3, B=20,\quad \text{we have } \; \# \F = 413702.
@@ -220,12 +220,12 @@ Thus, we can identify a basis of $\invar{\Q^\F}{\GL_2(\curlO)}$ by $\F / { \sim_
 We use the same invariation notation as for $\Q^\F$ and write
 \[ \invarF{\F}{\GL_2(\curlO)} := \F / { \sim_{\GL_2(\curlO)} } . \]
 We identify the elements in $\invarF{\F}{\GL_2(\curlO)}$ by reduced matrices%
-\footnote{%
+\footnote{
 This is in some sense of "reduced". Details can be seen in the source code at \cite{Zeyer13Github}. There is an algorithm which, for a given matrix $T \in \F$, calculates a reduced matrix $\tilde{T}$ and a determinant character $det$ such that $\tilde{T}[U] = T$ for some $U \in \GL_2(\curlO)$ with $\det(U) = e^{2 \pi i \cdot det / {\#(\curlO^\times)}}$.
 }
 in $\F$. Then, we have $\invar{\F}{\GL_2(\curlO)} \subseteq \F$.
 
-Restricting the elements in $\F$ by the $\GL_2(\curlO)$-invariation makes the set $\invar{\F}{\GL_2(\curlO)} \subseteq \F$ much smaller and better to handle in computer calculations.
+Restricting the elements in $\F$ by the $\GL_2(\curlO)$-invariation makes the set $\invar{\F}{\GL_2(\curlO)} \subseteq \F$ much smaller and better to handle in Computer calculations.
 For example,
 \begin{align*}
 & \text{for } D=-3, B=10,\quad \text{we have } \; \# \left(\invarF{\F}{\GL_2(\curlO)}\right) = 420, \\
