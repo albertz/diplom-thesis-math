@@ -366,7 +366,7 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 					verbose("new dimension: %i, wanted: %i" % (current_dimension, dim))
 					spacecomment = "<old base space>"
 
-				spaces += [spacecomment, newspace]
+				spaces += [(spacecomment, newspace)]
 
 			if spaces:
 				parallelization.exec_task(IntersectSpacesTask(herm_modform_fe_expannsion, spaces))
