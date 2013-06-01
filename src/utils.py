@@ -554,7 +554,9 @@ class Parallelization:
 			if w.is_ready(): continue
 			try: restuple = w.get_result(timeout=0)
 			except Empty: pass
-			else: results += [restuple]
+			else:
+				self.task_count -= 1
+				results += [restuple]
 		return results
 
 	def maybe_queue_tasks(self):
