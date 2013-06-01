@@ -245,6 +245,7 @@ def modform_restriction_info(calc, S, l):
 
 class IntersectSpacesTask:
 	def __init__(self, basespace, spaces):
+		verbose("queued intersection of %i spaces" % len(spaces))
 		self.basespace = basespace
 		self.spaces = spaces
 	def __call__(self):
