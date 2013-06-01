@@ -281,7 +281,6 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 		lastS = None
 		herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
 
-	current_dimension = herm_modform_fe_expannsion.dimension()
 	curlS = [] # all matrices S we have visited so far
 	curlS_denoms = set() # the denominators of the visited matrices S
 
@@ -326,28 +325,58 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 	if parallelization is not None:
 		parallelization.task_iter = task_iter
 
+	class IntersectSpacesTask:
+		def __init__(self, basespace, spaces):
+			self.basespace = basespace
+			self.spaces = spaces
+		def __call__(self):
+			herm_modform_fe_expannsion = self.basespace
+			for space in self.spaces:
+				verbose("intersecting %r..." % task)
+				herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( space )
+				current_dimension = herm_modform_fe_expannsion.dimension()
+				verbose("current dimension: %i, wanted: %i" % (current_dimension, dim))
+			return herm_modform_fe_expannsion
+
 	while True:
 		if parallelization is not None:
-			task, exc, newspace = parallelization.get_next_result()
-			if exc: raise exc
+			spaces = []
+			for task, exc, newspace in parallelization.get_all_ready_results():
+				if exc: raise exc
+
+				if newspace is None:
+					verbose("no data from %r" % task)
+					continue
+				if newspace.dimension() == reducedCurlFSize:
+					verbose("no information gain from %r" % task)
+					continue
+
+				assert newspace.dimension() >= dim, "%r, %r" % (task, newspace)
+				if newspace.dimension() < herm_modform_fe_expannsion.dimension():
+					herm_modform_fe_expannsion = newspace
+					current_dimension = herm_modform_fe_expannsion.dimension()
+					if current_dimension == dim:
+						if not isinstance(task, IntersectSpacesTask):
+							verbose("warning: we expected IntersectSpacesTask for final dim but got: %r" % task)
+					hermModformSpaceCache[cacheIdx] = (None, herm_modform_fe_expannsion)
+					verbose("new dimension: %i, wanted: %i" % (current_dimension, dim))
+
+				spaces += [newspace]
+
+			if spaces:
+				parallelization.exec_task(IntersectSpacesTask(herm_modform_fe_expannsion, spaces))
+
+			parallelization.maybe_queue_tasks()
+
 		else:
 			task = next(task_iter)
 			newspace = task()
 
-		if newspace is None:
-			verbose("no data from %r" % task)
-			continue
-		if newspace.dimension() == reducedCurlFSize:
-			verbose("no information gain from %r" % task)
-			continue
-		verbose("intersecting %r..." % task)
-		herm_modform_fe_expannsion = herm_modform_fe_expannsion.intersection( newspace )
-		current_dimension = herm_modform_fe_expannsion.dimension()
-		verbose("current dimension: %i, wanted: %i" % (current_dimension, dim))
-		assert current_dimension >= dim
-		if dim == current_dimension: break
+			herm_modform_fe_expannsion = IntersectSpacesTask(herm_modform_fe_expannsion, [newspace])()
+			current_dimension = herm_modform_fe_expannsion.dimension()
+			hermModformSpaceCache[cacheIdx] = (None, herm_modform_fe_expannsion)
+			verbose("new dimension: %i, wanted: %i" % (current_dimension, dim))
 
-		hermModformSpaceCache[cacheIdx] = (None, herm_modform_fe_expannsion)
 
 	# Test for some other S with other not-yet-seen denominator.
 	check_herm_modform_space(

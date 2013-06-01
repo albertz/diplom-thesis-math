@@ -538,29 +538,36 @@ class Parallelization:
 	def get_next_result(self):
 		from Queue import Empty
 		while True:
-			self._maybe_queue_tasks()
+			self.maybe_queue_tasks()
 			for w in self.workers:
 				if w.is_ready(): continue
-				try: func, exc, res = w.get_result(timeout=0.1)
+				try: restuple = w.get_result(timeout=0.1)
 				except Empty: pass
 				else:
 					self.task_count -= 1
-					self._maybe_queue_tasks()
-					return func, exc, res
+					self.maybe_queue_tasks()
+					return restuple
 
-	def _maybe_queue_tasks(self):
+	def get_all_ready_results(self):
+		results = []
+		from Queue import Empty
+		for w in self.workers:
+			if w.is_ready(): continue
+			try: restuple = w.get_result(timeout=0)
+			except Empty: pass
+			results += [restuple]
+		return results
+
+	def maybe_queue_tasks(self):
 		while self.task_count < self.task_limit:
 			next_task = next(self.task_iter)
-			self._exec_task(func=next_task)
+			self.exec_task(func=next_task)
 
-	def _exec_task(self, func, name=None):
+	def exec_task(self, func, name=None):
+		jobidcounter, w = min([(w.jobidcounter, w) for w in self.workers])
 		if name is None: name=repr(func)
 		self.task_count += 1
-		for w in self.workers:
-			if w.is_ready():
-				w.put_job(func=func, name=name)
-				return
-		assert False, "all workers are busy"
+		w.put_job(func=func, name=name)
 
 def reloadC():
 	"""
