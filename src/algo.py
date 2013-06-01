@@ -283,6 +283,7 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 
 	curlS = [] # all matrices S we have visited so far
 	curlS_denoms = set() # the denominators of the visited matrices S
+	current_dimension = herm_modform_fe_expannsion.dimension()
 
 	verbose("current dimension: %i, wanted: %i" % (herm_modform_fe_expannsion.dimension(), dim))
 	if dim == 0:
@@ -379,6 +380,9 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 			hermModformSpaceCache[cacheIdx] = (None, herm_modform_fe_expannsion)
 			verbose("new dimension: %i, wanted: %i" % (current_dimension, dim))
 
+		if current_dimension == dim:
+			verbose("finished!")
+			break
 
 	# Test for some other S with other not-yet-seen denominator.
 	check_herm_modform_space(
