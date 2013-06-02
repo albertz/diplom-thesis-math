@@ -536,7 +536,6 @@ class Parallelization_Worker:
 		selfid, func, exc, res = self.task.get()
 		assert selfid == self.id
 		assert len(self.joblist) > 0
-		assert func is self.joblist[0][0]
 		self.joblist.pop(0)
 		return func, exc, res
 	def fixup_broken_proc(self):
