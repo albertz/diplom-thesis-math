@@ -302,6 +302,8 @@ class ExecingProcess:
 		self.name = name
 		self.daemon = True
 		self.pid = None
+		self.isChild = False
+
 	def start(self):
 		assert self.pid is None
 		def pipeOpen():
@@ -313,6 +315,7 @@ class ExecingProcess:
 		self.pipe_p2c = pipeOpen()
 		pid = os.fork()
 		if pid == 0: # child
+			self.isChild = True
 			self.pipe_c2p[0].close()
 			self.pipe_p2c[1].close()
 			if "/local/bin/" in sys.executable: #'/Applications/sage-5.9/local/bin/python'
@@ -340,6 +343,16 @@ class ExecingProcess:
 			self.pickler.dump(self.args)
 			self.writeend.flush()
 			self.unpickler = Unpickler(self.readend)
+
+	def isFinished(self):
+		assert not self.isChild
+		pid, status = os.waitpid(self.pid, os.WNOHANG)
+		if pid != 0: assert pid == self.pid
+		return pid != 0
+
+	def __del__(self):
+		if not self.isChild:
+			os.waitpid(self.pid, 0)
 
 	@staticmethod
 	def checkExec():
@@ -488,29 +501,31 @@ def asyncCall(func, name=None):
 class Parallelization_Worker:
 	def __init__(self, _id):
 		self.id = _id
-		self.jobidcounter = 0
+		self.joblist = []
+		self._init_task()
+	def _init_task(self):
 		self.task = AsyncTask(func=self._work, name="Parallel worker")
-	def _handle_job(self, queue, jobid, func, name):
+	def _handle_job(self, queue, func, name):
 		try:
 			res = func()
-			queue.put((self.id, jobid, func, None, res))
+			queue.put((self.id, func, None, res))
 		except KeyboardInterrupt as exc:
 			print "Exception in asyncCall", name, ": KeyboardInterrupt"
-			queue.put((self.id, jobid, func, ForwardedKeyboardInterrupt(exc), None))
+			queue.put((self.id, func, ForwardedKeyboardInterrupt(exc), None))
 		except BaseException as exc:
 			print "Exception in asyncCall", name
 			sys.excepthook(*sys.exc_info())
-			queue.put((self.id, jobid, func, exc, None))
+			queue.put((self.id, func, exc, None))
 	def _work(self, queue):
 		while True:
-			jobid, func, name = queue.get()
-			self._handle_job(queue=queue, jobid=jobid, func=func, name=name)
+			func, name = queue.get()
+			self._handle_job(queue=queue, func=func, name=name)
 	def put_job(self, func, name):
-		self.jobidcounter += 1
-		jobid = self.jobidcounter
-		self.task.put((jobid, func, name))
+		job = (func, name)
+		self.joblist += [job]
+		self.task.put(job)
 	def is_ready(self):
-		return self.jobidcounter == 0
+		return len(self.joblist) == 0
 	def get_result(self, block=False, timeout=None):
 		if not block or timeout is not None:
 			poll_kwargs = {}
@@ -518,11 +533,20 @@ class Parallelization_Worker:
 			if not self.task.poll(**poll_kwargs):
 				from Queue import Empty
 				raise Empty
-		selfid, jobid, func, exc, res = self.task.get()
+		selfid, func, exc, res = self.task.get()
 		assert selfid == self.id
-		if jobid == self.jobidcounter:
-			self.jobidcounter = 0
+		assert len(self.joblist) > 0
+		assert func is self.joblist[0][0]
+		self.joblist.pop(0)
 		return func, exc, res
+	def fixup_broken_proc(self):
+		# We expect that the proc has terminated. If it hasn't,
+		# this function shouldn't be called and this is a bug.
+		assert self.task.proc.isFinished()
+		self._init_task() # reinit new proc
+		# push all incompleted jobs
+		for job in self.joblist:
+			self.task.put(job)
 
 
 class Parallelization:
@@ -565,10 +589,22 @@ class Parallelization:
 			self.exec_task(func=next_task)
 
 	def exec_task(self, func, name=None):
-		jobidcounter, w = min([(w.jobidcounter, w) for w in self.workers])
+		_, w = min([(len(w.joblist), w) for w in self.workers])
 		if name is None: name=repr(func)
 		self.task_count += 1
-		w.put_job(func=func, name=name)
+		while True:
+			try:
+				w.put_job(func=func, name=name)
+				break
+			except IOError as e: # broken pipe or so
+				# Expect that the proc has been terminated.
+				# (If this is wrong, this need some more checking code what happened
+				#  so that we can recover accordingly.)
+				print "Parallelization.exec_task proc exception:", e
+				print "Reinit proc ..."
+				w.fixup_broken_proc()
+				print "And retry."
+
 
 def reloadC():
 	"""
