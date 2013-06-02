@@ -564,23 +564,44 @@ class Parallelization:
 			self.maybe_queue_tasks()
 			for w in self.workers:
 				if w.is_ready(): continue
-				try: restuple = w.get_result(timeout=0.1)
+				try:
+					restuple = self._stable_proc_communicate(
+						w, lambda: w.get_result(timeout=0.1))
 				except Empty: pass
 				else:
 					self.task_count -= 1
 					self.maybe_queue_tasks()
 					return restuple
 
+	def _stable_proc_communicate(self, worker, action):
+		while True:
+			try:
+				return action()
+			except IOError as e: # broken pipe or so
+				# Expect that the proc has been terminated.
+				# (If this is wrong, this need some more checking code what happened
+				#  so that we can recover accordingly.)
+				print "%r proc exception: %r" % (action, e)
+				print "Reinit proc ..."
+				worker.fixup_broken_proc()
+				print "And retry."
+
 	def get_all_ready_results(self):
 		results = []
 		from Queue import Empty
 		for w in self.workers:
-			if w.is_ready(): continue
-			try: restuple = w.get_result(timeout=0)
-			except Empty: pass
-			else:
-				self.task_count -= 1
-				results += [restuple]
+			while True:
+				# Try to get all results and break if there aren't anymore.
+				if w.is_ready(): break
+				try:
+					restuple = self._stable_proc_communicate(
+						w, lambda: w.get_result(timeout=0))
+				except Empty:
+					break
+				else:
+					self.task_count -= 1
+					results += [restuple]
+
 		return results
 
 	def maybe_queue_tasks(self):
@@ -592,18 +613,8 @@ class Parallelization:
 		_, w = min([(len(w.joblist), w) for w in self.workers])
 		if name is None: name=repr(func)
 		self.task_count += 1
-		while True:
-			try:
-				w.put_job(func=func, name=name)
-				break
-			except IOError as e: # broken pipe or so
-				# Expect that the proc has been terminated.
-				# (If this is wrong, this need some more checking code what happened
-				#  so that we can recover accordingly.)
-				print "Parallelization.exec_task proc exception:", e
-				print "Reinit proc ..."
-				w.fixup_broken_proc()
-				print "And retry."
+		self._stable_proc_communicate(
+			w, lambda: w.put_job(func=func, name=name))
 
 
 def reloadC():
