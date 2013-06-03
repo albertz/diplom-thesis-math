@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# Hermitian modular forms, https://github.com/albertz/diplom-thesis-math
+# Copyright (c) 2013, Albert Zeyer, www.az2000.de
+# All rights reserved.
+# This code is under the GPL v3 or later, see License.txt in the root directory of this project.
+
 from sage.matrix.constructor import matrix
 from sage.modules.free_module_element import vector
 from sage.rings.number_field.number_field import QQ
