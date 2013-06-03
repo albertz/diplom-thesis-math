@@ -69,9 +69,9 @@ std::string string_to_bin(const std::string& s) {
 
 inline
 std::string bin_to_string(const char* s, const char* end, uint32_t& len) {
-	DOMAIN_CHECK(s + 4 < end);
+	DOMAIN_CHECK(s + 4 <= end);
 	uint32_t strsize = bin_to_int<uint32_t>(s);
-	DOMAIN_CHECK(s + strsize < end);
+	DOMAIN_CHECK(s + strsize <= end);
 	len = 4 + strsize;
 	return std::string(s + 4, strsize);
 }
