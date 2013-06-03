@@ -28,6 +28,7 @@ template<typename T>
 T bin_to_int(const char* s);
 
 template<>
+inline
 std::string int_to_bin<uint32_t>(const uint32_t& n) {
 	std::string ret(4, '\0');
 	// big endian
@@ -39,6 +40,7 @@ std::string int_to_bin<uint32_t>(const uint32_t& n) {
 }
 
 template<>
+inline
 uint32_t bin_to_int<uint32_t>(const char* s) {
 	return
 	(((uint32_t)(uint8_t)(s[0])) << 24) |
@@ -48,11 +50,13 @@ uint32_t bin_to_int<uint32_t>(const char* s) {
 }
 
 template<>
+inline
 std::string int_to_bin<int32_t>(const int32_t& n) {
 	return int_to_bin<uint32_t>((uint32_t) n);
 }
 
 template<>
+inline
 int32_t bin_to_int<int32_t>(const char* s) {
 	return (int32_t) bin_to_int<uint32_t>(s);
 }

@@ -194,6 +194,32 @@ struct CurlS_Generator {
 	void clearMatrices() {
 		matrices.clear();
 	}
+	
+	// state without list of current matrices (this->matrices).
+	std::string getState() const {
+		LOGIC_CHECK(D < 0);
+		LOGIC_CHECK(iterType != "");
+		LOGIC_CHECK(iter.get() != NULL);
+		std::string res;
+		res += int_to_bin<Int>(D);
+		res += string_to_bin(iterType);
+		res += string_to_bin(iter->getState());
+		return res;
+	}
+	
+	void setState(const std::string& state) {
+		DOMAIN_CHECK(state.size() >= 4);
+		const char* s = &state[0];
+		const char* end = s + state.size();
+		uint32_t slen = 0;
+		int _D = bin_to_int<Int>(s); s += sizeof(Int);
+		std::string _iterType = bin_to_string(s, end, slen); s += slen; slen = 0;
+		std::string _iterState = bin_to_string(s, end, slen); s += slen; slen = 0;
+		DOMAIN_CHECK(s == end);
+		init(_D, _iterType);
+		LOGIC_CHECK(iter.get() != NULL);
+		iter->setState(_iterState);
+	}
 };
 
 
