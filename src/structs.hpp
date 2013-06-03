@@ -32,9 +32,9 @@ inline
 std::string int_to_bin<uint32_t>(const uint32_t& n) {
 	std::string ret(4, '\0');
 	// big endian
-	ret[0] = (char)(uint8_t)(n & 0xff000000);
-	ret[1] = (char)(uint8_t)(n & 0x00ff0000);
-	ret[2] = (char)(uint8_t)(n & 0x0000ff00);
+	ret[0] = (char)(uint8_t)(n & 0xff000000 >> 24);
+	ret[1] = (char)(uint8_t)(n & 0x00ff0000 >> 16);
+	ret[2] = (char)(uint8_t)(n & 0x0000ff00 >> 8);
 	ret[3] = (char)(uint8_t)(n & 0x000000ff);
 	return ret;
 }

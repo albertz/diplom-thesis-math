@@ -133,4 +133,4 @@ def calcCurlSiter_serialization_test():
 		calc2.getNextS()
 
 	assert calc.curlS == calc2.curlS
-	
+
