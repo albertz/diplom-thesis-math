@@ -393,7 +393,7 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 			if spaces:
 				parallelization.exec_task(IntersectSpacesTask(herm_modform_fe_expannsion, spaces))
 				new_task_count += 1
-				
+
 			new_task_count += parallelization.maybe_queue_tasks()
 			time.sleep(0.1)
 

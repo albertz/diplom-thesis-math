@@ -158,9 +158,20 @@ class Unpickler(pickle.Unpickler):
 #from sage.misc.db import save, load
 # But these:
 def save(obj, filename):
-	f = open(filename, "w")
-	pickler = Pickler(f)
+	from StringIO import StringIO
+	s = StringIO()
+	pickler = Pickler(s)
 	pickler.dump(obj)
+	try:
+		f = open(filename, "w")
+		f.write(s.getvalue())
+	except BaseException:
+		# try again
+		f = open(filename, "w")
+		f.write(s.getvalue())
+		# but reraise
+		raise
+
 def load(filename):
 	f = open(filename)
 	unpickler = Unpickler(f)
