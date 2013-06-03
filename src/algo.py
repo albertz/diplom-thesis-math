@@ -308,18 +308,16 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 	dim = herm_modform_space_dim(D=D, HermWeight=HermWeight)
 
 	cacheIdx = (D, HermWeight, B_cF)
-	if cacheIdx in hermModformSpaceCache:
-		lastS, herm_modform_fe_expannsion = hermModformSpaceCache[cacheIdx]
-		#verbose("resume at S=%r" % lastS)
-		# Ignore for now because it doesn't work with the parallelization stuff.
-		verbose("ignore resume S=%r for now..." % lastS)
-		lastS = None
-	else:
-		lastS = None
+	try:
+		if not parallelization: raise TypeError # resuming not implemented in non-parallelization mode
+		herm_modform_fe_expannsion, calc, curlS_denoms, pending_tasks = hermModformSpaceCache[cacheIdx]
+		if not isinstance(calc, C.Calc): raise TypeError
+		print "Resuming!"
+	except (TypeError, KeyError): # old format or not cached
 		herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
+		curlS_denoms = set() # the denominators of the visited matrices S
+		pending_tasks = None
 
-	curlS = [] # all matrices S we have visited so far
-	curlS_denoms = set() # the denominators of the visited matrices S
 	current_dimension = herm_modform_fe_expannsion.dimension()
 
 	verbose("current dimension: %i, wanted: %i" % (herm_modform_fe_expannsion.dimension(), dim))
@@ -328,8 +326,6 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 		return
 
 	def task_iter_func():
-		_lastS = lastS
-
 		# Iterate S \in Mat_2^T(\curlO), S > 0.
 		while True:
 			# Get the next S.
@@ -337,13 +333,7 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 			S = calc.getNextS()
 			l = S.det()
 			l = toInt(l)
-			curlS.append(S)
 			curlS_denoms.add(l)
-
-			if _lastS is not None:
-				if S == _lastS:
-					_lastS = None
-				continue
 
 			verbose("trying S={0}, det={1}".format(S, l))
 
@@ -358,7 +348,14 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 	if parallelization is not None:
 		parallelization.task_iter = task_iter
 
+	if parallelization is not None and pending_tasks:
+		for func, name in pending_tasks:
+			parallelization.exec_task(func=func, name=name)
+
+	step_counter = 0
 	while True:
+		step_counter += 1
+
 		if parallelization is not None:
 			spaces = []
 			for task, exc, newspace in parallelization.get_all_ready_results():
@@ -391,6 +388,12 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 
 			parallelization.maybe_queue_tasks()
 			time.sleep(0.1)
+
+			if step_counter % 10 == 0:
+				# save state
+				pending_tasks = parallelization.get_pending_tasks()
+				hermModformSpaceCache[cacheIdx] = herm_modform_fe_expannsion, calc, curlS_denoms, pending_tasks
+				pass
 
 		else: # no parallelization
 			task = next(task_iter)

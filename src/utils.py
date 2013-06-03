@@ -639,6 +639,12 @@ class Parallelization:
 		self._stable_proc_communicate(
 			w, lambda: w.put_job(func=func, name=name))
 
+	def get_pending_tasks(self):
+		joblist = []
+		for w in self.workers:
+			joblist += w.joblist # list of (func,name)
+		return joblist
+
 
 def reloadC():
 	"""
