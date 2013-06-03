@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdexcept>
 #include <string>
+#include <stdint.h>
 
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
@@ -17,7 +18,59 @@
 #define LOGIC_CHECK(x) { if(!(x)) throw std::logic_error(\
 	(__FILE__ ":" TOSTRING(__LINE__) ": logic-check failed: " #x)); }
 
-typedef int Int;
+typedef int32_t Int;
+
+
+template<typename T>
+std::string int_to_bin(const T& n);
+
+template<typename T>
+T bin_to_int(const char* s);
+
+template<>
+std::string int_to_bin<uint32_t>(const uint32_t& n) {
+	std::string ret(4, '\0');
+	// big endian
+	ret[0] = (char)(uint8_t)(n & 0xff000000);
+	ret[1] = (char)(uint8_t)(n & 0x00ff0000);
+	ret[2] = (char)(uint8_t)(n & 0x0000ff00);
+	ret[3] = (char)(uint8_t)(n & 0x000000ff);
+	return ret;
+}
+
+template<>
+uint32_t bin_to_int<uint32_t>(const char* s) {
+	return
+	(((uint32_t)(uint8_t)(s[0])) << 24) |
+	(((uint32_t)(uint8_t)(s[1])) << 16) |
+	(((uint32_t)(uint8_t)(s[2])) << 8) |
+	(((uint32_t)(uint8_t)(s[3])));
+}
+
+template<>
+std::string int_to_bin<int32_t>(const int32_t& n) {
+	return int_to_bin<uint32_t>((uint32_t) n);
+}
+
+template<>
+int32_t bin_to_int<int32_t>(const char* s) {
+	return (int32_t) bin_to_int<uint32_t>(s);
+}
+
+inline
+std::string string_to_bin(const std::string& s) {
+	DOMAIN_CHECK(s.size() <= 0xffffffff);
+	return int_to_bin<uint32_t>((uint32_t)s.size()) + s;
+}
+
+inline
+std::string bin_to_string(const char* s, const char* end, uint32_t& len) {
+	DOMAIN_CHECK(s + 4 < end);
+	uint32_t strsize = bin_to_int<uint32_t>(s);
+	DOMAIN_CHECK(s + strsize < end);
+	len = 4 + strsize;
+	return std::string(s + 4, strsize);
+}
 
 
 template<typename T>
@@ -150,7 +203,20 @@ struct M2T_O {
 	Int det(const int D) const {
 		return a*c - absBsquare(D);
 	}
-	Int gcd() const { return ::gcd(a, b1, b2, c); }	
+	Int gcd() const { return ::gcd(a, b1, b2, c); }
+	
+	std::string getState() const {
+		std::string res = int_to_bin(a) + int_to_bin(b1) + int_to_bin(b2) + int_to_bin(c);
+		LOGIC_CHECK(res.size() == 4 * sizeof(Int));
+		return res;
+	}
+	void setState(const std::string& state) {
+		DOMAIN_CHECK(state.size() == 4 * sizeof(Int));
+		a  = bin_to_int<Int>(&state[sizeof(Int)*0]);
+		b1 = bin_to_int<Int>(&state[sizeof(Int)*1]);
+		b2 = bin_to_int<Int>(&state[sizeof(Int)*2]);
+		c  = bin_to_int<Int>(&state[sizeof(Int)*3]);
+	}
 };
 inline std::ostream& operator<<(std::ostream& os, const M2T_O& m) {
 	return os << "M2T_O(" << m.a << "," << m.b1 << "," << m.b2 << "," << m.c << ")";

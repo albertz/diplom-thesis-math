@@ -10,6 +10,7 @@
 #include <gmp.h>
 #include <iostream>
 #include <memory>
+#include <string>
 
 // In many cases, we wont use this variable and hardcode
 // it for degree 2. However, we define it here,
@@ -26,6 +27,8 @@ struct InfiniteIterIntf {
 	virtual bool isValid() const = 0;
 	virtual void next() = 0;
 	virtual T get() const = 0;
+	virtual std::string getState() const = 0;
+	virtual void setState(const std::string& state) = 0;
 	Self& operator++() {
 		do {
 			next();
@@ -48,6 +51,13 @@ struct M2T_O_PosDefSortedGeneric_Iterator : _InfIterM2T_O {
 	M2T_O cur;
 	M2T_O_PosDefSortedGeneric_Iterator(int _D) : _InfIterM2T_O(_D) {}
 	M2T_O get() const { return cur; }
+	std::string getState() const {
+		return cur.getState();
+	}
+	void setState(const std::string& state) {
+		DOMAIN_CHECK(state.size() == 4 * sizeof(Int));
+		cur.setState(state);
+	}
 	bool isValid() const {
 		if(cur.det(D) <= 0) return false;
 		if(cur.a <= 0) return false;
@@ -98,6 +108,16 @@ struct M2T_O_PosDefSortedZZ_Iterator : _InfIterM2T_O {
 	 */
 	
 	M2T_O get() const { return cur; }
+	
+	std::string getState() const {
+		return cur.getState() + int_to_bin(curDenom);
+	}
+	void setState(const std::string& state) {
+		DOMAIN_CHECK(state.size() == 5 * sizeof(Int));
+		cur.setState(state.substr(0, 4 * sizeof(Int)));
+		curDenom = bin_to_int<Int>(&state[sizeof(Int)*4]);
+	}
+	
 	bool isValid() const {
 		if(cur.a > cur.c) return false;
 		if(cur.det(D) != curDenom) return false;
