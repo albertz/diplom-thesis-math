@@ -221,6 +221,19 @@ class PersistentCache:
 	def __iter__(self):
 		return self.keys()
 
+def pickle_dumps(obj):
+	from StringIO import StringIO
+	s = StringIO()
+	pickler = Pickler(s)
+	pickler.dump(obj)
+	return s.getvalue()
+
+def pickle_loads(s):
+	from StringIO import StringIO
+	ss = StringIO(s)
+	unpickler = Unpickler(ss)
+	return unpickler.load()
+
 
 def persistent_cache(name, index=None, timeLimit=2, ignoreNone=True):
 	def decorator(func):

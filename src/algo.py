@@ -3,6 +3,17 @@
 # Copyright (c) 2013, Albert Zeyer, www.az2000.de
 # This code is under the GPL v3 or later, see License.txt in the root directory of this project.
 
+# In this file, the main algorithm is implemented which calculates the
+# vector space of Fourier expansions of Hermitian modular forms.
+# This is the function `herm_modform_space()`.
+
+# At the time of writing, we need Sage 5.9 (5.8 might work) and these Sage patches:
+# http://trac.sagemath.org/sage_trac/ticket/14240
+# http://trac.sagemath.org/sage_trac/ticket/14497
+# Download the patch files, go to $SAGEDIR/devel/sage, do:
+#   hg import <patch_i>
+#   sage -b
+
 from sage.modular.arithgroup.congroup_sl2z import SL2Z
 from sage.modular.congroup import Gamma0
 from sage.modules.free_module import FreeModule
@@ -21,14 +32,6 @@ import algo_cython as C
 from utils import *
 from helpers import *
 from checks import *
-
-
-# At the time of writing, we need Sage 5.9 (5.8 might work) and these Sage patches:
-# http://trac.sagemath.org/sage_trac/ticket/14240
-# http://trac.sagemath.org/sage_trac/ticket/14497
-# Download the patch files, go to $SAGEDIR/devel/sage, do:
-#   hg import <patch_i>
-#   sage -b
 
 
 @sage_cached_function

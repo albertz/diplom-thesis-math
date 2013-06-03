@@ -110,3 +110,27 @@ def parall_test(task_limit=1):
 	parallelizaton.task_iter = task_iter_func()
 
 	print parallelizaton.get_next_result()
+
+
+def calcCurlSiter_serialization_test():
+	D = -3
+	HermWeight = 6
+	B_cF = 7
+
+	import algo_cython as C
+	calc = C.Calc()
+	calc.init(D = D, HermWeight = HermWeight, B_cF=B_cF)
+	calc.calcReducedCurlF()
+
+	for i in range(10):
+		calc.getNextS()
+
+	calc_state = pickle_dumps(calc)
+	calc2 = pickle_loads(calc_state)
+
+	for i in range(10):
+		calc.getNextS()
+		calc2.getNextS()
+
+	assert calc.curlS == calc2.curlS
+	
