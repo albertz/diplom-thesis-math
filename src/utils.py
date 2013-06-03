@@ -369,7 +369,9 @@ class ExecingProcess:
 		return pid != 0
 
 	def __del__(self):
-		if not self.isChild:
+		if not self.isChild and self.pid:
+			import signal
+			os.kill(self.pid, signal.SIGINT)
 			os.waitpid(self.pid, 0)
 
 	@staticmethod
