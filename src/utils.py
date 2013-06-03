@@ -507,15 +507,21 @@ class Parallelization_Worker:
 		self.task = AsyncTask(func=self._work, name="Parallel worker")
 	def _handle_job(self, queue, func, name):
 		try:
-			res = func()
-			queue.put((self.id, func, None, res))
-		except KeyboardInterrupt as exc:
-			print "Exception in asyncCall", name, ": KeyboardInterrupt"
-			queue.put((self.id, func, ForwardedKeyboardInterrupt(exc), None))
-		except BaseException as exc:
-			print "Exception in asyncCall", name
-			sys.excepthook(*sys.exc_info())
-			queue.put((self.id, func, exc, None))
+			try:
+				res = func()
+			except KeyboardInterrupt as exc:
+				print "Exception in asyncCall", name, ": KeyboardInterrupt"
+				queue.put((self.id, func, ForwardedKeyboardInterrupt(exc), None))
+			except BaseException as exc:
+				print "Exception in asyncCall", name
+				sys.excepthook(*sys.exc_info())
+				queue.put((self.id, func, exc, None))
+			else:
+				queue.put((self.id, func, None, res))
+		except IOError as exc:
+			# This is probably a broken pipe or so.
+			print "parallel worker <pid %i> IOError: %r" % (os.getpid(), exc)
+			raise SystemExit
 	def _work(self, queue):
 		while True:
 			func, name = queue.get()
