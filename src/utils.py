@@ -513,7 +513,7 @@ class Parallelization_Worker:
 				print "Exception in asyncCall", name, ": KeyboardInterrupt"
 				queue.put((self.id, func, ForwardedKeyboardInterrupt(exc), None))
 			except BaseException as exc:
-				print "Exception in asyncCall", name
+				print "Exception in asyncCall", name, "<pid %i>" % os.getpid(), ": %r" % exc
 				sys.excepthook(*sys.exc_info())
 				queue.put((self.id, func, exc, None))
 			else:
