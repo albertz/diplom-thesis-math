@@ -329,8 +329,13 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 		# Iterate S \in Mat_2^T(\curlO), S > 0.
 		while True:
 			# Get the next S.
-			calc.curlS_clearMatrices() # In the C++ internal curlS, clear previous matrices.
-			S = calc.getNextS()
+			# If calc.curlS is not empty, this is because we have recovered from a resume.
+			if len(calc.curlS) == 0:
+				S = calc.getNextS()
+			else:
+				assert len(calc.curlS) == 1
+				S = calc.curlS[0]
+
 			l = S.det()
 			l = toInt(l)
 			curlS_denoms.add(l)
@@ -343,6 +348,8 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 			precLimit = calcPrecisionDimension(B_cF=B_cF, S=S)
 			yield CalcTask(
 				func=modform_cusp_info, calc=calc, kwargs={"S":S, "l":l, "precLimit": precLimit})
+
+			calc.curlS_clearMatrices() # In the C++ internal curlS, clear previous matrices.
 
 	task_iter = task_iter_func()
 	if parallelization is not None:
