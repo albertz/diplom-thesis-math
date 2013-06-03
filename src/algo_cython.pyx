@@ -36,6 +36,8 @@ cdef extern from "algo_cpp.cpp":
 		list[M2T_O] matrices
 		M2T_O getNextS()
 		void clearMatrices()
+		string getState() except +
+		void setState(string state) except +
 	cdef cppclass PrecisionF:
 		int B
 	cdef cppclass ReductionMatrices_Calc:
@@ -198,17 +200,11 @@ cdef class Calc:
 			self.calc.dumpMatrixTrans(i)
 
 	def __getstate__(self):
-		"""
-		Note that this state does not (yet) support the resuming of the curlS iteration!
-		It stores curlS itself, as well as all other parameters, so the calculations
-		`calcMatrix()` and `calcMatrixTrans()` will work, but calling `getNextS()`
-		is not supported (it will not crash but the next state is not defined).
-		"""
-		return ("prot1", self.params, self.curlSiterType, self.curlS)
+		return ("prot2", self.params, self.curlSiterType, self.curlS, self.calc.curlS.getState())
 
 	def __setstate__(self, state):
-		protocol, params, curlSiterType, curlS = state
-		assert protocol == "prot1"
+		protocol, params, curlSiterType, curlS, curlSiterState = state
+		assert protocol == "prot2"
 		D, HermWeight, B_cF = params
 		self.init(D=D, HermWeight=HermWeight, B_cF=B_cF, curlSiterType=curlSiterType)
 		self.calcReducedCurlF()
@@ -218,3 +214,4 @@ cdef class Calc:
 		for S in curlS:
 			_S = M2T_O_toC(S, D)
 			self.calc.curlS.matrices.push_back(_S)
+		self.calc.curlS.setState(curlSiterState)
