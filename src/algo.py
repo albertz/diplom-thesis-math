@@ -312,7 +312,7 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 		if not parallelization: raise TypeError # resuming not implemented in non-parallelization mode
 		herm_modform_fe_expannsion, calc, curlS_denoms, pending_tasks = hermModformSpaceCache[cacheIdx]
 		if not isinstance(calc, C.Calc): raise TypeError
-		print "Resuming!"
+		print "Resuming from %s" % hermModformSpaceCache._filename_for_key(cacheIdx)
 	except (TypeError, ValueError, KeyError): # old format or not cached
 		herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
 		curlS_denoms = set() # the denominators of the visited matrices S
