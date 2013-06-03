@@ -31,7 +31,7 @@ cython \
 	-I $SageExtIncludeDir \
 	--line-directives \
 	--cplus \
-	algo_cython.pyx
+	algo_cython.pyx || exit 1
 
 # Note that you either need a recent Clang or at least GCC 4.7.
 Cpp="c++"
@@ -48,16 +48,16 @@ $Cpp \
 	-I $SageExtIncludeDir \
 	-ggdb \
 	-c \
-	algo_cython.cpp
+	algo_cython.cpp || exit 1
 
 if [ "$(uname)" == "Linux" ]; then
-$Cpp -shared algo_cython.o -ggdb -lc -L $SageCLibDir -lcsage -o algo_cython.so
+$Cpp -shared algo_cython.o -ggdb -lc -L $SageCLibDir -lcsage -o algo_cython.so || exit 1
 
 elif [ "$(uname)" == "Darwin" ]; then
 libtool -dynamic \
 	algo_cython.o \
 	-undefined dynamic_lookup \
-	-o algo_cython.so
+	-o algo_cython.so || exit 1
 
 else
 echo "no linker"
