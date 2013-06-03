@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# Hermitian modular forms, https://github.com/albertz/diplom-thesis-math
+# Copyright (c) 2013, Albert Zeyer, www.az2000.de
+# All rights reserved.
+# This code is under the GPL v3 or later, see License.txt in the root directory of this project.
+
 from threading import currentThread
 import time, os
 from sage.matrix.matrix2 import Matrix
@@ -9,7 +15,7 @@ from sage.symbolic.ring import SymbolicRing
 from sage.symbolic.expression import Expression
 
 
-# for debugging
+# For debugging. It's a drop-in replacement for sys.excepthook.
 import better_exchook
 
 
