@@ -630,9 +630,12 @@ class Parallelization:
 		return results
 
 	def maybe_queue_tasks(self):
+		count = 0
 		while self.task_count < self.task_limit:
 			next_task = next(self.task_iter)
 			self.exec_task(func=next_task)
+			count += 1
+		return count
 
 	def exec_task(self, func, name=None):
 		_, w = min([(len(w.joblist), w) for w in self.workers])

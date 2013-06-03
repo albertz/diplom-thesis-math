@@ -361,9 +361,9 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 
 	step_counter = 0
 	while True:
-		step_counter += 1
-
 		if parallelization is not None:
+			new_task_count = 0
+
 			spaces = []
 			for task, exc, newspace in parallelization.get_all_ready_results():
 				if exc: raise exc
@@ -392,14 +392,18 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 
 			if spaces:
 				parallelization.exec_task(IntersectSpacesTask(herm_modform_fe_expannsion, spaces))
-
-			parallelization.maybe_queue_tasks()
+				new_task_count += 1
+				
+			new_task_count += parallelization.maybe_queue_tasks()
 			time.sleep(0.1)
 
-			if step_counter % 10 == 0:
-				verbose("save state after %i steps to %s" % (step_counter, os.path.basename(hermModformSpaceCache._filename_for_key(cacheIdx))))
-				pending_tasks = parallelization.get_pending_tasks()
-				hermModformSpaceCache[cacheIdx] = herm_modform_fe_expannsion, calc, curlS_denoms, pending_tasks
+			if new_task_count > 0:
+				step_counter += 1
+
+				if step_counter % 10 == 0:
+					verbose("save state after %i steps to %s" % (step_counter, os.path.basename(hermModformSpaceCache._filename_for_key(cacheIdx))))
+					pending_tasks = parallelization.get_pending_tasks()
+					hermModformSpaceCache[cacheIdx] = herm_modform_fe_expannsion, calc, curlS_denoms, pending_tasks
 
 		else: # no parallelization
 			task = next(task_iter)
