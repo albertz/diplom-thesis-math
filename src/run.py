@@ -3,7 +3,6 @@
 
 # Hermitian modular forms, https://github.com/albertz/diplom-thesis-math
 # Copyright (c) 2013, Albert Zeyer, www.az2000.de
-# All rights reserved.
 # This code is under the GPL v3 or later, see License.txt in the root directory of this project.
 
 # Important: Keep these imports at the top so that `sage run.py` works.

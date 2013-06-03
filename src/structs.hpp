@@ -1,3 +1,7 @@
+// Hermitian modular forms, https://github.com/albertz/diplom-thesis-math
+// Copyright (c) 2013, Albert Zeyer, www.az2000.de
+// This code is under the GPL v3 or later, see License.txt in the root directory of this project.
+
 #ifndef __SAGE_HERMITIAN_STRUCTS_HPP__
 #define __SAGE_HERMITIAN_STRUCTS_HPP__
 
