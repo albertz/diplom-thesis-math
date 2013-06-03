@@ -198,6 +198,12 @@ cdef class Calc:
 			self.calc.dumpMatrixTrans(i)
 
 	def __getstate__(self):
+		"""
+		Note that this state does not (yet) support the resuming of the curlS iteration!
+		It stores curlS itself, as well as all other parameters, so the calculations
+		`calcMatrix()` and `calcMatrixTrans()` will work, but calling `getNextS()`
+		is not supported (it will not crash but the next state is not defined).
+		"""
 		return ("prot1", self.params, self.curlSiterType, self.curlS)
 
 	def __setstate__(self, state):
