@@ -1,4 +1,10 @@
-// clang++ -std=c++11 test.cpp reduceGL.cpp
+// Hermitian modular forms, https://github.com/albertz/diplom-thesis-math
+// Copyright (c) 2013, Albert Zeyer, www.az2000.de
+// All rights reserved.
+// This code is under the GPL v3 or later, see License.txt in the root directory of this project.
+
+// Compile:
+// clang++ -std=c++11 test.cpp reduceGL.cpp algo.cpp
 
 void test_reduceGL();
 void test_algo_CurlSGen_ZZ();
