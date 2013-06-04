@@ -404,10 +404,10 @@ def solveR(M, S, space):
 
 	Define tM = [[a I, b S; c S^{-1}, d I]] \in \Sp_2(1/det(S) * \curlO).
 
-    OUTPUT:
+	OUTPUT:
 
-    - A tuple `(gamma, R, tM)`, where `gamma` is a matrix \in \Sp_2(\curlO),
-      `R` is a matrix \in \Sp_2(\K) such that
+	- A tuple `(gamma, R, tM)`, where `gamma` is a matrix \in \Sp_2(\curlO),
+	  `R` is a matrix \in \Sp_2(\K) such that
 
 	      tM = gamma R.
 
