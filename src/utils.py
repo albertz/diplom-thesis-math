@@ -178,6 +178,13 @@ def load(filename):
 	obj = unpickler.load()
 	return obj
 
+
+CacheEnabled = True
+if not int(os.environ.get("CACHE", 1)):
+	print "Cache disabled"
+	CacheEnabled = False
+
+
 class PersistentCache:
 	def __init__(self, name):
 		self.name = name
@@ -195,6 +202,7 @@ class PersistentCache:
 	def _filename_pattern(self):
 		return MyDir + "/cache/" + self.name + "_*.sobj"
 	def __getitem__(self, key):
+		if not CacheEnabled: raise KeyError
 		try:
 			cache_key, value = load(self._filename_for_key(key))
 		except IOError:
@@ -207,6 +215,7 @@ class PersistentCache:
 			if cache_key == key: return value
 			raise KeyError, "key repr collidation"
 	def __setitem__(self, key, value):
+		if not CacheEnabled: return
 		try:
 			save((key, value), self._filename_for_key(key))
 		except Exception:
@@ -217,6 +226,7 @@ class PersistentCache:
 		except KeyError: return False
 		else: return True
 	def items(self):
+		if not CacheEnabled: return
 		from glob import glob
 		for fn in glob(self._filename_pattern()):
 			try:
@@ -227,6 +237,7 @@ class PersistentCache:
 				raise
 			yield key, value
 	def keys(self):
+		if not CacheEnabled: return
 		for key,value in self.items():
 			yield key
 	def __iter__(self):
