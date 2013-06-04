@@ -309,9 +309,12 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 
 	cacheIdx = (D, HermWeight, B_cF)
 	try:
-		if not parallelization: raise TypeError # resuming not implemented in non-parallelization mode
 		herm_modform_fe_expannsion, calc, curlS_denoms, pending_tasks = hermModformSpaceCache[cacheIdx]
 		if not isinstance(calc, C.Calc): raise TypeError
+		if pending_tasks and not parallelization:
+			print "Warning: Resume state has pending_task but we have no parallelization"
+			print "We cannot resume."
+			raise ValueError
 		print "Resuming from %s" % hermModformSpaceCache._filename_for_key(cacheIdx)
 	except (TypeError, ValueError, KeyError, EOFError): # old format or not cached or cache incomplete
 		herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
@@ -352,10 +355,10 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 			calc.curlS_clearMatrices() # In the C++ internal curlS, clear previous matrices.
 
 	task_iter = task_iter_func()
-	if parallelization is not None:
+	if parallelization:
 		parallelization.task_iter = task_iter
 
-	if parallelization is not None and pending_tasks:
+	if parallelization and pending_tasks:
 		for func, name in pending_tasks:
 			parallelization.exec_task(func=func, name=name)
 
@@ -396,22 +399,25 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 			new_task_count += parallelization.maybe_queue_tasks()
 			time.sleep(0.1)
 
-			if new_task_count > 0:
-				step_counter += 1
-
-				if step_counter % 10 == 0:
-					verbose("save state after %i steps to %s" % (step_counter, os.path.basename(hermModformSpaceCache._filename_for_key(cacheIdx))))
-					pending_tasks = parallelization.get_pending_tasks()
-					hermModformSpaceCache[cacheIdx] = (herm_modform_fe_expannsion, calc, curlS_denoms, pending_tasks)
-
 		else: # no parallelization
+			new_task_count = 1
 			task = next(task_iter)
 			newspace = task()
 
 			herm_modform_fe_expannsion = IntersectSpacesTask(herm_modform_fe_expannsion, [newspace])()
 			current_dimension = herm_modform_fe_expannsion.dimension()
-			hermModformSpaceCache[cacheIdx] = (None, herm_modform_fe_expannsion)
 			verbose("new dimension: %i, wanted: %i" % (current_dimension, dim))
+
+		if new_task_count > 0:
+			step_counter += 1
+
+			if step_counter % 10 == 0:
+				verbose("save state after %i steps to %s" % (step_counter, os.path.basename(hermModformSpaceCache._filename_for_key(cacheIdx))))
+				if parallelization:
+					pending_tasks = parallelization.get_pending_tasks()
+				else:
+					pending_tasks = ()
+				hermModformSpaceCache[cacheIdx] = (herm_modform_fe_expannsion, calc, curlS_denoms, pending_tasks)
 
 		if current_dimension == dim:
 			verbose("finished!")
