@@ -136,11 +136,12 @@ def calcCurlSiter_serialization_test():
 
 
 def test_calcPrecisionDimension():
-	from helpers import calcPrecisionDimension
+	from helpers import calcPrecisionDimension, CurlO
 
 	D = -3
 	HermWeight = 6
 	B_cF = 7
+	space = CurlO(D)
 
 	import algo_cython as C
 	calc = C.Calc()
@@ -150,4 +151,5 @@ def test_calcPrecisionDimension():
 	for i in range(100):
 		S = calc.getNextS()
 		M = calc.calcMatrix()
-		assert M.nrows() == calcPrecisionDimension(B_cF=B_cF, S=S)
+		S_repr = (S[0,0], space.as_tuple_b(S[0,1]), S[1,1])
+		assert M.nrows() == calcPrecisionDimension(B_cF=B_cF, S=S), "fail at i = %i, S = %r, M.nrows = %i" % (i, S_repr, M.nrows())

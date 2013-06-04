@@ -15,8 +15,8 @@ void test_algo();
 int main() {
 //	test_reduceGL();
 //	test_algo_CurlSGen_ZZ();
-//	test_algo_CurlSGen_generic();
+	test_algo_CurlSGen_generic();
 //	test_algo_PrecisionF();
-	test_algo_calcReducedCurlF();
+//	test_algo_calcReducedCurlF();
 //	test_algo();
 }
