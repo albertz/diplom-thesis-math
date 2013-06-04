@@ -391,12 +391,28 @@ def M2T_Odual((a, b1, b2, c), D):
 
 def solveR(M, S, space):
 	"""
-	Let M = [[a,b;c,d]] \in \SL_2(\ZZ).
-	Let S \in \Her_2(\curlO) and S > 0.
+	INPUT:
+
+	- `M` -- A matrix in \SL_2(\ZZ). Let M = [[a,b;c,d]].
+
+	- `S` -- A matrix in \Her_2(\curlO), where \curlO is the maximum order
+	         of some quadratic number field \K. This is specified by `space`.
+	         Also, S > 0.
+
+	- `space` -- An instance of the class `CurlO`, or some compatible object.
+	             It specifies functions such as `xgcd` which are used here.
+
 	Define tM = [[a I, b S; c S^{-1}, d I]] \in \Sp_2(1/det(S) * \curlO).
-	We find gamma \in \Sp_2(\curlO), R \in \Sp_2(\K)
-	such that tM = gamma R.
-	This algorithm is written in a way that it should work in other cases, too, though.
+
+    OUTPUT:
+
+    - A tuple `(gamma, R, tM)`, where `gamma` is a matrix \in \Sp_2(\curlO),
+      `R` is a matrix \in \Sp_2(\K) such that
+
+	      tM = gamma R.
+
+	This algorithm is written in a way that it is flexible about inputs because
+	it can accept generic interfaces for `space`.
 	"""
 	assert isinstance(M, Matrix)
 	assert isinstance(S, Matrix)
