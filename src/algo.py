@@ -281,8 +281,13 @@ class CalcTask:
 		return self.func(calc, **self.kwargs)
 
 
+# These are flags for the parameter `reduction_method_flags` of `herm_modform_space`.
+Method_Elliptic_reduction = 1 << 0
+Method_EllipticCusp_reduction = 1 << 1
+
+
 hermModformSpaceCache = PersistentCache("herm_modform_space__precalc")
-def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
+def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None, reduction_method_flags=-1):
 	"""
 	This calculates the vectorspace of Fourier expansions to
 	Hermitian modular forms of weight `HermWeight` over \Gamma,
@@ -346,12 +351,14 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 
 			verbose("trying S={0}, det={1}".format(S, l))
 
-			yield CalcTask(
-				func=modform_restriction_info, calc=calc, kwargs={"S":S, "l":l})
+			if reduction_method_flags & Method_Elliptic_reduction:
+				yield CalcTask(
+					func=modform_restriction_info, calc=calc, kwargs={"S":S, "l":l})
 
-			precLimit = calcPrecisionDimension(B_cF=B_cF, S=S)
-			yield CalcTask(
-				func=modform_cusp_info, calc=calc, kwargs={"S":S, "l":l, "precLimit": precLimit})
+			if reduction_method_flags & Method_EllipticCusp_reduction:
+				precLimit = calcPrecisionDimension(B_cF=B_cF, S=S)
+				yield CalcTask(
+					func=modform_cusp_info, calc=calc, kwargs={"S":S, "l":l, "precLimit": precLimit})
 
 			calc.curlS_clearMatrices() # In the C++ internal curlS, clear previous matrices.
 
@@ -435,6 +442,9 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 	return herm_modform_fe_expannsion
 
 
-def herm_modform_space__parallel(D, HermWeight, B_cF=10, task_limit=4):
+def herm_modform_space__parallel(D, HermWeight, B_cF=10, task_limit=4, **kwargs):
 	parallelization = Parallelization(task_limit=task_limit)
-	return herm_modform_space(D=D, HermWeight=HermWeight, B_cF=B_cF, parallelization=parallelization)
+	return herm_modform_space(
+		D=D, HermWeight=HermWeight, B_cF=B_cF,
+		parallelization=parallelization,
+		**kwargs)
