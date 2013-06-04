@@ -4,7 +4,7 @@
 # This code is under the GPL v3 or later, see License.txt in the root directory of this project.
 
 from sage.calculus.functional import simplify
-from sage.functions.other import floor, ceil
+from sage.functions.other import floor
 from sage.matrix.constructor import matrix, Matrix
 from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
@@ -270,8 +270,8 @@ class CurlO:
 		# Now we are just checking multiple possibilities and use
 		# the smallest one. Note that these are not all possible cases.
 		solutions = []
-		for q1 in [int(floor(qq1)), int(ceil(qq1))]:
-			for q2 in [int(floor(qq2)), int(ceil(qq2))]:
+		for q1 in [int(floor(qq1)) + i for i in [-1,0,1,2]]:
+			for q2 in [int(floor(qq2)) + i for i in [-1,0,1,2]]:
 				q = self.from_tuple_b(q1,q2)
 				# q * b + r == a
 				r = _simplify(a - q * b)
