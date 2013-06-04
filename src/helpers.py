@@ -19,6 +19,13 @@ import cusp_expansions
 
 @persistent_cache(name="matrixTrans")
 def _calcMatrixTrans(calc, tS, tT, lS, lT):
+	"""
+	See `calcMatrixTrans()` for the main documentation.
+	This is the lower-level function which is wrapped through `persistent_cache`.
+	This makes the cache more flexible about different parameters
+	`R` to `calcMatrixTrans()`.
+	"""
+
 	try:
 		ms = calc.calcMatrixTrans(tS, tT, lS, lT)
 	except Exception:
