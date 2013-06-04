@@ -148,7 +148,7 @@ def test_calcPrecisionDimension():
 	calc.init(D=D, HermWeight=HermWeight, B_cF=B_cF)
 	calc.calcReducedCurlF()
 
-	for i in range(100):
+	for i in range(1000):
 		calc.curlS_clearMatrices()
 		S = calc.getNextS()
 		M = calc.calcMatrix()

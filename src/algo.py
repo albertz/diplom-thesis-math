@@ -214,6 +214,7 @@ def modform_restriction_info(calc, S, l):
 	# The maximum precision of Elliptic modular forms is given in
 	# the text by \cF(S). This is also the number of rows of M_S.
 	precLimit = M_S.nrows()
+	assert precLimit == calcPrecisionDimension(B_cF=B_cF, S=S)
 
 	# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
 	verbose("get elliptic modform space with precision %i ..." % precLimit)
