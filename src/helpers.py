@@ -261,8 +261,22 @@ def _simplify(a):
 		return a.simplify_full()
 	return simplify(a)
 
+
 class CurlO:
-	# We set `b = b1 + b2 (D + \sqrt{D})/2`.
+	"""
+	This class defines some helper functions for calculations in \curlO,
+	where \curlO is the maximal order of some quadratic imaginary number
+	field \K = \QQ(\sqrt{D}), where `D` is some negative integer.
+
+	For example, this class defines a function `xgcd` which implements the
+	extended Euclidean algorithm. This is based on the `divmod`
+	function, also in this class.
+
+	When representing an element `b` in \curlO, we use the representation
+	`b = b1 + b2 (D + \sqrt{D})/2` for b1,b2 \in \ZZ. This can be calculated
+	via the functions `from_tuple_b` and `as_tuple_b`.
+	"""
+
 	def __init__(self, D):
 		self.D = D
 		assert (D*D - D) % 4 == 0
@@ -270,6 +284,7 @@ class CurlO:
 		self.maxorder = self.field.maximal_order()
 		self.Droot = self.field(D).sqrt()
 		self.DrootHalf_coordinates_in_terms_of_powers = (self.Droot / 2).coordinates_in_terms_of_powers()
+
 	def divmod(self, a, b):
 		"""
 		Returns q,r such that a = q*b + r.
@@ -314,11 +329,14 @@ class CurlO:
 		euc_r, q, r = min(solutions)
 		assert euc_r < euc_b, "%r < %r; r=%r, b=%r, a=%r" % (euc_r, euc_b, r, b, a)
 		return q, r
+
 	def euclidean_func(self, x):
 		return self.field(x).abs()
+
 	def divides(self, a, b):
-		q,r = self.divmod(a, b)
+		q, r = self.divmod(a, b)
 		return r == 0
+
 	def xgcd(self, a, b):
 		if a == b: return a, 1, 0
 		if a == -b: return a, 1, 0
@@ -376,19 +394,23 @@ class CurlO:
 	def gcd(self, a, b):
 		d,_,_ = self.xgcd(a, b)
 		return d
+
 	def common_denom(self, *args):
 		tupleargs = [None] * len(args) * 2
 		for i in range(len(args)):
 			tupleargs[2*i],tupleargs[2*i+1] = self.as_tuple_b(args[i])
 		return matrix(QQ, 1,len(tupleargs), tupleargs).denominator()
+
 	def as_tuple_b(self, a):
 		real_part, b2 = self.DrootHalf_coordinates_in_terms_of_powers(a)
 		b1 = real_part - b2 * self.D / 2
 		return (b1, b2)
+
 	def from_tuple_b(self, b1, b2):
 		b1 = QQ(b1)
 		b2 = QQ(b2)
 		return self.field(b1 + b2 * (self.D + self.Droot) / 2)
+
 	def __contains__(self, item):
 		try:
 			b1,b2 = self.as_tuple_b(item)
@@ -396,9 +418,11 @@ class CurlO:
 		except TypeError: return False
 		else: return True
 
+
 def test_curlO():
 	space = CurlO(-3)
 	assert space.xgcd(1337,43) == orig_xgcd(1337,43)
+
 
 class CurlOdual:
 	def __init__(self, D):
@@ -408,10 +432,12 @@ class CurlOdual:
 		self.field = QuadraticField(D)
 		self.Droot = self.field(D).sqrt()
 		self.DrootHalf_coordinates_in_terms_of_powers = (self.Droot / 2).coordinates_in_terms_of_powers()
+
 	def from_tuple_b(self, b1, b2):
 		b1, b2 = QQ(b1), QQ(b2)
 		b = b1 / self.Droot + b2 * (1 + self.Droot) * QQ(0.5)
 		return b
+
 
 def M2T_Odual((a, b1, b2, c), D):
 	space = CurlOdual(D)
@@ -538,6 +564,7 @@ def solveR(M, S, space):
 	assert (R.submatrix(0,0,2,2) * R.submatrix(2,2,2,2).conjugate_transpose()).apply_map(_simplify) == 1
 	return gamma, R, tM
 
+
 def test_solveR():
 	space = CurlO(-3)
 	a,b,c,d = 2,1,1,1
@@ -595,6 +622,7 @@ def test_solveR():
 	gamma,R,tM = solveR(M, S, space)
 
 	return gamma,R,tM
+
 
 def _curlO_matrix_denom(mat, D):
 	space = CurlO(D)
