@@ -184,7 +184,17 @@ def calcRestrictMatrix(calc):
 
 def cusp_matrix(cusp):
 	"""
-	Returns a matrix M such that M * \infinity == cusp.
+	Returns a matrix `M` such that `M * \infinity == cusp`.
+
+	INPUT:
+
+	- `cusp` -- a number \in \QQ.
+
+	OUTPUT:
+
+	- A matrix `M` \in \SL_2(\ZZ) such that
+
+	      M * \infinity == cusp .
 	"""
 	if cusp == 0:
 		return matrix(ZZ,2,2,[0,-1,1,0])
