@@ -402,7 +402,7 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 				if step_counter % 10 == 0:
 					verbose("save state after %i steps to %s" % (step_counter, os.path.basename(hermModformSpaceCache._filename_for_key(cacheIdx))))
 					pending_tasks = parallelization.get_pending_tasks()
-					hermModformSpaceCache[cacheIdx] = herm_modform_fe_expannsion, calc, curlS_denoms, pending_tasks
+					hermModformSpaceCache[cacheIdx] = (herm_modform_fe_expannsion, calc, curlS_denoms, pending_tasks)
 
 		else: # no parallelization
 			task = next(task_iter)
