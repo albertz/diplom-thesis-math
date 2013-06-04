@@ -6,10 +6,11 @@
 from sage.matrix.constructor import matrix
 from sage.modules.free_module_element import vector
 from sage.rings.number_field.number_field import QQ
-from algo import *
 
 
 def check_eisenstein_series_D3_weight6(vs, B_cF):
+	from algo import herm_modform_indexset
+	from helpers import M2T_Odual
 	D = -3
 	HermWeight = 6
 	indexset = herm_modform_indexset(D=D, B_cF=B_cF)
@@ -87,6 +88,9 @@ def check_herm_modform_space(calc, herm_modform_space, used_curlS_denoms, checkS
 	When mapping herm_modform_space, we must only get Elliptic modular forms.
 	We check whether they are in ModularForms(\Gamma_0(l), prec).
 	"""
+
+	from helpers import calcRestrictMatrix, getElliptModFormsBasisMatrix, toInt
+	from algo import verbose
 
 	HermWeight = calc.HermWeight
 	curlS_denoms = set(used_curlS_denoms)
