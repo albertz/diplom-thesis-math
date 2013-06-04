@@ -420,10 +420,6 @@ def solveR(M, S, space):
 	assert M.nrows() == 2 and M.ncols() == 2
 	assert _simplify(S[0][0]) > 0 and _simplify(S[1][1]) > 0 and _simplify(S.det()) > 0, "S is not positive definite"
 	assert M.det() == 1, "M is not in \SL_2(\ZZ)"
-	#Ring = S.base_ring()
-	#print type(Ring), Ring
-	#Ring = SymbolicRing()
-	#Ring = I.base_ring() # Symbolic Ring
 	Ring = space.field
 
 	A1 = matrix(Ring, 2,2, M[0][0])
