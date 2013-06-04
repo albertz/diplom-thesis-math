@@ -223,6 +223,21 @@ def _calcMatrix_py(D, HermWeight, S, B_cF):
 
 
 def _simplify(a):
+	"""
+	INPUT:
+
+	- `a` -- Some mathematical object. We mostly expect something which
+	         represents a number. This can be a SymbolicExpression,
+	         something from QQ, ZZ or so or similar.
+
+	OUTPUT:
+
+	- `b`, where `b` is a simplified equal version of `a`. In case that
+	  `a` was a SymbolicExpression, it could be an element in QQ or a
+	  simplified SymbolicExpression. In case it has a `simplify_full`
+	  member function, it also calls that one. And it uses the Sage
+	  function `simplify`.
+	"""
 	try: return QQ(a)
 	except: pass
 	if hasattr(a, "simplify_full"):
