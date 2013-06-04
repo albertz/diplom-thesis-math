@@ -149,6 +149,7 @@ def test_calcPrecisionDimension():
 	calc.calcReducedCurlF()
 
 	for i in range(100):
+		calc.curlS_clearMatrices()
 		S = calc.getNextS()
 		M = calc.calcMatrix()
 		S_repr = (S[0,0], space.as_tuple_b(S[0,1]), S[1,1])
