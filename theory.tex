@@ -304,9 +304,18 @@ We can find
 \[ \gamma \in \Sp_2(\curlO), \quad R = \SimpleMatrix{\tilde{S}}{\tilde{T}}{0_2}{\overline{\tilde{S}}^T} \in \Sp_2(\K) \]
 such that $\tilde{M} = \gamma R$. We describe the details in \cref{lemma:solveR}.
 Then, we have
-\[ f[S] | M = (f | R) [S] . \]
+\begin{align*}
+& (f[S] | M) (\tau) \\
+=\quad& (f | R) [S] (\tau) \\
+=\quad& f( \tilde{S} S \overline{\tilde{S}}^T \tau + \tilde{S} \tilde{T} ) .
+\end{align*}
 
+Thus, a cusp $c$ and $S \in \PM_2(\curlO)$ gives us a linear map $f \mapsto f[S] | M_c$ which we can calculate as described. %TODO: more...
+And given Hermitian modular forms, we must only get Elliptic modular cusp forms.
 
+Via other methods, we can more directly calculate the vectorspace of Elliptic modular cusp forms in $M_c$.
+
+By comparing this, we have another method to reduce $\mathcal{M}_i$.
 
 \begin{lemma}
 \label{lemma:solveR}
