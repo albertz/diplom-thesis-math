@@ -374,7 +374,7 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None, reduction_m
 
 	step_counter = 0
 	while True:
-		if parallelization is not None:
+		if parallelization:
 			new_task_count = 0
 
 			spaces = []
