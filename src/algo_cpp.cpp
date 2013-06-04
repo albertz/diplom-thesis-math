@@ -611,6 +611,16 @@ void test_algo_calcReducedCurlF() {
 	for(size_t i = 0; i < calc.reducedCurlFList.size(); ++i) {
 		LOGIC_CHECK(calc.reducedCurlFList[i] == calc2.reducedCurlFList[i]);
 	}
+
+#ifndef OLDGCC
+	// another test whether all reductions are reducing to themselves.
+	for(auto Tr : calc.reducedCurlFMap) {
+		struct hermitian_form_with_character_evaluation reduced;
+		reduce_GL(Tr.first, calc.D, reduced);
+		LOGIC_CHECK(reduced.matrix == Tr.first);
+	}
+	cout << "all reduced matrices reduce to themselves" << endl;
+#endif
 }
 
 void test_algo() {
