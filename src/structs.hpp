@@ -131,6 +131,8 @@ template<typename T>
 T squareRootIntUpper(const T& y) {
 	T x = squareRootInt(y);
 	if(x*x == y) return x;
+	LOGIC_CHECK(x*x < y);
+	LOGIC_CHECK((x+1)*(x+1) >= y);
 	return x + 1;
 }
 
