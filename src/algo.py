@@ -314,6 +314,8 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None, reduction_m
 	dim = herm_modform_space_dim(D=D, HermWeight=HermWeight)
 
 	cacheIdx = (D, HermWeight, B_cF)
+	if reduction_method_flags != -1:
+		cacheIdx += (reduction_method_flags,)
 	try:
 		herm_modform_fe_expannsion, calc, curlS_denoms, pending_tasks = hermModformSpaceCache[cacheIdx]
 		if not isinstance(calc, C.Calc): raise TypeError
