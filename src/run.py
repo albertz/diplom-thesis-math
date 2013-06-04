@@ -11,14 +11,17 @@ import sys
 import sage.all
 
 
-def calc_herm_modforms():
+def calc_herm_modforms(**kwargs):
+	kwargs = kwargs.copy()
 	from sage.parallel.ncpus import ncpus
-	kwargs = {
+	for key,value in {
 		"D": -3,
 		"HermWeight": 6,
 		"B_cF": 7,
 		"task_limit": ncpus(),
-	}
+	}.items():
+		if not key in kwargs:
+			kwargs[key] = value
 	print "Calculating Hermitian modular forms with %r" % kwargs
 	import algo
 	modforms = algo.herm_modform_space__parallel(**kwargs)
@@ -39,6 +42,24 @@ if __name__ == "__main__":
 	utils.ExecingProcess.checkExec()
 
 	# Normal start up.
-	# Just do some calculation.
-	calc_herm_modforms()
+	# Just call `calc_herm_modforms()`.
+	# Get `kwargs` from `sys.argv`.
+
+	kwargs = {}
+	key = None
+	for i in range(1, len(sys.argv)):
+		arg = sys.argv[i]
+		if key is not None:
+			try:
+				arg = int(arg)
+			except ValueError:
+				print "Cannot convert %r to int for key %r" % (arg, key)
+				raise
+			kwargs[key] = arg
+			key = None
+		else:
+			if arg[:2] == "--":
+				key = arg[2:]
+
+	calc_herm_modforms(**kwargs)
 
