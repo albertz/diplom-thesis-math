@@ -287,6 +287,31 @@ Restricting the space of Hermitian modular form Fourier expansion space via \cre
 
 Another method is to use cusps...
 
+We get relations between different reductions.
+
+Let $c \in \Q \cup \Set{\infty}$ be a representation of a cusp in $\Gamma_0(l)$. For our method, we are only interested in $c \ne \infty$. We choose a matrix $M \in \SL_2(\Z)$ such that $M \infty = c$. $M$ is also called a cusp matrix.
+
+Now we look at $f[S] | M$. We have
+\begin{align*}
+& f[S] | M \\
+=\quad & f( (a S \tau + b S) ( c S^{-1} S \tau + d) ) \\
+=\quad & ( f | \tilde{M} )[S] ,
+\end{align*}
+where
+\[ \tilde{M} = \SimpleMatrix{a}{bS}{cS^{-1}}{d} . \]
+%
+We can find
+\[ \gamma \in \Sp_2(\curlO), \quad R = \SimpleMatrix{\tilde{S}}{\tilde{T}}{0_2}{\overline{\tilde{S}}^T} \in \Sp_2(\K) \]
+such that $\tilde{M} = \gamma R$. We describe the details in \cref{lemma:solveR}.
+Then, we have
+\[ f[S] | M = (f | R) [S] . \]
+
+
+
+\begin{lemma}
+\label{lemma:solveR}
+% TODO... describe solveR
+\end{lemma}
 
 \subsection{Algorithm}
 
