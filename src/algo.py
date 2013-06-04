@@ -327,15 +327,11 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None, reduction_m
 	try:
 		herm_modform_fe_expannsion, calc, curlS_denoms, pending_tasks = hermModformSpaceCache[cacheIdx]
 		if not isinstance(calc, C.Calc): raise TypeError
-		if pending_tasks and not parallelization:
-			print "Warning: Resume state has pending_task but we have no parallelization"
-			print "We cannot resume."
-			raise ValueError
 		print "Resuming from %s" % hermModformSpaceCache._filename_for_key(cacheIdx)
 	except (TypeError, ValueError, KeyError, EOFError): # old format or not cached or cache incomplete
 		herm_modform_fe_expannsion = FreeModule(QQ, reducedCurlFSize)
 		curlS_denoms = set() # the denominators of the visited matrices S
-		pending_tasks = None
+		pending_tasks = ()
 
 	current_dimension = herm_modform_fe_expannsion.dimension()
 
@@ -421,7 +417,11 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None, reduction_m
 
 		else: # no parallelization
 			new_task_count = 1
-			task = next(task_iter)
+			if pending_tasks: # from some resuming
+				task,_ = pending_tasks[0]
+				pending_tasks = pending_tasks[1:]
+			else:
+				task = next(task_iter)
 			newspace = task()
 
 			herm_modform_fe_expannsion = IntersectSpacesTask(herm_modform_fe_expannsion, [newspace])()
@@ -435,8 +435,6 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None, reduction_m
 				verbose("save state after %i steps to %s" % (step_counter, os.path.basename(hermModformSpaceCache._filename_for_key(cacheIdx))))
 				if parallelization:
 					pending_tasks = parallelization.get_pending_tasks()
-				else:
-					pending_tasks = ()
 				hermModformSpaceCache[cacheIdx] = (herm_modform_fe_expannsion, calc, curlS_denoms, pending_tasks)
 
 		if current_dimension == dim:
