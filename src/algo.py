@@ -305,6 +305,14 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None, reduction_m
 	if HermWeight % 3 != 0:
 		raise TypeError, "the modulform is trivial/zero if HermWeight is not divisible by 3"
 
+	# Transform these into native Python objects. We don't want to have
+	# any Sage objects (e.g. Integer) here so that the cache index stays
+	# unique.
+	D = int(D)
+	HermWeight = int(HermWeight)
+	B_cF = int(B_cF)
+	reduction_method_flags = int(reduction_method_flags)
+
 	calc = C.Calc()
 	calc.init(D = D, HermWeight = HermWeight, B_cF=B_cF)
 	calc.calcReducedCurlF()
