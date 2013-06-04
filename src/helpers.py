@@ -425,6 +425,17 @@ def test_curlO():
 
 
 class CurlOdual:
+	"""
+	This class is like the class `CurlO` but much simpler. It represents
+	the dual space \curlO^# of \curlO, which is the maximal order of
+	some quadratic imaginary number field \K = \QQ(\sqrt{D}), where
+	`D` is some negative integer -- just like in the `CurlO` class.
+
+	To represent an element `b` in \curlO^#, we use the representation
+	`b = b1 / \sqrt{D} + b2 (1 + \sqrt{D})/2`, where b1,b2 \in \ZZ.
+	This can be calculated via the function `from_tuple_b`.
+	"""
+
 	def __init__(self, D):
 		assert D < 0
 		assert (D*D - D) % 4 == 0
@@ -440,6 +451,27 @@ class CurlOdual:
 
 
 def M2T_Odual((a, b1, b2, c), D):
+	"""
+	INPUT:
+
+	- `(a,b1,b2,c)` - A tuple which represents a matrix in \curlO^#,
+	                  where \curlO is the maximal order of \QQ(\sqrt{D}).
+	                  The represented matrix is the matrix we return.
+	                  a,b1,b2,c are all in \ZZ.
+
+	- `D` - A negative number. This is the discriminant of the quadratic
+	        imaginary number field \QQ(\sqrt{D}).
+
+	OUTPUT:
+
+	- A matrix `m` in \Her_2(\curlO). We have
+
+	      m = [[a, b], [b.conjugate(), c]] ,
+
+	  where `b = b1 / \sqrt{D} + b2 (1 + \sqrt{D})/2`.
+
+	This function is based on the class `CurlOdual`.
+	"""
 	space = CurlOdual(D)
 	b = space.from_tuple_b(b1, b2)
 	m = matrix(space.field, 2, 2, [a, b, b.conjugate(), c])
