@@ -620,6 +620,19 @@ void test_algo_calcReducedCurlF() {
 		LOGIC_CHECK(reduced.matrix == Tr.first);
 	}
 	cout << "all reduced matrices reduce to themselves" << endl;
+
+	// are all reduced matrices also in \curlF?
+	for(auto Tr : calc.reducedCurlFMap) {
+		bool found = false;
+		for(auto T : calc.curlF) {
+			if(T == Tr.first) {
+				found = true;
+				break;
+			}
+		}
+		LOGIC_CHECK(found);
+	}
+	cout << "all reduced matrices are in curlF" << endl;
 #endif
 }
 
