@@ -4,7 +4,7 @@
 # This code is under the GPL v3 or later, see License.txt in the root directory of this project.
 
 from sage.calculus.functional import simplify
-from sage.functions.other import floor
+from sage.functions.other import floor, ceil
 from sage.matrix.constructor import matrix, Matrix
 from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
@@ -261,18 +261,27 @@ class CurlO:
 		qq2 = (-a1*b2 + a2*b1) / Bdet
 		assert _simplify(self.from_tuple_b(qq1,qq2) * b - a) == 0
 
-		# not sure on this
-		q1,q2 = int(round(qq1)), int(round(qq2))
-		if (q1-qq1)*(q2-qq2) < 0:
-			q1,q2 = int(floor(qq1)), int(floor(qq2))
-		#print a1,a2,b1,b2,qq1,qq2,q1,q2
-		q = self.from_tuple_b(q1,q2)
-		# q * b + r == a
-		r = _simplify(a - q * b)
-		# Note that this works for -D < 5.27. See the text: 13.5.13,divmod
-		euc_r, euc_b = map(self.euclidean_func, [r, b])
-		assert euc_r < euc_b, "%r < %r; r=%r, b=%r, a=%r, b=%r" % (euc_r, euc_b, r, b, a, b)
-		return q,r
+		# Not sure on this.
+		# From qq1 and qq2, we want to select q1,q2 \in \Z such that
+		# `r = a - q * b` is minimal with regards to `self.euclidean_func`,
+		# where `q = self.from_tuple_b(q1,q2)`.
+		# Simply using `round` will not work in all cases; neither does `floor`.
+		# Many test cases are (indirectly) in `test_solveR()`.
+		# Now we are just checking multiple possibilities and use
+		# the smallest one. Note that these are not all possible cases.
+		solutions = []
+		for q1 in [int(floor(qq1)), int(ceil(qq1))]:
+			for q2 in [int(floor(qq2)), int(ceil(qq2))]:
+				q = self.from_tuple_b(q1,q2)
+				# q * b + r == a
+				r = _simplify(a - q * b)
+				euc_r = self.euclidean_func(r)
+				solutions += [(euc_r, q, r)]
+		# Note that this works for -D < [...]. See the text: 13.5.13,divmod
+		euc_b = self.euclidean_func(b)
+		euc_r, q, r = min(solutions)
+		assert euc_r < euc_b, "%r < %r; r=%r, b=%r, a=%r" % (euc_r, euc_b, r, b, a)
+		return q, r
 	def euclidean_func(self, x):
 		return self.field(x).abs()
 	def divides(self, a, b):
