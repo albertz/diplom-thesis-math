@@ -32,6 +32,7 @@ import algo_cython as C
 from utils import *
 from helpers import *
 from checks import *
+from pprint import pprint
 
 
 @sage_cached_function
@@ -388,6 +389,8 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 						if not isinstance(task, IntersectSpacesTask):
 							verbose("warning: we expected IntersectSpacesTask for final dim but got: %r" % task)
 					verbose("new dimension: %i, wanted: %i" % (current_dimension, dim))
+					if current_dimension <= 20:
+						pprint(herm_modform_fe_expannsion.basis())
 					spacecomment = "<old base space>"
 
 				spaces += [(spacecomment, newspace)]
