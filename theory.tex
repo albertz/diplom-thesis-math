@@ -3,6 +3,25 @@
 \section{Theory}
 
 
+In this section, we will develop the theoretical foundation for the tools to calculate the space of Fourier expansions of some precision of Hermitian modular forms $\FE(\HSpace{n}{\Gamma})$.
+
+We know that there is a basis of Fourier expansions such that all Fourier coefficients are over $\Q$. % TODO: ref
+
+We start with the space of all possible Fourier expansions, i.e. with the space $\mathcal{M}_0 := \Q^\mathcal{I}$ for some index set $\mathcal{I}$. The tools in this section are all some specific conditions which lead to some vectorspace $\tilde{\mathcal{M}} \subset \Q^\mathcal{I}$ which are always superspaces of $\FE_\mathcal{I}(\HSpace{n}{\Gamma}) \subset \Q^\mathcal{I}$. Thus, when intersecting such space, we iteratively get new subspaces
+\[ \mathcal{M}_{i+1} := \mathcal{M}_i \cup \tilde{\mathcal{M}} . \]
+%
+With other methods, we know the dimension of $\FE(\HSpace{n}{\Gamma})$. Thus we can easily determine whether $\mathcal{M}_i = \FE_\mathcal{I}(\HSpace{n}{\Gamma})$, i.e. whether we are finished and can terminate the algorithm.
+
+It is not proven that this series of spaces eventually gets to $\FE_\mathcal{I}(\HSpace{n}{\Gamma})$ but from other research, this seems likely.
+% TODO: ref
+
+\subsection{Reduction to Elliptic modular forms}
+
+We develop the first method to calculate a vectorspace $\tilde{\mathcal{M}} \subset \FE(\HSpace{n}{\Gamma})$. This methods works by reducing Hermitian modular forms to Elliptic modular forms.
+Methods to calculate the vectorspace of Elliptic modular forms are well known.
+
+We start by describing the reduction.
+
 % TODO: wofür brauchen wir das?
 \begin{lemma}
 Let $f \colon \HalfPlane_2 \rightarrow \C$ be a Hermitian modular form of weight $k$ with $\nu \equiv 1$. Let $S \in \PM_2(\curlO)$.
@@ -123,6 +142,7 @@ To avoid such complications, we will use $\nu \equiv 1$ for the rest of our work
 \qed
 \end{remark}
 
+\
 
 \begin{prelim}
 We want to calculate a generating set for the Fourier expansions of Hermitian modular forms.
