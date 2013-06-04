@@ -142,7 +142,8 @@ struct M2T_Odual {
 	// the underlying imaginary quadratic number field.
 	// This M2T_Odual-struct represents the matrix [a,b,c].
 	Int a, b1, b2, c;
-	M2T_Odual(Int _a = 0, Int _b1 = 0, Int _b2 = 0, Int _c = 0)
+	M2T_Odual() : a(0), b1(0), b2(0), c(0) {}
+	M2T_Odual(Int _a, Int _b1, Int _b2, Int _c)
 	: a(_a), b1(_b1), b2(_b2), c(_c) {}
 	// detD == -D * det
 	// TODO(?): if D is fundamental, we always have 4|(D*D-D), thus we could just use -D * det.
@@ -185,7 +186,8 @@ struct M2T_O {
 	// the underlying imaginary quadratic number field.
 	// This M2T_O-struct represents the matrix [a,b,c].
 	Int a, b1, b2, c;
-	M2T_O(Int _a = 0, Int _b1 = 0, Int _b2 = 0, Int _c = 0)
+	M2T_O() : a(0), b1(0), b2(0), c(0) {}
+	M2T_O(Int _a, Int _b1, Int _b2, Int _c)
 	: a(_a), b1(_b1), b2(_b2), c(_c) {}
 	// = |b|^2
 	Int absBsquare(const int D) const {
@@ -246,7 +248,8 @@ inline bool operator<(const M2T_O& m1, const M2T_O& m2) {
 struct M2T {
 	Int a, b, c;
 	// This M2T-struct represents the matrix [a,b,c].
-	M2T(Int _a = 0, Int _b = 0, Int _c = 0)
+	M2T() : a(0), b(0), c(0) {}
+	M2T(Int _a, Int _b, Int _c)
 	: a(_a), b(_b), c(_c) {}
 	Int det() { return a*c - b*b; }
 };
@@ -258,7 +261,9 @@ inline std::ostream& operator<<(std::ostream& os, const M2T& m) {
 struct ElemOfCurlO {
 	// We represent `b = b1 + b2 (D + \sqrt{D})/2`.
 	Int b1, b2;
-	ElemOfCurlO(Int _b1 = 0, Int _b2 = 0) : b1(_b1), b2(_b2) {}
+	ElemOfCurlO() : b1(0), b2(0) {}
+	// Note: This implicit conversion is safe because it represents the same integer.
+	ElemOfCurlO(Int _b1, Int _b2 = 0) : b1(_b1), b2(_b2) {}
 	ElemOfCurlO conjugate(const int D) const {
 		ElemOfCurlO res;
 		res.b1 = b1 + b2 * D;
@@ -337,7 +342,8 @@ inline std::ostream& operator<<(std::ostream& os, const ElemOfCurlOdual& m) {
 template<typename ElemType>
 struct _M2_withD {
 	ElemType a,b,c,d; // [[a,b],[c,d]]
-	_M2_withD(ElemType _a = ElemType(), ElemType _b = ElemType(), ElemType _c = ElemType(), ElemType _d = ElemType())
+	_M2_withD() : a(), b(), c(), d() {}
+	_M2_withD(ElemType _a, ElemType _b, ElemType _c, ElemType _d)
 	: a(_a), b(_b), c(_c), d(_d) {}
 	_M2_withD conjugate_transpose(const int D) const {
 		_M2_withD res;
