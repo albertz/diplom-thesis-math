@@ -409,7 +409,7 @@ def solveR(M, S, space):
 	- A tuple `(gamma, R, tM)`, where `gamma` is a matrix \in \Sp_2(\curlO),
 	  `R` is a matrix \in \Sp_2(\K) such that
 
-	      tM = gamma R.
+	      tM = gamma R .
 
 	This algorithm is written in a way that it is flexible about inputs because
 	it can accept generic interfaces for `space`.
