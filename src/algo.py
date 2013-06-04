@@ -384,7 +384,6 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None):
 					if current_dimension == dim:
 						if not isinstance(task, IntersectSpacesTask):
 							verbose("warning: we expected IntersectSpacesTask for final dim but got: %r" % task)
-					hermModformSpaceCache[cacheIdx] = (None, herm_modform_fe_expannsion)
 					verbose("new dimension: %i, wanted: %i" % (current_dimension, dim))
 					spacecomment = "<old base space>"
 
