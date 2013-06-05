@@ -320,6 +320,10 @@ def calcMatrix_py(D, HermWeight, S, B_cF):
 
 	assert S[0,1] == S[1,0].conjugate()
 	s,t,u = S[0,0], S[0,1], S[1,1]
+
+	# We also have a Python implementation for calculating the indexset,
+	# but we can test that separately (`test_herm_modform_indexset()`)
+	# and use the fast version here.
 	from algo import herm_modform_indexset
 	indexset = herm_modform_indexset(D=D, B_cF=B_cF)
 	indexset_map = dict([(T,i) for (i,T) in enumerate(indexset)])
