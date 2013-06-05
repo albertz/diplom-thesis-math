@@ -225,7 +225,7 @@ def curlF_iter_py(D, B_cF):
 		b = space.from_tuple_b(b1,b2)
 		return matrix(space.field, 2, [a,b,b.conjugate(),c])
 	def isValid():
-		if cur().determinant() < 0: return False
+		if QQ(cur().determinant()) < 0: return False
 		if a < 0 or a >= B_cF: return False
 		if c < 0 or c >= B_cF: return False
 		return True
