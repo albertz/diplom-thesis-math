@@ -267,7 +267,7 @@ for $i \in \N_0, i < \F(S)$.
 
 %Let $v = (v_1, \dots, v_n) \in \Q^n$ be a vector in the base of reduced indices of $\F$ as described in \cref{remark:reducedCurlF} with
 Set $N := \# \left( \invarF{\F}{\GL_2(\curlO)} \right)$. And let
-\[ \invarF{\F}{\GL_2(\curlO)} = (T_1, \dots, T_N) \]
+\[ \invarF{\F}{\GL_2(\curlO)} = \Set{T_1, \dots, T_N} \]
 where $T_j$ are the reduced matrices in $\F$.
 
 We have
@@ -281,9 +281,14 @@ Thus,
 \[ a[S] (i) =  \sum_{T \in \F, \tr(S T) = i} \det(U_T)^{-k} a(T_{j_T}) . \]
 This gives us the formula to calculate the Fourier expansion $a[S] \colon \Set{i \in \N_0}{i < \FPrecisionLimit{S}} \rightarrow \Q$.
 
-This is a linear map $\Q^{\invarF{\F}{\GL_2(\curlO)}} \rightarrow \Q^{\Set{i \in \N_0}{i < \FPrecisionLimit{S}}}$ and the matrix $M \in \M_{\FPrecisionLimit{S} \times N}(\Q)$ of this map is given by the formula above: The $i$-th row and the $j$-th column is given by
-\[ M_{i,j} =  \sum_{T \in \F, \tr(S T) = i, j_T = j} \det(U_T)^{-k} . \]
-Then we have
+This is a linear map $\Q^{\invarF{\F}{\GL_2(\curlO)}} \rightarrow \Q^{\Set{i \in \N_0}{i < \FPrecisionLimit{S}}}$ and the matrix $M \in \M_{\FPrecisionLimit{S} \times N}(\Q)$ of this map is given by the formula above. When we identify
+\begin{align*}
+a = & \; (a(T_1), \dots, a(T_N)), \\
+a[S] = & \; (a[S](0), \dots, a[S](\FPrecisionLimit{S} - 1)),
+\end{align*}
+then the $i$-th row and the $j$-th column is given by
+\[ M_{i,j} =  \sum_{T \in \F, \tr(S T) = i, j_T = j} \det(U_T)^{-k} \]
+and we have
 \[ M \cdot a = a[S] . \]
 \qed
 \end{remark}
