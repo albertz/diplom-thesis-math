@@ -141,9 +141,6 @@ def getElliptModFormsBasisMatrix(level, weight, precision):
 		cut_matrix = fe_expansion_matrix_l[:,:precision]
 		dim = fe_expansion_matrix_l.rank()
 		return dim, cut_matrix
-	#n = 2
-	#while n < precision:
-	#	n **= 2
 	n = precision
 	n = max(10, n)
 	mf = ModularForms(Gamma0(level), weight)
