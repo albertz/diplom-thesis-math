@@ -155,7 +155,8 @@ cdef class Calc:
 		l = [None] * size
 		for i in range(size):
 			l[i] = M2T_Odual_fromC(self.calc.reducedCurlFList[i], self.D)
-		return l
+			l[i].set_immutable()
+		return tuple(l)
 
 	def calcMatrix(self):
 		"""
