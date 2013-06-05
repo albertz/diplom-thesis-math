@@ -86,9 +86,6 @@ def reduce_GL(s, D) :
         ...
         NotImplementedError: only implemented for non-positive discriminants: (1, 50, 0, 1)
     """
-    res = hermitian_form_with_character_evaluation()
-    a, b1, b2, c, det_char, nu_char, trans_char = [None]*7
-    
     (a, b1, b2, c) = s
 
     # the discriminant will be -D det(M) 
