@@ -29,6 +29,10 @@ AUTHOR :
 
 ## to represent the semi-integral matrix [[a, b/2], [\bar b/2, c]] we choose the
 ## integer basis 1/\sqrt D, (1 + \sqrt D) / 2
+
+from sage.rings.integer_ring import ZZ
+
+
 class hermitian_form_with_character_evaluation :
     a = None
     b1 = None
@@ -86,7 +90,8 @@ def reduce_GL(s, D) :
         ...
         NotImplementedError: only implemented for non-positive discriminants: (1, 50, 0, 1)
     """
-    (a, b1, b2, c) = s
+    (a, b1, b2, c) = map(ZZ, s)
+    D = int(D)
 
     # the discriminant will be -D det(M) 
     # FIXME: the discriminant can become too big
