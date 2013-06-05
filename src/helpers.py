@@ -318,9 +318,6 @@ def calcMatrix_py(D, HermWeight, B_cF, S):
 	This is just for testing. See `test_calcMatrix()`.
 	"""
 
-	assert S[0,1] == S[1,0].conjugate()
-	s,t,u = S[0,0], S[0,1], S[1,1]
-
 	# We also have a Python implementation for calculating the indexset,
 	# but we can test that separately (`test_herm_modform_indexset()`)
 	# and use the fast version here.
@@ -328,8 +325,7 @@ def calcMatrix_py(D, HermWeight, B_cF, S):
 	indexset = herm_modform_indexset(D=D, B_cF=B_cF)
 	indexset_map = dict([(T,i) for (i,T) in enumerate(indexset)])
 
-	precDim = B_cF * (s + u - 2 * abs(t))
-	precDim = floor(precDim)
+	precDim = calcPrecisionDimension(B_cF=B_cF, S=S)
 	matrixRowCount = precDim
 	matrixColumnCount = len(indexset)
 
