@@ -262,21 +262,29 @@ This makes the set $\invarF{\F}{\GL_2(\curlO)}$, to identify a basis of the fini
 \begin{remark}
 \label{remark:how-to-calc-aS}
 From \cref{remark:restricted-by-S} and \cref{lemma:fprecisionlimit}, we have
-\[ a[S] (k) = \sum_{T \in \F, \tr(S T) = k} a(T) \]
-for $k \in \N_0, k < \F(S)$.
+\[ a[S] (i) = \sum_{T \in \F, \tr(S T) = i} a(T) \]
+for $i \in \N_0, i < \F(S)$.
 
-Let $v = (v_1, \dots, v_n) \in \Q^n$ be a vector in the base of reduced indices of $\F$ as described in \cref{remark:reducedCurlF} with $n = \# \left( \invarF{\F}{\GL_2(\curlO)} \right)$. And let
-\[ \invarF{\F}{\GL_2(\curlO)} = (T_1, \dots, T_n) \]
-where $T_i$ are the reduced matrices in $\F$.
+%Let $v = (v_1, \dots, v_n) \in \Q^n$ be a vector in the base of reduced indices of $\F$ as described in \cref{remark:reducedCurlF} with
+Set $N := \# \left( \invarF{\F}{\GL_2(\curlO)} \right)$. And let
+\[ \invarF{\F}{\GL_2(\curlO)} = (T_1, \dots, T_N) \]
+where $T_j$ are the reduced matrices in $\F$.
 
 We have
-\[ \det(U)^k a(T_i[U]) = a(T_i) = v_i \]
-for all $i \le n$, $U \in \GL_2(\curlO)$.
-For any $T \in \F$, we can uniquely find $i \le n$ and $U \in \GL_2(\curlO)$ such that
-\[ T_i[U] = T. \]
+\[ \det(U)^k a(T_j[U]) = a(T_j) \] % =v_i
+for all $j \le N$, $U \in \GL_2(\curlO)$.
+For any $T \in \F$, we can uniquely find $j_T \le N$ and $U_T \in \GL_2(\curlO)$ such that
+\[ T_{j_T}[U_T] = T. \]
 Then we have
-\[ a(T) = a(T_i[U]) = \det(U)^{-k} a(T_i) = \det(U)^{-k} v_i . \]
-This gives us the formula to calculate the Fourier expansion $a[S] \colon \Set{k \in N_0}{k < \FPrecisionLimit{S}} \rightarrow \Q$.
+\[ a(T) = a(T_{j_T}[U]) = \det(U_T)^{-k} a(T_{j_T}) . \]
+Thus,
+\[ a[S] (i) =  \sum_{T \in \F, \tr(S T) = i} \det(U_T)^{-k} a(T_{j_T}) . \]
+This gives us the formula to calculate the Fourier expansion $a[S] \colon \Set{i \in \N_0}{i < \FPrecisionLimit{S}} \rightarrow \Q$.
+
+This is a linear map $\Q^{\invarF{\F}{\GL_2(\curlO)}} \rightarrow \Q^{\Set{i \in \N_0}{i < \FPrecisionLimit{S}}}$ and the matrix $M \in \M_{\FPrecisionLimit{S} \times N}(\Q)$ of this map is given by the formula above: The $i$-th row and the $j$-th column is given by
+\[ M_{i,j} =  \sum_{T \in \F, \tr(S T) = i, j_T = j} \det(U_T)^{-k} . \]
+Then we have
+\[ M \cdot a = a[S] . \]
 \qed
 \end{remark}
 
