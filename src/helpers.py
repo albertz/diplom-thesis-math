@@ -526,8 +526,8 @@ class CurlOdual:
 		return b
 
 	def as_tuple_b(self, b):
-		b2 = real(b) * 2
-		b1 = QQ(b2) * (-self.D) / 2 - imag(b) * self.field(-self.D).sqrt()
+		b2 = QQ(real(b)) * 2
+		b1 = QQ(b2) * (-self.D) / 2 - QQ(imag(b) * self.field(-self.D).sqrt())
 		assert self.from_tuple_b(b1, b2) == b
 		return (b1, b2)
 
