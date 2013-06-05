@@ -289,22 +289,20 @@ def _reduce_GL(a, b1, b2, c, D) :
         ## abs(Im b / sqrt D) <= a/4 <=> -4*D abs(Im b) <= -D * a
         if abs(-4*b1 - 2 * D * b2) > -D*a :
 
-            q = (-2*b1 - D * b2) / (-D * a)
-            r = (-2*b1 - D * b2) % (-D * a)
-            
-            if r > (-D * a) / 2 :
+            q, r = divmod(-2*b1 - D * b2, -D * a)
+
+            if r * 2 > -D * a :
                 #r -= -D * a
                 q += 1
             
             ## apply [[1, -q*(D + \sqrt D)/2], [0, 1]] 
-            c = c + q**2 * a * (D**2 - D) / 4 + b1 * q
-            b1 = b1 + q * a * (D-1) * D / 2
+            c = c + q**2 * a * (D**2 - D) // 4 + b1 * q
+            b1 = b1 + q * a * (D-1) * D // 2
             b2 = b2 - q * a * D
     
         ## abs(Re b) <= a/2
         if abs (b2) > a :
-            q = b2 / (2 * a)
-            r = b2 % (2 * a)
+            q, r = divmod(b2, 2 * a)
 
             if r > a :
                 r = r - 2 * a
