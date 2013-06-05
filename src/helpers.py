@@ -312,10 +312,10 @@ def herm_modform_indexset_py(D, B_cF):
 	return reducedList
 
 
-def calcMatrix_py(D, HermWeight, S, B_cF):
+def calcMatrix_py(D, HermWeight, B_cF, S):
 	"""
 	This is a Python implementation of the C++ `calcMatrix()` function.
-	This is just for testing.
+	This is just for testing. See `test_calcMatrix()`.
 	"""
 
 	assert S[0,1] == S[1,0].conjugate()

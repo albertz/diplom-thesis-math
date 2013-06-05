@@ -135,12 +135,8 @@ def calcCurlSiter_serialization_test():
 	assert calc.curlS == calc2.curlS
 
 
-def test_calcPrecisionDimension():
+def test_calcPrecisionDimension(D=-3, HermWeight=6, B_cF=7):
 	from helpers import calcPrecisionDimension, CurlO
-
-	D = -3
-	HermWeight = 6
-	B_cF = 7
 	space = CurlO(D)
 
 	import algo_cython as C
@@ -163,3 +159,22 @@ def test_herm_modform_indexset(D=-3, B_cF=7):
 	indexset = herm_modform_indexset(D=D, B_cF=B_cF)
 	indexset_py = herm_modform_indexset_py(D=D, B_cF=B_cF)
 	assert indexset == indexset_py
+
+
+def test_calcMatrix(D=-3, HermWeight=6, B_cF=7):
+	import algo_cython as C
+	calc = C.Calc()
+	calc.init(D=D, HermWeight=HermWeight, B_cF=B_cF)
+	calc.calcReducedCurlF()
+
+	from helpers import calcMatrix_py
+
+	for i in range(1000):
+		calc.curlS_clearMatrices()
+		S = calc.getNextS()
+		if i % 100 != 0: continue
+
+		M_cpp = calc.calcMatrix()
+		M_py = calcMatrix_py(D=D, HermWeight=HermWeight, B_cF=B_cF, S=S)
+
+		assert M_cpp == M_py
