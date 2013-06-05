@@ -4,7 +4,7 @@
 # This code is under the GPL v3 or later, see License.txt in the root directory of this project.
 
 from sage.calculus.functional import simplify
-from sage.functions.other import floor
+from sage.functions.other import floor, real, imag
 from sage.matrix.constructor import matrix, Matrix
 from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
@@ -216,6 +216,83 @@ def calcPrecisionDimension(B_cF, S):
 	precDim = B_cF * (s + u - 2 * abs(t))
 	precDim = floor(precDim)
 	return precDim
+
+
+def curlF_iter_py(D, B_cF):
+	space = CurlOdual(D=D)
+	a,b1,b2,c = 0,0,0,0
+	def cur():
+		b = space.from_tuple_b(b1,b2)
+		return matrix(space.field, 2, [a,b,b.conjugate(),c])
+	def isValid():
+		if cur().determinant() < 0: return False
+		if a < 0 or a >= B_cF: return False
+		if c < 0 or c >= B_cF: return False
+		return True
+	def hardLimitCheckB1():
+		return a*c*(D*D-D) >= b1*b1
+	def hardLimitCheckB2():
+		return a*c*4 >= b2*b2
+	curB = 0
+	while True:
+		if isValid(): yield cur()
+		if b2 > 0:
+			b2 *= -1
+			continue
+		b2 = -b2 + 1
+		if not hardLimitCheckB2():
+			b2 = 0
+			if b1 > 0:
+				b1 *= -1
+				continue
+			b1 = -b1 + 1
+		if not hardLimitCheckB1():
+			b1 = b2 = 0
+			c += 1
+		if c > curB:
+			b1 = b2 = 0
+			if a == curB:
+				curB += 1
+				a = 0
+				c = curB
+			else:
+				a += 1
+				if a < curB:
+					c = curB
+				else:
+					c = 0
+		if curB >= B_cF:
+			return
+
+
+class ReducedGL:
+	def __init__(self, T, D):
+		self.space = CurlOdual(D=D)
+		self._init(T=T)
+	def _init(self, T):
+		self.T = T
+		from reduceGL import reduce_GL
+		assert T[0,1] == T[1,0].conjugate()
+		a, b, c = T[0,0], T[0,1], T[1,1]
+		b1, b2 = self.space.as_tuple_b(b)
+		(a_,b1_,b2_,c_), (trans, det, nu) = reduce_GL((a,b1,b2,c), D=self.space.D)
+		b_ = self.space.from_tuple_b(b1_, b2_)
+		self.matrix = matrix(self.space.field, 2, [a_, b_, b_.conjugate(), c_])
+		self.matrix.set_immutable()
+		self.charTrans = trans
+		self.charDet = det
+		self.charNu = nu
+
+
+def herm_modform_indexset_py(D, B_cF):
+	reducedList = []
+	reducedMap = {}
+	for T in curlF_iter_py(D=D, B_cF=B_cF):
+		reduced = ReducedGL(T=T, D=D)
+		if not reduced.matrix in reducedMap:
+			reducedMap[reduced.matrix] = len(reducedList)
+			reducedList.append(reduced.matrix)
+	return reducedList
 
 
 def _calcMatrix_py(D, HermWeight, S, B_cF):
@@ -442,12 +519,17 @@ class CurlOdual:
 		self.D = D
 		self.field = QuadraticField(D)
 		self.Droot = self.field(D).sqrt()
-		self.DrootHalf_coordinates_in_terms_of_powers = (self.Droot / 2).coordinates_in_terms_of_powers()
 
 	def from_tuple_b(self, b1, b2):
 		b1, b2 = QQ(b1), QQ(b2)
 		b = b1 / self.Droot + b2 * (1 + self.Droot) * QQ(0.5)
 		return b
+
+	def as_tuple_b(self, b):
+		b2 = real(b) * 2
+		b1 = QQ(b2) * (-self.D) / 2 - imag(b) * self.field(-self.D).sqrt()
+		assert self.from_tuple_b(b1, b2) == b
+		return (b1, b2)
 
 
 def M2T_Odual((a, b1, b2, c), D):

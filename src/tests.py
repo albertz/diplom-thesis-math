@@ -154,3 +154,12 @@ def test_calcPrecisionDimension():
 		M = calc.calcMatrix()
 		S_repr = (S[0,0], space.as_tuple_b(S[0,1]), S[1,1])
 		assert M.nrows() == calcPrecisionDimension(B_cF=B_cF, S=S), "fail at i = %i, S = %r, M.nrows = %i" % (i, S_repr, M.nrows())
+
+
+def test_herm_modform_indexset(D=-3, B_cF=7):
+	# This also tests curlF iteration and reduceGL.
+	from helpers import herm_modform_indexset_py
+	from algo import herm_modform_indexset
+	indexset = herm_modform_indexset(D=D, B_cF=B_cF)
+	indexset_py = herm_modform_indexset_py(D=D, B_cF=B_cF)
+	assert indexset == indexset_py
