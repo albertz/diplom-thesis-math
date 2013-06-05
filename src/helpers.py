@@ -282,6 +282,23 @@ class ReducedGL:
 		self.charTrans = trans
 		self.charDet = det
 		self.charNu = nu
+	def value(self, k):
+		# det = exp(2 pi i det_character / h)
+		# where h = 2, or if D = -3, then h = 6, or D = -4, then h = 4
+		# we expect that it is a unit in \Z here.
+		# we return det^k.
+		if self.space.D == -3: h = 6
+		elif self.space.D == -4: h = 4
+		else: h = 2
+		det_char = self.charDet * k
+		if det_char % h == 0: value = 1
+		elif det_char % h == h/2: value = -1
+		else: assert False
+		sign = 0
+		nu_exp = 0
+		if sign: value *= self.charTrans
+		if nu_exp: value *= self.charNu
+		return value
 
 
 def herm_modform_indexset_py(D, B_cF):
@@ -295,7 +312,7 @@ def herm_modform_indexset_py(D, B_cF):
 	return reducedList
 
 
-def _calcMatrix_py(D, HermWeight, S, B_cF):
+def calcMatrix_py(D, HermWeight, S, B_cF):
 	"""
 	This is a Python implementation of the C++ `calcMatrix()` function.
 	This is just for testing.
@@ -305,14 +322,25 @@ def _calcMatrix_py(D, HermWeight, S, B_cF):
 	s,t,u = S[0,0], S[0,1], S[1,1]
 	from algo import herm_modform_indexset
 	indexset = herm_modform_indexset(D=D, B_cF=B_cF)
+	indexset_map = dict([(T,i) for (i,T) in enumerate(indexset)])
 
 	precDim = B_cF * (s + u - 2 * abs(t))
 	precDim = floor(precDim)
 	matrixRowCount = precDim
 	matrixColumnCount = len(indexset)
 
-	# ...
-	raise NotImplementedError
+	M = matrix(ZZ, matrixRowCount, matrixColumnCount)
+	for T in curlF_iter_py(D=D, B_cF=B_cF):
+		reduced = ReducedGL(T=T, D=D)
+		column = indexset_map[reduced.matrix]
+		row = ZZ((S * T).trace())
+		assert row >= 0
+		if row >= matrixRowCount: continue
+		a_T = reduced.value(-HermWeight)
+		M[row,column] += a_T
+
+	M.set_immutable()
+	return M
 
 
 
