@@ -150,16 +150,19 @@ We want to calculate a generating set for the Fourier expansions of Hermitian mo
 We define the index set
 \[ \Lambda := \Set{0 \le \SimpleMatrix{a}{b}{\overline b}{c} \in \M_2(\curlO^\#)}{a,c \in \Z } \]
 as the index for the Fourier coefficients of the Fourier expansions of our Hermitian modular forms.
-\end{prelim}
 
-\begin{remark}
-\label{remark:restricted-by-S}
 For a holomorphic function $f \colon \HalfPlane_2 \rightarrow \C$, we write its Fourier expansion as
 \[ f(Z) = \sum_{T \in \Lambda} a(T) \cdot e^{2 \pi i \cdot \tr(T Z)} \]
 with its Fourier coefficients $a \colon \Lambda \rightarrow \Q$.
 
+Note that some authors use $e^{\pi i}$ as the coefficient bases and define the index set $\Lambda$ in such a way that $\tr(TS) \in 2\Z$ for $T \in \Lambda$ and $S \in \Her_2(\curlO)$. In that case, $T$ is called "even" and one would only allow even matrices in $\Lambda$. We don't do that and we keep the factor $2$ in the coefficient base, i.e. we use $e^{2 \pi i}$.
+\end{prelim}
+
+\begin{remark}
+\label{remark:restricted-by-S}
 For any $S \in \PM_2(\curlO)$, for the restricted function $f[S] \colon \HalfPlane_1 \rightarrow \C$, this gives us
-\[ f[S](\tau) = \sum_{T \in \Lambda} a(T) \cdot e^{2 \pi i \cdot \tr(T S \tau)} . \]
+\[ f[S](\tau) = \sum_{T \in \Lambda} a(T) \cdot e^{2 \pi i \cdot \tr(T S \tau)}
+= \sum_{T \in \Lambda} a(T) \cdot e^{2 \pi i \cdot \tr(T S \tau)} . \]
 We use $a[S] \colon \N_0 \rightarrow \Q$ for the Fourier coefficients of $f[S]$, i.e. we have
 \[ f[S](\tau) = \sum_{n \in \N_0} a[S](n) \cdot e^{2 \pi i n \tau} . \]
 This gives us
