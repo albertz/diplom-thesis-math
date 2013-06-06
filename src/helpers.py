@@ -311,7 +311,7 @@ class ReducedGL:
 		"""
 		INPUT:
 
-		- `T` -- a matrix Her_2(\curlO) with `T >= 0`, where \curlO is the maximal
+		- `T` -- a matrix Her_2(\curlO^#) with `T >= 0`, where \curlO is the maximal
 		         order of the quadratic imaginary number field \QQ(\sqrt{D}).
 
 		- `D` -- the fundamental discriminant of the number field (see above).
