@@ -48,6 +48,14 @@ It holds
 \end{align*}
 When we need $|b|^2$ in an implementation, we can multiply it with $-D$ to get an integer:
 \[ (-D) |b|^2 = b_1^2 - (-D) b_1 b_2 + \frac{D^2-D}{4} b_2^2 . \]
+%
+%4.5.13 b \in \curlO^#
+%5.6.13 a \in \curlO^#
+When we have $b \in \K$ where $\Re(b)$ and $\Im(b)$ are easily available and when we want to calculate $b_1,b_2 \in \Q$ in the above representation, we get
+\begin{align*}
+b_2 =&\; 2 \Re(b) , \\
+b_1 =&\; b_2 \frac{-D}{2} - \Im(b) \sqrt{-D} = \Re(b) (-D) - \Im(b) \sqrt{-D} .
+\end{align*}
 
 \subsubsection{Multiplications}
 
