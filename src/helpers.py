@@ -459,6 +459,8 @@ class CurlO:
 	def divmod(self, a, b):
 		"""
 		Returns q,r such that a = q*b + r.
+		This is division with remainder.
+		It holds that `self.euclidean_func(r) < `self.euclidean_func(b)`.
 		"""
 		# Note that this implementation is quite naive!
 		# Later, we can do better with QuadraticForm(...). (TODO)
@@ -495,20 +497,39 @@ class CurlO:
 				r = _simplify(a - q * b)
 				euc_r = self.euclidean_func(r)
 				solutions += [(euc_r, q, r)]
-		# Note that this works for -D < [...]. See the text: 13.5.13,divmod
 		euc_b = self.euclidean_func(b)
 		euc_r, q, r = min(solutions)
 		assert euc_r < euc_b, "%r < %r; r=%r, b=%r, a=%r" % (euc_r, euc_b, r, b, a)
 		return q, r
 
 	def euclidean_func(self, x):
+		"""
+		The Euclidean function of x. (Returns just |x|.)
+		"""
 		return self.field(x).abs()
 
 	def divides(self, a, b):
+		"""
+		Returns whether `b` divides `a` without remainder.
+		"""
 		q, r = self.divmod(a, b)
 		return r == 0
 
 	def xgcd(self, a, b):
+		"""
+		The extended Euclidean algorithm. Mostly a standard implementation
+		with a few fast paths. For the generic case, it uses `self.divmod`.
+
+		INPUT:
+
+		- `a`, `b` -- two elements of `self.maxorder`.
+
+		OUTPUT:
+
+		- A tuple `(d, s, t)`, such that `d == a * s + b * t` and
+		  `d` divides both `s` and `t`. `d` is the greatest common divisor.
+		  These are all elements of `self.maxorder`.
+		"""
 		if a == b: return a, 1, 0
 		if a == -b: return a, 1, 0
 		if a == 1: return 1, 1, 0
@@ -538,14 +559,11 @@ class CurlO:
 
 		euc_a = self.euclidean_func(a)
 		euc_b = self.euclidean_func(b)
-		#assert abs_a != abs_b, "%r" % ((a,b,abs_a,abs_b),)
 		if euc_a < euc_b:
 			d,s,t = self.xgcd(b, a)
 			return d,t,s
-		# We have abs_b <= abs_a now.
+		# We have euc_b <= euc_a now.
 		q,r = self.divmod(a, b)
-		#assert q != 0
-		#assert _simplify(abs(r)) < _simplify(abs(b))
 		# q * b + r == a.
 		assert q * b + r == a
 		# => a - b*q == r
@@ -563,16 +581,45 @@ class CurlO:
 		return d, s, t
 
 	def gcd(self, a, b):
+		"""
+		INPUT:
+
+		- `a`, `b` -- elements of `self.maxorder`.
+
+		OUTPUT:
+
+		- An element `d` of `self.maxorder`. `d` is the greatest common divisor.
+		"""
 		d,_,_ = self.xgcd(a, b)
 		return d
 
 	def common_denom(self, *args):
+		"""
+		INPUT:
+
+		- `*args` -- elements from `self.field`.
+
+		OUTPUT:
+
+		- The smallest element `d` of `self.maxorder` such that
+		  `d * arg` is in `self.maxorder`, for all `arg` in `args`.
+		"""
 		tupleargs = [None] * len(args) * 2
 		for i in range(len(args)):
 			tupleargs[2*i],tupleargs[2*i+1] = self.as_tuple_b(args[i])
 		return matrix(QQ, 1,len(tupleargs), tupleargs).denominator()
 
 	def matrix_denom(self, mat):
+		"""
+		INPUT:
+
+		- `mat` -- matrix over `self.field`.
+
+		OUTPUT:
+
+		- The smallest element `d` of `self.maxorder` such that
+		  `d * mat` is over `self.maxorder`.
+		"""
 		denom = self.common_denom(*mat.list())
 		denom = int(ZZ(denom))
 		for v in mat.list():
@@ -580,16 +627,41 @@ class CurlO:
 		return denom
 
 	def as_tuple_b(self, a):
+		"""
+		INPUT:
+
+		- `a` -- an element in `self.field`.
+
+		OUTPUT:
+
+		- A tuple of rationals `(b1,b2)`, where `a = b1 + b2 (D + \sqrt{D})/2`.
+
+		If `a` is in `self.maxorder`, `b1` and `b2` are integers.
+		"""
 		real_part, b2 = self.DrootHalf_coordinates_in_terms_of_powers(a)
 		b1 = real_part - b2 * self.D / 2
 		return (b1, b2)
 
 	def from_tuple_b(self, b1, b2):
+		"""
+		INPUT:
+
+		- `b1`,`b2` -- rational numbers.
+
+		OUTPUT:
+
+		- An element `b` in `self.field` with `b = b1 + b2 (D + \sqrt{D})/2`.
+
+		If `b1`,`b2` are integers, `b` is in `self.maxorder`.
+		"""
 		b1 = QQ(b1)
 		b2 = QQ(b2)
 		return self.field(b1 + b2 * (self.D + self.Droot) / 2)
 
 	def __contains__(self, item):
+		"""
+		Returns whether `item` is an element of `self.maxorder`.
+		"""
 		try:
 			b1,b2 = self.as_tuple_b(item)
 			b1,b2 = ZZ(b1), ZZ(b2)
