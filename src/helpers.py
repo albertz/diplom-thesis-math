@@ -205,7 +205,23 @@ def cusp_matrix(cusp):
 
 def calcPrecisionDimension(B_cF, S):
 	"""
-	Like the C++ implementation of `calcPrecisionDimension()`.
+	When calculating the Fourier expansion `a[S]` of the reduction Elliptic modular form,
+	this gives the maximum precision we can calculate from a Fourier expansion `a` of
+	a Hermitian modular form, where the precision of `a` is given by `B_cF`.
+
+	See the text for details.
+
+	Note: This is like the C++ implementation `calcPrecisionDimension()` in `algo_cpp.cpp`.
+	We don't actually need this function in Python, except for testing.
+
+	INPUT:
+
+	- `B_cF` -- an integer: the precision of the FE of the Hermitian modular forms.
+	- `S` -- the reduction matrix for `a[S]`.
+
+	OUTPUT:
+
+	- an integer: the precision of the FE of the Elliptic modular forms.
 	"""
 	assert S[0,1] == S[1,0].conjugate()
 	s,t,u = S[0,0], S[0,1], S[1,1]
@@ -216,6 +232,24 @@ def calcPrecisionDimension(B_cF, S):
 
 
 def curlF_iter_py(D, B_cF):
+	"""
+	This function iterates \curlF, where \curlF is the precision index set for
+	Hermitian modular forms.
+
+	See the text for details.
+
+	Note: This is like the C++ implementation `PrecisionF` in `algo_cpp.cpp`.
+	We don't actually need this function in Python, except for testing.
+
+	INPUT:
+
+	- `D` -- the fundamental discriminant.
+	- `B_cF` -- the limit of the precision index set \curlF.
+
+	OUTPUT:
+
+	- An iterator, which iterates \curlF.
+	"""
 	space = CurlOdual(D=D)
 	a,b1,b2,c = 0,0,0,0
 	def cur():
@@ -263,10 +297,27 @@ def curlF_iter_py(D, B_cF):
 
 
 class ReducedGL:
+	"""
+	This is a small Python wrapper around the `reduce_GL` lower-level Python implementation.
+
+	Attributes:
+
+	- `matrix` -- the reduced matrix.
+	- `charTrans`, `charDet`, `charNu` -- the evaluation character. see `reduce_GL` for details.
+	"""
+
 	def __init__(self, T, D):
+		"""
+		INPUT:
+
+		- `T` -- a matrix Her_2(\curlO) with `T >= 0`, where \curlO is the maximal
+		         order of the quadratic imaginary number field \QQ(\sqrt{D}).
+
+		- `D` -- the fundamental discriminant of the number field (see above).
+		"""
 		self.space = CurlOdual(D=D)
 		self._init(T=T)
-		
+
 	def _init(self, T):
 		self.T = T
 		from reduceGL import reduce_GL
@@ -284,8 +335,11 @@ class ReducedGL:
 	def value(self, k):
 		"""
 		INPUT:
+
 		- `k` -- integer (exponent)
+
 		OUTPUT:
+
 		- `det^k`, where `det = exp(2 pi i det_character / h),
 		  where h = 2, or if D = -3, then h = 6, or D = -4, then h = 4.
 		  We expect that the return value is a unit in \ZZ, otherwise it fails.
@@ -307,6 +361,13 @@ class ReducedGL:
 
 
 def herm_modform_indexset_py(D, B_cF):
+	"""
+	This is a pure Python implementation of `herm_modform_indexset`.
+	It is just for testing (see `test_herm_modform_indexset()`).
+	It returns the index set \curlF with a given precision `B_cF`
+	for the Fourier coefficients of Hermitian modular forms with
+	the fundamental discriminant `D`.
+	"""
 	reducedList = []
 	reducedMap = {}
 	for T in curlF_iter_py(D=D, B_cF=B_cF):
@@ -319,7 +380,7 @@ def herm_modform_indexset_py(D, B_cF):
 
 def calcMatrix_py(D, HermWeight, B_cF, S):
 	"""
-	This is a Python implementation of the C++ `calcMatrix()` function.
+	This is a Python implementation of the C++ `calcMatrix()` function from `algo.cpp`.
 	This is just for testing. See `test_calcMatrix()`.
 	"""
 
