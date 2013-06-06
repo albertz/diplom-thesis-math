@@ -14,25 +14,35 @@ To represent $\curlO$ and $\curlO^\#$ in code, mostly in the low level C++ code,
 
 For $a \in \curlO$, we use
 \[ a = a_1 + a_2 \frac{D + \sqrt{D}} {2} \]
-with $a_1,a_2 \in \Z$. It holds
+with $a_1,a_2 \in \Z$.
+It holds
 \begin{align*}
-\Re(a) = &\; \frac{1}{2} a_2, \\
-\Re(a)^2 = &\; \frac{1}{4} a_2^2, \\
-\Im(a) = &\; -\frac{a_1}{\sqrt{-D}} + \frac{1}{2} \sqrt{-D} a_2, \\
-\Im(a)^2 = &\; \frac{a_1^2}{-D} - a_1 a_2 + \frac{1}{4} (-D) a_2^2, \\
-|a|^2 = &\; \Re(a)^2 + \Im(a)^2 = \frac{a_1^2}{-D} - a_1 a_2 + \frac{1}{4} (1-D) a_2^2 .
+\Re(a) = &\; a_1 + a_2 \frac{D}{2} , \\
+\Re(a)^2 =&\; a_1^2 + D a_1 a_2 + \frac{D^2}{4} a_2^2 , \\
+\Im(a) =&\; a_2 \frac{\sqrt{-D}}{2} , \\
+\Im(a)^2 =&\; a_2^2 \frac{-D}{4} , \\
+|a|^2 =&\; \Re(a)^2 + \Im(a)^2 = a_1^2 - (-D) a_1 a_2 + \frac{D^2-D}{4} a_2^2 .
 \end{align*}
-When we need $|a|^2$ in an implementation, we can multiply it with $-D$ to get an integer:
-\[ (-D) |a|^2 = a_1^2 - (-D) a_1 a_2 + \frac{D^2-D}{4} a_2^2 . \]
-Note that $4$ divides $D^2 - D$.
+Note that $4$ divides $D^2 - D$. Thus, $|a|^2 \in \Z$.
 
 \paragraph{$\curlO^\#$.}
 
 For $b \in \curlO^\#$, we use
 \[ b = b_1 \frac{1}{\sqrt{D}} + b2 \frac{1 + \sqrt{D}} {2} \]
 with $b_1,b_2 \in \Z$.
+% 6.6. alt det \cO^#
+It holds
+\begin{align*}
+\Re(b) = &\; \frac{1}{2} b_2, \\
+\Re(b)^2 = &\; \frac{1}{4} b_2^2, \\
+\Im(b) = &\; -\frac{b_1}{\sqrt{-D}} + \frac{1}{2} \sqrt{-D} b_2, \\
+\Im(b)^2 = &\; \frac{b_1^2}{-D} - b_1 b_2 + \frac{1}{4} (-D) b_2^2, \\
+|b|^2 = &\; \Re(b)^2 + \Im(b)^2 = \frac{b_1^2}{-D} - b_1 b_2 + \frac{1}{4} (1-D) b_2^2 .
+\end{align*}
+When we need $|b|^2$ in an implementation, we can multiply it with $-D$ to get an integer:
+\[ (-D) |b|^2 = b_1^2 - (-D) b_1 b_2 + \frac{D^2-D}{4} b_2^2 . \]
 
-\subsubsection{Multiplication of $\curlO$ and $\curlO^\#$}
+\subsubsection{Multiplications}
 
 \subsubsection{Determinant of 2-by-2 matrices}
 
