@@ -6,7 +6,7 @@ In this chapter, we are describing the implementation. All of the code can be fo
 
 \subsection{$\curlO$ and $\curlO^\#$ representation and calculation}
 
-To represent $\curlO$ and $\curlO^\#$ in code, mostly in the low level C++ code (files \ifilename{algo\_cpp.cpp}, \ifilename{structs.hpp}, \ifilename{reduceGL.hpp}), we can use two integers in both cases as the coefficients of some basis.
+To represent $\curlO$ and $\curlO^\#$ in code, mostly in the low level C++ code (files \ifilename{algo_cpp.cpp}, \ifilename{structs.hpp}, \ifilename{reduceGL.hpp}), we can use two integers in both cases as the coefficients of some basis.
 
 \subsubsection{Representations}
 
@@ -161,7 +161,20 @@ And if we have $T_a, T_{b1}, T_{b2}, T_{c}, S_a, S_{b1}, S_{b2}, S_c \in \Z$, we
 
 \subsection{Iteration of the precision Fourier indice $\F$}
 
+The set $\F$ depends on a limit $B_\F \in \N$:
+\[ \F = \F_B = \Set{\SimpleMatrix{a}{b}{\overline b}{c} \in \Lambda}{0 \le a , c < B_{\F}} \subseteq \Lambda . \]
+In \cref{remark:reducedCurlF}, we see that $\F$ is finite.
+
+We have implemented an iteration of $\F$ in a way that the list of $\F_{B_2}$ always starts with $\F_{B_1}$ if $B_1 \le B_2$. That is \ifuncname{PrecisionF} in \ifilename{algo_cpp.cpp} and \ifuncname{curlF_iter_py} in \ifilename{helpers.py}. I.e., in Python, that is
+\begin{lstlisting}
+Foo = list
+\end{lstlisting}
+
 \subsection{Iteration of $S \in \PM_2(\curlO)$}
+
+The matrices $S \in \PM_2(\curlO)$ are used for the reduction in $f[S]$ for an Hermitian modula form $f$.
+
+There are multiple implementations of this iteration.
 
 \subsection{\ifuncname{reduceGL}}
 \label{impl:reduceGL}

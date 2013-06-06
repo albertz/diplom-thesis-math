@@ -86,8 +86,18 @@
 
 \newcommand{\defword}[1]{{\bf #1}}
 
-\newcommand{\ifuncname}[1]{$#1$}
-\newcommand{\ifilename}[1]{$\tt{#1}$}
+% http://tex.stackexchange.com/questions/114997/how-do-i-define-a-custom-verbatim-command
+% http://tex.stackexchange.com/questions/117979/how-to-do-newcommand-filepath1-verb1
+\lstdefinestyle{inline}{
+    columns=fullflexible,
+    breaklines=false,
+    basicstyle=\itshape
+}
+\newcommand{\ifuncname}[1]{\lstinline[style=inline]!#1!}
+%\newcommand{\ifuncname}[1]{$#1$}
+%\newcommand{\ifilename}[1]{\verb!#1!}
+%\DeclareUrlCommand\ifuncname{}
+\DeclareUrlCommand\ifilename{}
 
 % inspired by http://ftp.fernuni-hagen.de/ftp-dir/pub/mirrors/www.ctan.org/macros/latex/contrib/braket/braket.sty
 \def\mid@vertical{\mskip1mu\vrule\mskip1mu}
@@ -104,7 +114,7 @@
 %\newcommand{\SetC}[2]{\bigl\{ #1 \bigm| #2 \bigr\}}
 %\DeclarePairedDelimiterX\SetC[2]{\lbrace}{\rbrace}{ #1 \,\delimsize|\, #2 }
 
-%\newcommand{\abs}[1]{\mathopen| #1 \mathclose|}
+%\newcommand{\ab	s}[1]{\mathopen| #1 \mathclose|}
 %\newcommand{\Abs}[1]{\left| #1 \right|}
 \newcommand{\abs}[1]{\left| #1 \right|}
 
