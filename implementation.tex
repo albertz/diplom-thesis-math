@@ -4,6 +4,43 @@
 
 In this chapter, we are describing the implementation.
 
+\subsection{$\curlO$ and $\curlO^\#$ representation and calculation}
+
+To represent $\curlO$ and $\curlO^\#$ in code, mostly in the low level C++ code, we can use two integers in both cases as the coefficients of some basis.
+
+\subsubsection{Representations}
+
+\paragraph{$\curlO$.}
+
+For $a \in \curlO$, we use
+\[ a = a_1 + a_2 \frac{D + \sqrt{D}} {2} \]
+with $a_1,a_2 \in \Z$. It holds
+\begin{align*}
+\Re(a) = &\; \frac{1}{2} a_2, \\
+\Re(a)^2 = &\; \frac{1}{4} a_2^2, \\
+\Im(a) = &\; -\frac{a_1}{\sqrt{-D}} + \frac{1}{2} \sqrt{-D} a_2, \\
+\Im(a)^2 = &\; \frac{a_1^2}{-D} - a_1 a_2 + \frac{1}{4} (-D) a_2^2, \\
+|a|^2 = &\; \Re(a)^2 + \Im(a)^2 = \frac{a_1^2}{-D} - a_1 a_2 + \frac{1}{4} (1-D) a_2^2 .
+\end{align*}
+When we need $|a|^2$ in an implementation, we can multiply it with $-D$ to get an integer:
+\[ (-D) |a|^2 = a_1^2 - (-D) a_1 a_2 + \frac{D^2-D}{4} a_2^2 . \]
+Note that $4$ divides $D^2 - D$.
+
+\paragraph{$\curlO^\#$.}
+
+For $b \in \curlO^\#$, we use
+\[ b = b_1 \frac{1}{\sqrt{D}} + b2 \frac{1 + \sqrt{D}} {2} \]
+with $b_1,b_2 \in \Z$.
+
+\subsubsection{Multiplication of $\curlO$ and $\curlO^\#$}
+
+\subsubsection{Determinant of 2-by-2 matrices}
+
+For $[a,b,c] \in \Her_2(\curlO)$, we have
+
+\subsubsection{$\tr(TS)$ for $T \in \Her_2(\curlO)$, $S \in \Her_2(\curlO^\#)$}
+
+
 \subsection{$reduceGL$}
 \label{impl:reduceGL}
 
