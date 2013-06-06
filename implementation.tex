@@ -159,6 +159,10 @@ Thus, in our Computer implementation, we can just use
 And if we have $T_a, T_{b1}, T_{b2}, T_{c}, S_a, S_{b1}, S_{b2}, S_c \in \Z$, we also have $\tr(TS) \in \Z$.
 
 
+\subsection{Iteration of the precision Fourier indice $\F$}
+
+\subsection{Iteration of $S \in \PM_2(\curlO)$}
+
 \subsection{\ifuncname{reduceGL}}
 \label{impl:reduceGL}
 In \cref{remark:reducedCurlF}, we have described that it is sufficient to use reduced matrices $\hat{T} \in \F$. Thus, in our implementation, for a given matrix $T \in \F$, we need a way to calculate the reduced matrix $\hat{T} \in \F$ such that
@@ -171,6 +175,8 @@ In this work, this function \ifuncname{reduceGL} has been reimplemented in C++ (
 
 
 \subsection{\ifuncname{divmod} and \ifuncname{xgcd}}
+
+\subsection{\ifuncname{solveR}}
 
 \subsection{Calculating the matrix of the map $a \rightarrow a[S]$}
 \label{impl:calcMatrix}
