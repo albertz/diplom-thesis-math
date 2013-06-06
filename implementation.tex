@@ -124,8 +124,32 @@ and
 
 For $[a,b,c] \in \Her_2(\curlO)$, we have
 
-\subsubsection{$\tr(TS)$ for $T \in \Her_2(\curlO)$, $S \in \Her_2(\curlO^\#)$}
-
+\subsubsection{Trace of $TS$}
+We want to calculate $\tr(TS)$ for $T \in \Her_2(\curlO^\#)$, $S \in \Her_2(\curlO)$.
+Let $T = [T_a, T_b, T_c]$ and $S = [S_a, S_b, S_c]$ with
+\begin{align*}
+T_b &= T_{b1} \frac{1}{\sqrt{D}} + T_{b2} \frac{1 + \sqrt{D}} {2} , \\
+S_b &= S_{b1} + S_{b2} \frac{D + \sqrt{D}} {2}
+\end{align*}
+and we have
+\[ \overline{S_b} = S_{b1} + S_{b2} \frac{D - \sqrt{D}} {2} . \]
+Then,
+\[
+\tr(T S) = T_a S_a
++ \underbrace{T_b \overline{S_b} + \overline{T_b} S_b}_{= 2 \Re(T_b \overline{S_b})}
++ T_c S_c
+\]
+and
+\begin{align*}
+\overline{S_b} T_b &= S_{b1} T_{b1} \tfrac{1}{\sqrt(D)} + S_{b1} T_{b2} (1 + \sqrt{D}) \tfrac{1}{2}
++ S_{b2} D \tfrac{1}{2} T_{b1} \tfrac{1}{\sqrt{D}}
+- S_{b2} \tfrac{1}{2} T_{b1} \\
+&\quad + T_{b2} S_{b2} \tfrac{1}{4} \underbrace{(D - \sqrt{D} + D \sqrt{D} - D)}_{=\sqrt{D}(D-1)} \\
+\Rightarrow \Re(\overline{S_b} T_b) &= S_{b1} T_{b2} \tfrac{1}{2} - S_{b2} T_{b1} \tfrac{1}{2} .
+\end{align*}
+Thus, in our Computer implementation, we can just use
+\[ \tr(T S) = T_a S_a + T_c S_c + S_{b1} T_{b2} - S_{b2} T_{b1} . \]
+And if we have $T_a, T_{b1}, T_{b2}, T_{c}, S_a, S_{b1}, S_{b2}, S_c \in \Z$, we also have $\tr(TS) \in \Z$.
 
 \subsection{$reduceGL$}
 \label{impl:reduceGL}
