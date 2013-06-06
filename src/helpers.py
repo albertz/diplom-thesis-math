@@ -669,10 +669,6 @@ class CurlO:
 		else: return True
 
 
-def test_curlO():
-	space = CurlO(-3)
-	assert space.xgcd(1337,43) == orig_xgcd(1337,43)
-
 
 class CurlOdual:
 	"""
