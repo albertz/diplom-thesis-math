@@ -2,7 +2,7 @@
 
 \section{Implementation}
 
-In this chapter, we are describing the implementation.
+In this chapter, we are describing the implementation. All of the code can be found at \cite{Zeyer13Github}.
 
 \subsection{$\curlO$ and $\curlO^\#$ representation and calculation}
 
@@ -158,9 +158,16 @@ Thus, in our Computer implementation, we can just use
 \[ \tr(T S) = T_a S_a + T_c S_c + S_{b1} T_{b2} - S_{b2} T_{b1} . \]
 And if we have $T_a, T_{b1}, T_{b2}, T_{c}, S_a, S_{b1}, S_{b2}, S_c \in \Z$, we also have $\tr(TS) \in \Z$.
 
+
 \subsection{\ifuncname{reduceGL}}
 \label{impl:reduceGL}
-Dominic Gehre and Martin Raum have developed a Cython implementation \cite{Raum09reduceGL} of "Functions for reduction of fourier indice of Hermitian modular forms". In this work, this function \ifuncname{reduceGL} has been reimplemented in C++ (\ifilename{reduceGL.hpp}) and in Python (\ifilename{reduceGL.py}).
+In \cref{remark:reducedCurlF}, we have described that it is sufficient to use reduced matrices $\hat{T} \in \F$. Thus, in our implementation, for a given matrix $T \in \F$, we need a way to calculate the reduced matrix $\hat{T} \in \F$ such that
+\[ \hat{T}[U_T] = T \]
+for some $U_T \in \GL_2(\curlO)$. In the code, we don't need $U_T$ directly but rather the determinant of $U_T$.
+
+Dominic Gehre and Martin Raum have developed a Cython implementation \cite{Raum09reduceGL} of "Functions for reduction of fourier indice of Hermitian modular forms". This function \ifuncname{reduceGL} gets a matrix $T \in \Her_2(\curlO^\#)$ and returns the reduced matrix $\hat{T} \in \Her_2(\curlO^\#)$ and some character evaluation of $U_T$ which also declares the determinant of $U_T$.
+
+In this work, this function \ifuncname{reduceGL} has been reimplemented in C++ (\ifilename{reduceGL.hpp}) and in Python (\ifilename{reduceGL.py}).
 
 
 \subsection{\ifuncname{divmod} and \ifuncname{xgcd}}
