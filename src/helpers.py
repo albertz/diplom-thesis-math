@@ -849,8 +849,18 @@ def solveR(M, S, space):
 	return gamma, R, tM
 
 
-
 def toInt(a):
+	"""
+	INPUT:
+
+	- `a` -- An object like an integer or convertible to an integer.
+	         E.g. also Symbolic Expressions are possible and they
+	         are simplified before via `_simplify`.
+
+	OUTPUT:
+
+	- An integer as Python `int`.
+	"""
 	a = _simplify(a)
 	a = ZZ(a)
 	a = int(a)
@@ -974,7 +984,6 @@ def toCyclPowerBase(M, order):
 			for i in range(K.degree()):
 				ms[i][y,x] = coords[i]
 	return ms
-
 
 
 def reduceNRow(denom, mats):
