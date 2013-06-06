@@ -4,6 +4,7 @@
 # This code is under the GPL v3 or later, see License.txt in the root directory of this project.
 
 from sage.misc.prandom import randrange
+from sage.rings.number_field.number_field import QQ
 import algo_cython as C
 from sage.matrix.constructor import matrix
 from utils import *
@@ -178,3 +179,63 @@ def test_calcMatrix(D=-3, HermWeight=6, B_cF=7):
 		M_py = calcMatrix_py(D=D, HermWeight=HermWeight, B_cF=B_cF, S=S)
 
 		assert M_cpp == M_py
+
+
+def test_solveR():
+	space = CurlO(-3)
+	a,b,c,d = 2,1,1,1
+	s,t,u = 5,space.Droot,1
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S, space)
+
+	a,b,c,d = 0,-1,1,0
+	s,t,u = 1,0,2
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S, space)
+
+	a,b,c,d = 1,0,2,1
+	s,t,u = 1,0,4
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S, space)
+
+	a,b,c,d = 1,0,3,1
+	s,t,u = 1,2,16
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S, space)
+
+	a,b,c,d = 0,-1,1,0
+	s,t,u = 2, QQ(0.5) * space.Droot - QQ(0.5), 2
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S, space)
+
+	a,b,c,d = 1,0,3,1
+	s,t,u = 3, QQ(0.5) * space.Droot - QQ(1.5), 3
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S, space)
+
+	a,b,c,d = 1,0,2,1
+	s,t,u = 3, QQ(0.5) * space.Droot - QQ(1.5), 3
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S, space)
+
+	a,b,c,d = 2,-1,3,-1
+	s,t,u = 4, QQ(-0.5) * space.Droot + QQ(5/2.0), 4
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S, space)
+
+	a,b,c,d = 1,0,2,1
+	s,t,u = 9, QQ(5)/2 * space.Droot - QQ(11)/2, 7
+	M = matrix(2, 2, [a,b,c,d])
+	S = matrix(2, 2, [s,t,t.conjugate(),u])
+	gamma,R,tM = solveR(M, S, space)
+
+	return gamma,R,tM
+

@@ -9,9 +9,10 @@ from sage.matrix.constructor import matrix, Matrix
 from sage.modular.congroup import Gamma0
 from sage.modular.modform.constructor import ModularForms
 from sage.rings.arith import xgcd as orig_xgcd
-from sage.rings.integer import Integer
 from sage.rings.number_field.number_field import CyclotomicField, QQ, ZZ, QuadraticField
+from sage.rings.integer import Integer
 from utils import *
+
 
 # via Martin. while this is not in Sage:
 import cusp_expansions
@@ -847,64 +848,6 @@ def solveR(M, S, space):
 	assert (R.submatrix(0,0,2,2) * R.submatrix(2,2,2,2).conjugate_transpose()).apply_map(_simplify) == 1
 	return gamma, R, tM
 
-
-def test_solveR():
-	space = CurlO(-3)
-	a,b,c,d = 2,1,1,1
-	s,t,u = 5,space.Droot,1
-	M = matrix(2, 2, [a,b,c,d])
-	S = matrix(2, 2, [s,t,t.conjugate(),u])
-	gamma,R,tM = solveR(M, S, space)
-
-	a,b,c,d = 0,-1,1,0
-	s,t,u = 1,0,2
-	M = matrix(2, 2, [a,b,c,d])
-	S = matrix(2, 2, [s,t,t.conjugate(),u])
-	gamma,R,tM = solveR(M, S, space)
-
-	a,b,c,d = 1,0,2,1
-	s,t,u = 1,0,4
-	M = matrix(2, 2, [a,b,c,d])
-	S = matrix(2, 2, [s,t,t.conjugate(),u])
-	gamma,R,tM = solveR(M, S, space)
-
-	a,b,c,d = 1,0,3,1
-	s,t,u = 1,2,16
-	M = matrix(2, 2, [a,b,c,d])
-	S = matrix(2, 2, [s,t,t.conjugate(),u])
-	gamma,R,tM = solveR(M, S, space)
-
-	a,b,c,d = 0,-1,1,0
-	s,t,u = 2, QQ(0.5) * space.Droot - QQ(0.5), 2
-	M = matrix(2, 2, [a,b,c,d])
-	S = matrix(2, 2, [s,t,t.conjugate(),u])
-	gamma,R,tM = solveR(M, S, space)
-
-	a,b,c,d = 1,0,3,1
-	s,t,u = 3, QQ(0.5) * space.Droot - QQ(1.5), 3
-	M = matrix(2, 2, [a,b,c,d])
-	S = matrix(2, 2, [s,t,t.conjugate(),u])
-	gamma,R,tM = solveR(M, S, space)
-
-	a,b,c,d = 1,0,2,1
-	s,t,u = 3, QQ(0.5) * space.Droot - QQ(1.5), 3
-	M = matrix(2, 2, [a,b,c,d])
-	S = matrix(2, 2, [s,t,t.conjugate(),u])
-	gamma,R,tM = solveR(M, S, space)
-
-	a,b,c,d = 2,-1,3,-1
-	s,t,u = 4, QQ(-0.5) * space.Droot + QQ(5/2.0), 4
-	M = matrix(2, 2, [a,b,c,d])
-	S = matrix(2, 2, [s,t,t.conjugate(),u])
-	gamma,R,tM = solveR(M, S, space)
-
-	a,b,c,d = 1,0,2,1
-	s,t,u = 9, QQ(5)/2 * space.Droot - QQ(11)/2, 7
-	M = matrix(2, 2, [a,b,c,d])
-	S = matrix(2, 2, [s,t,t.conjugate(),u])
-	gamma,R,tM = solveR(M, S, space)
-
-	return gamma,R,tM
 
 
 def toInt(a):
