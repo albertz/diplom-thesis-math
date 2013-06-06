@@ -35,7 +35,7 @@ a_1 = &\; \Re(a) - a_2 \frac{D}{2} = \Re(a) + \Im(a) \sqrt{-D} .
 \paragraph{$\curlO^\#$.}
 
 For $b \in \curlO^\#$, we use
-\[ b = b_1 \frac{1}{\sqrt{D}} + b2 \frac{1 + \sqrt{D}} {2} \]
+\[ b = b_1 \frac{1}{\sqrt{D}} + b_2 \frac{1 + \sqrt{D}} {2} \]
 with $b_1,b_2 \in \Z$.
 % 6.6. alt det \cO^#
 It holds
@@ -55,6 +55,16 @@ When we have $b \in \K$ where $\Re(b)$ and $\Im(b)$ are easily available and whe
 \begin{align*}
 b_2 =&\; 2 \Re(b) , \\
 b_1 =&\; b_2 \frac{-D}{2} - \Im(b) \sqrt{-D} = \Re(b) (-D) - \Im(b) \sqrt{-D} .
+\end{align*}
+
+Let us calculate the complex conjugate $\overline{b}$ of $b \in \curlO^\#$:
+\begin{align*}
+\overline{b} &= \frac{-b_1}{\sqrt{D}} + \frac{b_2}{2} - b_2 \frac{\sqrt{D}}{2} \\
+&\overset{!}{=} \hat{b}_1 \frac{1}{\sqrt{D}} + \hat{b}_2 \frac{1 + \sqrt{D}} {2} \\
+\Rightarrow \quad \hat{b}_2 &= b_2 , \\
+\hat{b}_1 &= \overline{b} \sqrt{D} - \hat{b}_2 (\sqrt{D}+D) \tfrac{1}{2} \\
+&= b_2 \frac{\sqrt{D}}{2} - b_2 \frac{\sqrt{D}}{2} - b_2 \frac{D}{2} - b_2 \frac{D}{2} - b_1 \\
+&= -b_2 D - b_1 .
 \end{align*}
 
 \subsubsection{Multiplications}
