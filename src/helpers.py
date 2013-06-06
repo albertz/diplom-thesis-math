@@ -266,6 +266,7 @@ class ReducedGL:
 	def __init__(self, T, D):
 		self.space = CurlOdual(D=D)
 		self._init(T=T)
+		
 	def _init(self, T):
 		self.T = T
 		from reduceGL import reduce_GL
@@ -279,11 +280,18 @@ class ReducedGL:
 		self.charTrans = trans
 		self.charDet = det
 		self.charNu = nu
+
 	def value(self, k):
-		# det = exp(2 pi i det_character / h)
-		# where h = 2, or if D = -3, then h = 6, or D = -4, then h = 4
-		# we expect that it is a unit in \Z here.
-		# we return det^k.
+		"""
+		INPUT:
+		- `k` -- integer (exponent)
+		OUTPUT:
+		- `det^k`, where `det = exp(2 pi i det_character / h),
+		  where h = 2, or if D = -3, then h = 6, or D = -4, then h = 4.
+		  We expect that the return value is a unit in \ZZ, otherwise it fails.
+
+		NOTE: This is the same code as in `reduceGL.hpp` in `reduce_character_evalutation::value()`.
+		"""
 		if self.space.D == -3: h = 6
 		elif self.space.D == -4: h = 4
 		else: h = 2
