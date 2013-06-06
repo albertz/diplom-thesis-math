@@ -244,7 +244,7 @@ We use the same invariation notation as for $\Q^\F$ and write
 \[ \invarF{\F}{\GL_2(\curlO)} := \F / { \sim_{\GL_2(\curlO)} } . \]
 We identify the elements in $\invarF{\F}{\GL_2(\curlO)}$ by reduced matrices%
 \footnote{
-This is in some sense of "reduced". Details can be seen in the source code at \cite{Zeyer13Github}. There is an algorithm which, for a given matrix $T \in \F$, calculates a reduced matrix $\tilde{T}$ and a determinant character $det$ such that $\tilde{T}[U] = T$ for some $U \in \GL_2(\curlO)$ with $\det(U) = e^{2 \pi i \cdot det / {\#(\curlO^\times)}}$.
+This is in some sense of "reduced". Details can be seen in \cref{impl:reduceGL} and in the source code at \cite{Zeyer13Github}. There is an algorithm which, for a given matrix $T \in \F$, calculates a reduced matrix $\tilde{T}$ and a determinant character $det$ such that $\tilde{T}[U] = T$ for some $U \in \GL_2(\curlO)$ with $\det(U) = e^{2 \pi i \cdot det / {\#(\curlO^\times)}}$.
 }
 in $\F$. Then, we have $\invar{\F}{\GL_2(\curlO)} \subseteq \F$.
 
@@ -273,7 +273,7 @@ where $T_j$ are the reduced matrices in $\F$.
 We have
 \[ \det(U)^k a(T_j[U]) = a(T_j) \] % =v_i
 for all $j \le N$, $U \in \GL_2(\curlO)$, where $k$ is the weight of the Hermitian modular form.
-For any $T \in \F$, we can (see also \cref{remark:reducedCurlF}) uniquely find $j_T \le N$ and $U_T \in \GL_2(\curlO)$ such that
+For any $T \in \F$, we can (see also \cref{remark:reducedCurlF} and \cref{impl:reduceGL}) uniquely find $j_T \le N$ and $U_T \in \GL_2(\curlO)$ such that
 \[ T_{j_T}[U_T] = T. \]
 Then we have
 \[ a(T) = a(T_{j_T}[U]) = \det(U_T)^{-k} a(T_{j_T}) . \]
@@ -290,6 +290,7 @@ then the $i$-th row and the $j$-th column is given by
 \[ M_{i,j} =  \sum_{T \in \F, \tr(S T) = i, j_T = j} \det(U_T)^{-k} \]
 and we have
 \[ M \cdot a = a[S] . \]
+The implementation of the calculation of $M$ and its details are described in \cref{impl:calcMatrix}.
 \qed
 \end{remark}
 
