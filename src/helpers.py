@@ -88,8 +88,8 @@ def calcMatrixTrans(calc, R):
 	"""
 	tS = R.submatrix(0,0,2,2)
 	tT = R.submatrix(2,0,2,2)
-	lS = _curlO_matrix_denom(tS, D=calc.D)
-	lT = _curlO_matrix_denom(tT, D=calc.D)
+	lS = CurlO(D=calc.D).matrix_denom(tS)
+	lT = CurlO(D=calc.D).matrix_denom(tT)
 	tS *= lS
 	tT *= lT
 	tS.set_immutable()
@@ -572,6 +572,13 @@ class CurlO:
 			tupleargs[2*i],tupleargs[2*i+1] = self.as_tuple_b(args[i])
 		return matrix(QQ, 1,len(tupleargs), tupleargs).denominator()
 
+	def matrix_denom(self, mat):
+		denom = self.common_denom(*mat.list())
+		denom = int(ZZ(denom))
+		for v in mat.list():
+			assert v * denom in self, "%r (D=%r)" % (mat, self.D)
+		return denom
+
 	def as_tuple_b(self, a):
 		real_part, b2 = self.DrootHalf_coordinates_in_terms_of_powers(a)
 		b1 = real_part - b2 * self.D / 2
@@ -830,15 +837,6 @@ def test_solveR():
 	gamma,R,tM = solveR(M, S, space)
 
 	return gamma,R,tM
-
-
-def _curlO_matrix_denom(mat, D):
-	space = CurlO(D)
-	denom = space.common_denom(*mat.list())
-	denom = int(ZZ(denom))
-	for v in mat.list():
-		assert v * denom in space, "%r (D=%r)" % (mat, D)
-	return denom
 
 
 def toInt(a):
