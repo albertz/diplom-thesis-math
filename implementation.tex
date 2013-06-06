@@ -76,10 +76,48 @@ Note that $b \in \R$ if and only if $b_1 \frac{1}{\sqrt{D}} = - b_2 \frac{\sqrt{
 %3.5. ElemOfCurlO.mul()
 Let $a,b \in \curlO$ with $a = a_1 + a_2 \frac{D + \sqrt{D}} {2}$, $b = b_1 + b_2 \frac{D + \sqrt{D}} {2}$. Then we have
 \begin{align*}
-ab &= a_1 b_1 + a_1 b_2 (D + \sqrt{D}) \tfrac{1}{2} + b_1 a_2 (D + \sqrt{D}) \tfrac{1}{2}
+a \cdot b &= a_1 b_1 + a_1 b_2 (D + \sqrt{D}) \tfrac{1}{2} + b_1 a_2 (D + \sqrt{D}) \tfrac{1}{2}
 + a_2 b_2 \tfrac{1}{4} \underbrace{(D^2 + 2 D \sqrt{D} + D)}_{= 2D (D + \sqrt{D}) - D^2 + D} \\
 &= \frac{\sqrt{D} + D}{2} (a_1 b_2 + b_1 a_2 + D a_2 b_2)
 + a_1 b_1 - a_2 b_2 \frac{D^2 - D}{4} .
+\end{align*}
+
+%3.5.13 mult \curlO^# und \curlO
+Now, let $a \in \curlO^\#$ and $b \in \curlO$ with
+\begin{align*}
+a &= a_1 \frac{1}{\sqrt{D}} + a_2 \frac{1 + \sqrt{D}} {2} , \\
+b &= b_1 + b_2 \frac{D + \sqrt{D}} {2} .
+\end{align*}
+Then we have
+\begin{align*}
+a \cdot b &= a_1 b_1 \tfrac{1}{\sqrt{D}} + a_1 b_2 (\sqrt{D} + 1) \tfrac{1}{2}
++ a_2 b_1 (1 + \sqrt{D}) \tfrac{1}{2} + a_2 b_2
+\underbrace{(D + \sqrt{D} + D \sqrt{D} + D)}_{
+\begin{aligned}
+= 2D + \sqrt{D} + D \sqrt{D} \\
+= 2D + \sqrt{D} (1 + D)
+\end{aligned}
+}
+\tfrac{1}{4} \\
+&= a_1 b_1 \tfrac{1}{\sqrt{D}} + (a_1 b_2 + a_2 b_1) (1 + \sqrt{D}) \tfrac{1}{2}
++ a_2 b_2 (2D + \sqrt{D}(1 + D)) \tfrac{1}{4} .
+\end{align*}
+Thus, when representing $a \cdot b \in \curlO^\#$ as
+\[ a \cdot b = (ab)_1 \frac{1}{\sqrt{D}} + (ab)_2 \frac{1 + \sqrt{D}} {2} , \]
+we get
+\[ (ab)_2 = a_1 b_2 + a_2 b_1 + a_2 b_2 D \]
+and
+\begin{align*}
+(ab)_1 &= \sqrt{D} ab - (ab)_2 (\sqrt{D} + D) \tfrac{1}{2} \\
+&= a_1 b_1 + (a_1 b_2 + b_1 a_2) (\sqrt{D} + D) \tfrac{1}{2} + a_2 b_2 (D + \sqrt{D})^2 \tfrac{1}{4} \\
+&\quad - (a_1 b_2 + a_2 b_1 + a_2 b_2 D) (\sqrt{D} + D) \tfrac{1}{2} \\
+&= a_1 b_1 + a_2 b_2 \underbrace{( (D+\sqrt{D})^2 \tfrac{1}{4} - D(\sqrt{D}+D)\tfrac{1}{2} )}_{
+\begin{aligned}[l]
+=& \tfrac{D^2}{4} + \tfrac{D\sqrt{D}}{2} + \tfrac{D}{4} - \tfrac{D\sqrt{D}}{2} - \tfrac{D^2}{2} \\
+=& \tfrac{D^2 - D}{4}
+\end{aligned}
+} \\
+&= a_1 b_1 + a_2 b_2 \frac{D^2 - D}{4} .
 \end{align*}
 
 \subsubsection{Determinant of 2-by-2 matrices}
