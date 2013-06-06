@@ -6,7 +6,7 @@ In this chapter, we are describing the implementation.
 
 \subsection{$\curlO$ and $\curlO^\#$ representation and calculation}
 
-To represent $\curlO$ and $\curlO^\#$ in code, mostly in the low level C++ code, we can use two integers in both cases as the coefficients of some basis.
+To represent $\curlO$ and $\curlO^\#$ in code, mostly in the low level C++ code (files \ifilename{algo\_cpp.cpp}, \ifilename{structs.hpp}, \ifilename{reduceGL.hpp}), we can use two integers in both cases as the coefficients of some basis.
 
 \subsubsection{Representations}
 
@@ -73,6 +73,14 @@ Note that $b \in \R$ if and only if $b_1 \frac{1}{\sqrt{D}} = - b_2 \frac{\sqrt{
 \[ 2 b_1 = - b_2 D . \]
 
 \subsubsection{Multiplications}
+%3.5. ElemOfCurlO.mul()
+Let $a,b \in \curlO$ with $a = a_1 + a_2 \frac{D + \sqrt{D}} {2}$, $b = b_1 + b_2 \frac{D + \sqrt{D}} {2}$. Then we have
+\begin{align*}
+ab &= a_1 b_1 + a_1 b_2 (D + \sqrt{D}) \tfrac{1}{2} + b_1 a_2 (D + \sqrt{D}) \tfrac{1}{2}
++ a_2 b_2 \tfrac{1}{4} \underbrace{(D^2 + 2 D \sqrt{D} + D)}_{= 2D (D + \sqrt{D}) - D^2 + D} \\
+&= \frac{\sqrt{D} + D}{2} (a_1 b_2 + b_1 a_2 + D a_2 b_2)
++ a_1 b_1 - a_2 b_2 \frac{D^2 - D}{4} .
+\end{align*}
 
 \subsubsection{Determinant of 2-by-2 matrices}
 
