@@ -162,11 +162,11 @@ Note that some authors use $e^{\pi i}$ as the coefficient bases and define the i
 \label{remark:restricted-by-S}
 For any $S \in \PM_2(\curlO)$, for the restricted function $f[S] \colon \HalfPlane_1 \rightarrow \C$, this gives us
 \[ f[S](\tau) = \sum_{T \in \Lambda} a(T) \cdot e^{2 \pi i \cdot \tr(T S \tau)}
-= \sum_{T \in \Lambda} a(T) \cdot e^{2 \pi i \cdot \tr(T S \tau)} . \]
+= \sum_{T \in \Lambda} a(T) \cdot e^{2 \pi i \cdot 2 \tr(T S) \tau} . \]
 We use $a[S] \colon \N_0 \rightarrow \Q$ for the Fourier coefficients of $f[S]$, i.e. we have
 \[ f[S](\tau) = \sum_{n \in \N_0} a[S](n) \cdot e^{2 \pi i n \tau} . \]
 This gives us
-\[ a[S] (n) = \sum_{T \in \Lambda, \tr(S T) = n} a(T) . \]
+\[ a[S] (n) = \sum_{T \in \Lambda, \tr(S T) = \frac{n}{2}} a(T) . \]
 \endproof
 \end{remark}
 
@@ -265,7 +265,7 @@ This makes the set $\invarF{\F}{\GL_2(\curlO)}$, to identify a basis of the fini
 \begin{remark}
 \label{remark:how-to-calc-aS}
 From \cref{remark:restricted-by-S} and \cref{lemma:fprecisionlimit}, we have
-\[ a[S] (i) = \sum_{T \in \F, \tr(S T) = i} a(T) \]
+\[ a[S] (i) = \sum_{T \in \F, \tr(S T) = \frac{i}{2}} a(T) \]
 for $i \in \N_0, i < \F(S)$.
 
 %Let $v = (v_1, \dots, v_n) \in \Q^n$ be a vector in the base of reduced indices of $\F$ as described in \cref{remark:reducedCurlF} with
@@ -281,7 +281,7 @@ For any $T \in \F$, we can (see also \cref{remark:reducedCurlF} and \cref{impl:r
 Then we have
 \[ a(T) = a(T_{j_T}[U]) = \det(U_T)^{-k} a(T_{j_T}) . \]
 Thus,
-\[ a[S] (i) =  \sum_{T \in \F, \tr(S T) = i} \det(U_T)^{-k} a(T_{j_T}) . \]
+\[ a[S] (i) =  \sum_{T \in \F, \tr(S T) = \frac{i}{2}} \det(U_T)^{-k} a(T_{j_T}) . \]
 This gives us the formula to calculate the Fourier expansion $a[S] \colon \Set{i \in \N_0}{i < \FPrecisionLimit{S}} \rightarrow \Q$.
 
 This is a linear map $\Q^{\invarF{\F}{\GL_2(\curlO)}} \rightarrow \Q^{\Set{i \in \N_0}{i < \FPrecisionLimit{S}}}$ and the matrix $M \in \M_{\FPrecisionLimit{S} \times N}(\Q)$ of this map is given by the formula above. When we identify
@@ -290,7 +290,7 @@ a = & \; (a(T_1), \dots, a(T_N)), \\
 a[S] = & \; (a[S](0), \dots, a[S](\FPrecisionLimit{S} - 1)),
 \end{align*}
 then the $i$-th row and the $j$-th column is given by
-\[ M_{i,j} =  \sum_{T \in \F, \tr(S T) = i, j_T = j} \det(U_T)^{-k} \]
+\[ M_{i,j} =  \sum_{T \in \F, \tr(S T) = \frac{i}{2}, j_T = j} \det(U_T)^{-k} \]
 and we have
 \[ M \cdot a = a[S] . \]
 The implementation of the calculation of $M$ and its details are described in \cref{impl:calcMatrix}.
