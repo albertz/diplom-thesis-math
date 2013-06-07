@@ -148,7 +148,6 @@ struct M2T_Odual {
 	M2T_Odual(Int _a, Int _b1, Int _b2, Int _c)
 	: a(_a), b1(_b1), b2(_b2), c(_c) {}
 	// detD == -D * det
-	// TODO(?): if D is fundamental, we always have 4|(D*D-D), thus we could just use -D * det.
 	Int detD(const int D) const {
 		DOMAIN_CHECK(D < 0);
 		DOMAIN_CHECK(Mod(D*D - D, 4) == 0);
