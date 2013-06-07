@@ -10,12 +10,29 @@ For performance reasons, some very heavy calculations have been implemented in C
 
 \subsection{Basic code structure}
 
+\subsubsection{Main function \ifuncname{herm_modform_space}}
 The main entry point is in the file \ifilename{algo.py}.
 The function \ifuncname{herm_modform_space} calculates the Hermitian modula form space.
-The function gets the fundamental discriminant \isymbname{D}, the Hermitian modula forms weight $k =$ \isymbname{HermWeight} and the precision limit $B_\F =$ \isymbname{B_cF} as its input and returns the vector space of Fourier expansion of Hermitian modular forms to the precision $B_\F$.
+The function gets the fundamental discriminant \isymbname{D}, the Hermitian modula forms weight $k =$ \isymbname{HermWeight} and the precision limit $B_\F =$ \isymbname{B_cF} as its input and returns the vector space of Fourier expansions of Hermitian modular forms to the precision $B_\F$. The Fourier expansions are indexed by the reduced matrices of $\F$ (see \cref{remark:reducedCurlF} for details).
+
+The function can also do its calculation in parallel via multiple processes. As a convenience, to easily start the calculation with $N$ processes in parallel, there is the function \ifuncname{herm_modform_space__parallel} with the additional parameter \isymbname{task_limit}, where you just set \isymbname{task_limit} $=N$. For details about the parallelization, see \cref{impl:parallelization}.
+
+Thus, to calculate the Hermitian modular forms with $D=-3$, weight $6$ and $B_\F = 7$, you can do:
+\begin{lstlisting}
+# run sage in the `src` directory of this work
+import algo
+algo.herm_modform_space(D=-3, HermWeight=6, B_cF=7)
+\end{lstlisting}
+Or, if you want to use 4 processes in parallel:
+\begin{lstlisting}
+algo.herm_modform_space__parallel(
+    D=-3, HermWeight=6, B_cF=7, task_limit=4)
+\end{lstlisting}
+
+%---
+\
 
 In the rest of this chapter, we will demonstrate the details of the calculations and representations.
-
 \subsection{$\curlO$ and $\curlO^\#$ representation and calculations}
 
 To represent $\curlO$ and $\curlO^\#$ in code, mostly in the low level C++ code (files \ifilename{algo_cpp.cpp}, \ifilename{structs.hpp}, \ifilename{reduceGL.hpp}), we can use two integers in both cases as the coefficients of some basis.
@@ -207,3 +224,4 @@ In this work, this function \ifuncname{reduceGL} has been reimplemented in C++ (
 \label{impl:calcMatrix}
 
 \subsection{Parallelization}
+\label{impl:parallelization}
