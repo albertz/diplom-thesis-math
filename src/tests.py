@@ -248,6 +248,7 @@ def test_calcMatrix_S3001():
 	l = S.det()
 	from helpers import calcRestrictMatrix_py
 	M_S = calcRestrictMatrix_py(D=D, HermWeight=HermWeight, B_cF=B_cF, S=S)
+	M_S = M_S.matrix_over_field() # matrix over rational field
 
 	precLimit = M_S.nrows()
 	assert precLimit == calcPrecisionDimension(B_cF=B_cF, S=S)
