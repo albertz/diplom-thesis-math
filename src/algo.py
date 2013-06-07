@@ -43,7 +43,7 @@ def herm_modform_indexset(D, B_cF):
 
 	The index set \Lambda is the set of positive definite 2*2 matrices over \curlO^#.
 	\curlF \subset \Lambda is a precision such that for [a,b,c] \in \curlF,
-	we have 0 \le a,c, \le B_cF.
+	we have 0 \le a,c \le B_cF.
 
 	This function returns all the reduced matrices of \curlF. The reduction
 	is given by `reduce_GL()` in `reduceGL.hpp`.
