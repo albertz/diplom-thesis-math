@@ -88,13 +88,15 @@
 
 % http://tex.stackexchange.com/questions/114997/how-do-i-define-a-custom-verbatim-command
 % http://tex.stackexchange.com/questions/117979/how-to-do-newcommand-filepath1-verb1
-\lstdefinestyle{inline}{
+% http://sunsite.informatik.rwth-aachen.de/ftp/pub/mirror/ctan/macros/latex/contrib/listings/listings.pdf
+\lstdefinestyle{inline-funcname}{
     columns=fullflexible,
     breaklines=false,
-    basicstyle=\itshape
+    %Note: \usefont{OML}{cmm}{m}{it} is exactly like \mathnormal
+    basicstyle=\usefont{OML}{cmm}{m}{it} %\itshape\ttfamily
 }
 %\newcommand{\ifuncname}[1]{\lstinline[style=inline]!#1!}
-\newcommand{\ifuncname}[1]{\lstinline[style=inline]{#1}}
+\newcommand{\ifuncname}[1]{\lstinline[style=inline-funcname]{#1}}
 %\newcommand{\ifuncname}[1]{$#1$}
 %\newcommand{\ifilename}[1]{\verb!#1!}
 %\DeclareUrlCommand\ifuncname{}
