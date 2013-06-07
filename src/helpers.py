@@ -180,6 +180,27 @@ def calcRestrictMatrix(calc):
 	return calc.calcMatrix()
 
 
+def calcRestrictMatrix_any(D, HermWeight, B_cF, S):
+	"""
+	Calculates the matrix of the linear map `f \mapsto f[S]`, like `calcRestrictMatrix()`.
+	This function is only for testing. Normally, it is not needed.
+	It uses the C++ code.
+	"""
+	# Note that this implementation is kind of ugly!
+	# There isn't really a supported way to overwrite calc.curlS.
+	# But we need to do that to calc the matrix for our wanted S.
+	# Thus, we grab the state, modify it and write it back.
+	from algo_cython import Calc
+	calc = Calc()
+	calc.init(D=D, HermWeight=HermWeight, B_cF=B_cF)
+	prot, params, curlSiterType, curlS, curlSiterState = calc.__getstate__()
+	assert prot == "prot2"
+	curlS = (S,)
+	new_state = (prot, params, curlSiterType, curlS, curlSiterState)
+	calc.__setstate__(new_state) # this also calls calcReducedCurlF
+	return calc.calcMatrix()
+
+
 def cusp_matrix(cusp):
 	"""
 	Returns a matrix `M` such that `M * \infinity == cusp`.

@@ -430,7 +430,7 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None, reduction_m
 			if newspace.dimension() == reducedCurlFSize:
 				verbose("no information gain from %r" % task)
 				newspace = None
-			
+
 			if newspace is not None:
 				new_task_count += 1
 				spacecomment = task
