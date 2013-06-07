@@ -86,6 +86,7 @@
 
 \newcommand{\defword}[1]{{\bf #1}}
 
+% This is all about the code. The 'i'-prefix stands for "implementation".
 % http://tex.stackexchange.com/questions/114997/how-do-i-define-a-custom-verbatim-command
 % http://tex.stackexchange.com/questions/117979/how-to-do-newcommand-filepath1-verb1
 % http://sunsite.informatik.rwth-aachen.de/ftp/pub/mirror/ctan/macros/latex/contrib/listings/listings.pdf
@@ -97,6 +98,7 @@
 }
 %\newcommand{\ifuncname}[1]{\lstinline[style=inline]!#1!}
 \newcommand{\ifuncname}[1]{\lstinline[style=inline-funcname]{#1}}
+\newcommand{\isymbname}[1]{\lstinline[style=inline-funcname]{#1}}
 %\newcommand{\ifuncname}[1]{$#1$}
 %\newcommand{\ifilename}[1]{\verb!#1!}
 %\DeclareUrlCommand\ifuncname{}
