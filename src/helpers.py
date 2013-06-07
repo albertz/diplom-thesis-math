@@ -180,11 +180,11 @@ def calcRestrictMatrix(calc):
 	return calc.calcMatrix()
 
 
-def calcRestrictMatrix_any(D, HermWeight, B_cF, S):
+def _getAnyCalc(D, HermWeight, B_cF, S):
 	"""
-	Calculates the matrix of the linear map `f \mapsto f[S]`, like `calcRestrictMatrix()`.
-	This function is only for testing. Normally, it is not needed.
-	It uses the C++ code.
+	This returns an instance of the C++ Calc object
+	with any curlS initialized.
+	Note that this is just for testing!
 	"""
 	# Note that this implementation is kind of ugly!
 	# There isn't really a supported way to overwrite calc.curlS.
@@ -198,6 +198,16 @@ def calcRestrictMatrix_any(D, HermWeight, B_cF, S):
 	curlS = (S,)
 	new_state = (prot, params, curlSiterType, curlS, curlSiterState)
 	calc.__setstate__(new_state) # this also calls calcReducedCurlF
+	return calc
+
+
+def calcRestrictMatrix_any(D, HermWeight, B_cF, S):
+	"""
+	Calculates the matrix of the linear map `f \mapsto f[S]`, like `calcRestrictMatrix()`.
+	This function is only for testing. Normally, it is not needed.
+	It uses the C++ code.
+	"""
+	calc = _getAnyCalc(D=D, HermWeight=HermWeight, B_cF=B_cF, S=S)
 	return calc.calcMatrix()
 
 
