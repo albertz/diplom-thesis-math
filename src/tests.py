@@ -267,3 +267,41 @@ def test_calcMatrix_S3001(usePyImpl=False):
 	print restriction_fe_expansions
 	assert restriction_fe_expansions.dimension() > 0
 
+
+def test_calcMatrix_S2a1(usePyImpl=False, B_cF=7):
+	D = -3
+	HermWeight = 6
+	K = QuadraticField(D)
+	a, b, c = 2, QQ(1)/2*K.gen() + QQ(1)/2, 1
+	S = matrix(K, 2, [a, b, b.conjugate(), c])
+	l = S.det()
+	if usePyImpl:	from helpers import calcRestrictMatrix_py as calcMatrix
+	else:			from helpers import calcRestrictMatrix_any as calcMatrix
+	M_S = calcMatrix(D=D, HermWeight=HermWeight, B_cF=B_cF, S=S)
+	M_S = M_S.matrix_over_field() # matrix over rational field
+
+	precLimit = M_S.nrows()
+	assert precLimit == calcPrecisionDimension(B_cF=B_cF, S=S)
+
+	# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
+	ell_dim, fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
+	assert fe_expansion_matrix_l.rank() == ell_dim
+	ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
+	assert ell_modform_fe_expansions_l.dimension() == ell_dim
+
+	M_S_module = M_S.column_module()
+	restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S_module )
+	assert restriction_fe_expansions.dimension() > 0
+
+	herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
+	herm_modform_fe_expannsion_S_module = herm_modform_fe_expannsion_S.column_module()
+	M_S_right_kernel = M_S.right_kernel()
+	herm_modform_fe_expannsion_S_module += M_S_right_kernel
+
+	import checks
+	checks.check_eisenstein_series_D3_weight6(
+		vs=herm_modform_fe_expannsion_S_module,
+		B_cF=B_cF
+	)
+
+
