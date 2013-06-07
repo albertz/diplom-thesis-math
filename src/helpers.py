@@ -211,6 +211,7 @@ def calcRestrictMatrix_any(D, HermWeight, B_cF, S):
 	return calc.calcMatrix()
 
 
+calcRestrictMatrix_py_Pure = False
 def calcRestrictMatrix_py(D, HermWeight, B_cF, S):
 	"""
 	This is a Python implementation of the C++ `calcMatrix()` function from `algo.cpp`.
@@ -221,8 +222,11 @@ def calcRestrictMatrix_py(D, HermWeight, B_cF, S):
 	# We also have a Python implementation for calculating the indexset,
 	# but we can test that separately (`test_herm_modform_indexset()`)
 	# and use the fast version here.
-	from algo import herm_modform_indexset
-	indexset = herm_modform_indexset(D=D, B_cF=B_cF)
+	if calcRestrictMatrix_py_Pure:
+		indexset = herm_modform_indexset_py(D=D, B_cF=B_cF)
+	else:
+		from algo import herm_modform_indexset
+		indexset = herm_modform_indexset(D=D, B_cF=B_cF)
 	indexset_map = dict([(T,i) for (i,T) in enumerate(indexset)])
 
 	precDim = calcPrecisionDimension(B_cF=B_cF, S=S)
@@ -396,6 +400,10 @@ class ReducedGL:
 		self.charDet = det
 		self.charNu = nu
 
+		if trans < 0:
+			self.matrix = self.matrix.transpose()
+			self.matrix.set_immutable()
+
 	def value(self, k):
 		"""
 		INPUT:
@@ -417,7 +425,7 @@ class ReducedGL:
 		if det_char % h == 0: value = 1
 		elif det_char % h == h/2: value = -1
 		else: assert False
-		sign = 1
+		sign = 0
 		nu_exp = 0
 		if sign: value *= self.charTrans
 		if nu_exp: value *= self.charNu
