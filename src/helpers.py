@@ -417,7 +417,7 @@ class ReducedGL:
 		if det_char % h == 0: value = 1
 		elif det_char % h == h/2: value = -1
 		else: assert False
-		sign = 0
+		sign = 1
 		nu_exp = 0
 		if sign: value *= self.charTrans
 		if nu_exp: value *= self.charNu

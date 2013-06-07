@@ -55,7 +55,7 @@ struct reduce_character_evalutation {
 			std::cerr << "reduce_character_evalutation.detValue error: det_char = " << det_char << ", D = " << D << ", k = " << k << std::endl;
 			DOMAIN_CHECK(false);
 		}
-		const int sign = 0; // 0 or 1
+		const int sign = 1; // 0 or 1 // TODO: what here??
 		const int nu_exp = 0; // 0 or 1
 		if(sign) value *= transposition;
 		if(nu_exp) value *= nu;
