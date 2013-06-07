@@ -425,11 +425,15 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None, reduction_m
 				task = next(task_iter)
 			newspace = task()
 
-			spacecomment = task
-			herm_modform_fe_expannsion = IntersectSpacesTask(
-				herm_modform_fe_expannsion, [(spacecomment, newspace)])()
-			current_dimension = herm_modform_fe_expannsion.dimension()
-			verbose("new dimension: %i, wanted: %i" % (current_dimension, dim))
+			if newspace is not None:
+				new_task_count += 1
+				spacecomment = task
+				herm_modform_fe_expannsion_new = IntersectSpacesTask(
+					herm_modform_fe_expannsion, [(spacecomment, newspace)])()
+				if herm_modform_fe_expannsion_new is not None:
+					herm_modform_fe_expannsion = herm_modform_fe_expannsion_new
+				current_dimension = herm_modform_fe_expannsion.dimension()
+				verbose("new dimension: %i, wanted: %i" % (current_dimension, dim))
 
 		if new_task_count > 0:
 			step_counter += 1
