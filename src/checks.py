@@ -8,6 +8,8 @@ from sage.modules.free_module_element import vector
 from sage.rings.number_field.number_field import QQ
 
 
+# Not exactly sure on this check. It fails.
+check_eisenstein_series_D3_weight6_Enabled = False
 def check_eisenstein_series_D3_weight6(vs, B_cF):
 	from algo import herm_modform_indexset
 	from helpers import M2T_Odual
@@ -73,9 +75,9 @@ def check_eisenstein_series_D3_weight6(vs, B_cF):
 
 
 def extra_check_on_herm_superspace(vs, D, HermWeight, B_cF):
-	# This check seems to be wrong.
-	#if D == -3 and HermWeight == 6:
-	#	check_eisenstein_series_D3_weight6(vs=vs, B_cF=B_cF)
+	if check_eisenstein_series_D3_weight6_Enabled:
+		if D == -3 and HermWeight == 6:
+			check_eisenstein_series_D3_weight6(vs=vs, B_cF=B_cF)
 	pass
 
 
