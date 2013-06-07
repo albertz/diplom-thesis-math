@@ -239,3 +239,29 @@ def test_solveR():
 
 	return gamma,R,tM
 
+
+def test_calcMatrix_S3001():
+	D = -3
+	HermWeight = 6
+	B_cF = 7
+	S = matrix(ZZ, 2, [3,0,0,1])
+	l = S.det()
+	from helpers import calcRestrictMatrix_py
+	M_S = calcRestrictMatrix_py(D=D, HermWeight=HermWeight, B_cF=B_cF, S=S)
+
+	precLimit = M_S.nrows()
+	assert precLimit == calcPrecisionDimension(B_cF=B_cF, S=S)
+
+	# These are the Elliptic modular forms with weight 2*HermWeight to \Gamma_0(l).
+	ell_dim, fe_expansion_matrix_l = getElliptModFormsBasisMatrix(l, 2*HermWeight, precLimit)
+	assert fe_expansion_matrix_l.rank() == ell_dim
+	ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
+	assert ell_modform_fe_expansions_l.dimension() == ell_dim
+
+	M_S_module = M_S.column_module()
+	restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S_module )
+
+	print "intersection:"
+	print restriction_fe_expansions
+	assert restriction_fe_expansions.dimension() > 0
+
