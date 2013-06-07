@@ -246,8 +246,9 @@ def test_calcMatrix_S3001():
 	B_cF = 7
 	S = matrix(ZZ, 2, [3,0,0,1])
 	l = S.det()
-	from helpers import calcRestrictMatrix_py
-	M_S = calcRestrictMatrix_py(D=D, HermWeight=HermWeight, B_cF=B_cF, S=S)
+	#from helpers import calcRestrictMatrix_py as calcMatrix
+	from helpers import calcRestrictMatrix_any as calcMatrix
+	M_S = calcMatrix(D=D, HermWeight=HermWeight, B_cF=B_cF, S=S)
 	M_S = M_S.matrix_over_field() # matrix over rational field
 
 	precLimit = M_S.nrows()
