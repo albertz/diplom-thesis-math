@@ -232,6 +232,10 @@ def modform_restriction_info(calc, S, l):
 	verbose("dimension of M_S column module: %i" % M_S_module.dimension())
 	restriction_fe_expansions = ell_modform_fe_expansions_l.intersection( M_S_module )
 	verbose("dimension of restriction_fe_expansions: %i" % restriction_fe_expansions.dimension())
+	if restriction_fe_expansions.dimension() == 0:
+		# TODO: later, fail. and fix!
+		# this should not happen. there must be one.
+		return None
 	herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
 	herm_modform_fe_expannsion_S_module = herm_modform_fe_expannsion_S.column_module()
 	verbose("dimension of herm column module: %i" % herm_modform_fe_expannsion_S_module.dimension())
