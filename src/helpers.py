@@ -201,6 +201,38 @@ def calcRestrictMatrix_any(D, HermWeight, B_cF, S):
 	return calc.calcMatrix()
 
 
+def calcRestrictMatrix_py(D, HermWeight, B_cF, S):
+	"""
+	This is a Python implementation of the C++ `calcMatrix()` function from `algo.cpp`.
+	This is just for testing. See `test_calcMatrix()`.
+	It does also exactly the same as `calcRestrictMatrix_any()`.
+	"""
+
+	# We also have a Python implementation for calculating the indexset,
+	# but we can test that separately (`test_herm_modform_indexset()`)
+	# and use the fast version here.
+	from algo import herm_modform_indexset
+	indexset = herm_modform_indexset(D=D, B_cF=B_cF)
+	indexset_map = dict([(T,i) for (i,T) in enumerate(indexset)])
+
+	precDim = calcPrecisionDimension(B_cF=B_cF, S=S)
+	matrixRowCount = precDim
+	matrixColumnCount = len(indexset)
+
+	M = matrix(ZZ, matrixRowCount, matrixColumnCount)
+	for T in curlF_iter_py(D=D, B_cF=B_cF):
+		reduced = ReducedGL(T=T, D=D)
+		column = indexset_map[reduced.matrix]
+		row = ZZ((S * T).trace())
+		assert row >= 0
+		if row >= matrixRowCount: continue
+		a_T = reduced.value(-HermWeight)
+		M[row,column] += a_T
+
+	M.set_immutable()
+	return M
+
+
 def cusp_matrix(cusp):
 	"""
 	Returns a matrix `M` such that `M * \infinity == cusp`.
@@ -398,38 +430,6 @@ def herm_modform_indexset_py(D, B_cF):
 			reducedMap[reduced.matrix] = len(reducedList)
 			reducedList.append(reduced.matrix)
 	return reducedList
-
-
-def calcMatrix_py(D, HermWeight, B_cF, S):
-	"""
-	This is a Python implementation of the C++ `calcMatrix()` function from `algo.cpp`.
-	This is just for testing. See `test_calcMatrix()`.
-	"""
-
-	# We also have a Python implementation for calculating the indexset,
-	# but we can test that separately (`test_herm_modform_indexset()`)
-	# and use the fast version here.
-	from algo import herm_modform_indexset
-	indexset = herm_modform_indexset(D=D, B_cF=B_cF)
-	indexset_map = dict([(T,i) for (i,T) in enumerate(indexset)])
-
-	precDim = calcPrecisionDimension(B_cF=B_cF, S=S)
-	matrixRowCount = precDim
-	matrixColumnCount = len(indexset)
-
-	M = matrix(ZZ, matrixRowCount, matrixColumnCount)
-	for T in curlF_iter_py(D=D, B_cF=B_cF):
-		reduced = ReducedGL(T=T, D=D)
-		column = indexset_map[reduced.matrix]
-		row = ZZ((S * T).trace())
-		assert row >= 0
-		if row >= matrixRowCount: continue
-		a_T = reduced.value(-HermWeight)
-		M[row,column] += a_T
-
-	M.set_immutable()
-	return M
-
 
 
 def _simplify(a):

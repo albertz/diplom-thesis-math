@@ -168,7 +168,7 @@ def test_calcMatrix(D=-3, HermWeight=6, B_cF=7):
 	calc.init(D=D, HermWeight=HermWeight, B_cF=B_cF)
 	calc.calcReducedCurlF()
 
-	from helpers import calcMatrix_py
+	from helpers import calcRestrictMatrix_py
 
 	for i in range(1000):
 		calc.curlS_clearMatrices()
@@ -176,7 +176,7 @@ def test_calcMatrix(D=-3, HermWeight=6, B_cF=7):
 		if i % 100 != 0: continue
 
 		M_cpp = calc.calcMatrix()
-		M_py = calcMatrix_py(D=D, HermWeight=HermWeight, B_cF=B_cF, S=S)
+		M_py = calcRestrictMatrix_py(D=D, HermWeight=HermWeight, B_cF=B_cF, S=S)
 
 		assert M_cpp == M_py
 
