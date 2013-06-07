@@ -225,6 +225,7 @@ def modform_restriction_info(calc, S, l):
 
 	ell_modform_fe_expansions_l = fe_expansion_matrix_l.row_module()
 	verbose("dim of elliptic modform space: %i" % ell_modform_fe_expansions_l.dimension())
+	assert ell_modform_fe_expansions_l.dimension() == ell_dim
 
 	verbose("calc M_S_module...")
 	M_S_module = M_S.column_module()
