@@ -13,7 +13,7 @@ For performance reasons, some very heavy calculations have been implemented in C
 \subsubsection{Main function \ifuncname{herm_modform_space}}
 The main entry point is in the file \ifilename{algo.py}.
 The function \ifuncname{herm_modform_space} calculates the Hermitian modula form space.
-The function gets the fundamental discriminant \isymbname{D}, the Hermitian modula forms weight $k =$ \isymbname{HermWeight} and the precision limit $B_\F =$ \isymbname{B_cF} as its input and returns the vector space of Fourier expansions of Hermitian modular forms to the precision $B_\F$. The Fourier expansions are indexed by the reduced matrices of $\F$ (see \cref{remark:reducedCurlF} for details).
+The function gets the fundamental discriminant \isymbname{D}, the Hermitian modula forms weight $k =$ \isymbname{HermWeight} and the precision limit $B_\F =$ \isymbname{B_cF} as its input and returns the vector space of Fourier expansions of Hermitian modular forms to the precision $B_\F$. The Fourier expansions are indexed by the reduced matrices of $\F$ (see \cref{remark:reducedCurlF} for details). This index list can also be returned by \ifuncname{herm_modform_indexset}.
 
 The function can also do its calculation in parallel via multiple processes. As a convenience, to easily start the calculation with $N$ processes in parallel, there is the function \ifuncname{herm_modform_space__parallel} with the additional parameter \isymbname{task_limit}, where you just set \isymbname{task_limit} $=N$. For details about the parallelization, see \cref{impl:parallelization}.
 
@@ -28,6 +28,11 @@ Or, if you want to use 4 processes in parallel:
 algo.herm_modform_space__parallel(
     D=-3, HermWeight=6, B_cF=7, task_limit=4)
 \end{lstlisting}
+
+The function \ifuncname{herm_modform_space} uses \ifuncname{modform_restriction_info} and \ifuncname{modform_cusp_info} which are also defined in the same file.
+The theory behind these functions is described in TODO-Ref...
+
+Both return a vector space which is a superspace of the Hermitian modular form Fourier expansions and \ifuncname{herm_modform_space} intersects them until the final dimension is reached.
 
 %---
 \
