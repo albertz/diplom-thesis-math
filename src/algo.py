@@ -58,7 +58,7 @@ def herm_modform_indexset(D, B_cF):
 		assert L1 == L2[:len(L1)]
 	"""
 
-	HermWeight = 6 # Just some dummy value. The calc-init wants something valid.
+	HermWeight = 6 # Just some dummy value. `calc.init()` wants something valid.
 	calc = C.Calc()
 	calc.init(D=D, HermWeight=HermWeight, B_cF=B_cF)
 	calc.calcReducedCurlF()
