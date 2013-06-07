@@ -400,7 +400,7 @@ def calcMatrix_py(D, HermWeight, B_cF, S):
 	for T in curlF_iter_py(D=D, B_cF=B_cF):
 		reduced = ReducedGL(T=T, D=D)
 		column = indexset_map[reduced.matrix]
-		row = ZZ((S * T).trace() * 2)
+		row = ZZ((S * T).trace())
 		assert row >= 0
 		if row >= matrixRowCount: continue
 		a_T = reduced.value(-HermWeight)

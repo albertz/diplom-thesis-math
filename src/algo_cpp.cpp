@@ -399,7 +399,7 @@ struct ReductionMatrices_Calc {
 				ElemOfS S = *_S;
 				int traceNum = trace(S,T, D);
 				LOGIC_CHECK(traceNum >= 0);
-				size_t row = rowStart + traceNum * 2;
+				size_t row = rowStart + traceNum;
 				rowStart += calcPrecisionDimension(curlF, S);
 				if(row >= rowStart) continue;
 				size_t matrixIndex = row * matrixColumnCount + column;
@@ -495,7 +495,7 @@ struct ReductionMatrices_Calc {
 					.trace()
 					.asInt(D);
 				//cout << "traceNum=" << traceNum << ", T_M2=" << T_M2 << ", S_M2 = " << S_M2 << endl;
-				size_t row = rowStart + traceNum * 2;
+				size_t row = rowStart + traceNum;
 				rowStart += calcPrecisionDimension(curlF, S);
 				//cout << "traceNum: " << traceNum << ", next rowStart: " << rowStart << endl;
 				if(row >= rowStart) continue;
