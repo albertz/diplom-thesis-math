@@ -425,7 +425,9 @@ def herm_modform_space(D, HermWeight, B_cF=10, parallelization=None, reduction_m
 				task = next(task_iter)
 			newspace = task()
 
-			herm_modform_fe_expannsion = IntersectSpacesTask(herm_modform_fe_expannsion, [newspace])()
+			spacecomment = task
+			herm_modform_fe_expannsion = IntersectSpacesTask(
+				herm_modform_fe_expannsion, [(spacecomment, newspace)])()
 			current_dimension = herm_modform_fe_expannsion.dimension()
 			verbose("new dimension: %i, wanted: %i" % (current_dimension, dim))
 
