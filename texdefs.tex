@@ -93,11 +93,13 @@
     breaklines=false,
     basicstyle=\itshape
 }
-\newcommand{\ifuncname}[1]{\lstinline[style=inline]!#1!}
+%\newcommand{\ifuncname}[1]{\lstinline[style=inline]!#1!}
+\newcommand{\ifuncname}[1]{\lstinline[style=inline]{#1}}
 %\newcommand{\ifuncname}[1]{$#1$}
 %\newcommand{\ifilename}[1]{\verb!#1!}
 %\DeclareUrlCommand\ifuncname{}
-\DeclareUrlCommand\ifilename{}
+%\DeclareUrlCommand\ifilename{}
+\newcommand{\ifilename}[1]{\protect\path{#1}}
 
 % inspired by http://ftp.fernuni-hagen.de/ftp-dir/pub/mirrors/www.ctan.org/macros/latex/contrib/braket/braket.sty
 \def\mid@vertical{\mskip1mu\vrule\mskip1mu}
