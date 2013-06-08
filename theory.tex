@@ -440,8 +440,9 @@ c_{4,2} &= c_{\gamma_3,1} \cdot a_{3,2} + d_{\gamma_3,1} \cdot c_{3,2} , \\
 c_{4,3} &= c_{\gamma_3,4} \cdot a_{3,2} + d_{\gamma_3,4} \cdot \underbrace{c_{3,2}}_{=0} , \\
 c_{4,4} &= c_{\gamma_3,4} \cdot a_{3,4} + d_{\gamma_3,4} \cdot \underbrace{c_{3,4}}_{=0} .
 \end{align*}
-Set $c_{\gamma_3,4} := b_{\gamma_3,4} := 0$ and $a_{\gamma_3,4} := d_{\gamma_3,4} := 1$. Thus $\SmallMatrix{a_{\gamma_3,1}}{b_{\gamma_3,1}}{c_{\gamma_3,1}}{d_{\gamma_3,1}} = 1_2 \in \Sp_1(\curlO)$. Then we have $c_{4,3} = 0$ and $c_{4,4} = 0$.
+Set $c_{\gamma_3,4} := b_{\gamma_3,4} := 0$ and $a_{\gamma_3,4} := d_{\gamma_3,4} := 1$. Thus $\SmallMatrix{a_{\gamma_3,4}}{b_{\gamma_3,4}}{c_{\gamma_3,4}}{d_{\gamma_3,4}} = 1_2 \in \Sp_1(\curlO)$. Then we have $c_{4,3} = 0$ and $c_{4,4} = 0$.
 
+Let $l_3 \in \curlO$ such that $a_{3,2} \cdot l_3, c_{3,2} \cdot l_3 \in \curlO$. Via \ifuncname{xgcd}, we can find $d_3,a_{\gamma_3,1},b_{\gamma_3,1} \in \curlO$ such that $1 = a_{\gamma_3,1} \frac{a_{3,2} \cdot l_3}{d_3} + b_{\gamma_3,1} \frac{c_{3,2} \cdot l_3}{d_3}$ and $\frac{a_{3,2} \cdot l_3}{d_3}, \frac{c_{3,2} \cdot l_3}{d_3} \in \curlO$. Set $c_{\gamma_3,1} := -\frac{c_{3,2} \cdot l_3}{d_3}$ and $d_{\gamma_3,1} := \frac{a_{3,2} \cdot l_3}{d_3}$. Then we have $\SmallMatrix{a_{\gamma_3,1}}{b_{\gamma_3,1}}{c_{\gamma_3,1}}{d_{\gamma_3,1}} \in \Sp_1(\curlO)$.
 
 \end{proof}
 \end{lemma}
