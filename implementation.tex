@@ -113,6 +113,7 @@ Note that $b \in \R$ if and only if $b_1 \frac{1}{\sqrt{D}} = - b_2 \frac{\sqrt{
 \[ 2 b_1 = - b_2 D . \]
 
 \subsubsection{Multiplications}
+\label{curlOmultiplications}
 %3.5. ElemOfCurlO.mul()
 Let $a,b \in \curlO$ with $a = a_1 + a_2 \frac{D + \sqrt{D}} {2}$, $b = b_1 + b_2 \frac{D + \sqrt{D}} {2}$. Then we have
 \begin{align*}
@@ -334,6 +335,28 @@ Thus, in this work, we have reimplemented a simple canonical version of \ifuncna
 
 The main work is done in the \ifuncname{divmod} function. \ifuncname{divmod} gets two numbers $a, b \in \curlO$ and returns $q, r \in \curlO$ such that $q b + r = a$. This is the division with remainder. It holds that $f(r) < f(b)$ for the Euclidean Norm $f \colon \K \rightarrow \R_{\ge 0}$. In our case, we have $f(x) = |x|$. The current implementation of \ifuncname{divmod} is very naive and should be improved. It can be found as well in the class \isymbname{CurlO} in \ifilename{helpers.py}.
 
+Let $a,b \in \curlO$ with $q = \tfrac{a}{b}$ be represented in the base $(1, \frac{D + \sqrt{D}} {2})$ as described in \cref{impl:repr:curlO} as tuples $a_1,a_2,b_1,b_2 \in \Z$ and $q_1,q_2 \in \Q$. We can describe the equation $bq = a$ as a matrix multiplication
+\[ \tilde{B} \begin{pmatrix} q_1 \\ q_2 \end{pmatrix} = \begin{pmatrix} a_1 \\ a_2 \end{pmatrix} . \]
+With the inverse (if it exists), we can calculate $q$:
+\[ \tilde{B}^{-1} \begin{pmatrix} a_1 \\ a_2 \end{pmatrix} = \begin{pmatrix} q_1 \\ q_2 \end{pmatrix} . \]
+The multiplation formulas for $\curlO$ as described in \cref{curlOmultiplications} yield
+\[ \tilde{B} = \begin{pmatrix}
+b_1 & -b_2 \frac{D^2 - D}{4} \\
+b_2 & b_1 + b_2 D
+\end{pmatrix} . \]
+Then, for the inverse, we have
+\[ \tilde{B}^{-1} = \frac{1}{\det(\tilde{B})}
+\begin{pmatrix}
+b_1 + b_2 D & b_2 \frac{D^2 - D}{4} \\
+-b_2 & b_1
+\end{pmatrix} . \]
+For the determinant, we have
+\begin{align*}
+\det(\tilde{B}) &= b_1^2 + b_1 b_2 D + b_2^2 \frac{D^2-D}{4} \\
+&= (b_1 + b_2 \tfrac{D}{2})^2 \underbrace{- b_2^2 \tfrac{D^2}{4} + b_2^2 \tfrac{D^2-D}{4}}_{
+= -b_2^2 \tfrac{D}{4} \ge 0} \ge 0.
+\end{align*}
+Note that $\det(\tilde{B}) = 0$ exactly if and only if $b_1 = b_2 = 0$, as it was expected.
 
 \subsection{\ifuncname{solveR}}
 \label{solveR}
