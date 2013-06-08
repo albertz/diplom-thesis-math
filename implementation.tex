@@ -203,6 +203,7 @@ And if we have $T_a, T_{b1}, T_{b2}, T_{c}, S_a, S_{b1}, S_{b2}, S_c \in \Z$, we
 
 
 \subsection{Iteration of the precision Fourier indice $\F$}
+\label{curlFiteration}
 
 The set $\F$ depends on a limit $B_\F \in \N$:
 \[ \F = \F_B = \Set{\SimpleMatrix{a}{b}{\overline b}{c} \in \Lambda}{0 \le a , c < B_{\F}} \subseteq \Lambda . \]
@@ -256,11 +257,24 @@ This is equivalent with the inequality to-be-proved.
 
 We have seen in \cref{reducedCurlF} that it is sufficient to use $\invarF{\F}{\GL_2(\curlO)}$ as the index set. In our implementation, we iterate through $\F$ and save the first occurrence of a new reduced matrix in a list. That list is returned by the function \ifuncname{herm_modform_indexset} which is declared in \ifilename{helpers.py}. It uses the C++ implementation in \ifilename{algo_cpp.cpp} as its backend. For testing and demonstration purpose, there is also a pure Python implementation \ifuncname{herm_modform_indexset_py} in \ifilename{helpers.py}.
 
+
 \subsection{Iteration of $S \in \PM_2(\curlO)$}
 
 The matrices $S \in \PM_2(\curlO)$ are used for the reduction in $f[S]$ for an Hermitian modula form $f$.
 
-There are multiple implementations of this iteration.
+There are multiple implementations of this iteration. Our first version only iterated through matrices $\PM_2(\Z)$ with increasing determinator. We want the increasing determinant because we want to exhaust all possible matrices with low determinants because they are easier for the rest of the calculations. Later, it turned out that matrices only over $\Z$ don't yield enough information and we need matrices with imaginary components. Once you add the imaginary component, it is not possible anymore to iterate through all of $\PM_2(\Z)$ with increasing determinant because there can be infinity many matrices for a given determinant (or it is not trivial to see if there are not and how to set the limits in an implementation). Thus, the second implementation for matrices over $\PM_2(\curlO)$ does not keep the determinant fixed and rather works very similar to the iteration through $\F$, as described in \cref{curlFiteration}.
+
+The implementation is in C++ in the file \ifilename{algo_cpp.cpp}. The class \isymbname{CurlS_Generator} owns and manages the iterator and can store several matrices at once because the main matrix calculation implementations (\cref{calcMatrix} and \cref{calcMatrixTrans}) can be done for several matrices at once. The class \isymbname{M2T_O_PosDefSortedZZ_Iterator} implements the iteration through $\PM_2(\Z)$ with increasing denominator. The class \isymbname{M2T_O_PosDefSortedGeneric_Iterator} implements the generic iteratoin through $\PM_2(\curlO)$.
+
+The iteration through $S \in \PM_2(\Z)$ in \isymbname{M2T_O_PosDefSortedZZ_Iterator} works as follows: We represent $S$ as $a,b,c \in \Z$ with $[a,b,c] = S$. We start with each of them set to zero. Also, we internally save the current determinant $\delta$ and start with $\delta := 0$.
+\begin{enumerate}
+\item We return a matrix if it is valid and reduced in some sense. That means that we only return if $a \le c$, $\det([a,b,c]) = ac - b^2 = \delta$ and if there is no common divisor of $a,b,c$ except $1$.
+\item We increase $c$ by one. We set $a := \lfloor \frac{\delta + b^2}{c} \rfloor$.
+\item Once we hit $c > \delta + b^2$, we reset $c := 0$ and make one iteration step for $b \in \Set{0,1,-1,2,-2,\dots}$.
+\item
+%TODO: why? ref?
+Once we hit $3 b^2 > \delta$, we know that there aren't any further matrices with this determinant $\delta$. Thus we reset $a := b := c := 0$ and increase $\delta$ by one.
+\end{enumerate}
 
 \subsection{\ifuncname{reduceGL}}
 \label{impl:reduceGL}
@@ -295,6 +309,9 @@ The main work is done in the \ifuncname{divmod} function. \ifuncname{divmod} get
 
 \subsection{Calculating the matrix of the map $a \rightarrow a[S]$}
 \label{impl:calcMatrix}
+\label{calcMatrix}
+\label{calcMatrixTrans}
+
 
 \subsection{Parallelization}
 \label{impl:parallelization}
