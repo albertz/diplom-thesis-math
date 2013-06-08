@@ -13,7 +13,7 @@ For performance reasons, some very heavy calculations have been implemented in C
 \subsubsection{Main function \ifuncname{herm_modform_space}}
 The main entry point is in the file \ifilename{algo.py}.
 The function \ifuncname{herm_modform_space} calculates the Hermitian modula form space.
-The function gets the fundamental discriminant \isymbname{D}, the Hermitian modula forms weight $k =$ \isymbname{HermWeight} and the precision limit $B_\F =$ \isymbname{B_cF} as its input and returns the vector space of Fourier expansions of Hermitian modular forms to the precision $B_\F$. The Fourier expansions are indexed by the reduced matrices of $\F$ (see \cref{remark:reducedCurlF} for details). This index list can also be returned by \ifuncname{herm_modform_indexset}.
+The function gets the fundamental discriminant \isymbname{D} $= - \Delta$, the Hermitian modula forms weight $k =$ \isymbname{HermWeight} and the precision limit $B_\F =$ \isymbname{B_cF} as its input and returns the vector space of Fourier expansions of Hermitian modular forms to the precision $B_\F$. The Fourier expansions are indexed by the reduced matrices of $\F$ (see \cref{remark:reducedCurlF} for details). This index list can also be returned by \ifuncname{herm_modform_indexset}.
 
 The function can also do its calculation in parallel via multiple processes. As a convenience, to easily start the calculation with $N$ processes in parallel, there is the function \ifuncname{herm_modform_space__parallel} with the additional parameter \isymbname{task_limit}, where you just set \isymbname{task_limit} $=N$. For details about the parallelization, see \cref{impl:parallelization}.
 
@@ -210,12 +210,15 @@ curlF2 = list(curlF_iter_py(D=D, B_cF=B2))
 assert curlF1 == curlF2[:len(curlF1)]
 \end{lstlisting}
 
-The algorithm of the iteration of $\F$ works in the following way: We have the current matrix represented as integers $a,b_1,b_2,c$ and we start with each of them set to $0$. We have the limit $B_\F$ and iterate an internal limit $\tilde{B} \in \Set{0,1,\dots,B_\F-1}$.
+The algorithm of the iteration of $T \in \F$ works in the following way: We have the current matrix represented as integers $a,b_1,b_2,c \in \Z$ and we start with each of them set to $0$. Then, $b = b_1 \frac{1}{\sqrt{D}} + b_2 \frac{1 + \sqrt{D}} {2}$ and $T = [a,b,c]$. We have the limit $B_\F \in \N_0$ and iterate an internal limit $\tilde{B} \in \Set{0,1,\dots,B_\F-1}$.
 \begin{enumerate}
 \item If the current saved matrix is a valid one, i.e. its determinant is not negative and $0 \le a,c \le B_\F$, we return it.
 \item We iterate $b_2$ through $\Set{0,1,-1,2,-2,\dots}$.
 \item The absolut limit for $b_2$ is given by
 \[ a c 4 \ge b_2^2 . \]
+\begin{proof}
+bla
+\end{proof}
 \item Once we hit that limit, we reset $b_2 := 0$ and we do one iteration step for $b_1$ through the set $\Set{0,1,-1,2,-2,\dots}$.
 \item The absolut limit for $b_1$ is given by
 \[ a c (D^2 - D) \ge b_1^2 . \]
