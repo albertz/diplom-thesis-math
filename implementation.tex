@@ -279,9 +279,32 @@ Once we hit $3 b^2 > \delta$, we know that there aren't any further matrices wit
 For a reduced matrix $[a,b,c]$, we have
 \[ 0 \le 2 |b| \le a \le c . \]
 Thus,
-\[ \delta = ac - b^2 \ge (2 |b|) (2 |b|) - b^2 = 3 b^2 . \]
+\[ \delta = ac - b^2 \ge (2 |b|) (2 |b|) - b^2 = 3 b^2 . \qedhere \]
 \end{proof}
 \end{enumerate}
+
+The iteration through $S \in \PM_2(\curlO)$ in \isymbname{M2T_O_PosDefSortedGeneric_Iterator} is mostly the same as the iteration of $\F$ as described in \cref{curlFiteration}. The difference is that $\F$ is over $\curlO^\#$ and $S$ is over $\curlO$. This yields to other limits for $b_1$ and $b_2$. Also, we don't have a limit like $\tilde{B}$.
+\begin{enumerate}
+\item We iterate $b_2$ through $\Set{0,1,-1,2,-2,\dots}$.
+\item Once we hit the absolut limit of $b_2$, we reset $b_2 := 0$ and make one iteration step for $b_1 \in \Set{0,1,-1,2,-2,\dots}$.
+\end{enumerate}
+%
+%23.5.13 \S iteration fix (\curlO)
+The absolut limit of $b_2$ is given by
+\[ 4 ac \ge (-D) b_2^2 \]
+and the absolut limit of $b_1$ is given by
+\[ ac (1 - D) \ge b_1^2 . \]
+\begin{proof}
+We have $\det(S) \ge 0$ and thus
+(see \cref{detCurlO})
+\[ a c \ge b_1^2 - (-D) b_1 b_2 + \frac{D^2 - D}{4} b_2^2 . \]
+Note that this is mostly like the inequality in the case over $\curlO^\#$, except that we have $ac$ on the left side instead of $(-D) ac$. Thus, we can mostly reuse the $b_1, b_2$ limit calculations from \cref{curlFiteration}. For $b_1$, we have
+\[ a c \ge b_1^2 \frac{-D}{D^2-D} . \]
+This is equivalent to the inequality to-be-proved.
+And for $b_2$, we have
+\[ a c \ge \tfrac{-D}{4} b_2^2 . \qedhere \]
+\end{proof}
+
 
 \subsection{\ifuncname{reduceGL}}
 \label{impl:reduceGL}
