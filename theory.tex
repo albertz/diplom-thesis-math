@@ -425,6 +425,24 @@ Now we
 thus
 \[ a_{3,1} = \overline{d_{\gamma_2,1}} \cdot a_{2,1} - \overline{d_{\gamma_2,3}} \cdot a_{2,3} . \]
 
+3) Set
+\[ \gamma_3 := \begin{pmatrix}
+a_{\gamma_3,1} & b_{\gamma_3,1} \\
+c_{\gamma_3,1} & d_{\gamma_3,1}
+\end{pmatrix} \times \begin{pmatrix}
+a_{\gamma_3,4} & b_{\gamma_3,4} \\
+c_{\gamma_3,4} & d_{\gamma_3,4}
+\end{pmatrix} . \]
+With $\tilde{M}_4 = \gamma_3 \tilde{M}_3$, we have
+\begin{align*}
+c_{4,1} &= c_{\gamma_3,1} \cdot a_{3,1} + d_{\gamma_3,1} \cdot \underbrace{c_{3,1}}_{=0} , \\
+c_{4,2} &= c_{\gamma_3,1} \cdot a_{3,2} + d_{\gamma_3,1} \cdot c_{3,2} , \\
+c_{4,3} &= c_{\gamma_3,4} \cdot a_{3,2} + d_{\gamma_3,4} \cdot \underbrace{c_{3,2}}_{=0} , \\
+c_{4,4} &= c_{\gamma_3,4} \cdot a_{3,4} + d_{\gamma_3,4} \cdot \underbrace{c_{3,4}}_{=0} .
+\end{align*}
+Set $c_{\gamma_3,4} := b_{\gamma_3,4} := 0$ and $a_{\gamma_3,4} := d_{\gamma_3,4} := 1$. Thus $\SmallMatrix{a_{\gamma_3,1}}{b_{\gamma_3,1}}{c_{\gamma_3,1}}{d_{\gamma_3,1}} = 1_2 \in \Sp_1(\curlO)$. Then we have $c_{4,3} = 0$ and $c_{4,4} = 0$.
+
+
 \end{proof}
 \end{lemma}
 Note that this proof gives explicit formulas to calculate $\gamma$ and $R$. This has been implemented in \ifilename{helpers.py} as \ifuncname{solveR}. A list of test cases have also been generated in the function \ifuncname{test_solveR} in \ifilename{tests.py} which also indirectly test the \ifuncname{xgcd} and \ifuncname{divmod} implementation (described in \cref{xgcd}).
