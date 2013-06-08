@@ -254,7 +254,7 @@ This is equivalent with the inequality to-be-proved.
 \item Once we hit $\tilde{B} \ge B_\F$, we are finished.
 \end{enumerate}
 
-We have seen in \cref{reducedCurlF} that it is sufficient to use $\invarF{\F}{\GL_2(\curlO)}$ as the index set. In our implementation, we iterate through $\F$ and save the first occurance of a new reduced matrix in a list. That list is returned by the function \ifuncname{herm_modform_indexset} which is declared in \ifilename{helpers.py}. It uses the C++ implementation in \ifilename{algo_cpp.cpp} as its backend. For testing and demonstration purpose, there is also a pure Python implementation \ifuncname{herm_modform_indexset_py} in \ifilename{helpers.py}.
+We have seen in \cref{reducedCurlF} that it is sufficient to use $\invarF{\F}{\GL_2(\curlO)}$ as the index set. In our implementation, we iterate through $\F$ and save the first occurrence of a new reduced matrix in a list. That list is returned by the function \ifuncname{herm_modform_indexset} which is declared in \ifilename{helpers.py}. It uses the C++ implementation in \ifilename{algo_cpp.cpp} as its backend. For testing and demonstration purpose, there is also a pure Python implementation \ifuncname{herm_modform_indexset_py} in \ifilename{helpers.py}.
 
 \subsection{Iteration of $S \in \PM_2(\curlO)$}
 
