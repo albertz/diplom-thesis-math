@@ -216,7 +216,7 @@ The algorithm of the iteration of $T \in \F$ works in the following way: We have
 \item If the current saved matrix is a valid one, i.e. its determinant is not negative and $0 \le a,c \le B_\F$, we return it.
 \item We iterate $b_2$ through $\Set{0,1,-1,2,-2,\dots}$.
 \item
-%23.5.13 \F iteration fix (\curlO^#)
+%23.5.13 \F iteration fix (\curlO^#). b_2
 The absolut limit for $b_2$ is given by
 \[ 4 a c \ge b_2^2 . \]
 \begin{proof}
@@ -229,8 +229,21 @@ thus
 This is equivalent with the inequality to-be-proved.
 \end{proof}
 \item Once we hit that limit, we reset $b_2 := 0$ and we do one iteration step for $b_1$ through the set $\Set{0,1,-1,2,-2,\dots}$.
-\item The absolut limit for $b_1$ is given by
+\item
+%23.5.13 \F iteration fix (\curlO^#). nr2. b_1
+The absolut limit for $b_1$ is given by
 \[ a c (D^2 - D) \ge b_1^2 . \]
+\begin{proof}
+We have
+\[ \tfrac{D^2-D}{4} b_2^2 - (-D) b_1 b_2
+= \left( \sqrt{\tfrac{D^2-D}{4}} b_2 - \frac{-D}{2 \sqrt{\tfrac{D^2-D}{4}}} b_1 \right)^2
+- \tfrac{(-D)^2}{D^2 - D} b_1^2
+\ge - \tfrac{D^2}{D^2 - D} b_1^2 .
+\]
+Then, again with $\det(T) \ge 0$ like in the limit for $b_2$, we have
+\[ (-D) a c \ge b_1^2 - \frac{D^2}{D^2 - D} b_1^2 = b_1^2 \frac{-D}{D^2-D} . \]
+This is equivalent with the inequality to-be-proved.
+\end{proof}
 \item Once we hit that limit, we reset $b_1 := b_2 := 0$ and we increase $c$ by one.
 \item Once we hit $c > \tilde{B}$, we reset $b_1 := b_2 := 0$ and we increase $a$ by one, if $a < \tilde{B}$. For all cases where $a < \tilde{B}$, we set $c := \tilde{B}$, otherwise $c := 0$.
 \item Once we hit $a = \tilde{B}$, we increase $\tilde{B}$ by one and reset $a := 0$ and $c := \tilde{B}$.
