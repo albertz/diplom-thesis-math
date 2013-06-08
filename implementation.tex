@@ -223,7 +223,22 @@ In this work, this function \ifuncname{reduceGL} has been reimplemented in C++ (
 
 \subsection{\ifuncname{divmod} and \ifuncname{xgcd}}
 
+We have given numbers $a,b \in \curlO$ and we search for $d,p,q \in \curlO$ such that $d = pa + qb$ and $d$ divides $a$ and $b$. Then, $d$ is also the greatest common divisor (\ifuncname{gcd}). This is also equivalent to
+\[ 1 = p \frac{a}{d} + q \frac{b}{d} . \]
+%
+For example, we need that in \ifuncname{solveR} (\cref{solveR}).
+
+The extended Euclidean algorithm (\ifuncname{xgcd}) is the standard algorithm to calculate these numbers. It works over all Euclidean rings.
+
+Sage has \ifuncname{xgcd} which works only for integers. It doesn't directly offer functions to calculate the \ifuncname{xgcd} over quadratic imaginary number fields.
+
+Thus, in this work, we have reimplemented a simple canonical version of \ifuncname{xgcd} for $\curlO$ with a few fast paths, e.g. in the case of integers. This implementation can be found in the class \isymbname{CurlO} in \ifilename{helpers.py}.
+
+The main work is done in the \ifuncname{divmod} function.
+
 \subsection{\ifuncname{solveR}}
+\label{solveR}
+\label{impl:solveR}
 
 \subsection{Calculating the matrix of the map $a \rightarrow a[S]$}
 \label{impl:calcMatrix}
