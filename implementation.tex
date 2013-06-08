@@ -321,6 +321,7 @@ In this work, this function \ifuncname{reduceGL} has been reimplemented in C++ (
 
 
 \subsection{\ifuncname{divmod} and \ifuncname{xgcd}}
+\label{xgcd}
 
 We have given numbers $a,b \in \curlO$ and we search for $d,p,q \in \curlO$ such that $d = pa + qb$ and $d$ divides $a$ and $b$. Then, $d$ is also the greatest common divisor (\ifuncname{gcd}). This is also equivalent to
 \[ 1 = p \frac{a}{d} + q \frac{b}{d} . \]
@@ -360,10 +361,6 @@ Note that $\det(\tilde{B}) = 0$ exactly if and only if $b_1 = b_2 = 0$, as it wa
 
 This gives us some direct formulas for $q_1,q_2 \in \Q$ which are used in the \ifuncname{divmod} implementation where we select $q'_1, q'_2 \in \Z$ close to $q_1,q_2$ such that $r := a - q' b$ becomes minimal with regards to the Euclidean Norm.
 
-
-\subsection{\ifuncname{solveR}}
-\label{solveR}
-\label{impl:solveR}
 
 \subsection{Calculating the matrix of the map $a \rightarrow a[S]$}
 \label{impl:calcMatrix}

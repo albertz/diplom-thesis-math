@@ -322,7 +322,7 @@ where
 %
 We can find
 \[ \gamma \in \Sp_2(\curlO), \quad R = \SimpleMatrix{\tilde{S}}{\tilde{T}}{0_2}{\overline{\tilde{S}}^T} \in \Sp_2(\K) \]
-such that $\tilde{M} = \gamma R$. We describe the details in \cref{lemma:solveR}.
+such that $\tilde{M} = \gamma R$. We describe the details in \cref{solveR}.
 Then, we have
 \begin{align*}
 & (f[S] | M) (\tau) \\
@@ -339,8 +339,22 @@ By comparing this, we gain new information and we have another method to reduce 
 
 \begin{lemma}
 \label{lemma:solveR}
+\label{solveR}
+\label{impl:solveR}
+% 28.4.13 weiter Teil 2 R_i
+% 27.4. ...?
+% 30.4. \tilde{M} = \gamma R
+Let $\tilde{M} \in \Sp_2(\curlO)$.
+We can find
+\[ \gamma \in \Sp_2(\curlO), \quad R = \SimpleMatrix{\tilde{S}}{\tilde{T}}{0_2}{\overline{\tilde{S}}^T} \in \Sp_2(\K) \]
+such that $\tilde{M} = \gamma R$.
+\begin{proof}
 % TODO... describe solveR
+Consider the embedding of $M_1, M_2 \in \Sp_1(\curlO)$
+\[  . \]
+\end{proof}
 \end{lemma}
+Note that this proof gives explicit formulas to calculate $\gamma$ and $R$. This has been implemented in \ifilename{helpers.py} as \ifuncname{solveR}. A list of test cases have also been generated in the function \ifuncname{test_solveR} in \ifilename{tests.py} which also indirectly test the \ifuncname{xgcd} and \ifuncname{divmod} implementation (described in \cref{xgcd}).
 
 \subsection{Algorithm}
 
