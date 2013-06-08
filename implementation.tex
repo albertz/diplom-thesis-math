@@ -210,6 +210,21 @@ curlF2 = list(curlF_iter_py(D=D, B_cF=B2))
 assert curlF1 == curlF2[:len(curlF1)]
 \end{lstlisting}
 
+The algorithm of the iteration of $\F$ works in the following way: We have the current matrix represented as integers $a,b_1,b_2,c$ and we start with each of them set to $0$. We have the limit $B_\F$ and iterate an internal limit $\tilde{B} \in \Set{0,1,\dots,B_\F-1}$.
+\begin{enumerate}
+\item If the current saved matrix is a valid one, i.e. its determinant is not negative and $0 \le a,c \le B_\F$, we return it.
+\item We iterate $b_2$ through $\Set{0,1,-1,2,-2,\dots}$.
+\item The absolut limit for $b_2$ is given by
+\[ a c 4 \ge b_2^2 . \]
+\item Once we hit that limit, we reset $b_2 := 0$ and we do one iteration step for $b_1$ through the set $\Set{0,1,-1,2,-2,\dots}$.
+\item The absolut limit for $b_1$ is given by
+\[ a c (D^2 - D) \ge b_1^2 . \]
+\item Once we hit that limit, we reset $b_1 := b_2 := 0$ and we increase $c$ by one.
+\item Once we hit $c > \tilde{B}$, we reset $b_1 := b_2 := 0$ and we increase $a$ by one, if $a < \tilde{B}$. For all cases where $a < \tilde{B}$, we set $c := \tilde{B}$, otherwise $c := 0$.
+\item Once we hit $a = \tilde{B}$, we increase $\tilde{B}$ by one and reset $a := 0$ and $c := \tilde{B}$.
+\item Once we hit $\tilde{B} \ge B_\F$, we are finished.
+\end{enumerate}
+
 We have seen in \cref{reducedCurlF} that it is sufficient to use $\invarF{\F}{\GL_2(\curlO)}$ as the index set. In our implementation, we iterate through $\F$ and save the first occurance of a new reduced matrix in a list. That list is returned by the function \ifuncname{herm_modform_indexset} which is declared in \ifilename{helpers.py}. It uses the C++ implementation in \ifilename{algo_cpp.cpp} as its backend. For testing and demonstration purpose, there is also a pure Python implementation \ifuncname{herm_modform_indexset_py} in \ifilename{helpers.py}.
 
 \subsection{Iteration of $S \in \PM_2(\curlO)$}
