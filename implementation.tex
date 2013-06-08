@@ -216,7 +216,7 @@ In \cref{remark:reducedCurlF}, we have described that it is sufficient to use re
 \[ \hat{T}[U_T] = T \]
 for some $U_T \in \GL_2(\curlO)$. In the code, we don't need $U_T$ directly but rather the determinant of $U_T$.
 
-Dominic Gehre and Martin Raum have developed a Cython implementation \cite{Raum09reduceGL} of "Functions for reduction of fourier indice of Hermitian modular forms". This function \ifuncname{reduceGL} gets a matrix $T \in \Her_2(\curlO^\#)$ and returns the reduced matrix $\hat{T} \in \Her_2(\curlO^\#)$ and some character evaluation of $U_T$ which also declares the determinant of $U_T$.
+Dominic Gehre and Martin Raum have developed a Cython implementation \cite{Raum09reduceGL} of "Functions for reduction of fourier indice of Hermitian modular forms". This function \ifuncname{reduceGL} gets a matrix $T \in \Her_2(\curlO^\#)$ and returns the Minkowski-reduced matrix $\hat{T} \in \Her_2(\curlO^\#)$ and some character evaluation of $U_T$ which also declares the determinant of $U_T$.
 
 In this work, this function \ifuncname{reduceGL} has been reimplemented in C++ (\ifilename{reduceGL.hpp}) and in Python (\ifilename{reduceGL.py}).
 
