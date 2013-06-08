@@ -387,7 +387,8 @@ c_{1,1} & c_{1,2} \\
 c_{1,3} & c_{1,4}
 \end{pmatrix} = cS^{-1} .
 \end{align*}
-We want to define $\gamma_1$ such that $c_{2,1} = c_{2,3} = 0$.
+
+1) We want to define $\gamma_1$ such that $c_{2,1} = c_{2,3} = 0$.
 Set
 \[ \gamma_1 := \begin{pmatrix}
 a_{\gamma_1,1} & b_{\gamma_1,1} \\
@@ -397,6 +398,27 @@ a_{\gamma_1,4} & b_{\gamma_1,4} \\
 c_{\gamma_1,4} & d_{\gamma_1,4}
 \end{pmatrix} . \]
 Given $0 = c_{2,3} = c_{\gamma_1,4} a_{1,3} + d_{\gamma_1,4} c_{1,3}$, where $a_{1,3} = 0$, we get $d_{\gamma_1,4} := 0$ and we can set $a_{\gamma_1,4} := 0$, $b_{\gamma_1,4} := 1$ and $c_{\gamma_1,4} := -1$ such that $\SmallMatrix{a_{\gamma_1,4}}{b_{\gamma_1,4}}{c_{\gamma_1,4}}{d_{\gamma_1,4}} \in \Sp_1(\curlO)$.
+
+We want $0 = c_{2,1} = c_{\gamma_1,1} a_{1,1} + d_{\gamma_1,1} c_{1,1}$. We have $c_{1,1} \in \K$ but there is a $l \in \curlO$ such that $c_{1,1} l \in \curlO$.Via \ifuncname{xgcd} (see \cref{xgcd}), we can find $d,a_{\gamma_1,1},b_{\gamma_1,1} \in \curlO$ such that $1 = a_{\gamma_1,1} \frac{a_{1,1} l}{d} + b_{\gamma_1,1} \frac{c_{1,1} l}{d}$ and $\frac{a_{1,1} l}{d},  \frac{c_{1,1} l}{d} \in \curlO$. Then set $c_{\gamma_1,1} := - \frac{c_{1,1} l}{d}$ and $d_{\gamma_1,1} := \frac{a_{1,1} l}{d}$. Then we have $\SmallMatrix{a_{\gamma_1,1}}{b_{\gamma_1,1}}{c_{\gamma_1,1}}{d_{\gamma_1,1}} \in \Sp_1(\curlO)$.
+
+That way, we have defined $\gamma_1 \in \Sp_2(\curlO)$ and we have $c_{2,1} = c_{2,3} = 0$ in $\tilde{M}_2 = \gamma_1 \tilde{M}$.
+
+2) Consider
+\[ \gamma_{2} = \SimpleMatrix{A_{\gamma_2}}{0_2}{0_2}{D_{\gamma_2}} \]
+where $A_{\gamma_2} \in \Sp_1(\curlO)$ and $D_{\gamma_2} = \overline{A_{\gamma_2}^{-1}}^T \in \Sp_1(\curlO)$. Then we have $\gamma_2 \in \Sp_2(\curlO)$. Write $D_{\gamma_2} = \SmallMatrix{d_{\gamma_2,1}}{d_{\gamma_2,2}}{d_{\gamma_2,3}}{d_{\gamma_2,4}}$.
+
+Then we have
+\begin{align*}
+\SimpleMatrix{c_{3,1}}{c_{3,2}}{c_{3,3}}{c_{3,4}} &= D_{\gamma_2} \SimpleMatrix{c_{2,1}}{c_{2,2}}{c_{2,3}}{c_{2,4}} \\
+&= \SimpleMatrix{d_{\gamma_2,1}}{d_{\gamma_2,2}}{d_{\gamma_2,3}}{d_{\gamma_2,4}} \SimpleMatrix{0}{c_{2,2}}{0}{c_{2,4}} \\
+&= \SimpleMatrix{0}{d_{\gamma_2,1} c_{2,2} + d_{\gamma_2,2} c_{2,4}}{0}{d_{\gamma_2,3} c_{2,2} + d_{\gamma_2,4} c_{2,4}}
+\end{align*}
+
+We want $0 = d_{\gamma_2,3} c_{2,2} + d_{\gamma_2,4} c_{2,4}$. Again, $c_{2,2}, c_{2,4} \in \K$ but we can select $l_2 \in \curlO$ such that $c_{2,2} l_2, c_{2,4} l_2 \in \curlO$. Again via \ifuncname{xgcd}, we can find $d_2,d_{\gamma_2,1},d_{\gamma_2,2} \in \curlO$ such that $1 = d_{\gamma_2,1} \frac{c_{2,2} l_2}{d_2} + d_{\gamma_2,2} \frac{c_{2,4} l_2}{d_2}$ and $\frac{c_{2,2} l_2}{d_2}, \frac{c_{2,4} l_2}{d_2} \in \curlO$. Set $d_{\gamma_2,3} := -\frac{c_{2,4} l_2}{d_2}$ and $d_{\gamma_2,4} := \frac{c_{2,2} l_2}{d_2}$. Then we have $D_{\gamma_2} \in \Sp_1(\curlO)$.
+
+That way, we have defined $\gamma_2 \in \Sp_2(\curlO)$ and we have $c_{3,1} = c_{3,3} = c_{3,4} = 0$ in $\tilde{M}_3 = \gamma_2 \tilde{M}_2 = \gamma_2 \gamma_1 \tilde{M}$.
+
+
 \end{proof}
 \end{lemma}
 Note that this proof gives explicit formulas to calculate $\gamma$ and $R$. This has been implemented in \ifilename{helpers.py} as \ifuncname{solveR}. A list of test cases have also been generated in the function \ifuncname{test_solveR} in \ifilename{tests.py} which also indirectly test the \ifuncname{xgcd} and \ifuncname{divmod} implementation (described in \cref{xgcd}).
