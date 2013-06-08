@@ -316,6 +316,26 @@ int calcPrecisionDimension(const PrecisionF& F, ElemOfS S) {
 typedef M2T_Odual ElemOfF;
 typedef Int ValueOfA;
 
+//typedef ElemOfF ReducedCurlFMapKey; // old key
+struct ReducedCurlFMapKey {
+	M2T_Odual matrix;
+	int trans;
+	ReducedCurlFMapKey(const struct hermitian_form_with_character_evaluation& reduced) {
+		matrix = reduced.matrix;
+		trans = reduced.character.transposition;
+	}
+	bool operator==(const ReducedCurlFMapKey& other) const {
+		return matrix == other.matrix && trans == other.trans;
+	}
+	bool operator!=(const ReducedCurlFMapKey& other) const {
+		return !((*this) == other);
+	}
+	bool operator<(const ReducedCurlFMapKey& other) const {
+		if(matrix != other.matrix) return matrix < other.matrix;
+		return trans < other.trans;
+	}
+};
+
 struct ReductionMatrices_Calc {
 	int HermWeight; // k in the paper. usually <20
 	int D; // discriminant. usually D in {-2,-3,-4}
@@ -355,8 +375,8 @@ struct ReductionMatrices_Calc {
 	CurlS_Generator curlS;
 	PrecisionF curlF;
 	
-	std::map<ElemOfF,size_t> reducedCurlFMap; // reducedMatrix(\cF) -> index in list
-	std::vector<ElemOfF> reducedCurlFList; // reducedMatrix(\cF)
+	std::map<ReducedCurlFMapKey,size_t> reducedCurlFMap; // reducedMatrix(\cF) -> index in list
+	std::vector<ReducedCurlFMapKey> reducedCurlFList; // reducedMatrix(\cF)
 	void calcReducedCurlF() {
 		reducedCurlFMap.clear();
 		reducedCurlFList.clear();
@@ -364,9 +384,9 @@ struct ReductionMatrices_Calc {
 			ElemOfF T = *_T;
 			struct hermitian_form_with_character_evaluation reduced;
 			reduce_GL(T, D, reduced);
-			if(reducedCurlFMap.find(reduced.matrix) == reducedCurlFMap.end()) {
-				reducedCurlFMap[reduced.matrix] = reducedCurlFList.size();
-				reducedCurlFList.push_back(reduced.matrix);
+			if(reducedCurlFMap.find(ReducedCurlFMapKey(reduced)) == reducedCurlFMap.end()) {
+				reducedCurlFMap[ReducedCurlFMapKey(reduced)] = reducedCurlFList.size();
+				reducedCurlFList.push_back(ReducedCurlFMapKey(reduced));
 			}
 		}
 		matrixColumnCount = reducedCurlFList.size();
@@ -393,7 +413,7 @@ struct ReductionMatrices_Calc {
 			ElemOfF T = *_T;
 			struct hermitian_form_with_character_evaluation reduced;
 			reduce_GL(T, D, reduced);
-			size_t column = reducedCurlFMap[reduced.matrix];
+			size_t column = reducedCurlFMap[ReducedCurlFMapKey(reduced)];
 			size_t rowStart = 0;
 			for(auto _S = curlS.begin(); _S != curlS.end(); ++_S) {
 				ElemOfS S = *_S;
@@ -474,7 +494,7 @@ struct ReductionMatrices_Calc {
 			M2_Odual T_M2 = M2_Odual_from_M2T_Odual(T, D);
 			struct hermitian_form_with_character_evaluation reduced;
 			reduce_GL(T, D, reduced);
-			size_t column = reducedCurlFMap[reduced.matrix];
+			size_t column = reducedCurlFMap[ReducedCurlFMapKey(reduced)];
 			size_t rowStart = 0;
 			for(auto _S = curlS.begin(); _S != curlS.end(); ++_S) {
 				ElemOfS S = *_S;
@@ -620,8 +640,8 @@ void test_algo_calcReducedCurlF() {
 	// another test whether all reductions are reducing to themselves.
 	for(auto Tr : calc.reducedCurlFMap) {
 		struct hermitian_form_with_character_evaluation reduced;
-		reduce_GL(Tr.first, calc.D, reduced);
-		LOGIC_CHECK(reduced.matrix == Tr.first);
+		reduce_GL(Tr.first.matrix, calc.D, reduced);
+		LOGIC_CHECK(reduced.matrix == Tr.first.matrix);
 	}
 	cout << "all reduced matrices reduce to themselves" << endl;
 
@@ -629,7 +649,7 @@ void test_algo_calcReducedCurlF() {
 	for(auto Tr : calc.reducedCurlFMap) {
 		bool found = false;
 		for(auto T : calc.curlF) {
-			if(T == Tr.first) {
+			if(T == Tr.first.matrix) {
 				found = true;
 				break;
 			}
