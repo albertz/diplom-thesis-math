@@ -199,10 +199,14 @@ The set $\F$ depends on a limit $B_\F \in \N$:
 \[ \F = \F_B = \Set{\SimpleMatrix{a}{b}{\overline b}{c} \in \Lambda}{0 \le a , c < B_{\F}} \subseteq \Lambda . \]
 In \cref{remark:reducedCurlF}, we see that $\F$ is finite.
 
-We have implemented an iteration of $\F$ in a way that the list of $\F_{B_2}$ always starts with $\F_{B_1}$ if $B_1 \le B_2$. That is \ifuncname{PrecisionF} in \ifilename{algo_cpp.cpp} and \ifuncname{curlF_iter_py} in \ifilename{helpers.py}. I.e., in Python, that is
+We have implemented an iteration of $\F$ in a way that the list of $\F_{B_2}$ always starts with $\F_{B_1}$ if $B_1 \le B_2$. That is \ifuncname{PrecisionF} in \ifilename{algo_cpp.cpp}. For testing and demonstration purpose, there is also a pure Python implementation \ifuncname{curlF_iter_py} in \ifilename{helpers.py}. I.e., in Python, for some $D$ and $B1 \le B2$, it yields:
 \begin{lstlisting}
-Foo = list
+curlF1 = list(curlF_iter_py(D=D, B_cF=B1))
+curlF2 = list(curlF_iter_py(D=D, B_cF=B2))
+assert curlF1 == curlF2[:len(curlF1)]
 \end{lstlisting}
+
+We have seen in \cref{reducedCurlF} that it is sufficient to use $\invarF{\F}{\GL_2(\curlO)}$ as the index set. In our implementation, we iterate through $\F$ and save the first occurance of a new reduced matrix in a list. That list is returned by the function \ifuncname{herm_modform_indexset} which is declared in \ifilename{helpers.py}. It uses the C++ implementation in \ifilename{algo_cpp.cpp} as its backend. For testing and demonstration purpose, there is also a pure Python implementation \ifuncname{herm_modform_indexset_py} in \ifilename{helpers.py}.
 
 \subsection{Iteration of $S \in \PM_2(\curlO)$}
 
