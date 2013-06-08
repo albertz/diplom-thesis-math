@@ -55,7 +55,7 @@ struct reduce_character_evalutation {
 			std::cerr << "reduce_character_evalutation.detValue error: det_char = " << det_char << ", D = " << D << ", k = " << k << std::endl;
 			DOMAIN_CHECK(false);
 		}
-		const int sign = 0; // 0 or 1 // TODO: what here??
+		const int sign = 1; // 0 or 1 // TODO: what here??
 		const int nu_exp = 0; // 0 or 1
 		if(sign) value *= transposition;
 		if(nu_exp) value *= nu;
@@ -486,7 +486,7 @@ inline void reduce_GL(M2T_Odual matrix, int D, struct hermitian_form_with_charac
 	else
 		res.character.determinant = Mod(det, 2);
 	res.character.nu = nu;
-
+	
 }
 
 #endif

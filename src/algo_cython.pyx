@@ -40,15 +40,12 @@ cdef extern from "algo_cpp.cpp":
 		void setState(string state) except +
 	cdef cppclass PrecisionF:
 		int B
-	cdef cppclass ReducedCurlFMapKey:
-		M2T_Odual matrix
-		int trans
 	cdef cppclass ReductionMatrices_Calc:
 		ReductionMatrices_Calc()
 		void init(int D, int HermWeight, string curlSiterType) except +
 		PrecisionF curlF
 		CurlS_Generator curlS
-		vector[ReducedCurlFMapKey] reducedCurlFList
+		vector[M2T_Odual] reducedCurlFList
 		void calcReducedCurlF() except +
 
 		void calcMatrix() except +
@@ -157,9 +154,8 @@ cdef class Calc:
 		size = self.calc.reducedCurlFList.size()
 		l = [None] * size
 		for i in range(size):
-			m = M2T_Odual_fromC(self.calc.reducedCurlFList[i].matrix, self.D)
-			m.set_immutable()
-			l[i] = (m, self.calc.reducedCurlFList[i].trans)
+			l[i] = M2T_Odual_fromC(self.calc.reducedCurlFList[i], self.D)
+			l[i].set_immutable()
 		return tuple(l)
 
 	def calcMatrix(self):

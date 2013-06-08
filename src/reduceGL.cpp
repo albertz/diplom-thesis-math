@@ -13,7 +13,7 @@ using namespace std;
 void reduce_GL_assertEqual(M2T_Odual matrix, int D, _H result) {
 	_H calcRes;
 	cout << "reduce_GL(" << matrix << ", " << D << ") == " << result << endl;
-	reduce_GL(matrix, D, calcRes, false);
+	reduce_GL(matrix, D, calcRes);
 	if(result != calcRes) {
 		cerr << "not equal: " << calcRes << endl;
 		abort();
