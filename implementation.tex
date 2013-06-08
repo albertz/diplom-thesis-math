@@ -262,11 +262,11 @@ We have seen in \cref{reducedCurlF} that it is sufficient to use $\invarF{\F}{\G
 
 The matrices $S \in \PM_2(\curlO)$ are used for the reduction in $f[S]$ for an Hermitian modula form $f$.
 
-There are multiple implementations of this iteration. Our first version only iterated through reduced matrices $\PM_2(\Z)$ with increasing determinator. We want the increasing determinant because we want to exhaust all possible matrices with low determinants because they are easier for the rest of the calculations. Later, it turned out that matrices only over $\Z$ don't yield enough information and we need matrices with imaginary components. Once you add the imaginary component, it is not possible anymore to iterate through all of $\PM_2(\Z)$ with increasing determinant because there can be infinity many matrices for a given determinant (or it is not trivial to see if there are not and how to set the limits in an implementation). Thus, the second implementation for matrices over $\PM_2(\curlO)$ does not keep the determinant fixed and rather works very similar to the iteration through $\F$, as described in \cref{curlFiteration}.
+There are multiple implementations of this infinite iteration. Our first version only iterated through reduced matrices $\PM_2(\Z)$ with increasing determinator. We want the increasing determinant because we want to exhaust all possible matrices with low determinants because they are easier for the rest of the calculations. Later, it turned out that matrices only over $\Z$ don't yield enough information and we need matrices with imaginary components. Once you add the imaginary component, it is not possible anymore to iterate through all of $\PM_2(\Z)$ with increasing determinant because there can be infinity many matrices for a given determinant (or it is not trivial to see if there are not and how to set the limits in an implementation). Thus, the second implementation for matrices over $\PM_2(\curlO)$ does not keep the determinant fixed and rather works very similar to the iteration through $\F$, as described in \cref{curlFiteration}.
 
 The implementation is in C++ in the file \ifilename{algo_cpp.cpp}. The class \isymbname{CurlS_Generator} owns and manages the iterator and can store several matrices at once because the main matrix calculation implementations (\cref{calcMatrix} and \cref{calcMatrixTrans}) can be done for several matrices at once. The class \isymbname{M2T_O_PosDefSortedZZ_Iterator} implements the iteration through $\PM_2(\Z)$ with increasing denominator. The class \isymbname{M2T_O_PosDefSortedGeneric_Iterator} implements the generic iteratoin through $\PM_2(\curlO)$.
 
-The iteration through $S \in \PM_2(\Z)$ in \isymbname{M2T_O_PosDefSortedZZ_Iterator} works as follows: We represent $S$ as $a,b,c \in \Z$ with $[a,b,c] = S$. We start with each of them set to zero. Also, we internally save the current determinant $\delta$ and start with $\delta := 0$.
+The infinite iteration through $S \in \PM_2(\Z)$ in \isymbname{M2T_O_PosDefSortedZZ_Iterator} works as follows: We represent $S$ as $a,b,c \in \Z$ with $[a,b,c] = S$. We start with each of them set to zero. Also, we internally save the current determinant $\delta$ and start with $\delta := 0$.
 \begin{enumerate}
 \item We return a matrix if it is valid and reduced. That means that we only return if $a \le c$, $\det([a,b,c]) = ac - b^2 = \delta$ and if there is no common divisor of $a,b,c$ except $1$.
 \item We increase $c$ by one. We set $a := \lfloor \frac{\delta + b^2}{c} \rfloor$.
@@ -283,10 +283,12 @@ Thus,
 \end{proof}
 \end{enumerate}
 
-The iteration through $S \in \PM_2(\curlO)$ in \isymbname{M2T_O_PosDefSortedGeneric_Iterator} is mostly the same as the iteration of $\F$ as described in \cref{curlFiteration}. The difference is that $\F$ is over $\curlO^\#$ and $S$ is over $\curlO$. This yields to other limits for $b_1$ and $b_2$. Also, we don't have a limit like $\tilde{B}$.
+The infinite iteration through $S \in \PM_2(\curlO)$ in \isymbname{M2T_O_PosDefSortedGeneric_Iterator} is mostly the same as the iteration of $\F$ as described in \cref{curlFiteration}. The difference is that $\F$ is over $\curlO^\#$ and $S$ is over $\curlO$. This yields to other limits for $b_1$ and $b_2$. Also, we don't have a limit like $\tilde{B}$.
 \begin{enumerate}
 \item We iterate $b_2$ through $\Set{0,1,-1,2,-2,\dots}$.
 \item Once we hit the absolut limit of $b_2$, we reset $b_2 := 0$ and make one iteration step for $b_1 \in \Set{0,1,-1,2,-2,\dots}$.
+\item Once we hit the absolut limit of $b_1$, we reset $b_1 := b_2 := 0$ and increase $c$ by one.
+\item Once we hit $c > a$, we reset $c := b_1 := b_2 := 0$ and increase $a$ by one.
 \end{enumerate}
 %
 %23.5.13 \S iteration fix (\curlO)
