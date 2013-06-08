@@ -89,7 +89,7 @@ inline bool operator!=(const hermitian_form_with_character_evaluation& f1, const
 }
 
 
-inline void reduce_GL(M2T_Odual matrix, int D, struct hermitian_form_with_character_evaluation& res, bool doTranspose=true) {
+inline void reduce_GL(M2T_Odual matrix, int D, struct hermitian_form_with_character_evaluation& res) {
 	auto a = matrix.a, b1 = matrix.b1, b2 = matrix.b2, c = matrix.c;
 	
 	/*
@@ -486,10 +486,7 @@ inline void reduce_GL(M2T_Odual matrix, int D, struct hermitian_form_with_charac
 	else
 		res.character.determinant = Mod(det, 2);
 	res.character.nu = nu;
-	
-	if(doTranspose && trans < 0) {
-		res.matrix.b1 = -b1 - b2 * D;
-	}
+
 }
 
 #endif
