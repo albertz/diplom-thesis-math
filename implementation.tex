@@ -161,12 +161,13 @@ and
 \end{align*}
 
 \subsubsection{Determinant of 2-by-2 matrices}
-
+\label{detCurlO}
 %16.4.13 det(S)
 For $[a,b,c] \in \Her_2(\C)$, we have
 \[ \det([a,b,c]) = ac - b \overline{b} = ac - |b|^2 . \]
 %
 When we have $b \in \curlO$ or $b \in \curlO^\#$, we have given a formula for $|b|^2$ in \cref{impl:repr:curlO}.
+TODO schreibs voll hin!
 
 \subsubsection{Trace of $TS$}
 %16.4.13 tr(ST)
@@ -214,10 +215,18 @@ The algorithm of the iteration of $T \in \F$ works in the following way: We have
 \begin{enumerate}
 \item If the current saved matrix is a valid one, i.e. its determinant is not negative and $0 \le a,c \le B_\F$, we return it.
 \item We iterate $b_2$ through $\Set{0,1,-1,2,-2,\dots}$.
-\item The absolut limit for $b_2$ is given by
-\[ a c 4 \ge b_2^2 . \]
+\item
+%23.5.13 \F iteration fix (\curlO^#)
+The absolut limit for $b_2$ is given by
+\[ 4 a c \ge b_2^2 . \]
 \begin{proof}
-bla
+With $\det(T) \ge 0$, we have (see \cref{detCurlO})
+\[ (-D) a c \ge b_1^2 - (-D) b_1 b_2 + \frac{(-D)(1-D)}{4} b_2^2 . \]
+And it yields
+\[ b_1^2 - (-D) b_1 b_2 = (b_1 - \tfrac{-D}{2} b_2)^2 - \tfrac{D^2}{4} b_2^2 \ge - \tfrac{D^2}{4} b_2^2 , \]
+thus
+\[ (-D) a c \ge - \tfrac{D^2}{4} b_2^2 + \frac{(-D)(1-D)}{4} b_2^2 = \tfrac{-D}{4} b_2^2 . \]
+This is equivalent with the inequality to-be-proved.
 \end{proof}
 \item Once we hit that limit, we reset $b_2 := 0$ and we do one iteration step for $b_1$ through the set $\Set{0,1,-1,2,-2,\dots}$.
 \item The absolut limit for $b_1$ is given by
