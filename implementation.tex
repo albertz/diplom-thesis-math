@@ -166,10 +166,12 @@ and
 For $[a,b,c] \in \Her_2(\C)$, we have
 \[ \det([a,b,c]) = ac - b \overline{b} = ac - |b|^2 . \]
 %
-When we have $b \in \curlO$ or $b \in \curlO^\#$, we have given a formula for $|b|^2$ in \cref{impl:repr:curlO}. With those representations, for $b \in \curlO$, we have
+When we have $b \in \curlO$ or $b \in \curlO^\#$, we have given a formula for $|b|^2$ in \cref{impl:repr:curlO}. With those representations and $a,c \in \Z$, for $b \in \curlO$, we have
 \[ \det([a,b,c]) = a c -  b_1^2 + (-D) b_1 b_2 - \tfrac{D^2-D}{4} b_2^2 \in \Z \]
 and for $b \in \curlO^\#$, we have
 \[ \det([a,b,c]) = a c - b_1^2 \tfrac{1}{-D} + b_1 b_2 - \tfrac{1}{4} (1-D) b_2^2 \in \tfrac{1}{-D} \Z . \]
+
+In the code, we represent both matrices $\Her_2(\curlO)$ and $\Her_2(\curlO^\#)$ by 4-tuples $(a,b_1,b_2,c) \in \Z^4$.
 
 \subsubsection{Trace of $TS$}
 %16.4.13 tr(ST)
