@@ -234,7 +234,7 @@ def modform_restriction_info(calc, S, l):
 	verbose("dimension of restriction_fe_expansions: %i" % restriction_fe_expansions.dimension())
 	if restriction_fe_expansions.dimension() == 0:
 		# This must not happen. Probably for more cases, but at least these:
-		if D == -3 and HermWeight == 7:
+		if D == -3 and HermWeight == 6:
 			assert False
 	herm_modform_fe_expannsion_S = M_S.solve_right( restriction_fe_expansions.basis_matrix().transpose() )
 	herm_modform_fe_expannsion_S_module = herm_modform_fe_expannsion_S.column_module()
