@@ -400,10 +400,6 @@ class ReducedGL:
 		self.charDet = det
 		self.charNu = nu
 
-		if trans < 0:
-			self.matrix = self.matrix.transpose()
-			self.matrix.set_immutable()
-
 	def value(self, k):
 		"""
 		INPUT:
