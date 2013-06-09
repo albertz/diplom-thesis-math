@@ -427,21 +427,26 @@ thus
 
 We have $\tilde{M}_3 \in \Sp_2(\curlO)$, thus $\overline{\tilde{M}_3}^T \SmallMatrix{}{-1_2}{1_2}{} \tilde{M}_3 = \SmallMatrix{}{-1_2}{1_2}{}$. Thus
 \[ \overline{\begin{pmatrix}
-a_{i,1} & a_{i,3} & c_{i,1} & c_{i,3} \\
-a_{i,2} & a_{i,4} & c_{i,2} & c_{i,4} \\
-b_{i,1} & b_{i,3} & d_{i,1} & d_{i,3} \\
-b_{i,2} & b_{i,4} & d_{i,2} & d_{i,4}
+a_{3,1} & a_{3,3} & c_{3,1} & c_{3,3} \\
+a_{3,2} & a_{3,4} & c_{3,2} & c_{3,4} \\
+b_{3,1} & b_{3,3} & d_{3,1} & d_{3,3} \\
+b_{3,2} & b_{3,4} & d_{3,2} & d_{3,4}
 \end{pmatrix}} \cdot \begin{pmatrix}
--c_{i,1} & -c_{i,2} & -d_{i,1} & -d_{i,2} \\
--c_{i,3} & -c_{i,4} & -d_{i,3} & -d_{i,4} \\
-a_{i,1} & a_{i,2} & b_{i,1} & b_{i,2} \\
-a_{i,3} & a_{i,4} & b_{i,3} & b_{i,4}
+-c_{3,1} & -c_{3,2} & -d_{3,1} & -d_{3,2} \\
+-c_{3,3} & -c_{3,4} & -d_{3,3} & -d_{3,4} \\
+a_{3,1} & a_{3,2} & b_{3,1} & b_{3,2} \\
+a_{3,3} & a_{3,4} & b_{3,3} & b_{3,4}
 \end{pmatrix} = \SimpleMatrix{}{-1_2}{1_2}{} .
  \]
 It follows
-\begin{align*}
-
-\end{align*}
+\[
+\begin{array}{cl}
+& - \overline{a_{3,1}} \cdot c_{3,2} - \overline{a_{3,3}} \cdot c_{3,4} + \overline{c_{3,1}} \cdot a_{3,2} + \overline{c_{3,3}} \cdot a_{3,4} = 0 \\
+\overset{c_{3,1}=c_{3,3}=c_{3,4}=0}{\Longrightarrow}\quad & \overline{a_{3,1}} \cdot c_{3,2} = 0 \\
+\Rightarrow \quad & a_{3,1} = 0 \quad \text{or} \quad c_{3,2} = 0 .
+\end{array}
+\]
+Thus, either we are ready ($c_{3,2} = 0$) or we are not ($c_{3,2} \ne 0$) but then we have $a_{3,1} = 0$. We need that in the next step.
 
 4) Set
 \[ \gamma_3 := \begin{pmatrix}
