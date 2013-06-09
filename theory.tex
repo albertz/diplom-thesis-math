@@ -15,15 +15,15 @@ With other methods, we know the dimension of $\FE(\HSpace{n}{\Gamma})$. Thus we 
 It is not proven that this series of spaces eventually gets to $\FE_\mathcal{I}(\HSpace{n}{\Gamma})$ but from other research, this seems likely.
 % TODO: ref
 
-\subsection{Reduction to Elliptic modular forms}
+\subsection{Restriction to Elliptic modular forms}
 \label{ellipticReduction}
 
-We develop the first method to calculate a vectorspace $\tilde{\mathcal{M}} \subset \FE(\HSpace{n}{\Gamma})$. This methods works by reducing Hermitian modular forms to Elliptic modular forms.
-Methods to calculate the vectorspace of Elliptic modular forms are well known.
+We develop the first method to calculate a vectorspace $\tilde{\mathcal{M}} \subset \FE(\HSpace{n}{\Gamma})$. This methods works by restricting Hermitian modular forms to Elliptic modular forms. A similar method to restrict Siegel modular forms to Elliptic modular forms has been presented in \cite{PoorYuen07Comp}.
+ 
+Methods to calculate the vectorspace of Elliptic modular forms are well known and thus we gain information by this restriction.
 
-We start by describing the reduction.
+We start by describing the restriction.
 
-% TODO: wofür brauchen wir das?
 \begin{lemma}
 Let $f \colon \HalfPlane_2 \rightarrow \C$ be a Hermitian modular form of weight $k$ with $\nu \equiv 1$. Let $S \in \PM_2(\curlO)$.
 Then, $\tau \mapsto f(S \tau) \colon \HalfPlane_1 \subseteq \C \rightarrow \C$ is an Elliptic modular form of weight $2k$ to $\Gamma_0(l)$, where $l$ is the denominator of $S^{-1}$.  %for some matrix $S \in \M_2(\Z)$ with $\Gamma(S) \subseteq \SL_2(\Z)$.
@@ -447,7 +447,7 @@ It follows
 \begin{array}{cl}
 & - \overline{a_{3,1}} \cdot c_{3,2} - \overline{a_{3,3}} \cdot c_{3,4} + \overline{c_{3,1}} \cdot a_{3,2} + \overline{c_{3,3}} \cdot a_{3,4} = 0 \\
 \overset{c_{3,1}=c_{3,3}=c_{3,4}=0}{\Longrightarrow}\quad & \overline{a_{3,1}} \cdot c_{3,2} = 0 \\
-\Rightarrow \quad & a_{3,1} = 0 \quad \text{or} \quad c_{3,2} = 0 .
+\Longrightarrow \quad & a_{3,1} = 0 \quad \text{or} \quad c_{3,2} = 0 .
 \end{array}
 \]
 Thus, either we are ready ($c_{3,2} = 0$) or we are not ($c_{3,2} \ne 0$) but then we have $a_{3,1} = 0$. We need that in the next step.

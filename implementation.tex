@@ -261,7 +261,7 @@ We have seen in \cref{reducedCurlF} that it is sufficient to use $\invarF{\F}{\G
 
 \subsection{Iteration of $S \in \PM_2(\curlO)$}
 
-The matrices $S \in \PM_2(\curlO)$ are used for the reduction in $f[S]$ for an Hermitian modula form $f$ as described in \cref{ellipticReduction}.
+The matrices $S \in \PM_2(\curlO)$ are used for the restriction in $f[S]$ for an Hermitian modula form $f$ as described in \cref{ellipticReduction}.
 
 There are multiple implementations of this infinite iteration. Our first version only iterated through reduced matrices $\PM_2(\Z)$ with increasing determinator. We want the increasing determinant because we want to exhaust all possible matrices with low determinants because they are easier for the rest of the calculations. Later, it turned out that matrices only over $\Z$ don't yield enough information and we need matrices with imaginary components. Once you add the imaginary component, it is not possible anymore to iterate through all of $\PM_2(\Z)$ with increasing determinant because there can be infinity many matrices for a given determinant (or it is not trivial to see if there are not and how to set the limits in an implementation). Thus, the second implementation for matrices over $\PM_2(\curlO)$ does not keep the determinant fixed and rather works very similar to the iteration through $\F$, as described in \cref{curlFiteration}.
 
