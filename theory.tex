@@ -336,8 +336,10 @@ Then, we have
 =\quad& ( f |_k \tilde{M} )[S] (\tau) \\
 =\quad& ( f |_k \gamma |_k R  )[S] (\tau) \\
 =\quad& (f |_k R) [S] (\tau) \\
-=\quad& \det(\tilde{S})^{-k} \cdot (f |_k R) [S] (\tau) \\
-=\quad& f( \tilde{S} S \overline{\tilde{S}}^T \tau + \tilde{S} \tilde{T} ) .
+=\quad& \det\left(\overline{\tilde{S}^{-1}}^T\right)^{-k} \cdot f(R  (S \tau)) \\
+=\quad& \overline{\det(\tilde{S})}^k \cdot
+f \left(\left(\tilde{S} \cdot S \tau + \tilde{T}\right) \cdot \left(\overline{\tilde{S}^{-1}}^T\right)^{-1}\right) \\
+=\quad& \overline{\det(\tilde{S})}^k \cdot f\left( \tilde{S} S \overline{\tilde{S}}^T \tau + \tilde{S} \tilde{T} \right) .
 \end{align*}
 
 Thus, a cusp $\hat{c}$ and $S \in \PM_2(\curlO)$ gives us a linear map $f \mapsto f[S] | M_{\hat{c}}$ which we can calculate as described. %TODO: more...
