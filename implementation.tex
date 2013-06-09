@@ -175,6 +175,7 @@ and for $b \in \curlO^\#$, we have
 In the code, we represent both matrices $\Her_2(\curlO)$ and $\Her_2(\curlO^\#)$ by 4-tuples $(a,b_1,b_2,c) \in \Z^4$.
 
 \subsubsection{Trace of $TS$}
+\label{traceST}
 %16.4.13 tr(ST)
 We want to calculate $\tr(TS)$ for $T \in \Her_2(\curlO^\#)$, $S \in \Her_2(\curlO)$.
 Let $T = [T_a, T_b, T_c]$ and $S = [S_a, S_b, S_c]$ with
@@ -311,6 +312,7 @@ And for $b_2$, we have
 
 \subsection{\ifuncname{reduceGL}}
 \label{impl:reduceGL}
+\label{reduceGL}
 In \cref{remark:reducedCurlF}, we have described that it is sufficient to use reduced matrices $\hat{T} \in \F$. Thus, in our implementation, for a given matrix $T \in \F$, we need a way to calculate the reduced matrix $\hat{T} \in \F$ such that
 \[ \hat{T}[U_T] = T \]
 for some $U_T \in \GL_2(\curlO)$. In the code, we don't need $U_T$ directly but rather the determinant of $U_T$.
@@ -367,6 +369,22 @@ This gives us some direct formulas for $q_1,q_2 \in \Q$ which are used in the \i
 \label{calcMatrix}
 \label{calcMatrixTrans}
 
+In \cref{lemma:ellipticRestriction}, we have seen that, via a matrix $S \in \PM_2(\curlO)$, we can restrict a Hermitian modula form $f : \HalfPlane_2 \rightarrow \C$ to an Elliptic modular form $f[S]$. In the whole \cref{ellipticRestriction}, we have developed the theory.
+
+Let $N = \# \left( \invarF{\F}{\GL_2(\curlO)} \right)$ with $\invarF{\F}{\GL_2(\curlO)} = \Set{T_1,\dots,T_N}$ and let $M \in \M_{\FPrecisionLimit{S} \times N}(\Q)$ be the matrix to the linear map of Fourier expansions $a \in \Q^\F$ of Hermitian modular forms to Fourier expansions $a[S] \in \Q^{\FPrecisionLimit{S}}$ of Elliptic modular forms. In \cref{remark:how-to-calc-aS}, we have given the necessary formula
+\[ M_{i,j} =  \sum_{T \in \F, \tr(S T) = i, j_T = j} \det(U_T)^{-k} \]
+for the $i$-th row and $j$-th column with $0 \le i < \FPrecisionLimit{S}$ and $1 \le j \le N$, where $k$ is the weight of the Hermitian modular forms. $j_T$ is uniquely determined such that the reduced matrix of $T$ is $T_{j_T}$ and $T_{j_T}[U_T] = T$. 
+
+In any case, we need to iterate through all of $\F$ to get all the summands in the every sum of every matrix entry. Such an iteration is described in \cref{curlFiteration}. $\F$ is quite huge (see \cref{remark:reducedCurlF}; e.g. for $D=-3$, $B=10$, we have $\# \F = 21892$) and we need to calculate the reduced matrix index $j_T$ and $U_T$ from each $T$ via \ifuncname{reduceGL} (see \cref{reduceGL}) which is heavy to calculate, thus we want to call \ifuncname{reduceGL} only once for each $T \in \F$. The calculation is still heavy, thus it was implemented in C++ for maximal performance. The algorithm works as follows:
+\begin{enumerate}
+\item \emph{Input}: The restriction matrix $S \in \PM_2(\curlO)$, as well as the parameters for the Hermitian modular forms, i.e. the fundamental discriminant $D$ for the underlying quadratic imaginary field, the weight $k$ and the precision limit $B_\F$.
+
+\emph{Output}: $M \in \M_{\FPrecisionLimit{S} \times N}(\Q)$.
+\item The outer loop goes through all $T \in \F$ (see \cref{curlFiteration}).
+\item For each $T$, we call \ifuncname{reduceGL} (see \cref{reduceGL}) to calculate $T_{j_T}$ and $\det(U_T)$. This gives us also the matrix column $j := j_T$.
+\item We also calculate $i := \tr(ST)$ to get the matrix row. In \cref{traceST}, we have shown the formula for the direct calculation and also that we have only entries in $\N_0$. We could get $i \ge \FPrecisionLimit{S}$ but we ignore those.
+\item We increase the matrix entry $(i,j)$ by $\det(U_T)^{-k}$.
+\end{enumerate}
 
 \subsection{Parallelization}
 \label{impl:parallelization}

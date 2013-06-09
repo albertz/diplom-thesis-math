@@ -17,6 +17,7 @@ It is not proven that this series of spaces eventually gets to $\FE_\mathcal{I}(
 
 \subsection{Restriction to Elliptic modular forms}
 \label{ellipticReduction}
+\label{ellipticRestriction}
 
 We develop the first method to calculate a vectorspace $\tilde{\mathcal{M}} \subset \FE(\HSpace{n}{\Gamma})$. This methods works by restricting Hermitian modular forms to Elliptic modular forms. A similar method to restrict Siegel modular forms to Elliptic modular forms has been presented in \cite{PoorYuen07Comp}.
  
@@ -24,7 +25,8 @@ Methods to calculate the vectorspace of Elliptic modular forms are well known an
 
 We start by describing the restriction.
 
-\begin{lemma}
+\begin{lemma}[Restriction]
+\label{lemma:ellipticRestriction}
 Let $f \colon \HalfPlane_2 \rightarrow \C$ be a Hermitian modular form of weight $k$ with $\nu \equiv 1$. Let $S \in \PM_2(\curlO)$.
 Then, $\tau \mapsto f(S \tau) \colon \HalfPlane_1 \subseteq \C \rightarrow \C$ is an Elliptic modular form of weight $2k$ to $\Gamma_0(l)$, where $l$ is the denominator of $S^{-1}$.  %for some matrix $S \in \M_2(\Z)$ with $\Gamma(S) \subseteq \SL_2(\Z)$.
 
@@ -286,7 +288,7 @@ Thus,
 \[ a[S] (i) =  \sum_{T \in \F, \tr(S T) = i} \det(U_T)^{-k} a(T_{j_T}) . \]
 This gives us the formula to calculate the Fourier expansion $a[S] \colon \Set{i \in \N_0}{i < \FPrecisionLimit{S}} \rightarrow \Q$.
 
-This is a linear map $\Q^{\invarF{\F}{\GL_2(\curlO)}} \rightarrow \Q^{\Set{i \in \N_0}{i < \FPrecisionLimit{S}}}$ and the matrix $M \in \M_{\FPrecisionLimit{S} \times N}(\Q)$ of this map is given by the formula above. When we identify
+This is a linear map $\Q^{\invarF{\F}{\GL_2(\curlO)}} \rightarrow \Q^{\Set{i \in \N_0}{i < \FPrecisionLimit{S}}} \cong \Q^{\FPrecisionLimit{S}}$ and the matrix $M \in \M_{\FPrecisionLimit{S} \times N}(\Q)$ of this map is given by the formula above. When we identify
 \begin{align*}
 a = & \; (a(T_1), \dots, a(T_N)), \\
 a[S] = & \; (a[S](0), \dots, a[S](\FPrecisionLimit{S} - 1)),
@@ -415,7 +417,7 @@ Then we have
 \begin{align*}
 \SimpleMatrix{c_{3,1}}{c_{3,2}}{c_{3,3}}{c_{3,4}} &= D_{\gamma_2} \SimpleMatrix{c_{2,1}}{c_{2,2}}{c_{2,3}}{c_{2,4}} \\
 &= \SimpleMatrix{d_{\gamma_2,1}}{d_{\gamma_2,2}}{d_{\gamma_2,3}}{d_{\gamma_2,4}} \SimpleMatrix{0}{c_{2,2}}{0}{c_{2,4}} \\
-&= \SimpleMatrix{0}{d_{\gamma_2,1} c_{2,2} + d_{\gamma_2,2} c_{2,4}}{0}{d_{\gamma_2,3} c_{2,2} + d_{\gamma_2,4} c_{2,4}}
+&= \SimpleMatrix{0}{d_{\gamma_2,1} c_{2,2} + d_{\gamma_2,2} c_{2,4}}{0}{d_{\gamma_2,3} c_{2,2} + d_{\gamma_2,4} c_{2,4}} .
 \end{align*}
 
 We want $0 = c_{3,4} = d_{\gamma_2,3} \cdot c_{2,2} + d_{\gamma_2,4} \cdot c_{2,4}$. In case we already have $c_{2,2} = 0$, we can select $D_{\gamma_2} := J_1 \in \Sp_1(\curlO)$. Otherwise: Again, $c_{2,2}, c_{2,4} \in \K$ but we can select $l_2 \in \curlO$ such that $c_{2,2} \cdot l_2, c_{2,4} \cdot l_2 \in \curlO$. Again via \ifuncname{xgcd}, we can find $d_2,d_{\gamma_2,1},d_{\gamma_2,2} \in \curlO$ such that $1 = d_{\gamma_2,1} \frac{c_{2,2} \cdot l_2}{d_2} + d_{\gamma_2,2} \frac{c_{2,4} \cdot l_2}{d_2}$ and $\frac{c_{2,2} \cdot l_2}{d_2}, \frac{c_{2,4} \cdot l_2}{d_2} \in \curlO$. Set $d_{\gamma_2,3} := -\frac{c_{2,4}\cdot l_2}{d_2}$ and $d_{\gamma_2,4} := \frac{c_{2,2} \cdot l_2}{d_2}$. Then we have $D_{\gamma_2} \in \Sp_1(\curlO)$.
