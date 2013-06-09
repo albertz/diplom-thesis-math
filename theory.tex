@@ -539,8 +539,12 @@ Then, for the Fourier expansion, we have
 \end{align*}
 \end{remark}
 where $l \in \N$ such that $\tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) \cdot l \in \N_0$ for all $T \in \Lambda$ and
-\[ (a[S]|_{2k} M) (p) = \overline{\det(\tilde{S})}^k \cdot \sum_{T \in \Lambda, \tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) = p} a(T) \cdot e^{2 \pi i \tr\left(T \tilde{T} \overline{\tilde{S}}^T\right)} \]
+\[ (a[S]|_{2k} M) (p) = \overline{\det(\tilde{S})}^k \cdot \sum_{\begin{subarray}{c}
+T \in \Lambda,\\
+\tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) = p
+\end{subarray}} a(T) \cdot e^{2 \pi i \tr\left(T \tilde{T} \overline{\tilde{S}}^T\right)} \]
 for all $p \in \frac{1}{l} \N_0$.
+
 
 \subsection{Algorithm}
 
