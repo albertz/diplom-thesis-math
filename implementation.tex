@@ -311,7 +311,7 @@ And for $b_2$, we have
 
 \subsection{\ifuncname{reduceGL}}
 \label{impl:reduceGL}
-In \cref{remark:reducedCurlF}, we have described that it is sufficient to use reduced matrices $\hat{T} \in \F$. Thus, in our implementation, for a given matrix $T \in \F$, we need a way to calculate the Minkowski-reduced matrix $\hat{T} \in \F$ such that
+In \cref{remark:reducedCurlF}, we have described that it is sufficient to use reduced matrices $\hat{T} \in \F$. Thus, in our implementation, for a given matrix $T \in \F$, we need a way to calculate the reduced matrix $\hat{T} \in \F$ such that
 \[ \hat{T}[U_T] = T \]
 for some $U_T \in \GL_2(\curlO)$. In the code, we don't need $U_T$ directly but rather the determinant of $U_T$.
 
