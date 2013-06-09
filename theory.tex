@@ -483,6 +483,11 @@ such that
 \end{lemma}
 Note that this proof gives explicit formulas to calculate $\gamma$ and $R$. This has been implemented in \ifilename{helpers.py} as \ifuncname{solveR}. A list of test cases have also been generated in the function \ifuncname{test_solveR} in \ifilename{tests.py} which also indirectly test the \ifuncname{xgcd} and \ifuncname{divmod} implementation (described in \cref{xgcd}).
 
+\begin{remark}
+\label{remark:algo-mainstep2}
+Just like \cref{remark:algo-mainstep1}.
+\end{remark}
+
 \subsection{Algorithm}
 
 \begin{algo}
@@ -492,45 +497,52 @@ We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta
 \begin{enumerate}
 %or: http://www.latex-community.org/forum/viewtopic.php?f=4&t=2209
 %\renewcommand{\theenumi}{Step \arabic{enumi}}
-\item\label{NextSStep} Enumerate matrices $S \in \PM_2(\curlO)$ and for each matrix perform the following steps. Start with $\mathcal{M}_1 := \Q^{\invarF{\F}{\GL_2(\curlO)}}$.
+\item
+Start with $\mathcal{M}_1 := \Q^{\invarF{\F}{\GL_2(\curlO)}}$ and $i=1$.
+
+\item\label{NextSStep} Enumerate matrices $S \in \PM_2(\curlO)$ and for each matrix perform the following steps.
 
 %Select a set of matrices $\mathcal{S} \subseteq \M_2^T(\Z)$ with $0 < S \in \mathcal{S}$.
 %Make $\mathcal{S}$ big enough.
 %Now, for some $S \in \mathcal{S}$:
 
 \item
-From \cref{remark:algo-mainstep1} and more detailed in \cref{calcMatrix}, we get a superspace $\mathcal{M}^H_S \subset \Q^{\invarF{\F}{\GL_2(\curlO)}}$ of $\FE(\HSpace{k}{\Gamma})$.
+In \cref{remark:algo-mainstep1} and more detailed in \cref{calcMatrix} about the restriction ($f \mapsto f[S]$), we get a superspace $\mathcal{M}^H_S \subset \Q^{\invarF{\F}{\GL_2(\curlO)}}$ of $\FE(\HSpace{k}{\Gamma})$.
 
-Now, take .
+\item
+From \cref{remark:algo-mainstep2}, we get a superspace $\mathcal{C}^H_S \subset \Q^{\invarF{\F}{\GL_2(\curlO)}}$ of $\FE(\HSpace{k}{\Gamma})$.
 
-We set
-\[ \mathcal{M}_{k,\mathcal{S},\F}^H := \Set{ (a [S])_{S\in\mathcal{S}} }{\text{$a \in \Q^\F$ is $\GL_2(\curlO)$ invariant}} \subseteq \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}} . \]
-The elements $a \in \Q^\F$ are Fourier expansions of Elliptic modular forms ($\HalfPlane_1 \rightarrow \C$) and $a(T) \in \Q$ for $T \in \F \subseteq \M_2(\curlO^\#)$ are the Fourier coefficients.
-
-We identify
+\item
+Now set
+\[ \mathcal{M}_{i+1} := \mathcal{M}_i \cap \mathcal{M}^H_S \cap \mathcal{C}^H_S . \]
+%
+%We set
+%\[ \mathcal{M}_{k,\mathcal{S},\F}^H := \Set{ (a [S])_{S\in\mathcal{S}} }{\text{$a \in \Q^\F$ is $\GL_2(\curlO)$ invariant}} \subseteq \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}} . \]
+%The elements $a \in \Q^\F$ are Fourier expansions of Elliptic modular forms ($\HalfPlane_1 \rightarrow \C$) and $a(T) \in \Q$ for $T \in \F \subseteq \M_2(\curlO^\#)$ are the Fourier coefficients.
+%
+%We identify
 % Das ist der Bildbereich der Abbildung.
-\[ \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}} = \Q^N, \ \ N = \sum_{S\in\mathcal{S}} \FPrecisionLimit{S} . \]
-
-See \cref{lemma:fprecisionlimit}.
-
-We want to calculate the matrix of the linear function \[
-\invar{\Q^\F}{\GL_2(\curlO)} \rightarrow \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}}, \ \ 
-a \mapsto (a[S])_{S\in\mathcal{S}} .
-\]
-The base of the destination room is canonical. The dimension is $N$.
-The base of the source room can be identified by $\invar{\F}{\GL_2(\curlO)}$.
-
-And we set
-\[ \mathcal{M}_{k, \mathcal{S},\F} := \bigoplus_{S\in\mathcal{S}} \FE_{\F(S)}(\ESpace{k}{\Gamma_0(l_S)}) \]
-where $\ESpace{k}{\Gamma_0(l_S)}$ is the vectorspace of Elliptic modular forms over $\Gamma_0(l_S)$. % Köcher-Krieg II.3
+%\[ \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}} = \Q^N, \ \ N = \sum_{S\in\mathcal{S}} \FPrecisionLimit{S} . \]
+%
+%See \cref{lemma:fprecisionlimit}.
+%
+%We want to calculate the matrix of the linear function \[
+%\invar{\Q^\F}{\GL_2(\curlO)} \rightarrow \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}}, \ \ 
+%a \mapsto (a[S])_{S\in\mathcal{S}} .
+%\]
+%The base of the destination room is canonical. The dimension is $N$.
+%The base of the source room can be identified by $\invar{\F}{\GL_2(\curlO)}$.
+%
+%And we set
+%\[ \mathcal{M}_{k, \mathcal{S},\F} := \bigoplus_{S\in\mathcal{S}} \FE_{\F(S)}(\ESpace{k}{\Gamma_0(l_S)}) \]
+%where $\ESpace{k}{\Gamma_0(l_S)}$ is the vectorspace of Elliptic modular forms over $\Gamma_0(l_S)$. % Köcher-Krieg II.3
 
 \item
 If
-\[ \dim \mathcal{M}_{k,\mathcal{S},\F}^H \cap \mathcal{M}_{k, \mathcal{S},\F}
-= \dim \HSpace{k}{\Gamma,\nu} , \]
-then we are ready and we can reconstruct the Fourier expansion in the following way: ...
+\[ \dim \mathcal{M}_i = \dim \HSpace{k}{\Gamma} , \]
+then we are ready.
 
-If not, then return to step \ref{NextSStep}, and enlarge $\mathcal{S}$.
+If not, increase $i$, return to step \ref{NextSStep} and select the next $S \in \PM_2(\curlO)$.
 \end{enumerate}
 \end{algo}
 
