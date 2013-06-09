@@ -537,7 +537,6 @@ Then, for the Fourier expansion, we have
 &= \overline{\det(\tilde{S})}^k \cdot \sum_{T \in \Lambda} a(T) \cdot e^{2 \pi i \cdot \tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) \cdot \tau} \cdot e^{2 \pi i \cdot \tr\left(T \tilde{T} \overline{\tilde{S}}^T\right)} \\
 &= \sum_{p \in \frac{1}{l} \N_0} (a[S]|_{2k} M) (p) \cdot e^{2 \pi i \cdot p \cdot \tau} ,
 \end{align*}
-\end{remark}
 where $l \in \N$ such that $\tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) \cdot l \in \N_0$ for all $T \in \Lambda$ and
 \[ (a[S]|_{2k} M) (p) = \overline{\det(\tilde{S})}^k \cdot \sum_{\begin{subarray}{c}
 T \in \Lambda,\\
@@ -545,6 +544,10 @@ T \in \Lambda,\\
 \end{subarray}} a(T) \cdot e^{2 \pi i \cdot \tr\left(T \tilde{T} \overline{\tilde{S}}^T\right)} \]
 for all $p \in \frac{1}{l} \N_0$.
 
+Similarily as in \cref{remark:how-to-calc-aS}, we get a formula to calculate such a matrix for the linear map $a \mapsto a[S]|_{2k} M$. Because we don't just have numbers over $\Q$ and $\Z$ anymore, a performant implementation is a bit more complicated than before. We describe the details in \cref{calcMatrixTrans}.
+
+At this point, let us just remark that we get another superspace $\mathcal{M}^H_{\hat{c},S} \subset \Q^{\invarF{\F}{\GL_2(\curlO)}}$ of $\FE(\HSpace{k}{\Gamma})$. \qed
+\end{remark}
 
 \subsection{Algorithm}
 
@@ -570,11 +573,11 @@ Start with $\mathcal{M}_1 := \Q^{\invarF{\F}{\GL_2(\curlO)}}$ and $i=1$.
 In \cref{remark:algo-mainstep1} and more detailed in \cref{calcMatrix} about the restriction ($f \mapsto f[S]$), we get a superspace $\mathcal{M}^H_S \subset \Q^{\invarF{\F}{\GL_2(\curlO)}}$ of $\FE(\HSpace{k}{\Gamma})$.
 
 \item
-From \cref{remark:algo-mainstep2} and the cusp expansion information, we get a superspace $\mathcal{C}^H_S \subset \Q^{\invarF{\F}{\GL_2(\curlO)}}$ of $\FE(\HSpace{k}{\Gamma})$.
+From \cref{remark:algo-mainstep2} and the cusp expansion information, for each cusp $c \in \mathcal{C}_l \subset \Q \cup \Set{\infty}$ with $c \ne \infty$ where $\mathcal{C}_l$ are the cusps in $\Gamma_0(l)$ and $l = \det(S)$, we get a superspace $\mathcal{M}^H_{c,S} \subset \Q^{\invarF{\F}{\GL_2(\curlO)}}$ of $\FE(\HSpace{k}{\Gamma})$.
 
 \item
 Now set
-\[ \mathcal{M}_{i+1} := \mathcal{M}_i \cap \mathcal{M}^H_S \cap \mathcal{C}^H_S . \]
+\[ \mathcal{M}_{i+1} := \mathcal{M}_i \cap \mathcal{M}^H_S \cap \bigcap_{c \in \mathcal{C}_l, c \ne \infty} \mathcal{M}^H_{c,S} . \]
 %
 %We set
 %\[ \mathcal{M}_{k,\mathcal{S},\F}^H := \Set{ (a [S])_{S\in\mathcal{S}} }{\text{$a \in \Q^\F$ is $\GL_2(\curlO)$ invariant}} \subseteq \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}} . \]
