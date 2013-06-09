@@ -309,6 +309,8 @@ Restricting the space of Hermitian modular form Fourier expansion space via \cre
 
 Another method is to use information from cusp forms. We can restrict them in a similar way as earlier and we get relations between the restrictions and the space of Elliptic modular cusp forms.
 
+\begin{prelim}
+\label{prelim:cuspInfo}
 Let $c \in \Q \cup \Set{\infty}$ be a representation of a cusp in $\Gamma_0(l)$. For our method, we are only interested in $c \ne \infty$. We choose a matrix $M_c \in \SL_2(\Z)$ such that $M_c \infty = c$. $M_c$ is also called a cusp matrix.
 
 Let $f \colon \HalfPlane_2 \rightarrow \C$ be a Hermitian modular form and $S \in \PM_2(\curlO)$. Now we look at $f[S] | M$. We have
@@ -331,11 +333,12 @@ Then, we have
 \end{align*}
 
 Thus, a cusp $c$ and $S \in \PM_2(\curlO)$ gives us a linear map $f \mapsto f[S] | M_c$ which we can calculate as described. %TODO: more...
-And given Hermitian modular forms, we must only get Elliptic modular cusp forms.
+%And given Hermitian modular forms, we must only get Elliptic modular cusp forms.
 
 Via other methods, we can more directly calculate the vectorspace of Elliptic modular cusp forms in $M_c$.
 
 By comparing this, we gain new information and we have another method to reduce $\mathcal{M}_i$.
+\end{prelim}
 
 \begin{lemma}[$solveR$]
 \label{lemma:solveR}
@@ -485,10 +488,14 @@ Note that this proof gives explicit formulas to calculate $\gamma$ and $R$. This
 
 \begin{remark}
 \label{remark:algo-mainstep2}
-Just like \cref{remark:algo-mainstep1}.
+We want to develop the formulas to use the new information about the cusp expansion relations as described in \cref{prelim:cuspInfo}. This is very similar as the idea in \cref{remark:algo-mainstep1}, such that we can develop similar formulas as in \cref{remark:how-to-calc-aS}.
+
 \end{remark}
 
+
 \subsection{Algorithm}
+
+Now we formulate the main algorithm based on the work previously developed in this chapter.
 
 \begin{algo}
 \label{main-algo}
@@ -540,7 +547,8 @@ Now set
 \item
 If
 \[ \dim \mathcal{M}_i = \dim \HSpace{k}{\Gamma} , \]
-then we are ready.
+then we are ready and we have
+\[ \mathcal{M}_i = \FE_\F(\HSpace{k}{\Gamma}) . \]
 
 If not, increase $i$, return to step \ref{NextSStep} and select the next $S \in \PM_2(\curlO)$.
 \end{enumerate}
