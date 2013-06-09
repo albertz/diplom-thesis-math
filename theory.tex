@@ -311,9 +311,9 @@ Another method is to use information from cusp forms. We can restrict them in a 
 
 \begin{prelim}
 \label{prelim:cuspInfo}
-Let $c \in \Q \cup \Set{\infty}$ be a representation of a cusp in $\Gamma_0(l)$. For our method, we are only interested in $c \ne \infty$. We choose a matrix $M_c \in \SL_2(\Z)$ such that $M_c \infty = c$. $M_c$ is also called a cusp matrix.
+Let $c \in \Q \cup \Set{\infty}$ be a representation of a cusp in $\Gamma_0(l)$. For our method, we are only interested in $c \ne \infty$. We choose a matrix $M_c \in \SL_2(\Z)$ such that $M_c \infty = c$. We show in \cref{lemma:cuspmatrixMc} how to do that. $M_c$ is also called a cusp matrix.
 
-Let $f \colon \HalfPlane_2 \rightarrow \C$ be a Hermitian modular form and $S \in \PM_2(\curlO)$. Now we look at $f[S] | M$. We have
+Let $f \colon \HalfPlane_2 \rightarrow \C$ be a Hermitian modular form and $S \in \PM_2(\curlO)$. Now we look at $f[S] | M_c$. We have
 \begin{align*}
 & f[S] | M_c \\
 =\quad & f( (a S \tau + b S) ( c S^{-1} S \tau + d) ) \\
@@ -339,6 +339,20 @@ Via other methods, we can more directly calculate the vectorspace of Elliptic mo
 
 By comparing this, we gain new information and we have another method to reduce $\mathcal{M}_i$.
 \end{prelim}
+
+\begin{lemma}
+\label{lemma:cuspmatrixMc}
+Let $\hat{c} \in \Q \cup \Set{\infty}$. Then there exists a matrix $M = \SmallMatrix{a}{b}{c}{d} \in \Sp_1(\Z)$ such that $M \infty = c$. 
+\begin{proof}
+We have $M \infty = \frac{a \infty + b}{c \infty + d}$.
+
+Case 1: $\hat{c} = \infty$. Then we can choose $M = 1_2$.
+
+Case 2: $\hat{c} = 0$. Then we can choose $M = J_2$.
+
+Case 3: $\hat{c} \in \Q^\times$. Let $\hat{c} = \frac{a}{b}$ with $a \in \Z$, $c \in \N$ such that there is no common denominator of $a$ and $b$. Then we can select $b, d \in \Z$ such that $1 = a c - b d$. Then we have $M \in \Sp_1(\Z)$ and $M \infty = \hat{c}$.
+\end{proof}
+\end{lemma}
 
 \begin{lemma}[$solveR$]
 \label{lemma:solveR}
@@ -489,6 +503,7 @@ Note that this proof gives explicit formulas to calculate $\gamma$ and $R$. This
 \begin{remark}
 \label{remark:algo-mainstep2}
 We want to develop the formulas to use the new information about the cusp expansion relations as described in \cref{prelim:cuspInfo}. This is very similar as the idea in \cref{remark:algo-mainstep1}, such that we can develop similar formulas as in \cref{remark:how-to-calc-aS}.
+
 
 \end{remark}
 
