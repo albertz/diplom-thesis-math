@@ -420,12 +420,20 @@ That way, we have defined $\gamma_2 \in \Sp_2(\curlO)$ and we have $c_{3,1} = c_
 
 Note that we have $A_{\gamma_2} = \overline{D_{\gamma_2}^{-1}}^T = \SimpleMatrix{\overline{d_{\gamma_2,4}}}{-\overline{d_{\gamma_2,3}}}{-\overline{d_{\gamma_2,2}}}{\overline{d_{\gamma_2,1}}}$.
 
-Now we
+3) Now we
 \[ \SimpleMatrix{a_{3,1}}{a_{3,2}}{a_{3,3}}{a_{3,4}} = A_{\gamma_2} \SimpleMatrix{a_{2,1}}{a_{2,2}}{a_{2,3}}{a_{2,4}} , \]
 thus
 \[ a_{3,1} = \overline{d_{\gamma_2,1}} \cdot a_{2,1} - \overline{d_{\gamma_2,3}} \cdot a_{2,3} . \]
 
-3) Set
+We have $\tilde{M}_3 \in \Sp_2(\curlO)$, thus $\overline{\tilde{M}_3}^T \SmallMatrix{}{-1_2}{1_2}{} \tilde{M}_3 = \SmallMatrix{}{-1_2}{1_2}{}$. Thus
+\[ \overline{\begin{pmatrix}
+a_{i,1} & a_{i,3} & c_{i,1} & c_{i,3} \\
+a_{i,2} & a_{i,4} & c_{i,2} & c_{i,4} \\
+b_{i,1} & b_{i,3} & d_{i,1} & d_{i,3} \\
+b_{i,2} & b_{i,4} & d_{i,2} & d_{i,4}
+\end{pmatrix}}. \]
+
+4) Set
 \[ \gamma_3 := \begin{pmatrix}
 a_{\gamma_3,1} & b_{\gamma_3,1} \\
 c_{\gamma_3,1} & d_{\gamma_3,1}
