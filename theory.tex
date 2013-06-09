@@ -3,16 +3,16 @@
 \section{Theory}
 
 
-In this section, we will develop the theoretical foundation for the tools to calculate the space of Fourier expansions of some precision of Hermitian modular forms $\FE(\HSpace{n}{\Gamma})$.
+In this section, we will develop the theoretical foundation for the tools to calculate the space of Fourier expansions of some precision of Hermitian modular forms $\FE(\HSpace{k}{\Gamma})$.
 
 We know that there is a basis of Fourier expansions such that all Fourier coefficients are over $\Q$. % TODO: ref
 
-We start with the space of all possible Fourier expansions, i.e. with the space $\mathcal{M}_0 := \Q^\mathcal{I}$ for some index set $\mathcal{I}$. The tools in this section are all some specific conditions which lead to some vectorspace $\tilde{\mathcal{M}} \subset \Q^\mathcal{I}$ which are always superspaces of $\FE_\mathcal{I}(\HSpace{n}{\Gamma}) \subset \Q^\mathcal{I}$. Thus, when intersecting such space, we iteratively get new subspaces
+We start with the space of all possible Fourier expansions, i.e. with the space $\mathcal{M}_0 := \Q^\mathcal{I}$ for some index set $\mathcal{I}$. The tools in this section are all some specific conditions which lead to some vectorspace $\tilde{\mathcal{M}} \subset \Q^\mathcal{I}$ which are always superspaces of $\FE_\mathcal{I}(\HSpace{k}{\Gamma}) \subset \Q^\mathcal{I}$. Thus, when intersecting such space, we iteratively get new subspaces
 \[ \mathcal{M}_{i+1} := \mathcal{M}_i \cup \tilde{\mathcal{M}} . \]
 %
-With other methods, we know the dimension of $\FE(\HSpace{n}{\Gamma})$. Thus we can easily determine whether $\mathcal{M}_i = \FE_\mathcal{I}(\HSpace{n}{\Gamma})$, i.e. whether we are finished and can terminate the algorithm.
+With other methods, we know the dimension of $\FE(\HSpace{k}{\Gamma})$. Thus we can easily determine whether $\mathcal{M}_i = \FE_\mathcal{I}(\HSpace{k}{\Gamma})$, i.e. whether we are finished and can terminate the algorithm.
 
-It is not proven that this series of spaces eventually gets to $\FE_\mathcal{I}(\HSpace{n}{\Gamma})$ but from other research, this seems likely.
+It is not proven that this series of spaces eventually gets to $\FE_\mathcal{I}(\HSpace{k}{\Gamma})$ but from other research, this seems likely.
 % TODO: ref
 
 \subsection{Restriction to Elliptic modular forms}
