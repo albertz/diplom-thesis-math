@@ -8,7 +8,7 @@ In this section, we will develop the theoretical foundation for the tools to cal
 We know that there is a basis of Fourier expansions such that all Fourier coefficients are over $\Q$. % TODO: ref
 
 We start with the space of all possible Fourier expansions, i.e. with the space $\mathcal{M}_0 := \Q^\mathcal{I}$ for some index set $\mathcal{I}$. The tools in this section are all some specific conditions which lead to some vectorspace $\tilde{\mathcal{M}} \subset \Q^\mathcal{I}$ which are always superspaces of $\FE_\mathcal{I}(\HSpace{k}{\Gamma}) \subset \Q^\mathcal{I}$. Thus, when intersecting such space, we iteratively get new subspaces
-\[ \mathcal{M}_{i+1} := \mathcal{M}_i \cup \tilde{\mathcal{M}} . \]
+\[ \mathcal{M}_{i+1} := \mathcal{M}_i \cap \tilde{\mathcal{M}} . \]
 %
 With other methods, we know the dimension of $\FE(\HSpace{k}{\Gamma})$. Thus we can easily determine whether $\mathcal{M}_i = \FE_\mathcal{I}(\HSpace{k}{\Gamma})$, i.e. whether we are finished and can terminate the algorithm.
 
