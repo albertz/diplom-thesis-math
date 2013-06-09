@@ -328,7 +328,7 @@ where
 \[ \tilde{M} = \SimpleMatrix{a1_2}{bS}{cS^{-1}}{d1_2} \in \Sp_2(\K) . \]
 %
 We can find
-\[ \gamma \in \Sp_2(\curlO), \quad R = \SimpleMatrix{\tilde{S}}{\tilde{T}}{0_2}{\overline{\tilde{S}}^T} \in \Sp_2(\K) \]
+\[ \gamma \in \Sp_2(\curlO), \quad R = \SimpleMatrix{\tilde{S}}{\tilde{T}}{0_2}{\overline{\tilde{S}^{-1}}^T} \in \Sp_2(\K) \]
 such that $\tilde{M} = \gamma R$. We describe the details in \cref{solveR}.
 Then, we have
 \begin{align*}
@@ -336,6 +336,7 @@ Then, we have
 =\quad& ( f |_k \tilde{M} )[S] (\tau) \\
 =\quad& ( f |_k \gamma |_k R  )[S] (\tau) \\
 =\quad& (f |_k R) [S] (\tau) \\
+=\quad& \det(\tilde{S})^{-k} \cdot (f |_k R) [S] (\tau) \\
 =\quad& f( \tilde{S} S \overline{\tilde{S}}^T \tau + \tilde{S} \tilde{T} ) .
 \end{align*}
 
@@ -371,7 +372,7 @@ Let
 where
 \[ \SimpleMatrix{a}{b}{c}{d} \in \SL_2(\Z), \quad S \in \Her_2(\curlO) . \]
 We can find
-\[ \gamma \in \Sp_2(\curlO), \quad R = \SimpleMatrix{\tilde{S}}{\tilde{T}}{0_2}{\overline{\tilde{S}}^T} \in \Sp_2(\K) \]
+\[ \gamma \in \Sp_2(\curlO), \quad R = \SimpleMatrix{\tilde{S}}{\tilde{T}}{0_2}{\overline{\tilde{S}^{-1}}^T} \in \Sp_2(\K) \]
 such that $\tilde{M} = \gamma R$.
 \begin{proof}
 It follows a lengthy constructive proof.
@@ -500,7 +501,21 @@ That way, we have defined $\gamma_3 \in \Sp_2(\curlO)$ and we have $c_{4,1} = c_
 and
 \[ \gamma :=  \gamma_1^{-1} \gamma_2^{-1} \gamma_3^{-1} \in \Sp_2(\curlO) \]
 such that
-\[ \gamma R = \tilde{M} . \qedhere \]
+\[ \gamma R = \tilde{M} . \]
+Write
+\[ R = \SimpleMatrix{\tilde{S}}{\tilde{T}}{0_2}{\tilde{U}} . \]
+We have $R \in \Sp_2(\K)$, thus $J_2[R] = J_2$, i.e.
+\begin{align*}
+&\SimpleMatrix{\overline{\tilde{S}}^T}{}{\overline{\tilde{T}}^T}{\overline{\tilde{U}}^T}
+\SimpleMatrix{}{-1_2}{1_2}{}
+\SimpleMatrix{\tilde{S}}{\tilde{T}}{}{\tilde{U}} \\
+=\quad & \SimpleMatrix{\overline{\tilde{S}}^T}{}{\overline{\tilde{T}}^T}{\overline{\tilde{U}}^T}
+\SimpleMatrix{}{-\tilde{U}}{\tilde{S}}{\tilde{T}} \\
+=\quad & \SimpleMatrix{0_2}{-\overline{\tilde{S}}^T \tilde{U}}{\overline{\tilde{U}}^T \tilde{S}}{%
+-\overline{\tilde{T}}^T \tilde{U} + \overline{\tilde{U}}^T \tilde{T} } \\
+=\quad & \SimpleMatrix{}{-1_2}{1_2}{}
+\end{align*}
+Thus, we have $\tilde{U} = \overline{\tilde{S}^{-1}}^T$.
 \end{proof}
 \end{lemma}
 Note that this proof gives explicit formulas to calculate $\gamma$ and $R$. This has been implemented in \ifilename{helpers.py} as \ifuncname{solveR}. A list of test cases have also been generated in the function \ifuncname{test_solveR} in \ifilename{tests.py} which also indirectly test the \ifuncname{xgcd} and \ifuncname{divmod} implementation (described in \cref{xgcd}).
