@@ -388,13 +388,13 @@ In any case, we need to iterate through all of $\F$ to get all the summands in t
 \end{enumerate}
 This algorithm has been implemented in the function \ifuncname{calcMatrix} in the class \isymbname{ReductionMatrices_Calc} in the file \ifilename{algo_cpp.cpp}. All the state and parameters are stored in the class so that we need to copy as less data as possible for successive $S \in \PM_2(\curlO)$. That is also why the iteration through different $S \in \PM_2(\curlO)$ (see \cref{Siter}) has been done in C++.
 
-In Python, in \ifuncname{modform_restriction_info} in the file \ifilename{algo.py}, we get an instance of that C++ class and call the function \ifuncname{calcMatrix}. This gives us the matrix $M$. Define its column module as
-\[ \mathcal{M}_M := \Set{M a}{a \in \Q^\F} . \]
-Via other methods in Sage, we can calculate the vector space $ \FE_{\F(S)}(\ESpace{k}{\Gamma_0(l)})$ of Fourier expansions of Elliptic modular forms to $\Gamma_0(l)$ where $l := det(S)$ and weight $2k$. Then consider the intersection
-\[ \mathcal{M}'_M := \FE_{\F(S)}(\ESpace{2k}{\Gamma_0(l)} \cap \mathcal{M}_M . \]
+In Python, in \ifuncname{modform_restriction_info} in the file \ifilename{algo.py}, we get an instance of that C++ class and call the function \ifuncname{calcMatrix}. This gives us the matrix $M_S$. Define its column module as
+\[ \mathcal{M}_S := \Set{M_S a}{a \in \Q^\F} . \]
+Via other methods in Sage, we can calculate the vector space $ \FE_{\F(S)}(\ESpace{k}{\Gamma_0(l_S)})$ of Fourier expansions of Elliptic modular forms to $\Gamma_0(l_S)$ where $l_S := det(S)$ and weight $2k$. Then consider the intersection
+\[ \mathcal{M}'_S := \FE_{\F(S)}(\ESpace{2k}{\Gamma_0(l)} \cap \mathcal{M}_S . \]
 Now, take them back to the Hermitian modular form space:
-\[ \mathcal{M}^H_{M} := \Set{a \in \Q^\F}{Ma \in  \mathcal{M}'_M} . \]
-In Sage, we can do that by using \ifuncname{solve_right} on the matrix $M$ and adding the right kernel of $M$.
+\[ \mathcal{M}^H_S := \Set{a \in \Q^\F}{Ma \in \mathcal{M}'_S} . \]
+In Sage, we can do that by using \ifuncname{solve_right} on the matrix $M_S$ and adding the right kernel of $M_S$.
 
 For testing and demonstration purpose, another implementation has been done in Python in \ifuncname{calcRestrictMatrix_py} in the file \ifilename{helpers.py}. Also for testing purpose, the C++ version can be called directly via the Python function \ifuncname{calcRestrictMatrix_any}.
 

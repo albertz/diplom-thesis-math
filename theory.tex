@@ -487,18 +487,22 @@ Note that this proof gives explicit formulas to calculate $\gamma$ and $R$. This
 
 \begin{algo}
 \label{main-algo}
-We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta$ (for now, $\Delta \in \Set{3,4,8}$). Then we select some form weight $k \in \Z$ ($k \in \Set{1,\dots,20}$ or so), let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximal order (see chapter \ref{maxorder}) and some subgroup $\Gamma$ of $\Sp_2(\curlO)$. Then we select an abel character $\nu \colon \Gamma \rightarrow \C^\times$ of $\Sp_2(\curlO)$ (we just use $\nu \equiv 1$, see \cref{remark-nu}).
+We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta$ (for now, $\Delta \in \Set{3,4,8}$). Then we select some form weight $k \in \Z$ ($k \in \Set{1,\dots,20}$ or so), let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximal order (see \cref{maxorder}) and let $\Gamma := \Sp_2(\curlO)$. We use $\nu \colon \Gamma \rightarrow \C^\times$, $\nu \equiv 1$ as the Abel character (see \cref{remark-nu}).
 
 \begin{enumerate}
 %or: http://www.latex-community.org/forum/viewtopic.php?f=4&t=2209
 %\renewcommand{\theenumi}{Step \arabic{enumi}}
-\item\label{NextSStep} Enumerate matrices $S \in \PM_2(\curlO)$ and for each matrix perform the following steps.
+\item\label{NextSStep} Enumerate matrices $S \in \PM_2(\curlO)$ and for each matrix perform the following steps. Start with $\mathcal{M}_1 := \Q^{\invarF{\F}{\GL_2(\curlO)}}$.
 
 %Select a set of matrices $\mathcal{S} \subseteq \M_2^T(\Z)$ with $0 < S \in \mathcal{S}$.
 %Make $\mathcal{S}$ big enough.
 %Now, for some $S \in \mathcal{S}$:
 
 \item
+From \cref{remark:algo-mainstep1} and more detailed in \cref{calcMatrix}, we get a superspace $\mathcal{M}^H_S \subset \Q^{\invarF{\F}{\GL_2(\curlO)}}$ of $\FE(\HSpace{k}{\Gamma})$.
+
+Now, take .
+
 We set
 \[ \mathcal{M}_{k,\mathcal{S},\F}^H := \Set{ (a [S])_{S\in\mathcal{S}} }{\text{$a \in \Q^\F$ is $\GL_2(\curlO)$ invariant}} \subseteq \bigoplus_{S\in\mathcal{S}} \Q^{\FPrecisionLimit{S}} . \]
 The elements $a \in \Q^\F$ are Fourier expansions of Elliptic modular forms ($\HalfPlane_1 \rightarrow \C$) and $a(T) \in \Q$ for $T \in \F \subseteq \M_2(\curlO^\#)$ are the Fourier coefficients.
