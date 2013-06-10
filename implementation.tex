@@ -441,14 +441,14 @@ For testing and demonstration purpose, another implementation has been done in P
 
 \subsection{Calculating the cusp restrictions}
 \label{calcMatrixTrans}
-We want to develop the algorithm analogously to \cref{calcMatrix}. We have developed the neccessary basics in \cref{remark:algo-mainstep2}. We have given some $S \in \PM_2(\curlO)$ and a cusp $c \in \Q$ of $\Gamma_0(l)$ with $l = \det(S)$.
+We want to develop the algorithm analogously to \cref{calcMatrix}. We have developed the neccessary basics in \cref{remark:algo-mainstep2}. We have given some $S \in \PM_2(\curlO)$ and a cusp $c \in \Q$ of $\Gamma_0(l)$ with $l = \det(S)$. Let $M \in \Sp_1(\Z)$ such that $M \infty = c$.
 
 Recall that we have
 \[ (a[S]| M) (p) = \overline{\det(\tilde{S})}^k \cdot \sum_{\begin{subarray}{c}
 T \in \Lambda,\\
 \tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) = p
 \end{subarray}} a(T) \cdot e^{2 \pi i \cdot \tr\left(T \tilde{T} \overline{\tilde{S}}^T\right)} \]
-for all $p \in \frac{1}{l} \N_0$.
+for all $p \in \frac{1}{L} \N_0$ for some $L \in \N$.
 
 
 \subsection{Parallelization}
