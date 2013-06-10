@@ -442,6 +442,8 @@ class AsyncTask:
 		self.name = name or repr(func)
 		self.func = func
 		self.parent_pid = os.getpid()
+		# We exec() instead of just fork() because of problems with non-fork-safe libs in Sage.
+		# See: http://ask.sagemath.org/question/2627/sigill-in-forked-process
 		self.proc = ExecingProcess(
 			target = self._asyncCall,
 			args = (self,),
