@@ -450,7 +450,7 @@ T \in \Lambda,\\
 \end{subarray}} a(T) \cdot e^{2 \pi i \cdot \tr\left(T \tilde{T} \overline{\tilde{S}}^T\right)} \]
 for all $p \in \frac{1}{L} \N_0$ for some $L \in \N$.
 
-We want to construct a matrix $\hat{M}_{c,S}$ such that $\hat{M}_{c,S} \cdot a = a[S]|M_c$ for some given precisions.
+We want to construct a matrix $\hat{M}_{c,S}$ such that $\hat{M}_{c,S} \cdot a = a[S]|M_c$ for some given precision limit $\F_c(S)$ for the Elliptic modular forms. We want to develop the precision limit $\F_c(S)$ in the same way as $\FPrecisionLimit{S}$ in \cref{lemma:fprecisionlimit}.
 
 Write $T = [t_1,t_2,t_4] \in \PM_2(\curlO^\#)$, $S = [s_1,s_2,s_4] \in \PM_2(\curlO)$ and $\tilde{S} = \SmallMatrix{u_1}{u_2}{u_3}{u_4} \in \M_2(\K)$, then
 \begin{align*}
@@ -458,6 +458,7 @@ Write $T = [t_1,t_2,t_4] \in \PM_2(\curlO^\#)$, $S = [s_1,s_2,s_4] \in \PM_2(\cu
 =\quad & {\left(t_{4} u_{4} + u_{2} \overline{t_{2}}\right)} s_{4} + {\left(t_{4} u_{3} + u_{1} \overline{t_{2}}\right)} s_{2} + {\left(t_{1} u_{2} + t_{2} u_{4}\right)} \overline{s_{2}} + {\left(t_{1} u_{1} + t_{2} u_{3}\right)} s_{1} + \overline{u_{1}} + \overline{u_{4}} \\
 =\quad & {\left(s_{4} \overline{t_{2}} + t_{1} \overline{s_{2}}\right)} u_{2} + {\left(s_{4} t_{4} + t_{2} \overline{s_{2}}\right)} u_{4} + {\left(s_{1} t_{2} + s_{2} t_{4}\right)} u_{3} + {\left(s_{1} t_{1} + s_{2} \overline{t_{2}}\right)} u_{1} + \overline{u_{1}} + \overline{u_{4}} .
 \end{align*}
+
 
 As we are dealing with vector spaces, we can ignore the constant factor $\overline{\det(\tilde{S})}^k$, because for some vector space $\mathcal{V} \subset \Q^\F$, we have $(a \mapsto a[S]| M_c) (\mathcal{V}) = (a \mapsto \frac{a[S]| M_c}{\overline{\det(\tilde{S})}^k}) (\mathcal{V})$.
 
