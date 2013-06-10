@@ -772,7 +772,7 @@ def solveR(M, S, space):
 
 	- `M` -- A matrix in \SL_2(\ZZ). Let M = [[a,b;c,d]].
 
-	- `S` -- A matrix in \Her_2(\curlO), where \curlO is the maximum order
+	- `S` -- A matrix in \Her_2(\curlO), where \curlO is the maximal order
 	         of some quadratic number field \K. This is specified by `space`.
 	         Also, S > 0.
 
