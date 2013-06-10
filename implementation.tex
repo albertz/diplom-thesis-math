@@ -10,6 +10,8 @@ For performance reasons, some very heavy calculations have been implemented in C
 
 \subsection{Code structure}
 
+We introduce the most important files and details. Other files might be mentioned elsewhere.
+
 \subsubsection{Main function \ifuncname{herm_modform_space}}
 The main entry point is in the file \ifilename{algo.py}.
 The function \ifuncname{herm_modform_space} calculates the Hermitian modula form space.
@@ -38,15 +40,34 @@ Both return a vector space which is a superspace of the Hermitian modular form F
 \subsubsection{\ifilename{helpers.py}}
 This file contains many other mathematical calculations needed by \ifilename{algo.py}. These are, among others:
 \begin{itemize}
-\item The iteration of $\F$ (as described in \cref{curlFiteration}),
-\item the iteration of $S \in \PM_2(\curlO)$ (as described in \cref{Siter}),
+\item Calculations in $\curlO$ and $\curlO^\#$ (as described in \cref{curlOcalcs}),
 \item \ifuncname{solveR} (as described in \cref{solveR}),
 \item \ifuncname{xgcd} and \ifuncname{divmod} (as described in \cref{xgcd}),
-\item some wrappers around 
+\item some wrappers around \ifuncname{calcMatrix} from \ifilename{algo_cpp.cpp} and others,
+\item some reimplementations of the C++ code for demonstration and testing.
 \end{itemize}
 
+\subsubsection{\ifilename{algo_cpp.cpp}, \ifilename{structs.hpp} and other C++/Cython code}
+These files contains all the heavy calculation code. For example, these are
+\begin{itemize}
+\item Again, calculations in $\curlO$ and $\curlO^\#$ (as described in \cref{curlOcalcs}),
+\item the iteration of $\F$ (as described in \cref{curlFiteration}),
+\item the iteration of $S \in \PM_2(\curlO)$ (as described in \cref{Siter}),
+\item \ifuncname{reduceGL} (as described in \cref{reduceGL}),
+\item \ifuncname{calcMatrix} (as described in \cref{calcMatrix}),
+\item \ifuncname{calcMatrixTrans} (as described in \cref{calcMatrixTrans}).
+\end{itemize}
+
+\subsubsection{\ifilename{checks.py}}
+In some calculations, such as \ifuncname{modform_restriction_info} in \ifilename{algo.py}, it is possible to do some checks whether the intermediate calculations are sane. For example, in some cases, we can check some properties which must hold for all superspaces of $\FE(\HSpace{k}{\Gamma})$.
+
 \subsubsection{\ifilename{utils.py}}
-foo
+This file contains mostly non-mathematical related utilities.
+
+It also contains all the utilities for the parallelization. Details are described in \cref{impl:parallelization}.
+
+\subsubsection{\ifilename{tests.py}}
+This file contains some tests for some of the functions in \ifilename{algo.py}, \ifilename{helpers.py} and \ifilename{utils.py}.
 
 
 %---
@@ -56,6 +77,7 @@ In the rest of this chapter, we will demonstrate the details of the calculations
 
 
 \subsection{$\curlO$ and $\curlO^\#$ representation and calculations}
+\label{curlOcalcs}
 
 To represent $\curlO$ and $\curlO^\#$ in code, mostly in the low level C++ code (files \ifilename{algo_cpp.cpp}, \ifilename{structs.hpp}, \ifilename{reduceGL.hpp}), we can use two integers in both cases as the coefficients of some basis.
 
