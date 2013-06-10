@@ -402,10 +402,9 @@ Note that $\det(\tilde{B}) = 0$ exactly if and only if $b_1 = b_2 = 0$, as it wa
 This gives us some direct formulas for $q_1,q_2 \in \Q$ which are used in the \ifuncname{divmod} implementation where we select $q'_1, q'_2 \in \Z$ close to $q_1,q_2$ such that $r := a - q' b$ becomes minimal with regards to the Euclidean Norm.
 
 
-\subsection{Calculating the matrix of the map $a \rightarrow a[S]$}
+\subsection{Calculating the restriction information from the map $a \rightarrow a[S]$}
 \label{impl:calcMatrix}
 \label{calcMatrix}
-\label{calcMatrixTrans}
 
 In \cref{lemma:ellipticRestriction}, we have seen that, via a matrix $S \in \PM_2(\curlO)$, we can restrict a Hermitian modula form $f : \HalfPlane_2 \rightarrow \C$ to an Elliptic modular form $f[S]$. In the whole \cref{ellipticRestriction}, we have developed the theory.
 
@@ -434,6 +433,17 @@ Now, take them back to the Hermitian modular form space:
 In Sage, we can do that by using \ifuncname{solve_right} on the matrix $M_S$ and adding the right kernel of $M_S$.
 
 For testing and demonstration purpose, another implementation has been done in Python in \ifuncname{calcRestrictMatrix_py} in the file \ifilename{helpers.py}. Also for testing purpose, the C++ version can be called directly via the Python function \ifuncname{calcRestrictMatrix_any}.
+
+\subsection{Calculating the cusp restrictions}
+\label{calcMatrixTrans}
+We want to develop the algorithm analogously to \cref{calcMatrix}. We have developed the neccessary basics in \cref{remark:algo-mainstep2}. We have given some $S \in \PM_2(\curlO)$ and a cusp $c \in \Q$ of $\Gamma_0(l)$ with $l = \det(S)$.
+
+Recall that we have
+\[ (a[S]| M) (p) = \overline{\det(\tilde{S})}^k \cdot \sum_{\begin{subarray}{c}
+T \in \Lambda,\\
+\tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) = p
+\end{subarray}} a(T) \cdot e^{2 \pi i \cdot \tr\left(T \tilde{T} \overline{\tilde{S}}^T\right)} \]
+for all $p \in \frac{1}{l} \N_0$.
 
 
 \subsection{Parallelization}
