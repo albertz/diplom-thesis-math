@@ -299,7 +299,8 @@ def calcPrecisionDimension(B_cF, S):
 	#precDim = B_cF * (s + u - 2 * abs(t))
 	#precDim = floor(precDim)
 	precDim = B_cF * (min(s, u) - 2 * abs(t))
-	precDim = max(0, precDim)
+	precDim = QQ(precDim)
+	if precDim < 0: return 0
 	precDim = floor(precDim)
 	return precDim
 
