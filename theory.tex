@@ -230,7 +230,7 @@ Thus,
 \begin{remark}
 \label{remark:reducedCurlF}
 \label{reducedCurlF}
-In the algorithm, we want to work with Fourier expansions in $\Q^\F$. A canonical basis is the set $\F$. We analyze how practical this is in a Computer implementation.
+In the algorithm, we want to work with Fourier expansions in $\Q^\F$. A canonical basis is the set $\F$. We analyze how practical this is in a computer implementation.
 
 With $[a,b,c] \in \F$, we have $0\le a,c<B$, thus there are only a finite number of possible $(a,c) \in \N_0^2$. Because $0 \le [a,b,c]$, we get $ac - \left| b \right|^2 \ge 0$ and thus $b$ is also always limited. Thus, $\F$ is finite but it might be huge for even small $B$.
 For example\footnote{ This example was calculated with the code at \cite{Zeyer13Github}.},
@@ -255,14 +255,14 @@ The matrices are reduced in some sense of Minkowski. Details can be seen in \cre
 }
 in $\F$. Then, we have $\invar{\F}{\GL_2(\curlO)} \subseteq \F$.
 
-Restricting the elements in $\F$ by the $\GL_2(\curlO)$-invariation makes the set $\invar{\F}{\GL_2(\curlO)} \subseteq \F$ much smaller and better to handle in Computer calculations.
+Restricting the elements in $\F$ by the $\GL_2(\curlO)$-invariation makes the set $\invar{\F}{\GL_2(\curlO)} \subseteq \F$ much smaller and better to handle in computer calculations.
 For example,
 \begin{align*}
 & \text{for } D=-3, B=10,\quad \text{we have } \; \# \left(\invarF{\F}{\GL_2(\curlO)}\right) = 420, \\
 & \text{for } D=-3, B=20,\quad \text{we have } \; \# \left(\invarF{\F}{\GL_2(\curlO)}\right) = 4840.
 \end{align*}
 %
-This makes the set $\invarF{\F}{\GL_2(\curlO)}$, to identify a basis of the finite dimension vector space $\invar{\Q^\F}{\GL_2(\curlO)}$, much more practical to be used in a Computer implementation.
+This makes the set $\invarF{\F}{\GL_2(\curlO)}$, to identify a basis of the finite dimension vector space $\invar{\Q^\F}{\GL_2(\curlO)}$, much more practical to be used in a computer implementation.
 \qed
 \end{remark}
 
