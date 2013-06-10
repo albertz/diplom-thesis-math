@@ -441,16 +441,25 @@ For testing and demonstration purpose, another implementation has been done in P
 
 \subsection{Calculating the cusp restrictions}
 \label{calcMatrixTrans}
-We want to develop the algorithm analogously to \cref{calcMatrix}. We have developed the neccessary basics in \cref{remark:algo-mainstep2}. We have given some $S \in \PM_2(\curlO)$ and a cusp $c \in \Q$ of $\Gamma_0(l)$ with $l = \det(S)$. Let $M \in \Sp_1(\Z)$ such that $M \infty = c$.
+We want to develop the algorithm analogously to \cref{calcMatrix}. We have developed the neccessary basics in \cref{remark:algo-mainstep2}. We have given some $S \in \PM_2(\curlO)$ and a cusp $c \in \Q$ of $\Gamma_0(l)$ with $l = \det(S)$. Let $M_c \in \Sp_1(\Z)$ such that $M_c \infty = c$.
 
 Recall that we have
-\[ (a[S]| M) (p) = \overline{\det(\tilde{S})}^k \cdot \sum_{\begin{subarray}{c}
+\[ (a[S]| M_c) (p) = \overline{\det(\tilde{S})}^k \cdot \sum_{\begin{subarray}{c}
 T \in \Lambda,\\
 \tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) = p
 \end{subarray}} a(T) \cdot e^{2 \pi i \cdot \tr\left(T \tilde{T} \overline{\tilde{S}}^T\right)} \]
 for all $p \in \frac{1}{L} \N_0$ for some $L \in \N$.
 
-As we are dealing with vector spaces, we can ignore the constant factor $\overline{\det(\tilde{S})}^k$, because for some vector space $\mathcal{V} \subset \Q^\F$, we have $(a \mapsto a[S]| M) (\mathcal{V}) = (a \mapsto \frac{a[S]| M}{\overline{\det(\tilde{S})}^k}) (\mathcal{V})$.
+We want to construct a matrix $\hat{M}_{c,S}$ such that $\hat{M}_{c,S} \cdot a = a[S]|M_c$ for some given precisions.
+
+Write $T = \SmallMatrix{t_1}{t_2}{t_3}{t_4}$, $S = [s_1,s_2,s_3]$ and $\tilde{S} = \SmallMatrix{u_1}{u_2}{u_3}{u_4}$, then
+\begin{align*}
+& \tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) \\
+=\quad & {\left(t_{4} u_{4} + u_{2} \overline{t_{2}}\right)} s_{4} + {\left(t_{4} u_{3} + u_{1} \overline{t_{2}}\right)} s_{2} + {\left(t_{1} u_{2} + t_{2} u_{4}\right)} \overline{s_{2}} + {\left(t_{1} u_{1} + t_{2} u_{3}\right)} s_{1} + \overline{u_{1}} + \overline{u_{4}} \\
+=\quad & {\left(s_{4} \overline{t_{2}} + t_{1} \overline{s_{2}}\right)} u_{2} + {\left(s_{4} t_{4} + t_{2} \overline{s_{2}} + 1\right)} u_{4} + {\left(s_{1} t_{2} + s_{2} t_{4}\right)} u_{3} + {\left(s_{1} t_{1} + s_{2} \overline{t_{2}} + 1\right)} u_{1} .
+\end{align*}
+
+As we are dealing with vector spaces, we can ignore the constant factor $\overline{\det(\tilde{S})}^k$, because for some vector space $\mathcal{V} \subset \Q^\F$, we have $(a \mapsto a[S]| M_c) (\mathcal{V}) = (a \mapsto \frac{a[S]| M_c}{\overline{\det(\tilde{S})}^k}) (\mathcal{V})$.
 
 For the row indices, we can use $0 \le n < L \cdot \FPrecisionLimit{S}$ with $p = \frac{n}{L}$. The column is given by the reduced matrix index of $T$. However, the entry itself is not in $\Q$ but in the $P$-th cyclomotic field $\Q(\zeta_P)$ such that $P \cdot \tr\left(T \tilde{T} \overline{\tilde{S}}^T\right) \in \Z$ for all $T \in \Lambda$. However, there is a $P-1$-th dimensional base of $\Q(\zeta_P)$ and we can use several matrices such that each represent a factor to $\zeta_P^i$ for $0 \le i < P - 1$.
 
