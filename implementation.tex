@@ -8,6 +8,8 @@ The code consists of several parts.
 All of it was implemented around the Sage (\cite{sage}) framework, thus the main language is Python (\cite{python}).
 For performance reasons, some very heavy calculations have been implemented in C++ (\cite{cpp}) and some Cython (\cite{cython}) code is the interface between both parts.
 
+The implementation is complete as far as what we have developed in this thesis. Unfortunately, at the time of writing, there are probably some flaws in the implementation because there haven't been any senseful results yet. It seems like these are only minor issues, though.
+
 \subsection{Code structure}
 
 We introduce the most important files and details. Other files might be mentioned elsewhere.
@@ -63,12 +65,14 @@ In some calculations, such as \ifuncname{modform_restriction_info} in \ifilename
 
 \subsubsection{\ifilename{utils.py}}
 This file contains mostly non-mathematical related utilities.
-
-It also contains all the utilities for the parallelization. Details are described in \cref{impl:parallelization}.
+\begin{itemize}
+\item It contains an extended \isymbname{Pickler} which overcomes some problems with the default \isymbname{Pickler}. Otherwise, some Sage objects would not be serializable. Also, serialization becomes deterministic.
+\item There are several functions for persistent on-disk caching via serialization, such as \isymbname{PersistentCache} which is a dictionary which saves each entry in a separate file which makes Git-merging easier.
+\item It also contains all the utilities for the parallelization. Details are described in \cref{impl:parallelization}.
+\end{itemize}
 
 \subsubsection{\ifilename{tests.py}}
-This file contains some tests for some of the functions in \ifilename{algo.py}, \ifilename{helpers.py} and \ifilename{utils.py}.
-
+This file contains some tests for some of the functions in \ifilename{algo.py}, \ifilename{helpers.py} and \ifilename{utils.py}. It is not needed otherwise.
 
 %---
 \
