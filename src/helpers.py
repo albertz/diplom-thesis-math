@@ -294,7 +294,12 @@ def calcPrecisionDimension(B_cF, S):
 	assert S[0,1] == S[1,0].conjugate()
 	s,t,u = S[0,0], S[0,1], S[1,1]
 	s, u = QQ(s), QQ(u)
-	precDim = B_cF * (s + u - 2 * abs(t))
+
+	# see comment in C++
+	#precDim = B_cF * (s + u - 2 * abs(t))
+	#precDim = floor(precDim)
+	precDim = B_cF * (min(s, u) - 2 * abs(t))
+	precDim = max(0, precDim)
 	precDim = floor(precDim)
 	return precDim
 
