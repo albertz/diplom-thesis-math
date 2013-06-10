@@ -17,8 +17,8 @@ We introduce the most important files and details. Other files might be mentione
 
 \subsubsection{Main function \ifuncname{herm_modform_space}}
 The main entry point is in the file \ifilename{algo.py}.
-The function \ifuncname{herm_modform_space} calculates the Hermitian modula form space.
-The function gets the fundamental discriminant \isymbname{D} $= - \Delta$, the Hermitian modula forms weight $k =$ \isymbname{HermWeight} and the precision limit $B_\F =$ \isymbname{B_cF} as its input and returns the vector space of Fourier expansions of Hermitian modular forms to the precision $B_\F$. The Fourier expansions are indexed by the reduced matrices of $\F$ (see \cref{remark:reducedCurlF} for details). This index list can also be returned by \ifuncname{herm_modform_indexset}.
+The function \ifuncname{herm_modform_space} calculates the Hermitian modular forms space.
+The function gets the fundamental discriminant \isymbname{D} $= - \Delta$, the Hermitian modular forms weight $k =$ \isymbname{HermWeight} and the precision limit $B_\F =$ \isymbname{B_cF} as its input and returns the vector space of Fourier expansions of Hermitian modular forms to the precision $B_\F$. The Fourier expansions are indexed by the reduced matrices of $\F$ (see \cref{remark:reducedCurlF} for details). This index list can also be returned by \ifuncname{herm_modform_indexset}.
 
 The function can also do its calculation in parallel via multiple processes. As a convenience, to easily start the calculation with $N$ processes in parallel, there is the function \ifuncname{herm_modform_space__parallel} with the additional parameter \isymbname{task_limit}, where you just set \isymbname{task_limit} $=N$. For details about the parallelization, see \cref{impl:parallelization}.
 
