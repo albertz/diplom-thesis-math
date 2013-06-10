@@ -8,7 +8,7 @@ The code consists of several parts.
 All of it was implemented around the Sage (\cite{sage}) framework, thus the main language is Python (\cite{python}).
 For performance reasons, some very heavy calculations have been implemented in C++ (\cite{cpp}) and some Cython (\cite{cython}) code is the interface between both parts.
 
-\subsection{Basic code structure}
+\subsection{Code structure}
 
 \subsubsection{Main function \ifuncname{herm_modform_space}}
 The main entry point is in the file \ifilename{algo.py}.
@@ -29,10 +29,25 @@ algo.herm_modform_space__parallel(
     D=-3, HermWeight=6, B_cF=7, task_limit=4)
 \end{lstlisting}
 
+\subsubsection{\ifilename{algo.py}}
 The function \ifuncname{herm_modform_space} uses \ifuncname{modform_restriction_info} and \ifuncname{modform_cusp_info} which are also defined in the same file.
-The theory behind these functions is described in \cref{ellipticReduction} and \cref{cuspInfo}, accordingly.
+The theory behind these functions is described in \cref{ellipticReduction} and \cref{cuspInfo}, accordingly. Details about the implementation are also described in \cref{calcMatrix} and \cref{calcMatrixTrans}, accordingly.
 
 Both return a vector space which is a superspace of the Hermitian modular form Fourier expansions and \ifuncname{herm_modform_space} intersects them until the final dimension is reached.
+
+\subsubsection{\ifilename{helpers.py}}
+This file contains many other mathematical calculations needed by \ifilename{algo.py}. These are, among others:
+\begin{itemize}
+\item The iteration of $\F$ (as described in \cref{curlFiteration}),
+\item the iteration of $S \in \PM_2(\curlO)$ (as described in \cref{Siter}),
+\item \ifuncname{solveR} (as described in \cref{solveR}),
+\item \ifuncname{xgcd} and \ifuncname{divmod} (as described in \cref{xgcd}),
+\item some wrappers around 
+\end{itemize}
+
+\subsubsection{\ifilename{utils.py}}
+foo
+
 
 %---
 \
