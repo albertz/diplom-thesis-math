@@ -454,3 +454,13 @@ for all $p \in \frac{1}{l} \N_0$.
 \subsection{Parallelization}
 \label{impl:parallelization}
 
+The parallelization is implemented by distributing the calculation along multiple processes. In \ifilename{utils.py}, there are the neccessary functions to use this technique.
+
+The high level class \isymbname{Parallelization} spawns a number of independent worker processes. These are real separate processes and not forks because of issues with non-fork-safe libraries such as libBLAS. Details and references about this can be found in the source.
+
+The communication between the worker processes and the main process is via serialization over pipes.
+
+For our specific work, the function \ifuncname{herm_modform_space} manages a \isymbname{Parallelization} instance and delegates the calculation of the superspaces (via \ifuncname{modform_restriction_info} and \ifuncname{modform_cusp_info}) to the worker processes.
+
+As the intersection of the superspaces takes also some time, it is also delegated to some worker processes in a non-blocking and distributing way. Details can be found in the source code.
+
