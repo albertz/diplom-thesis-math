@@ -312,9 +312,9 @@ Another method is to use information from cusp forms. We can restrict them in a 
 
 \begin{prelim}
 \label{prelim:cuspInfo}
-Let $\hat{c} \in \Q \cup \Set{\infty}$ be a representation of a cusp in $\Gamma_0(l)$. For our method, we are only interested in $\hat{c} \ne \infty$. We choose a matrix $M = M_{\hat{c}} = \SmallMatrix{a}{b}{c}{d} \in \SL_2(\Z)$ such that $M \infty = \hat{c}$. We show in \cref{lemma:cuspmatrixMc} how to do that. $M$ is also called a cusp matrix.
+Let $\hat{c} \in \Q \cup \Set{\infty}$ be a representation of a cusp in $\Gamma_0(l)$, where $l = \det(S)$ for some $S \in \PM_2(\curlO)$ (as before). For our method, we are only interested in $\hat{c} \ne \infty$. We choose a matrix $M = M_{\hat{c}} = \SmallMatrix{a}{b}{c}{d} \in \SL_2(\Z)$ such that $M \infty = \hat{c}$. We show in \cref{lemma:cuspmatrixMc} how to do that. $M$ is also called a cusp matrix.
 
-Let $f \colon \HalfPlane_2 \rightarrow \C$ be a Hermitian modular form and $S \in \PM_2(\curlO)$. Now we look at $f[S] |_{2k} M$. We have
+Let $f \colon \HalfPlane_2 \rightarrow \C$ be a Hermitian modular form. Now we look at $f[S] |_{2k} M$. We have
 \begin{align*}
 & (f[S] |_{2k} M) (\tau) \\
 =\quad & (c \tau + d)^{-2k} \cdot f[S](M \tau) \\
@@ -343,7 +343,7 @@ f \left(\left(\tilde{S} \cdot S \tau + \tilde{T}\right) \cdot \left(\overline{\t
 =\quad& \overline{\det(\tilde{S})}^k \cdot f\left( \tilde{S} S \overline{\tilde{S}}^T \tau + \tilde{T} \overline{\tilde{S}}^T \right) .
 \end{align*}
 
-Thus, a cusp $\hat{c}$ and $S \in \PM_2(\curlO)$ gives us a linear map $f \mapsto f[S] | M_{\hat{c}}$ which we can calculate as described. %TODO: more...
+Thus, a cusp $\hat{c}$ and $S \in \PM_2(\curlO)$ give us a linear map $f \mapsto f[S] | M_{\hat{c}}$ which we can calculate as described. %TODO: more...
 %And given Hermitian modular forms, we must only get Elliptic modular cusp forms.
 
 Via other methods, we can more directly calculate the vectorspace of Elliptic modular cusp forms in $M_{\hat{c}}$.
