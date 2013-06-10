@@ -2,6 +2,7 @@
 # Hermitian modular forms, https://github.com/albertz/diplom-thesis-math
 # Copyright (c) 2013, Albert Zeyer, www.az2000.de
 # This code is under the GPL v3 or later, see License.txt in the root directory of this project.
+from sage.all import RR
 
 from sage.calculus.functional import simplify
 from sage.functions.other import floor, real, imag
@@ -299,7 +300,7 @@ def calcPrecisionDimension(B_cF, S):
 	#precDim = B_cF * (s + u - 2 * abs(t))
 	#precDim = floor(precDim)
 	precDim = B_cF * (min(s, u) - 2 * abs(t))
-	precDim = QQ(precDim)
+	precDim = RR(precDim)
 	if precDim < 0: return 0
 	precDim = floor(precDim)
 	return precDim
