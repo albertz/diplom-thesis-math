@@ -508,7 +508,7 @@ struct ReductionMatrices_Calc {
 					.mulMat(tS.conjugate_transpose(D), D)
 					.trace()
 					.asInt(D);
-				// TODO: we also need det(\overline{tS})^k in the factor.
+				// Note that we don't need the factor det(\overline{tS})^k. See the text.
 				factor_exp = Mod(factor_exp, lS*lT);
 				matrixIndex += factor_exp * matrixRowCountTrans * matrixColumnCountTrans;
 				matrixTrans[matrixIndex] += a_T;
