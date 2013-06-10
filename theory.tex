@@ -557,7 +557,13 @@ Now we formulate the main algorithm based on the work previously developed in th
 
 \begin{algo}
 \label{main-algo}
-We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta$ (for now, $\Delta \in \Set{3,4,8}$). Then we select some form weight $k \in \Z$ ($k \in \Set{1,\dots,20}$ or so), let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximal order (see \cref{maxorder}) and let $\Gamma = \Sp_2(\curlO)$. We use $\nu \colon \Gamma \rightarrow \C^\times$, $\nu \equiv 1$ as the Abel character (see \cref{remark-nu}).
+We have the Hermitian modular form degree $n = 2$ fixed, as well as some $\Delta$. Then we select some form weight $k \in \Z$, let $\curlO \subseteq \Q(\sqrt{-\Delta})$ be the maximal order (see \cref{maxorder}) and let $\Gamma = \Sp_2(\curlO)$. We use $\nu \colon \Gamma \rightarrow \C^\times$, $\nu \equiv 1$ as the Abel character (see \cref{remark-nu}). We also choose a $B_\F \in \N$ which defines the Fourier precision index set $\F$.
+
+Common values at the time of writing are $\Delta \in \Set{3,4,8}$. In the implementation, at the time of the hand over of the thesis, only the implementation of $\Delta = 3$ is complete, also the case $\Delta = 4$ is easy to extend. We need a way to calculate the dimension of $\FE(\HSpace{k}{\Gamma})$. For other cases, e.g. $\Delta = 8$, this seems very difficult. All other part of the algorithm and the implementation are generic and work for any $\Delta$.
+
+Any valid input for $k \in \Z$ is allowed. It probably make sense to use $k < 20$. We mostly tested the implementation with $k = 6$.
+
+Increasing the value of $B_\F$ makes the calculation very slow (guess without proof: probably $O(N^3)$ or so). We mostly tested with $B_\F \in \Set{7,8,9,10}$. Having this value too low makes it mostly impossible to find the right vector space as we gain too less information.
 
 \begin{enumerate}
 %or: http://www.latex-community.org/forum/viewtopic.php?f=4&t=2209
@@ -574,12 +580,12 @@ Start with $\mathcal{M}_1 := \Q^{\invarF{\F}{\GL_2(\curlO)}}$ and $i=1$.
 \item
 In \cref{remark:algo-mainstep1} and more detailed in \cref{calcMatrix} about the restriction ($f \mapsto f[S]$), we get a superspace
 \[ \mathcal{M}^H_S \subset \Q^{\invarF{\F}{\GL_2(\curlO)}} \]
-of $\FE(\HSpace{k}{\Gamma})$.
+of $\FE_\F(\HSpace{k}{\Gamma})$.
 
 \item
 From \cref{remark:algo-mainstep2} and more detailed in \cref{calcMatrixTrans} about the cusp expansion information, for each cusp $c \in \mathcal{C}_l \subset {\Q \cup \Set{\infty}}$ with $c \ne \infty$ where $\mathcal{C}_l$ are the cusps in $\Gamma_0(l)$ and $l = \det(S)$, we get a superspace
 \[ \mathcal{M}^H_{c,S} \subset \Q^{\invarF{\F}{\GL_2(\curlO)}} \]
-of $\FE(\HSpace{k}{\Gamma})$.
+of $\FE_\F(\HSpace{k}{\Gamma})$.
 
 \item
 Now set
