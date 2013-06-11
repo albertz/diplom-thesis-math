@@ -549,6 +549,7 @@ Note that this proof gives explicit formulas to calculate $\gamma$ and $R$. This
 
 We want to analyze $\tilde{S}$ a bit more.
 \begin{remark}[On $\tilde{S}$ in $solveR$]
+\label{remark:on-solveR-tS}
 Let $\tilde{S}_i$ the left upper 2-by-2 matrix of $\tilde{M}_i$.
 We have
 \[ \tilde{S}_2 = \SimpleMatrix{a_{\gamma_1,1}}{}{}{a_{\gamma_1,4}} a +
@@ -599,7 +600,10 @@ Then, for the Fourier expansion, we have
 &= \overline{\det(\tilde{S})}^k \cdot \sum_{T \in \Lambda} a(T) \cdot e^{2 \pi i \cdot \tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) \cdot \tau} \cdot e^{2 \pi i \cdot \tr\left(T \tilde{T} \overline{\tilde{S}}^T\right)} \\
 &= \sum_{p \in \frac{1}{L} \N_0} (a[S]|_{2k} M) (p) \cdot e^{2 \pi i \cdot p \cdot \tau} ,
 \end{align*}
-where $L \in \N$ such that $\tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) \cdot l \in \N_0$ for all $T \in \Lambda$ and
+where $L \in \N$ such that $\tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) \cdot l \in \N_0$ for all $T \in \Lambda$.
+%Such $L \in \N$ exists, because $T, \tilde{S}, S, \overline{\tilde{S}}^T \ge 0$, thus $T \tilde{S} S \overline{\tilde{S}}^T \ge 0$.
+We assume at this point that such $L \in \N$ exists. We analyze this in more detail in \cref{calcMatrixTrans}.
+Then, we have
 \[ (a[S]|_{2k} M) (p) = \overline{\det(\tilde{S})}^k \cdot \sum_{\begin{subarray}{c}
 T \in \Lambda,\\
 \tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) = p

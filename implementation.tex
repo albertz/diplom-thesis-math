@@ -466,15 +466,24 @@ Case 1: $t_4 = 0$. Then we have $t_1 \ge B$ and $t_2 = 0$. And
 \[ \tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) \ge
  B {s_{1}} u_{1} + {B \overline{s_{2}}} u_{2} + \overline{u_{1}} + \overline{u_{4}} \ge B(s_1 u_1 - |\overline{s_2} u_2 |) + \overline{u_1} + \overline{u_4} . \]
 %
-Case 2: $0 < t_4 < B$. Then $t_1 \ge B$.
-We also have $|t_2|^2 \le t_1 t_4 \le B t_4$, thus $X$. Then
+Case 2: $t_1 = 0$. Then we have $t_4 \ge B$ and $t_2 = 0$. And
 \[ \tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) \ge
- {\left(s_{4} \overline{t_{2}} + B \overline{s_{2}}\right)} u_{2} + {\left(s_{4} t_{4} + t_{2} \overline{s_{2}}\right)} u_{4} + {\left(s_{1} t_{2} + s_{2} t_{4}\right)} u_{3} + {\left(s_{1} t_{1} + s_{2} \overline{t_{2}}\right)} u_{1} + \overline{u_{1}} + \overline{u_{4}} . \]
+ B {s_4} u_4 + {B s_{2}} u_3 + \overline{u_{1}} + \overline{u_{4}} \ge B(s_4 u_4 - |s_2 u_3 |) + \overline{u_1} + \overline{u_4} . \]
+%
+%Case 3: $0 < t_4 < B$. Then $t_1 \ge B$.
+%We also have $|t_2|^2 \le t_1 t_4 \le B t_4$, thus $X$. Then
+%\[ \tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) \ge
+% {\left(s_{4} \overline{t_{2}} + B \overline{s_{2}}\right)} u_{2} + {\left(s_{4} t_{4} + t_{2} \overline{s_{2}}\right)} u_{4} + {\left(s_{1} t_{2} + s_{2} t_{4}\right)} u_{3} + {\left(s_{1} t_{1} + s_{2} \overline{t_{2}}\right)} u_{1} + \overline{u_{1}} + \overline{u_{4}} . \]
+Analyzing the other cases is left open for further work. We also don't prove that
+\[ \tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) \in \Q_{\ge 0} \]
+at this point, although the computer calculations have shown that this seems to be the case. See also \cref{remark:on-solveR-tS} for some analysis on $\tilde{S}$.
 
+Let us assume that we have found a limit $\F_c(S,\tilde{S})$ such that $\tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) \ge \F_c(S,\tilde{S})$ for all $T \in \Lambda - \F$.
+%
 % WRONG: (?)
 %As we are dealing with vector spaces, we can ignore the constant factor $\overline{\det(\tilde{S})}^k$, because for some vector space $\mathcal{V} \subset \Q^\F$, we have $(a \mapsto a[S]| M_c) (\mathcal{V}) = (a \mapsto \frac{a[S]| M_c}{\overline{\det(\tilde{S})}^k}) (\mathcal{V})$.
 
-For the row indices, we can use $0 \le n < L \cdot \F_c(S)$ with $p = \frac{n}{L}$. The column is given by the reduced matrix index of $T$. However, the entry itself is not in $\Q$ but in the $P$-th cyclomotic field $\Q(\zeta_P)$ such that $P \cdot \tr\left(T \tilde{T} \overline{\tilde{S}}^T\right) \in \Z$ for all $T \in \Lambda$. However, there is a $P-1$-th dimensional base of $\Q(\zeta_P)$ and we can use several matrices such that each represent a factor to $\zeta_P^i$ for $0 \le i < P - 1$.
+For the row indices, we can use $0 \le n < L \cdot \F_c(S,\tilde{S})$ with $p = \frac{n}{L}$. The column is given by the reduced matrix index of $T$. However, the entry itself is not in $\Q$ but in the $P$-th cyclomotic field $\Q(\zeta_P)$ such that $P \cdot \tr\left(T \tilde{T} \overline{\tilde{S}}^T\right) \in \Z$ for all $T \in \Lambda$. However, there is a $P-1$-th dimensional base of $\Q(\zeta_P)$ and we can use several matrices such that each represent a factor to $\zeta_P^i$ for $0 \le i < P - 1$.
 
 
 \subsection{Parallelization}
