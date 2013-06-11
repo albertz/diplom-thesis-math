@@ -2,7 +2,10 @@
 
 \section{Conclusion and further work}
 
-We have developed an generic algorithm to calculate the vector space of Fourier expansions of Hermitian modular forms.
+We have developed and implemented an generic algorithm to calculate the vector space of Fourier expansions of Hermitian modular forms.
 
-Unfortunately, we haven't gotten any results which seems to be because of mistakes in the implementations (as it was also noted in \cref{chapter:impl}). It seems likely that these are only minor issues. Further work should fix these bugs.
+We haven't gotten any results yet as it was also noted in \cref{chapter:impl}. Many parts of the code have been tested in various ways but as we don't have any results yet, we cannot tell whether it is all correct and it needs more testing.
 
+Also the precision limit $\FPrecisionLimit{S}$ (see \cref{lemma:fprecisionlimit}) could be improved so that the information gain is bigger for more $S \in \PM_2(\curlO)$. Right now, only a few $S$ are usable for us.
+
+A few more details in \cref{calcMatrixTrans} about the cusp restriction information gain need to be worked out, such as a good precision limit $\F_c(S,\tilde{S})$.
