@@ -452,14 +452,24 @@ T \in \Lambda,\\
 \end{subarray}} a(T) \cdot e^{2 \pi i \cdot \tr\left(T \tilde{T} \overline{\tilde{S}}^T\right)} \]
 for all $p \in \frac{1}{L} \N_0$ for some $L \in \N$.
 
-We want to construct a matrix $\hat{M}_{c,S}$ such that $\hat{M}_{c,S} \cdot a = a[S]|M_c$ for some given precision limit $\F_c(S)$ for the Elliptic modular forms (similar to $\FPrecisionLimit{S}$ as described in \cref{lemma:fprecisionlimit}).
+We want to construct a matrix $\hat{M}_{c,S}$ such that $\hat{M}_{c,S} \cdot a = a[S]|M_c$ for some given precision limit $\F_c(S, \tilde{S})$ for the Elliptic modular forms (similar to $\FPrecisionLimit{S}$ as described in \cref{lemma:fprecisionlimit}).
 
-Write $T = [t_1,t_2,t_4] \in \Lambda$, $S = [s_1,s_2,s_4] \in \PM_2(\curlO)$ and $\tilde{S} = \SmallMatrix{u_1}{u_2}{u_3}{u_4} \in \M_2(\K)$, then
+Write $T = [t_1,t_2,t_4] \in \Lambda$, $S = [s_1,s_2,s_4] \in \PM_2(\curlO)$ and $\tilde{S} = \SmallMatrix{u_1}{u_2}{u_3}{u_4} \in \M_2(\K)$.  Note that $t_1,t_4,s_1,s_4 \in \Z$. Then
 \begin{align*}
 & \tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) \\
 =\quad & {\left(t_{4} u_{4} + u_{2} \overline{t_{2}}\right)} s_{4} + {\left(t_{4} u_{3} + u_{1} \overline{t_{2}}\right)} s_{2} + {\left(t_{1} u_{2} + t_{2} u_{4}\right)} \overline{s_{2}} + {\left(t_{1} u_{1} + t_{2} u_{3}\right)} s_{1} + \overline{u_{1}} + \overline{u_{4}} \\
 =\quad & {\left(s_{4} \overline{t_{2}} + t_{1} \overline{s_{2}}\right)} u_{2} + {\left(s_{4} t_{4} + t_{2} \overline{s_{2}}\right)} u_{4} + {\left(s_{1} t_{2} + s_{2} t_{4}\right)} u_{3} + {\left(s_{1} t_{1} + s_{2} \overline{t_{2}}\right)} u_{1} + \overline{u_{1}} + \overline{u_{4}} .
 \end{align*}
+Let $S$ and $\tilde{S}$ be fixed. Now assume $T \in \Lambda - \F_B$, i.e. $\max(t_1,t_4) \ge B$.
+
+Case 1: $t_4 = 0$. Then we have $t_1 \ge B$ and $t_2 = 0$. And
+\[ \tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) \ge
+ B {s_{1}} u_{1} + {B \overline{s_{2}}} u_{2} + \overline{u_{1}} + \overline{u_{4}} \ge B(s_1 u_1 - |\overline{s_2} u_2 |) + \overline{u_1} + \overline{u_4} . \]
+%
+Case 2: $0 < t_4 < B$. Then $t_1 \ge B$.
+We also have $|t_2|^2 \le t_1 t_4 \le B t_4$, thus $X$. Then
+\[ \tr\left(T \tilde{S} S \overline{\tilde{S}}^T\right) \ge
+ {\left(s_{4} \overline{t_{2}} + B \overline{s_{2}}\right)} u_{2} + {\left(s_{4} t_{4} + t_{2} \overline{s_{2}}\right)} u_{4} + {\left(s_{1} t_{2} + s_{2} t_{4}\right)} u_{3} + {\left(s_{1} t_{1} + s_{2} \overline{t_{2}}\right)} u_{1} + \overline{u_{1}} + \overline{u_{4}} . \]
 
 % WRONG: (?)
 %As we are dealing with vector spaces, we can ignore the constant factor $\overline{\det(\tilde{S})}^k$, because for some vector space $\mathcal{V} \subset \Q^\F$, we have $(a \mapsto a[S]| M_c) (\mathcal{V}) = (a \mapsto \frac{a[S]| M_c}{\overline{\det(\tilde{S})}^k}) (\mathcal{V})$.
