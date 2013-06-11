@@ -442,7 +442,7 @@ struct ReductionMatrices_Calc {
 	//   (a|R_i)[S](n) =
 	//     det((tS)^{-1}^{*})^{-k}
 	//     * \sum_{T, tr(T * tS * S * tS^{*}) = n} a(T) * e^{2 \pi i tr(T * tT * tS^{*})}
-	// The function just calculates the function without the det(..) factor.
+	// The function just calculates the function without the det(\overline{tS})^k factor.
 	// The tS,tT parameters given to this function might be multiplied with some factors lS,lT
 	// so that the matrices are in \curlO.
 	// Note that the right part are elements of the CyclomoticField(lS*lT).
@@ -510,7 +510,7 @@ struct ReductionMatrices_Calc {
 					.mulMat(tS.conjugate_transpose(D), D)
 					.trace()
 					.asInt(D);
-				// TODO: we also need the factor det(\overline{tS})^k. See the text.
+				// Without the det(\overline{tS})^k factor, see the header comment.
 				factor_exp = Mod(factor_exp, lS*lT);
 				matrixIndex += factor_exp * matrixRowCountTrans * matrixColumnCountTrans;
 				matrixTrans[matrixIndex] += a_T;
