@@ -138,7 +138,9 @@ T squareRootIntUpper(const T& y) {
 
 
 struct M2T_Odual {
-	// This represents always an element in Her_2(\cO^#) from our work.
+	// This represents always an element in \Lambda from our work,
+	// i.e. a Hermitian 2-by-2 matrix with diagonal entries in \Z
+	// and the off-entries in \cO^#.
 	// We set `b = b1 / \sqrt{D} + b2 (1 + \sqrt{D})/2`, where
 	// D is a negative integer, the fundamental discriminant of
 	// the underlying imaginary quadratic number field.
