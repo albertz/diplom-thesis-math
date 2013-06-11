@@ -449,7 +449,7 @@ c_{\gamma_1,1} & d_{\gamma_1,1}
 a_{\gamma_1,4} & b_{\gamma_1,4} \\
 c_{\gamma_1,4} & d_{\gamma_1,4}
 \end{pmatrix} . \]
-Given $0 = c_{2,3} = c_{\gamma_1,4} \cdot a_{1,3} + d_{\gamma_1,4} \cdot c_{1,3}$, where $a_{1,3} = 0$, we get $d_{\gamma_1,4} := 0$ and we can set $a_{\gamma_1,4} := 0$, $b_{\gamma_1,4} := 1$ and $c_{\gamma_1,4} := -1$ such that $\SmallMatrix{a_{\gamma_1,4}}{b_{\gamma_1,4}}{c_{\gamma_1,4}}{d_{\gamma_1,4}} \in \Sp_1(\curlO)$.
+Given $0 = c_{2,3} = c_{\gamma_1,4} \cdot a_{1,3} + d_{\gamma_1,4} \cdot c_{1,3}$, where $a_{1,3} = 0$, we get $d_{\gamma_1,4} := 0$ and we can set $a_{\gamma_1,4} := 0$, $b_{\gamma_1,4} := 1$ and $c_{\gamma_1,4} := -1$ such that $\SmallMatrix{a_{\gamma_1,4}}{b_{\gamma_1,4}}{c_{\gamma_1,4}}{d_{\gamma_1,4}} = -J_1 \in \Sp_1(\curlO)$.
 
 We want $0 = c_{2,1} = c_{\gamma_1,1} \cdot a_{1,1} + d_{\gamma_1,1} \cdot c_{1,1}$. In case we already have $c_{1,1} = 0$, we can select $\SmallMatrix{a_{\gamma_1,1}}{b_{\gamma_1,1}}{c_{\gamma_1,1}}{d_{\gamma_1,1}}  = 1_2 \in \Sp_1(\curlO)$. Otherwise: We have $c_{1,1} \in \K$ but there is a $l_1 \in \curlO$ such that $c_{1,1} \cdot l_1 \in \curlO$. Via \ifuncname{xgcd} (see \cref{xgcd}), we can find $d_1,a_{\gamma_1,1},b_{\gamma_1,1} \in \curlO$ such that $1 = a_{\gamma_1,1} \frac{a_{1,1} \cdot l_1}{d_1} + b_{\gamma_1,1} \frac{c_{1,1} \cdot l_1}{d_1}$ and $\frac{a_{1,1} \cdot l_1}{d_1},  \frac{c_{1,1} \cdot l_1}{d_1} \in \curlO$. Then set $c_{\gamma_1,1} := - \frac{c_{1,1} \cdot l_1}{d_1}$ and $d_{\gamma_1,1} := \frac{a_{1,1} \cdot l_1}{d_1}$. Then we have $\SmallMatrix{a_{\gamma_1,1}}{b_{\gamma_1,1}}{c_{\gamma_1,1}}{d_{\gamma_1,1}} \in \Sp_1(\curlO)$.
 
@@ -514,7 +514,7 @@ With $\tilde{M}_4 = \gamma_3 \tilde{M}_3$, we have
 \begin{align*}
 c_{4,1} &= c_{\gamma_3,1} \cdot \underbrace{a_{3,1}}_{=0} + d_{\gamma_3,1} \cdot \underbrace{c_{3,1}}_{=0} , \\
 c_{4,2} &= c_{\gamma_3,1} \cdot a_{3,2} + d_{\gamma_3,1} \cdot c_{3,2} , \\
-c_{4,3} &= c_{\gamma_3,4} \cdot a_{3,2} + d_{\gamma_3,4} \cdot \underbrace{c_{3,2}}_{=0} , \\
+c_{4,3} &= c_{\gamma_3,4} \cdot a_{3,2} + d_{\gamma_3,4} \cdot \underbrace{c_{3,3}}_{=0} , \\
 c_{4,4} &= c_{\gamma_3,4} \cdot a_{3,4} + d_{\gamma_3,4} \cdot \underbrace{c_{3,4}}_{=0} .
 \end{align*}
 Set $c_{\gamma_3,4} := b_{\gamma_3,4} := 0$ and $a_{\gamma_3,4} := d_{\gamma_3,4} := 1$. Thus $\SmallMatrix{a_{\gamma_3,4}}{b_{\gamma_3,4}}{c_{\gamma_3,4}}{d_{\gamma_3,4}} = 1_2 \in \Sp_1(\curlO)$. Then we have $c_{4,3} = 0$ and $c_{4,4} = 0$.
@@ -547,6 +547,43 @@ Thus, we have $\tilde{U} = \overline{\tilde{S}^{-1}}^T$.
 \end{lemma}
 Note that this proof gives explicit formulas to calculate $\gamma$ and $R$. This has been implemented in \ifilename{helpers.py} as \ifuncname{solveR}. A list of test cases have also been generated in the function \ifuncname{test_solveR} in \ifilename{tests.py} which also indirectly tests the \ifuncname{xgcd} and \ifuncname{divmod} implementation (described in \cref{xgcd}).
 
+We want to analyze $\tilde{S}$ a bit more.
+\begin{remark}[On $\tilde{S}$ in $solveR$]
+Let $\tilde{S}_i$ the left upper 2-by-2 matrix of $\tilde{M}_i$.
+We have
+\[ \tilde{S}_2 = \SimpleMatrix{a_{\gamma_1,1}}{}{}{a_{\gamma_1,4}} a +
+ \SimpleMatrix{b_{\gamma_1,1}}{}{}{b_{\gamma_1,4}} c S^{-1} , \]
+\[ \tilde{S}_3 = A_{\gamma_2} \tilde{S}_2 , \]
+and
+\[ \tilde{S} = \tilde{S}_4 = 
+\SimpleMatrix{a_{\gamma_3,1}}{}{}{a_{\gamma_3,4}} \tilde{S}_3 +
+\SimpleMatrix{b_{\gamma_3,1}}{}{}{b_{\gamma_3,4}}
+\SimpleMatrix{c_{3,1}}{c_{3,2}}{c_{3,3}}{c_{3,4}} . \]
+Write $S = [s,t,u]$ and $l = \det(S)$, thus $S^{-1} = \frac{1}{l} [u,-t,s]$. 
+Thus
+\[ \tilde{S}_2 = \SimpleMatrix
+{a_{\gamma_1,1} \cdot a + b_{\gamma_1,1} \cdot \tfrac{c}{l} u}  {- b_{\gamma_1,1} \cdot \tfrac{c}{l} t}
+{- b_{\gamma_1,4} \cdot \tfrac{c}{l} \overline{t}}  {a_{\gamma_1,4} \cdot a + b_{\gamma_1,4} \cdot \tfrac{c}{l} s}
+\]
+and (note $a_{\gamma_1,4} = 0$, $b_{\gamma_1,4} = 1$)
+\begin{align*}
+\tilde{S} &=
+\SimpleMatrix{a_{\gamma_3,1}}{}{}{1} A_{\gamma_2} \tilde{S}_2 +
+\SimpleMatrix{b_{\gamma_3,1}}{}{}{}
+\SimpleMatrix{}{c_{3,2}}{}{} \\
+&= A_{\gamma_2} \SimpleMatrix
+{a_{\gamma_3,1} \cdot a_{\gamma_1,1} \cdot a + b_{\gamma_1,1} \cdot \tfrac{c}{l} u}  {- a_{\gamma_3,1} \cdot b_{\gamma_1,1} \cdot \tfrac{c}{l} t}
+{- b_{\gamma_1,4} \cdot \tfrac{c}{l} \overline{t}}  {a_{\gamma_1,4} \cdot a + b_{\gamma_1,4} \cdot \tfrac{c}{l} s}
++ \SimpleMatrix{}{b_{\gamma_3,1}\cdot c_{3,2}}{}{} \\
+&= A_{\gamma_2} \SimpleMatrix
+{a_{\gamma_3,1} \cdot a_{\gamma_1,1} \cdot a + b_{\gamma_1,1} \cdot \tfrac{c}{l} u}  {- a_{\gamma_3,1} \cdot b_{\gamma_1,1} \cdot \tfrac{c}{l} t}
+{- \tfrac{c}{l} \overline{t}}  {\tfrac{c}{l} s}
++ \SimpleMatrix{}{b_{\gamma_3,1}\cdot c_{3,2}}{}{}
+. \end{align*}
+We leave it as this for now.
+\end{remark}
+
+Now we formulate the main method to gain new information from these relations.
 \begin{remark}
 \label{remark:algo-mainstep2}
 We want to develop the formulas to use the new information about the cusp expansion relations as described in \cref{prelim:cuspInfo}. This is very similar as the idea in \cref{remark:algo-mainstep1}, such that we can develop similar formulas as in \cref{remark:how-to-calc-aS}.
