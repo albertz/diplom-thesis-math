@@ -464,7 +464,6 @@ struct ReductionMatrices_Calc {
 			matrixRowCountTrans += calcPrecisionDimension(curlF, (ElemOfS)*S);
 		}
 	
-		// TODO: WARNING: All the stuff about matrixRowDenomTrans and trace (below) has to be studied and worked out.
 		matrixRowDenomTrans = lS * lS;
 		
 		matrixTrans.clear();
@@ -511,7 +510,7 @@ struct ReductionMatrices_Calc {
 					.mulMat(tS.conjugate_transpose(D), D)
 					.trace()
 					.asInt(D);
-				// Note that we don't need the factor det(\overline{tS})^k. See the text.
+				// TODO: we also need the factor det(\overline{tS})^k. See the text.
 				factor_exp = Mod(factor_exp, lS*lT);
 				matrixIndex += factor_exp * matrixRowCountTrans * matrixColumnCountTrans;
 				matrixTrans[matrixIndex] += a_T;
