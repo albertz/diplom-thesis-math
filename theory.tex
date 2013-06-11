@@ -183,7 +183,8 @@ The main algorithm is going to be described in \cref{main-algo}. It will start w
 \begin{lemma}
 \label{lemma:fprecisionlimit}
 Given a Hermitian modular form $f$ and its Fourier expansion coefficients $a \colon \F_B \rightarrow \Q$ of the precision index set $\F_B$ and a matrix $S = [s,t,u] \in \PM_2(\curlO)$, the precision of the Fourier expansion of the Elliptic modular form $f[S]$ is given by
-\[ \FPrecisionLimit{S} = B \cdot (s + u - 2 \left| t \right|) , \]
+%\[ \FPrecisionLimit{S} = B \cdot (s + u - 2 \left| t \right|) , \] %WRONG! see 10.6. \F(S)
+\[ \FPrecisionLimit{S} = \max(0, B(\min(s,u) - 2 |t|)) , \]
 i.e. we can calculate the Fourier expansion coefficients (as described in \cref{remark:restricted-by-S})
 \[ a[S] \colon \Set{k \in N_0}{k < \FPrecisionLimit{S}} \rightarrow \Q . \]
 
@@ -196,23 +197,45 @@ Because $T \ge 0$, we have $ac \ge \left| b \right|^2$ and thus
 \[ \left| b \right| \le \sqrt{ac} \le \max(a,c). \]
 Thus,
 \[ 2 \Re(\overline{t} b) \ge -2 \left| t \right| \left| b \right| \ge -2 \left| t \right| \max(a,c). \]
-We also have $as + cu \ge \max(a,c) (s + u)$. Assuming $T \in \Lambda - \F$, we have $\max(a,c) \ge B$. For such $T$, we get
-\[ \tr(ST) \ge B \cdot (s + u - 2 \left| t \right|) . \]
-Given $S > 0$, we have $su > \left| t \right|^2$. Then we have
-\begin{align*}
-& s + u - 2 \left| t \right| > 0 \\
-\Leftrightarrow \quad & su + u^2 - 2 \left| t \right| u > 0 \\
-\Leftrightarrow \quad & \left( \left|t\right|^2 + u^2 - 2 \left| t \right| u \right) + (su - \left|t \right|^2) > 0 \\
-\Leftrightarrow \quad & \left(\left| t \right| - u \right)^2 + (su - \left| t \right|^2) > 0 .
-\end{align*}
-Thus, for $B > 0$, we have
-\[ B \cdot (s + u - 2 \left| t \right|) > 0 . \]
-All inequalities were sharp estimations\footnote{For example, let $S=[2,-1,1]$. Then you have $s+u-2 \left| t \right| = 1$. With $c=B$ and $a=b=1$, you hit the limit $\tr(S T) = 2 + B - 2 = B = \FPrecisionLimit{S}$. }, %
-thus we get
-\[ \FPrecisionLimit{S} = B \cdot (s + u - 2 \left| t \right|) . \qedhere \]
+%We also have $as + cu \ge \max(a,c) (s + u)$.%WRONG!
+Assuming $T \in \Lambda - \F$, we have $\max(a,c) \ge B$.
+Case 1: Assume that we have $a \ge c$. Thus we have $a \ge B, |b|$ and
+\[\tr(ST) \ge as + cu - 2a |t| = a(s - 2|t|)+ cu \ge B(s - 2 |t|) . \]
+Case 2: Assume that we have $c \ge a$. Thus we have $c \ge B, |b|$ and
+\[\tr(ST) \ge as + cu - 2 c |t| = c(u - 2|t|)+ as \ge B(u - 2 |t|) . \]
+Thus, in both cases, we have
+\[\tr(ST) \ge B(\min(s,u) - 2 |t|) . \]
+We can use that as the limit, i.e.
+\[ \FPrecisionLimit{S} = \max(0, B(\min(s,u) - 2 |t|)) . \qedhere \]
+%For such $T$, we get
+%\[ \tr(ST) \ge B \cdot (s + u - 2 \left| t \right|) . \] % WRONG!
+%not relevant:
+%Given $S > 0$, we have $su > \left| t \right|^2$. Then we have
+%\begin{align*}
+%& s + u - 2 \left| t \right| > 0 \\
+%\Leftrightarrow \quad & su + u^2 - 2 \left| t \right| u > 0 \\
+%\Leftrightarrow \quad & \left( \left|t\right|^2 + u^2 - 2 \left| t \right| u \right) + (su - \left|t \right|^2) > 0 \\
+%\Leftrightarrow \quad & \left(\left| t \right| - u \right)^2 + (su - \left| t \right|^2) > 0 .
+%\end{align*}
+%Thus, for $B > 0$, we have
+%\[ B \cdot (s + u - 2 \left| t \right|) > 0 . \]
+%All inequalities were sharp estimations\footnote{For example, let $S=[2,-1,1]$. Then you have $s+u-2 \left| t \right| = 1$. With $c=B$ and $a=b=1$, you hit the limit $\tr(S T) = 2 + B - 2 = B = \FPrecisionLimit{S}$. }, %
+%thus we get
+%\[ \FPrecisionLimit{S} = B \cdot (s + u - 2 \left| t \right|) . \qedhere \] %WRONG!
 \endproof
 \end{lemma}
+\begin{remark}[On $\FPrecisionLimit{S}$]
+% 10.6. \F(S) limit
+Note that originially, we thought to have a better limit $\FPrecisionLimit{S}$. This limit is low and often $0$, thus we wont gain any information for many $S \in \PM_2(\curlO)$. Another way to improve it would be to change the precision set $\F$. For example, we could introduce another limit in $\F$ such that $\FPrecisionLimit{S}$ can be choosen better. For example
+\[ \F'_{B,L} := \Set{T = [a,b,c] \in \Lambda}{0 \le a,c < B, |b| \le \frac{B}{L}} \subset \F \]
+for $L \in \N$. That way, we still have
+\[ \F'_{B_1,L} \subset \F'_{B_2,L} \;\; \forall\ B_1 \le B_2, \quad\quad \bigcup_{B \in \N} \F'_{B,L} = \Lambda . \]
+And we would have the better precision Elliptic precision limit
+\[ \F'_{B,L}(S) = \max(0, B (\min(s,u) - \tfrac{2}{L} |t|) ) . \]
+We leave this open for further research.
+\end{remark}
 
+Now we formulate the main idea about how to gain new information from the restriction.
 \begin{remark}
 \label{remark:algo-mainstep1}
 Let $\mathcal{M}_i$ be a sub vector space of Hermitian modular form Fourier expansions $a \colon \F \rightarrow \Q$, i.e. $\mathcal{M}_i \subset \FE_\F(\HSpace{k}{\Gamma})$.
