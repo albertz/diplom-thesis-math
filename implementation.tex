@@ -485,7 +485,13 @@ Let us assume that we have found a limit $\F_c(S,\tilde{S})$ such that $\tr\left
 
 For the row indices, we can use $0 \le n < L \cdot \F_c(S,\tilde{S})$ with $p = \frac{n}{L}$. The column is given by the reduced matrix index of $T$. However, the entry itself is not in $\Q$ but in the $P$-th cyclomotic field $\Q(\zeta_P)$ such that $P \cdot \tr\left(T \tilde{T} \overline{\tilde{S}}^T\right) \in \Z$ for all $T \in \Lambda$. However, there is a $(P-1)$-th dimensional basis of $\Q(\zeta_P)$ and we can use several matrices such that each represents a factor to $\zeta_P^i$ for $0 \le i < P - 1$.
 
+In the C++ part, in the function \ifuncname{calcMatrixTrans}, we get the matrices $\tilde{S}$ and $\tilde{T}$ as described earlier (via \ifuncname{solveR}) and we have $S$ internally given. The function works very similar to \ifuncname{calcMatrix} (as described in \cref{calcMatrix}). The difference is that we prepare/return $P$ matrices, one for each factor $\zeta_P^i$ for $0 \le i < P$.
+
+In Python, we get these $P$ matrices and transform them to the $(P-1)$ basis.
+
 To calculate the cusp expansions of the Elliptic modular forms in Sage, we use a recent work by Martin Raum which was not published yet at the time of writing. It will be published later under \cite{Raum13PSage}.
+
+We can compare this relation then in the same way as in \cref{calcMatrix}. This is done in \ifuncname{modform_cusp_info} in \ifilename{algo.py}.
 
 
 \subsection{Parallelization}
