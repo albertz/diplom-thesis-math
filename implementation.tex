@@ -502,9 +502,12 @@ CyclotomicField(order).gen().coordinates_in_terms_of_powers()
 \end{lstlisting}
 from Sage to do this transformation.
 
-To calculate the cusp expansions of the Elliptic modular forms in Sage, we use a recent work by Martin Raum which was not published yet at the time of writing. It will be published later under \cite{Raum13PSage}.
+To calculate the cusp expansions of the Elliptic modular forms in Sage, we use a recent work by Martin Raum which was not published yet at the time of writing. It will be published later under \cite{Raum13PSage}. It returns a denominator $L'$ (similar to $L$) and a basis matrix $C'_c$ over the Universal cyclomotic field which represents the Fourier expansion at the cusp $c$ of all forms, such that each basis vector $v$ corresponds to the expansion
+\[ \sum_{n \ge 0} v_n e^{2 \pi i \cdot \tfrac{n}{L'}} . \]
 
-We can compare this relation then in the same way as in \cref{calcMatrix}. This is done in \ifuncname{modform_cusp_info} in \ifilename{algo.py}.
+For the comparison, we must transform $C'_c$ and $C_m$ so that we have the same denominator $L'$ and $L$. In \ifuncname{modform_cusp_info}, we do that via the function \ifuncname{addRows} which is defined in \ifilename{helpers.py}. For the implementation, we must also unify the order of the Cyclomotic field. We do that via \ifuncname{toCyclPowerBase} and \ifuncname{toLowerCyclBase} (see the source for more details).
+
+We can compare this relation then in the same way as in \cref{calcMatrix}. This is all done in \ifuncname{modform_cusp_info} in \ifilename{algo.py}.
 
 
 \subsection{Parallelization}
