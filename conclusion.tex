@@ -7,6 +7,10 @@ We have developed and implemented an generic algorithm to calculate the vector s
 
 We haven't gotten any results yet as it was also noted in \cref{chapter:impl}. Many parts of the code have been tested in various ways but as we don't have any results yet, we cannot tell whether it is all correct and it needs more testing.
 
-Also the precision limit $\FPrecisionLimit{S}$ (see \cref{lemma:fprecisionlimit}) could be improved so that the information gain is bigger for more $S \in \PM_2(\curlO)$. Right now, only a few $S$ are usable for us. Maybe it also makes sense to use another definition of the precision index set $\F$.
+A few properties can be tested on superspaces of the Hermitian modular forms. We have started to implement such tests in \ifilename{checks.py}. This can be extended to improve the debugging.
+
+Also the precision limit $\FPrecisionLimit{S}$ (see \cref{lemma:fprecisionlimit}) could be improved so that the information gain is bigger for more $S \in \PM_2(\curlO)$. Right now, only a few $S$ are usable for us. Maybe it also makes sense to use another definition of the precision index set $\F$. See \cref{remark:on-fprecisionlimit} for more.
 
 A few more details in \cref{calcMatrixTrans} about the cusp restriction information gain need to be worked out, such as a good precision limit $\F_c(S,\tilde{S})$.
+
+It seems likely that the restriction to Elliptic modular forms (\cref{ellipticRestriction}) and the Elliptic expansion in cusps (\cref{cuspInfo}) will eventually lead to the final vectorspace. We leave this open for further work.
