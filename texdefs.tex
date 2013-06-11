@@ -95,12 +95,16 @@
 % http://sunsite.informatik.rwth-aachen.de/ftp/pub/mirror/ctan/macros/latex/contrib/listings/listings.pdf
 \lstdefinestyle{inline-funcname}{
     columns=fullflexible,
-    breaklines=false,
+    breaklines,
+    %breaklines=false,
+    breakatwhitespace,
     %Note: \usefont{OML}{cmm}{m}{it} is exactly like \mathnormal
-    basicstyle=\usefont{OML}{cmm}{m}{it} %\itshape\ttfamily
+    basicstyle=\usefont{OML}{cmm}{m}{it}, %\itshape\ttfamily
+    breakindent=2ex,
+    postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookrightarrow\space}},
 }
 \newcommand{\ifuncname}[1]{{\lstinline[style=inline-funcname]{#1}}}
-\newcommand{\isymbname}[1]{\lstinline[style=inline-funcname]{#1}}
+\newcommand{\isymbname}[1]{{\lstinline[style=inline-funcname]{#1}}}
 %\newcommand{\ifuncname}[1]{\lstinline[style=inline]!#1!}
 %\newcommand{\ifuncname}[1]{$#1$}
 %\newcommand{\ifilename}[1]{\verb!#1!}
