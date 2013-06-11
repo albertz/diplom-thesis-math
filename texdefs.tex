@@ -99,9 +99,9 @@
     %Note: \usefont{OML}{cmm}{m}{it} is exactly like \mathnormal
     basicstyle=\usefont{OML}{cmm}{m}{it} %\itshape\ttfamily
 }
-%\newcommand{\ifuncname}[1]{\lstinline[style=inline]!#1!}
-\newcommand{\ifuncname}[1]{\lstinline[style=inline-funcname]{#1}}
+\newcommand{\ifuncname}[1]{{\lstinline[style=inline-funcname]{#1}}}
 \newcommand{\isymbname}[1]{\lstinline[style=inline-funcname]{#1}}
+%\newcommand{\ifuncname}[1]{\lstinline[style=inline]!#1!}
 %\newcommand{\ifuncname}[1]{$#1$}
 %\newcommand{\ifilename}[1]{\verb!#1!}
 %\DeclareUrlCommand\ifuncname{}
