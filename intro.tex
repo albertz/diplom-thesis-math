@@ -8,6 +8,16 @@ In \cite{PoorYuen07Comp}, spaces of Siegel modular cusp forms are calculated. It
 
 A similar algorithm is also \cite[Algorithm 4.3]{Raum12Jacobi} for Jacobi forms.
 
-We are doing the same for Hermitian modular forms.
+We are doing the same for Hermitian modular forms. We can calculate the dimension of the Hermitian modular forms vectorspace and we also can calculate the vectorspace of Elliptic modular forms. We develop a method to restrict Hermitian modular forms to Elliptic modular forms and gain information from this relation. We can thus restrict the space of possible Fourier expansions. By repeating that, we hope to reduce the dimension so far that we eventually can describe the vector space of Fourier expansion of Hermitian modular forms.
 
-Along with the theoretical work, the algorithm has also been implemented. The implementation has been done with the Sage (\cite{sage}) framework. It is implemented in C++ (\cite{cpp}), Cython (\cite{cython}) and Python (\cite{python}). The code can be found on GitHub (\cite{Zeyer13Github}) and another backup might be on \cite{Zeyer13Homepage}. We haven't been able to get any results yet, though, which is left open for further work. The details are described in \cref{chapter:impl}.
+Another further method to gain information is to calculate cusp expansions of Elliptic modular form. We can also restrict the Hermitian modular forms to those cusp expansions of Elliptic modular forms and we gain information from that relation in the same way as before. It seems likely that this gives enough information to eventually reduce the dimension enough.
+
+Along with the theoretical work, the algorithm has also been implemented. The implementation has been done with the Sage (\cite{sage}) framework. It is implemented in C++ (\cite{cpp}), Cython (\cite{cython}) and Python (\cite{python}). The code can be found on GitHub (\cite{Zeyer13Github}) and another backup might be on \cite{Zeyer13Homepage}. We haven't been able to get any results yet, though, which is left open for further work.
+
+In \cref{chapter:prelim}, we introduce the reader to our notation. We also define all the basic concepts as well as introduce to Elliptic, Siegel and Hermitian modular forms.
+
+In \cref{chapter:theory}, we develop and work out all the theory of the methods for the algorithm. We also describe the algorithm itself in more detail.
+
+In \cref{chapter:impl}, we describe all the details about the implementation as well as develop further formulas needed for the implementation, such as how to iterate through specific sets of matrices and how to calculate with our set of complex numbers.
+
+We conclude with \cref{chapter:conclusion}. We refer to further work and we analyse the state of this algorithm and its implementation.
