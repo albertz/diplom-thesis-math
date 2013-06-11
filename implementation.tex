@@ -495,7 +495,12 @@ j_T = j
 \det(U_T)^{-k} \]
 where $k$ is the weight of the Hermitian modular forms and $j_T$ is uniquely determined such that the reduced matrix of $T$ is $T_{j_T}$ and $T_{j_T}[U_T] = T$ (via \ifuncname{reduceGL}, see \cref{reduceGL}).
 
-In Python, we get these $P$ matrices $C_1,\dots,C_P$ and transform them to the $(P-1)$ basis.
+We do the main work in the Python function \ifuncname{modform_cusp_info} and we call \ifuncname{calcMatrixTrans} (indirectly via the Cython interface) from there.
+In Python, we get these $P$ matrices $C_1,\dots,C_P$ and transform them to the $(P-1)$ basis $(1,\zeta_P,\zeta_P^2,\dots,\zeta_P^{m-1})$. This is actually done in the same-called Python function \ifuncname{calcMatrixTrans} in \ifilename{helpers.py}. It basically uses
+\begin{lstlisting}[belowskip=-0.8 \baselineskip]
+CyclotomicField(order).gen().coordinates_in_terms_of_powers()
+\end{lstlisting}
+from Sage to do this transformation.
 
 To calculate the cusp expansions of the Elliptic modular forms in Sage, we use a recent work by Martin Raum which was not published yet at the time of writing. It will be published later under \cite{Raum13PSage}.
 
