@@ -301,18 +301,10 @@ struct PrecisionF {
 
 
 int calcPrecisionDimension(const PrecisionF& F, ElemOfS S) {
-	// tr([s,t,u] * [a,b,c]) >= max(a,c) * (s + u - 2|t|)
-	// T=[a,b,c] \in \cF - \Lambda => max(a,c) >= B
+	// See text about \curlF(S).
+	// This is the precision limit of the restriction Elliptic modular forms.
 	DOMAIN_CHECK(S.det(F.D) > 0);
 	DOMAIN_CHECK(F.B > 0);
-	// NOTE: this seems to be wrong: (10.6.)
-	// Note: B(s + u) is \in \Z. B(s+u) >= 2 B |t|.
-	// 2 B |t| might be in \R-\Z, but we still have
-	// Gauss_upper(2 B |t|) <= B(s+u).
-	// Those can be equal though, thus this can be zero.
-	// With increasing B, this is always increasing, though.
-	//return (F.B * S.a + F.B * S.c - S.absBMupper(F.D, 2 * F.B));
-	// new (10.6.)
 	return std::max(0, F.B * std::min(S.a, S.c) - S.absBMupper(F.D, 2 * F.B));
 }
 
