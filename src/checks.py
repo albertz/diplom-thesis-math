@@ -8,9 +8,23 @@ from sage.modules.free_module_element import vector
 from sage.rings.number_field.number_field import QQ
 
 
-# Not exactly sure on this check. It fails.
 check_eisenstein_series_D3_weight6_Enabled = False
 def check_eisenstein_series_D3_weight6(vs, B_cF):
+	"""
+	We know that there must be an Eisenstein series in weight 6 with D=-3.
+	We check for that.
+
+	INPUT:
+
+	- `vs` - Hermitian modular form Fourier expansion supervectorspace
+
+	- `B_cF` - the limit of the precision index set for the Hermitian Fourier indices
+
+	OUTPUT:
+
+	- Not defined. We just raise a ValueError exception if this check fails.
+	"""
+
 	from algo import herm_modform_indexset
 	from helpers import M2T_Odual
 	D = -3
@@ -75,6 +89,25 @@ def check_eisenstein_series_D3_weight6(vs, B_cF):
 
 
 def extra_check_on_herm_superspace(vs, D, HermWeight, B_cF):
+	"""
+	Test some properties which must hold on any superspace of
+	a Hermitian modular form Fourier expansion vectorspace.
+
+	INPUT:
+
+	- `vs` -- The Hermitian modular form Fourier expansion supervectorspace.
+
+	- `D` -- fundamental discriminant.
+
+	- `HermWeight` -- the Hermitian modular form weight.
+
+	- `B_cF` -- the limit of the precision index set
+
+	OUTPUT:
+
+	- Not defined. We raise an exception if some test fails.
+	"""
+
 	if check_eisenstein_series_D3_weight6_Enabled:
 		if D == -3 and HermWeight == 6:
 			check_eisenstein_series_D3_weight6(vs=vs, B_cF=B_cF)
