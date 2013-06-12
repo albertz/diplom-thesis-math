@@ -110,6 +110,21 @@ cdef M2T_O M2T_O_toC(m, int D) except *:
 	return _m
 
 cdef class Calc:
+	"""
+	This is mostly just a wrapper class to the C++ code in `algo_cpp.cpp`.
+	All of the documentation can be found there. See also the text of the thesis.
+
+	After you call `init()` on an instance of this class, you must also
+	call `calcReducedCurlF()` to calculate the reduced index set of `\curlF`.
+
+	Then, call `getNextS()` to get another `S`. You should call `curlS_clearMatrices()`
+	every time before you do a further call to `getNextS()`.
+
+	Then you can call `calcMatrix()` or `calcMatrixTrans()`.
+
+	See the code in `algo.py` and `helpers.py` for a demonstration and usage.
+	"""
+
 	# You need a recent Cython (e.g. >=0.19) for this.
 	cdef ReductionMatrices_Calc calc
 	cdef public int D, HermWeight, B_cF
@@ -161,6 +176,7 @@ cdef class Calc:
 	def calcMatrix(self):
 		"""
 		:rtype : Matrix_integer_dense
+		For documentation, see the C++ function `calcMatrix` in `algo_cpp.cpp`.
 		"""
 		if self.D == 0: raise RuntimeError, "you have to call init first"
 		self.calc.calcMatrix()
@@ -179,6 +195,9 @@ cdef class Calc:
 		return m
 
 	def calcMatrixTrans(self, tS, tT, lS, lT):
+		"""
+		For documentation, see the C++ function `calcMatrixTrans` in `algo_cpp.cpp`.
+		"""
 		if self.D == 0: raise RuntimeError, "you have to call init first"
 		cdef M2_O _tS
 		cdef M2_O _tT
