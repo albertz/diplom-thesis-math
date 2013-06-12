@@ -2,8 +2,8 @@
 # Hermitian modular forms, https://github.com/albertz/diplom-thesis-math
 # Copyright (c) 2013, Albert Zeyer, www.az2000.de
 # This code is under the GPL v3 or later, see License.txt in the root directory of this project.
-from sage.all import RR
 
+from sage.all import RR
 from sage.calculus.functional import simplify
 from sage.functions.other import floor, real, imag
 from sage.matrix.constructor import matrix, Matrix
@@ -16,6 +16,7 @@ from utils import *
 
 
 # via Martin. while this is not in Sage:
+# (see text for details and ref. can probably later be found at <https://github.com/martinra/psage/>)
 import cusp_expansions
 
 
@@ -286,7 +287,7 @@ def calcPrecisionDimension(B_cF, S):
 	INPUT:
 
 	- `B_cF` -- an integer: the precision of the FE of the Hermitian modular forms.
-	
+
 	- `S` -- the reduction matrix for `a[S]`.
 
 	OUTPUT:
