@@ -307,6 +307,8 @@ def persistent_cache(name, index=None, timeLimit=2, ignoreNone=True):
 	return decorator
 
 
+# This was needed to convert some cache files which were created with an earlier version
+# of this code. This probably can be deleted at some later point. (2013-06-12)
 def convert_old_cache(name):
 	old_cache_fn = MyDir + "/" + name + ".cache.sobj"
 	assert os.path.exists(old_cache_fn)
@@ -543,6 +545,9 @@ def asyncCall(func, name=None):
 
 
 class Parallelization_Worker:
+	"""
+	See documentation of the `Parallelization` class.
+	"""
 	def __init__(self, _id):
 		self.id = _id
 		self.joblist = []
@@ -599,6 +604,23 @@ class Parallelization_Worker:
 
 
 class Parallelization:
+	"""
+	This class is the base class to parallize some calculation. It creates multiple
+	worker processes via the `Parallelization_Worker` class. These are own independent
+	processes and we do the communication via serialization (via pickling) on pipes.
+
+	You queue any number of tasks which will be executed on any worker. You can get
+	any available results via `get_next_result()` which is blocking or `get_all_ready_results()`.
+
+	Queueing the tasks works by setting the `task_iter` attribute to any iterator.
+	That iterator must yield tasks, which are callable objects.
+
+	The managing/parent process can call `maybe_queue_tasks()` to start the calculation
+	of new tasks, if we are idling. This is also called automatically in `get_next_result()`.
+
+	You can also call `exec_task()` manually to queue a task.
+	"""
+
 	def __init__(self, task_limit=4):
 		import multiprocessing
 		self.task_count = 0
