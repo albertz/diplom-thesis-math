@@ -12,6 +12,14 @@ from helpers import *
 
 
 def fast_fail_test_D3_k6(B_cF=5):
+	"""
+	We had some problems with cases where `check_eisenstein_series_D3_weight6()` failed.
+	This test function tries simplify/reduce a test case for the fail.
+	The fail is probably not up-to-date anymore because a few bugs have been already fixed
+	and it probably doesn't work anymore as-is.
+	We leave it like this for now in case we need its code to do a similar test-case
+	later on.
+	"""
 	from checks import check_eisenstein_series_D3_weight6
 
 	D = -3
@@ -66,6 +74,9 @@ def fast_fail_test_D3_k6(B_cF=5):
 
 
 def _fork_test_func(iterator=None):
+	"""
+	Test function for `fork()`. See `fork_test()` and others.
+	"""
 	if not iterator:
 		import itertools
 		iterator = itertools.count()
@@ -77,6 +88,10 @@ def _fork_test_func(iterator=None):
 	return x
 
 def fork_test():
+	"""
+	Test `fork()`. I get a SIGILL on this test case.
+	See: <http://ask.sagemath.org/question/2627/sigill-in-forked-process>
+	"""
 	_fork_test_func(range(10))
 	import os
 	pid = os.fork()
@@ -91,18 +106,29 @@ def fork_test():
 			os._exit(0)
 
 def fork_test2():
+	"""
+	Another indirect test for `fork()`. I get a SIGILL on this test case.
+	See: <http://ask.sagemath.org/question/2627/sigill-in-forked-process>
+	"""
 	# Also see here: http://www.sagemath.org/doc/reference/sage/parallel/decorate.html
 	from sage.parallel.decorate import fork
 	test_ = fork(_fork_test_func, verbose=True)
 	test_()
 
 def fork_test3(mustExec=False):
+	"""
+	Another indirect test for `fork()`. I get a SIGILL on this test case.
+	See: <http://ask.sagemath.org/question/2627/sigill-in-forked-process>
+	"""
 	_fork_test_func(range(10))
 	import utils
 	utils.asyncCall(func=_fork_test_func)
 
 
 def parall_test(task_limit=1):
+	"""
+	This function tests the `Parallelization` class.
+	"""
 	import utils
 	parallelizaton = utils.Parallelization(task_limit=task_limit)
 	def task_iter_func():
@@ -114,6 +140,10 @@ def parall_test(task_limit=1):
 
 
 def calcCurlSiter_serialization_test():
+	"""
+	The `Calc` instance serialization has been extended by the ability
+	to store the state of its CurlS-iteration. We test that here.
+	"""
 	D = -3
 	HermWeight = 6
 	B_cF = 7
@@ -137,6 +167,11 @@ def calcCurlSiter_serialization_test():
 
 
 def test_calcPrecisionDimension(D=-3, HermWeight=6, B_cF=7):
+	"""
+	Test the precision limit calculation. This is \curlF(S) in the text.
+	This has been implemented in both C++ and in Python
+	as `calcPrecisionDimension()`.
+	"""
 	from helpers import calcPrecisionDimension, CurlO
 	space = CurlO(D)
 
@@ -154,7 +189,9 @@ def test_calcPrecisionDimension(D=-3, HermWeight=6, B_cF=7):
 
 
 def test_herm_modform_indexset(D=-3, B_cF=7):
-	# This also tests curlF iteration and reduceGL.
+	"""
+	This also tests `\curlF` iteration and `reduceGL()`.
+	"""
 	from helpers import herm_modform_indexset_py
 	from algo import herm_modform_indexset
 	indexset = herm_modform_indexset(D=D, B_cF=B_cF)
@@ -163,6 +200,10 @@ def test_herm_modform_indexset(D=-3, B_cF=7):
 
 
 def test_calcMatrix(D=-3, HermWeight=6, B_cF=7):
+	"""
+	We have implemented `calcMatrix()` also in Python. We test the
+	function here and compare the result with the C++ calculation.
+	"""
 	import algo_cython as C
 	calc = C.Calc()
 	calc.init(D=D, HermWeight=HermWeight, B_cF=B_cF)
@@ -182,6 +223,13 @@ def test_calcMatrix(D=-3, HermWeight=6, B_cF=7):
 
 
 def test_solveR():
+	"""
+	Some test cases for `solveR()`. `solveR()` has asserts internally
+	so that it ensures itself that its result is correct.
+
+	These test cases have all failed in some earlier versions.
+	"""
+
 	space = CurlO(-3)
 	a,b,c,d = 2,1,1,1
 	s,t,u = 5,space.Droot,1
@@ -241,6 +289,9 @@ def test_solveR():
 
 
 def test_calcMatrix_S3001(usePyImpl=False):
+	"""
+	Some test case for S = [3,0,1] which failed at some earlier point.
+	"""
 	D = -3
 	HermWeight = 6
 	B_cF = 7
@@ -269,6 +320,9 @@ def test_calcMatrix_S3001(usePyImpl=False):
 
 
 def test_calcMatrix_S2a1(usePyImpl=False, B_cF=7):
+	"""
+	Some test case for S = [2,...,1] which failed at some earlier point.
+	"""
 	D = -3
 	HermWeight = 6
 	K = QuadraticField(D)
