@@ -482,13 +482,6 @@ struct ReductionMatrices_Calc {
 				ElemOfS S = *_S;
 				M2_O S_M2 = M2_O_from_M2T_O(S, D);
 				// n = tr(T tS S tS^*)
-				/*
-				auto t1 = T_M2.mulMat(tS, D);
-				auto t2 = t1.mulMat(S_M2, D);
-				auto _t3 = tS.conjugate_transpose(D);
-				auto t3 = t2.mulMat(_t3, D);
-				auto t4 = t3.trace();
-				*/
 				Int traceNum =
 					T_M2
 					.mulMat(tS, D)
